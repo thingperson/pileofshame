@@ -11,6 +11,8 @@ import Reroll from '@/components/Reroll';
 import ImportHub from '@/components/ImportHub';
 import SettingsMenu from '@/components/SettingsMenu';
 import ViewToggle from '@/components/ViewToggle';
+import AuthButton from '@/components/AuthButton';
+import CloudSync from '@/components/CloudSync';
 import { ToastProvider } from '@/components/Toast';
 import NinetiesMode from '@/components/NinetiesMode';
 
@@ -127,6 +129,7 @@ function AppContent() {
             + Add
           </button>
           <SettingsMenu />
+          <AuthButton />
         </div>
       </header>
 
@@ -226,6 +229,7 @@ function AppContent() {
       <AddGameModal open={addModalOpen} onClose={() => setAddModalOpen(false)} />
       <ImportHub open={importHubOpen} onClose={() => setImportHubOpen(false)} />
       <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} />
+      <CloudSync />
 
       {/* Footer */}
       <footer className="mt-12 pb-6 text-center space-y-2">
