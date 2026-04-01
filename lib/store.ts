@@ -5,6 +5,7 @@ import { persist } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
 import { Game, GameStatus, LibraryState, FilterState, TimeTier, PlatformPreference } from './types';
 import { DEFAULT_CATEGORIES, DEFAULT_VIBES, STATUS_CYCLE } from './constants';
+import { SEED_GAMES } from './seedData';
 
 interface StoreActions {
   // Game CRUD
@@ -17,8 +18,17 @@ interface StoreActions {
   getNextStatus: (status: GameStatus) => GameStatus | null;
   setBailed: (id: string) => void;
   unBail: (id: string) => void;
+  shelveGame: (id: string) => void;
   playAgain: (id: string) => void;
   newGamePlus: (id: string) => void;
+
+  // Celebration (lives in store so it survives GameCard unmount)
+  celebrationGame: Game | null;
+  showCelebration: (game: Game) => void;
+  closeCelebration: () => void;
+
+  // Auto-enrichment progress (transient, not persisted)
+  enrichmentProgress: { done: number; total: number } | null;
 
   // Filters
   setFilter: <K extends keyof FilterState>(key: K, value: FilterState[K]) => void;
@@ -42,6 +52,7 @@ const DEFAULT_FILTERS: FilterState = {
   search: '',
   category: '',
   vibe: '',
+  mood: '',
   timeTier: '',
   showPlayed: false,
   showBailed: false,
@@ -50,8 +61,8 @@ const DEFAULT_FILTERS: FilterState = {
 export const useStore = create<LibraryState & StoreActions>()(
   persist(
     (set, get) => ({
-      // State
-      games: [],
+      // State — seed with test data in dev when no localStorage exists
+      games: process.env.NODE_ENV === 'development' ? SEED_GAMES : [],
       categories: [...DEFAULT_CATEGORIES],
       customVibes: [],
       settings: {
@@ -66,7 +77,18 @@ export const useStore = create<LibraryState & StoreActions>()(
         lastThreePicks: [],
       },
       filters: { ...DEFAULT_FILTERS },
+      linkedSteamId: undefined,
       lastSaved: new Date().toISOString(),
+
+      // Celebration state (global so it survives GameCard unmount)
+      celebrationGame: null,
+      enrichmentProgress: null,
+      showCelebration: (game: Game) => {
+        set({ celebrationGame: { ...game } }); // snapshot the game before status change
+      },
+      closeCelebration: () => {
+        set({ celebrationGame: null });
+      },
 
       // Game CRUD
       addGame: (gameData) => {
@@ -122,7 +144,12 @@ export const useStore = create<LibraryState & StoreActions>()(
         const now = new Date().toISOString();
         set({
           games: state.games.map((g) =>
-            g.id === id ? { ...g, status: nextStatus, updatedAt: now } : g
+            g.id === id ? {
+              ...g,
+              status: nextStatus,
+              updatedAt: now,
+              ...(nextStatus === 'played' ? { completedAt: now } : {}),
+            } : g
           ),
           lastSaved: now,
         });
@@ -146,6 +173,18 @@ export const useStore = create<LibraryState & StoreActions>()(
         set((state) => ({
           games: state.games.map((g) =>
             g.id === id && g.status === 'bailed'
+              ? { ...g, status: 'buried' as GameStatus, updatedAt: now }
+              : g
+          ),
+          lastSaved: now,
+        }));
+      },
+
+      shelveGame: (id) => {
+        const now = new Date().toISOString();
+        set((state) => ({
+          games: state.games.map((g) =>
+            g.id === id && (g.status === 'playing' || g.status === 'on-deck')
               ? { ...g, status: 'buried' as GameStatus, updatedAt: now }
               : g
           ),
@@ -241,6 +280,7 @@ export const useStore = create<LibraryState & StoreActions>()(
           categories: state.categories,
           customVibes: state.customVibes,
           settings: state.settings,
+          linkedSteamId: state.linkedSteamId,
           lastSaved: state.lastSaved,
         };
         return JSON.stringify(exportData, null, 2);
@@ -254,6 +294,7 @@ export const useStore = create<LibraryState & StoreActions>()(
             games: data.games,
             categories: data.categories || [...DEFAULT_CATEGORIES],
             customVibes: data.customVibes || [],
+            linkedSteamId: data.linkedSteamId,
             settings: data.settings || {
               showPlayed: false,
               showBailed: false,
@@ -271,7 +312,7 @@ export const useStore = create<LibraryState & StoreActions>()(
     }),
     {
       name: 'getplaying-library',
-      version: 1,
+      version: 2,
       migrate: (persisted: unknown, version: number) => {
         const state = persisted as Record<string, unknown>;
         if (version === 0) {
@@ -288,6 +329,14 @@ export const useStore = create<LibraryState & StoreActions>()(
             });
           }
         }
+        if (version < 2) {
+          // Add new default categories for existing users
+          const cats = state.categories as string[] | undefined;
+          if (cats) {
+            if (!cats.includes('Brain Off')) cats.push('Brain Off');
+            if (!cats.includes('The Shame Wall')) cats.push('The Shame Wall');
+          }
+        }
         return state;
       },
       partialize: (state) => ({
@@ -296,6 +345,7 @@ export const useStore = create<LibraryState & StoreActions>()(
         customVibes: state.customVibes,
         settings: state.settings,
         reroll: state.reroll,
+        linkedSteamId: state.linkedSteamId,
         lastSaved: state.lastSaved,
       }),
     }

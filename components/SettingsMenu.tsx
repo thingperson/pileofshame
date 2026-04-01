@@ -2,7 +2,9 @@
 
 import { useState, useRef } from 'react';
 import { useStore } from '@/lib/store';
+import { LibrarySettings } from '@/lib/types';
 import { downloadBackup, readBackupFile } from '@/lib/backup';
+import { enrichBatch } from '@/lib/enrichGame';
 import { useToast } from './Toast';
 
 export default function SettingsMenu() {
@@ -10,15 +12,96 @@ export default function SettingsMenu() {
   const [confirmImport, setConfirmImport] = useState(false);
   const [pendingImport, setPendingImport] = useState<string | null>(null);
   const [enriching, setEnriching] = useState(false);
+  const [enrichingAll, setEnrichingAll] = useState(false);
+  const [enrichProgress, setEnrichProgress] = useState('');
+  const [refreshingSteam, setRefreshingSteam] = useState(false);
+  const [steamIdPrompt, setSteamIdPrompt] = useState(false);
+  const [steamIdInput, setSteamIdInput] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const exportState = useStore((s) => s.exportState);
   const importState = useStore((s) => s.importState);
   const games = useStore((s) => s.games);
   const updateGame = useStore((s) => s.updateGame);
   const settings = useStore((s) => s.settings);
+  const linkedSteamId = useStore((s) => s.linkedSteamId);
   const { showToast } = useToast();
 
   const gamesWithoutArt = games.filter((g) => !g.coverUrl);
+  const steamGames = games.filter((g) => g.steamAppId);
+  const gamesNeedingEnrichment = games.filter((g) => !g.enrichedAt || !g.description || !g.moodTags || g.moodTags.length === 0);
+
+  const handleEnrichAll = async () => {
+    setEnrichingAll(true);
+    setEnrichProgress('Starting...');
+    try {
+      const count = await enrichBatch(
+        games,
+        updateGame,
+        (done, total) => {
+          setEnrichProgress(`${done}/${total} games`);
+        },
+        5,
+      );
+      if (count > 0) {
+        showToast(`Enriched ${count} games with descriptions, moods & time estimates.`);
+      } else {
+        showToast('All games already enriched.');
+      }
+    } catch {
+      showToast('Enrichment hit an error. Try again for remaining games.');
+    }
+    setEnrichingAll(false);
+    setEnrichProgress('');
+  };
+
+  const handleRefreshSteamHours = async (overrideSteamId?: string) => {
+    const steamId = overrideSteamId || linkedSteamId;
+    if (!steamId) {
+      setSteamIdPrompt(true);
+      return;
+    }
+    setRefreshingSteam(true);
+    try {
+      // Resolve vanity URL / profile URL first, then fetch playtime
+      const resolveRes = await fetch(`/api/steam?steamId=${encodeURIComponent(steamId)}&action=resolve`);
+      const resolveData = await resolveRes.json();
+      if (!resolveRes.ok) {
+        showToast(resolveData.error || 'Could not find that Steam account.');
+        setRefreshingSteam(false);
+        return;
+      }
+      const resolvedId = resolveData.profile.steamId;
+      // Save for future use
+      useStore.setState({ linkedSteamId: resolvedId });
+
+      const res = await fetch(`/api/steam?steamId=${encodeURIComponent(resolvedId)}&action=playtime`);
+      const data = await res.json();
+      if (!res.ok) {
+        showToast(data.error || 'Could not fetch Steam playtime.');
+        setRefreshingSteam(false);
+        return;
+      }
+      const playtimeMap: Record<number, number> = data.playtime;
+      let updated = 0;
+      for (const game of steamGames) {
+        if (game.steamAppId && playtimeMap[game.steamAppId] !== undefined) {
+          const newHours = playtimeMap[game.steamAppId];
+          if (newHours !== game.hoursPlayed) {
+            updateGame(game.id, { hoursPlayed: newHours });
+            updated++;
+          }
+        }
+      }
+      if (updated > 0) {
+        showToast(`Updated playtime for ${updated} game${updated !== 1 ? 's' : ''}. Keep grinding.`);
+      } else {
+        showToast('All playtime already up to date.');
+      }
+    } catch {
+      showToast('Network error refreshing Steam hours.');
+    }
+    setRefreshingSteam(false);
+  };
 
   const handleEnrichArt = async () => {
     setEnriching(true);
@@ -46,7 +129,7 @@ export default function SettingsMenu() {
       await new Promise((r) => setTimeout(r, 200));
     }
     const remaining = gamesWithoutArt.length - enriched;
-    showToast(`Added cover art to ${enriched} games.${remaining > 0 ? ` ${remaining} remaining — run again.` : ''}`);
+    showToast(`Added cover art to ${enriched} games.${remaining > 0 ? ` ${remaining} remaining. Run again.` : ''}`);
     setEnriching(false);
   };
 
@@ -112,21 +195,68 @@ export default function SettingsMenu() {
               borderColor: 'var(--color-border-active)',
             }}
           >
-            {!confirmImport ? (
+            {steamIdPrompt ? (
+              <div className="p-2 space-y-2">
+                <p className="text-xs text-text-muted">
+                  Enter your Steam username or profile URL to sync playtime:
+                </p>
+                <input
+                  type="text"
+                  value={steamIdInput}
+                  onChange={(e) => setSteamIdInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && steamIdInput.trim()) {
+                      setSteamIdPrompt(false);
+                      handleRefreshSteamHours(steamIdInput.trim());
+                      setSteamIdInput('');
+                    }
+                  }}
+                  placeholder="Username, URL, or Steam ID"
+                  autoFocus
+                  className="w-full text-xs bg-bg-primary border border-border-subtle rounded-lg px-2.5 py-2 text-text-primary placeholder-text-faint focus:outline-none focus:border-accent-purple"
+                />
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => { setSteamIdPrompt(false); setSteamIdInput(''); }}
+                    className="flex-1 px-2 py-1.5 text-xs text-text-dim rounded-lg border border-border-subtle"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (steamIdInput.trim()) {
+                        setSteamIdPrompt(false);
+                        handleRefreshSteamHours(steamIdInput.trim());
+                        setSteamIdInput('');
+                      }
+                    }}
+                    disabled={!steamIdInput.trim()}
+                    className="flex-1 px-2 py-1.5 text-xs font-medium rounded-lg disabled:opacity-30"
+                    style={{ backgroundColor: 'var(--color-accent-purple)', color: '#0a0a0f' }}
+                  >
+                    Sync
+                  </button>
+                </div>
+              </div>
+            ) : !confirmImport ? (
               <>
                 {/* Theme Toggle */}
                 <div className="px-3 py-2 space-y-1.5">
                   <p className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">Theme</p>
-                  <div className="flex gap-1">
+                  <div className="flex flex-wrap gap-1">
                     {[
                       { value: 'dark', label: '🌙 Dark' },
+                      { value: 'light', label: '☀️ Light' },
+                      { value: '80s', label: '🌆 80s' },
                       { value: '90s', label: '🚧 90s' },
+                      { value: 'future', label: '🔮 Future' },
+                      { value: 'dino', label: '🦕 Dino' },
                     ].map((opt) => (
                       <button
                         key={opt.value}
                         onClick={() => {
                           useStore.setState((s) => ({
-                            settings: { ...s.settings, theme: opt.value as 'dark' | '90s' },
+                            settings: { ...s.settings, theme: opt.value as LibrarySettings['theme'] },
                           }));
                         }}
                         className={`px-2 py-1 text-[11px] rounded-md font-medium transition-all ${
@@ -191,6 +321,26 @@ export default function SettingsMenu() {
                     className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors disabled:opacity-50"
                   >
                     {enriching ? '⏳ Fetching...' : `🖼️ Fetch Cover Art (${gamesWithoutArt.length})`}
+                  </button>
+                )}
+                {steamGames.length > 0 && (
+                  <button
+                    onClick={() => handleRefreshSteamHours()}
+                    disabled={refreshingSteam}
+                    className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors disabled:opacity-50"
+                  >
+                    {refreshingSteam ? '⏳ Syncing...' : `🔄 Refresh Steam Hours (${steamGames.length})`}
+                  </button>
+                )}
+                {gamesNeedingEnrichment.length > 0 && (
+                  <button
+                    onClick={handleEnrichAll}
+                    disabled={enrichingAll}
+                    className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors disabled:opacity-50"
+                  >
+                    {enrichingAll
+                      ? `⏳ Enriching ${enrichProgress}`
+                      : `🧠 Smart Enrich (${gamesNeedingEnrichment.length} games)`}
                   </button>
                 )}
               </>

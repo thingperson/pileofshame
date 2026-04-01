@@ -52,6 +52,7 @@ export default function CategorySection({ name, games }: CategorySectionProps) {
         className="flex items-center gap-2 w-full group"
       >
         <svg
+          aria-hidden="true"
           className={`w-3.5 h-3.5 text-text-dim transition-transform duration-200 ${collapsed ? '-rotate-90' : ''}`}
           fill="none"
           viewBox="0 0 24 24"
@@ -60,11 +61,11 @@ export default function CategorySection({ name, games }: CategorySectionProps) {
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
-        {icon && <span className="text-lg">{icon}</span>}
-        <h2 className="text-sm font-semibold text-text-secondary tracking-wide">
+        {icon && <span className="text-xl">{icon}</span>}
+        <h2 className="text-lg font-bold text-text-primary tracking-tight">
           {name}
         </h2>
-        <span className="text-xs text-text-dim font-[family-name:var(--font-mono)]">
+        <span className="text-sm text-text-muted font-[family-name:var(--font-mono)]">
           {games.length}
         </span>
       </button>

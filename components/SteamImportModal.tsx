@@ -38,6 +38,11 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
   const existingGames = useStore((s) => s.games);
   const { showToast } = useToast();
 
+  // Save the linked Steam ID when importing
+  const saveSteamId = (id: string) => {
+    useStore.setState({ linkedSteamId: id });
+  };
+
   const resolveProfile = useCallback(async () => {
     if (!steamId.trim()) return;
     setLoading(true);
@@ -118,12 +123,17 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
         coverUrl: game.headerUrl,
         category: DEFAULT_CATEGORIES[0],
         vibes: [],
-        timeTier: game.playtimeHours > 20 ? 'deep-cut' : 'wind-down',
+        timeTier: game.playtimeHours > 50 ? 'marathon' : game.playtimeHours > 20 ? 'deep-cut' : game.playtimeHours > 5 ? 'wind-down' : 'quick-hit',
         notes: game.playtimeHours > 0 ? `${game.playtimeHours}h on Steam` : '',
         status: 'buried',
       });
       count++;
     });
+
+    // Save the Steam ID for future playtime refresh
+    if (profile) {
+      saveSteamId(profile.steamId);
+    }
 
     showToast(`Imported ${count} games from Steam. Now go play one.`);
     handleClose();
@@ -264,7 +274,7 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
                   color: '#0a0a0f',
                 }}
               >
-                {loading ? 'Loading...' : "That's me — fetch games"}
+                {loading ? 'Loading...' : "That's me, fetch games"}
               </button>
             </div>
           </div>
@@ -281,7 +291,7 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
               }}
             >
               <p className="text-sm text-text-secondary">
-                Steam usernames aren&apos;t unique — someone else may have that custom URL. Here&apos;s how to find yours:
+                Steam usernames aren&apos;t unique, so someone else may have that custom URL. Here&apos;s how to find yours:
               </p>
               <ol className="text-xs text-text-muted space-y-2 list-decimal list-inside">
                 <li>
@@ -293,9 +303,9 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
                   >
                     Click here to open your Steam profile
                   </a>
-                  {' '}(opens in new tab — you must be logged in)
+                  {' '}(opens in new tab, you must be logged in)
                 </li>
-                <li>Copy the <strong className="text-text-secondary">URL from your browser bar</strong> — it&apos;ll look like:
+                <li>Copy the <strong className="text-text-secondary">URL from your browser bar</strong>. It&apos;ll look like:
                   <br />
                   <code className="text-accent-purple text-[11px] font-[family-name:var(--font-mono)]">
                     steamcommunity.com/profiles/76561198...

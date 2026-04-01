@@ -128,6 +128,25 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ profile });
     }
 
+    // Action: playtime — refresh hours for specific appIds
+    if (action === 'playtime') {
+      const gamesRes = await fetch(
+        `https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${STEAM_API_KEY}&steamid=${steamId}&include_appinfo=true&include_played_free_games=true&format=json`
+      );
+      const gamesData = await gamesRes.json();
+
+      if (!gamesData.response?.games) {
+        return NextResponse.json({ error: 'Could not fetch playtime data' }, { status: 404 });
+      }
+
+      const playtimeMap: Record<number, number> = {};
+      for (const g of gamesData.response.games as SteamGame[]) {
+        playtimeMap[g.appid] = Math.round(g.playtime_forever / 60 * 10) / 10;
+      }
+
+      return NextResponse.json({ steamId, playtime: playtimeMap });
+    }
+
     // Action: games — fetch owned games
     const gamesRes = await fetch(
       `https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${STEAM_API_KEY}&steamid=${steamId}&include_appinfo=true&include_played_free_games=true&format=json`

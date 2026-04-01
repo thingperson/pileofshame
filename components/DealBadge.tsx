@@ -58,7 +58,13 @@ export default function DealBadge({ gameName, compact = false }: DealBadgeProps)
     }
   }, [gameName]);
 
-  // Only fetch when explicitly requested (don't auto-fetch for every card)
+  // Auto-fetch on mount (card expanded = component mounted)
+  useEffect(() => {
+    if (!compact) {
+      fetchDeal();
+    }
+  }, [compact, fetchDeal]);
+
   const bestDeal = deal?.deals?.[0];
 
   if (compact) {
@@ -87,36 +93,44 @@ export default function DealBadge({ gameName, compact = false }: DealBadgeProps)
     );
   }
 
-  // Expanded view — shows full deal info with check button
+  // Exciting deal copy based on discount
+  const getDealCopy = (savings: number): string => {
+    if (savings >= 75) return '🚨 Steal alert!';
+    if (savings >= 50) return '🔥 Seriously discounted.';
+    if (savings >= 30) return '💰 Deal spotted.';
+    return '🏷️ On sale.';
+  };
+
+  // Expanded view — auto-fetches and shows exciting deal info
   return (
     <div className="space-y-1.5" onClick={(e) => e.stopPropagation()}>
-      {!deal && !loading && (
-        <button
-          onClick={(e) => { e.stopPropagation(); fetchDeal(); }}
-          className="text-[11px] text-text-dim hover:text-accent-purple font-[family-name:var(--font-mono)] transition-colors"
-        >
-          💰 Check deals
-        </button>
-      )}
-
       {loading && (
-        <span className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">
-          Checking prices...
+        <span className="text-[11px] text-text-faint font-[family-name:var(--font-mono)] animate-pulse">
+          🔍 Hunting for deals...
         </span>
       )}
 
       {bestDeal && (
         <div className="space-y-1">
-          <button
-            onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
-            className="flex items-center gap-2 text-[11px] font-[family-name:var(--font-mono)]"
+          <a
+            href={bestDeal.dealUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="flex flex-wrap items-center gap-2 text-xs font-[family-name:var(--font-mono)] rounded-lg px-3 py-2 transition-all hover:scale-[1.01] cursor-pointer"
+            style={{
+              backgroundColor: bestDeal.savings >= 50 ? 'rgba(34,197,94,0.08)' : 'rgba(245,158,11,0.08)',
+              border: `1px solid ${bestDeal.savings >= 50 ? 'rgba(34,197,94,0.2)' : 'rgba(245,158,11,0.2)'}`,
+            }}
           >
+            <span style={{ color: bestDeal.savings >= 50 ? '#22c55e' : '#f59e0b' }}>
+              {getDealCopy(bestDeal.savings)}
+            </span>
             <span
               className="px-1.5 py-0.5 rounded font-bold"
               style={{
                 backgroundColor: bestDeal.savings >= 50 ? '#22c55e15' : '#f59e0b15',
                 color: bestDeal.savings >= 50 ? '#22c55e' : '#f59e0b',
-                border: `1px solid ${bestDeal.savings >= 50 ? '#22c55e30' : '#f59e0b30'}`,
               }}
             >
               ${bestDeal.price.toFixed(2)}
@@ -124,16 +138,21 @@ export default function DealBadge({ gameName, compact = false }: DealBadgeProps)
             <span className="text-text-dim">
               {bestDeal.savings}% off at {bestDeal.store}
             </span>
-            {deal.cheapestEver && (
-              <span className="text-text-faint">
-                (lowest ever: ${deal.cheapestEver.price.toFixed(2)})
-              </span>
-            )}
-          </button>
+            <span className="text-accent-purple text-[11px]">Grab it →</span>
+          </a>
+
+          {deal.deals.length > 1 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
+              className="text-[10px] text-text-faint hover:text-text-dim font-[family-name:var(--font-mono)] ml-1 transition-colors"
+            >
+              {expanded ? '▾ Hide other stores' : `▸ ${deal.deals.length - 1} more store${deal.deals.length > 2 ? 's' : ''}`}
+            </button>
+          )}
 
           {expanded && deal.deals.length > 1 && (
             <div className="ml-2 space-y-1 pt-1">
-              {deal.deals.slice(0, 4).map((d, i) => (
+              {deal.deals.slice(1, 5).map((d, i) => (
                 <a
                   key={i}
                   href={d.dealUrl}
@@ -147,18 +166,11 @@ export default function DealBadge({ gameName, compact = false }: DealBadgeProps)
                   </span>
                   <span className="text-text-faint">({d.savings}%)</span>
                   <span>{d.store}</span>
-                  {d.isAffiliate && <span className="text-[9px] text-text-faint">↗</span>}
                 </a>
               ))}
             </div>
           )}
         </div>
-      )}
-
-      {deal && deal.deals.length === 0 && (
-        <span className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">
-          No deals right now
-        </span>
       )}
     </div>
   );

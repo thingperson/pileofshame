@@ -1,24 +1,28 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { Game, GameStatus, TimeTier } from '@/lib/types';
 import { useStore } from '@/lib/store';
-import { STATUS_CONFIG, STATUS_CYCLE, TIME_TIER_CONFIG, SOURCE_LABELS, SOURCE_ICONS, DEFAULT_VIBES, DEFAULT_CATEGORIES, getVibeColor } from '@/lib/constants';
+import { STATUS_CONFIG, TIME_TIER_CONFIG, SOURCE_LABELS, SOURCE_ICONS } from '@/lib/constants';
 import { useToast } from './Toast';
 import DealBadge from './DealBadge';
+import { getGameDescriptor } from '@/lib/descriptors';
+import { MOOD_TAG_CONFIG, getPlaytimeRoast } from '@/lib/enrichment';
 
 interface GameCardProps {
   game: Game;
-  upNextIndex?: number; // 1-based index for Up Next games
+  upNextIndex?: number; // 1-based index for Play Next games
+  forceExpanded?: boolean; // Used by GameDetailModal to render expanded without click
 }
 
-export default function GameCard({ game, upNextIndex }: GameCardProps) {
-  const [expanded, setExpanded] = useState(false);
+export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardProps) {
+  const [expanded, setExpanded] = useState(forceExpanded ?? false);
   const [ghostStatus, setGhostStatus] = useState<GameStatus | null>(null);
   const [showBailConfirm, setShowBailConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [notesSaved, setNotesSaved] = useState(false);
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
-  const { cycleStatus, getNextStatus, setBailed, unBail, playAgain, newGamePlus, updateGame, deleteGame } = useStore();
+  const { cycleStatus, getNextStatus, setBailed, unBail, shelveGame, playAgain, newGamePlus, updateGame, deleteGame, showCelebration } = useStore();
   const { showToast } = useToast();
   const categories = useStore((s) => s.categories);
 
@@ -26,15 +30,46 @@ export default function GameCard({ game, upNextIndex }: GameCardProps) {
   const nextStatus = getNextStatus(game.status);
   const tierConfig = TIME_TIER_CONFIG[game.timeTier];
 
+  // Status badge discoverability: show hint until user has tapped one
+  const [showBadgeHint, setShowBadgeHint] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const hasTapped = localStorage.getItem('pos-status-tapped');
+    if (!hasTapped && nextStatus) {
+      setShowBadgeHint(true);
+    }
+  }, [nextStatus]);
+  const descriptor = getGameDescriptor(game.name, game.metacritic, game.genres);
+
   const handleStatusClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     if (game.status === 'played' || game.status === 'bailed') return;
+
+    // Mark badge as discovered
+    if (showBadgeHint) {
+      localStorage.setItem('pos-status-tapped', '1');
+      setShowBadgeHint(false);
+    }
+
+    // Intercept the transition TO played — show celebration instead
+    const next = getNextStatus(game.status);
+    if (next === 'played') {
+      showCelebration(game);
+      return;
+    }
+
     const newStatus = cycleStatus(game.id);
     if (newStatus) {
       const cfg = STATUS_CONFIG[newStatus];
-      showToast(`${game.name} → ${cfg.label} ${cfg.icon}`);
+      // First-time Play Next celebration
+      if (newStatus === 'on-deck' && !localStorage.getItem('pos-first-playnext')) {
+        localStorage.setItem('pos-first-playnext', '1');
+        showToast(`${game.name} → Play Next 🎯 Nice. You just committed. That's the hard part.`);
+      } else {
+        showToast(`${game.name} → ${cfg.label} ${cfg.icon}`);
+      }
     }
-  }, [game.id, game.name, game.status, cycleStatus, showToast]);
+  }, [game.id, game.name, game.status, cycleStatus, getNextStatus, showToast, showBadgeHint]);
 
   const handleLongPressStart = useCallback(() => {
     if (game.status === 'played') return;
@@ -50,10 +85,21 @@ export default function GameCard({ game, upNextIndex }: GameCardProps) {
     }
   }, []);
 
+  const canBail = game.status !== 'played' && game.status !== 'bailed';
+
+  const bailAffirmations = [
+    'You drew a line. That takes guts.',
+    'Knowing when to walk away is a superpower.',
+    'One less thing weighing on you. Nice.',
+    'Boundaries set. Pile shrunk. Progress.',
+    'That decision? Already worth more than 10 more hours sunk.',
+  ];
+
   const handleBail = useCallback(() => {
     setBailed(game.id);
     setShowBailConfirm(false);
-    showToast(`${game.name} → Bailed 🚪`);
+    const affirmation = bailAffirmations[Math.floor(Math.random() * bailAffirmations.length)];
+    showToast(`${game.name} → Done ✊ ${affirmation}`);
   }, [game.id, game.name, setBailed, showToast]);
 
   const handlePlayAgain = useCallback(() => {
@@ -71,6 +117,11 @@ export default function GameCard({ game, upNextIndex }: GameCardProps) {
     showToast(`${game.name} → back in the backlog 📚`);
   }, [game.id, game.name, unBail, showToast]);
 
+  const handleShelve = useCallback(() => {
+    shelveGame(game.id);
+    showToast(`${game.name} → returned to The Pile 📚`);
+  }, [game.id, game.name, shelveGame, showToast]);
+
   return (
     <div
       className={`group relative rounded-xl border transition-all duration-150 hover:-translate-y-[1px] ${game.status === 'playing' ? 'now-playing-glow' : ''}`}
@@ -83,52 +134,82 @@ export default function GameCard({ game, upNextIndex }: GameCardProps) {
     >
       {/* Compact View */}
       <div
-        className="flex items-center gap-3 px-3.5 py-3 cursor-pointer select-none"
-        onClick={() => setExpanded(!expanded)}
+        className={`flex items-center gap-3 px-3.5 py-3 select-none ${forceExpanded ? '' : 'cursor-pointer'}`}
+        role={forceExpanded ? undefined : 'button'}
+        tabIndex={forceExpanded ? undefined : 0}
+        aria-expanded={forceExpanded ? undefined : expanded}
+        onClick={forceExpanded ? undefined : () => setExpanded(!expanded)}
+        onKeyDown={forceExpanded ? undefined : (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setExpanded(!expanded);
+          }
+        }}
       >
         {/* Status Badge */}
-        <button
-          onClick={handleStatusClick}
-          onMouseEnter={() => nextStatus && setGhostStatus(nextStatus)}
-          onMouseLeave={() => setGhostStatus(null)}
-          onMouseDown={handleLongPressStart}
-          onMouseUp={handleLongPressEnd}
-          onTouchStart={handleLongPressStart}
-          onTouchEnd={handleLongPressEnd}
-          className={`
-            relative flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium
-            font-[family-name:var(--font-mono)] transition-transform duration-150
-            ${game.status !== 'played' && game.status !== 'bailed' ? 'hover:scale-105 active:scale-95 cursor-pointer' : 'cursor-default'}
-          `}
-          style={{
-            backgroundColor: statusConfig.bg,
-            color: statusConfig.color,
-          }}
-          title={game.status === 'played' ? 'Played — expand card for options' : undefined}
-        >
-          <span className="emoji-icon">{statusConfig.icon}</span>
-          <span className="ascii-icon hidden">{statusConfig.asciiIcon}</span>
-          <span className="hidden sm:inline">{statusConfig.label}</span>
-          {/* Ghost preview */}
+        <div className="relative flex items-center">
+          <button
+            onClick={handleStatusClick}
+            onMouseEnter={() => nextStatus && setGhostStatus(nextStatus)}
+            onMouseLeave={() => setGhostStatus(null)}
+            onMouseDown={handleLongPressStart}
+            onMouseUp={handleLongPressEnd}
+            onTouchStart={handleLongPressStart}
+            onTouchEnd={handleLongPressEnd}
+            className={`
+              relative flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium
+              font-[family-name:var(--font-mono)] transition-all duration-150
+              ${game.status !== 'played' && game.status !== 'bailed'
+                ? 'hover:ring-1 hover:ring-white/20 hover:brightness-110 active:scale-95 cursor-pointer'
+                : 'cursor-default'}
+              ${showBadgeHint ? 'animate-[pulse_2s_ease-in-out_3]' : ''}
+            `}
+            style={{
+              backgroundColor: statusConfig.bg,
+              color: statusConfig.color,
+            }}
+            title={
+              game.status === 'played'
+                ? 'Played. Expand card for options'
+                : game.status === 'bailed'
+                ? 'You drew the line. Expand card to reconsider'
+                : nextStatus
+                ? `Tap to move → ${STATUS_CONFIG[nextStatus].label}`
+                : undefined
+            }
+          >
+            <span className="emoji-icon">{statusConfig.icon}</span>
+            <span className="ascii-icon hidden">{statusConfig.asciiIcon}</span>
+            <span className="hidden sm:inline">{statusConfig.label}</span>
+            {/* Chevron hint — shows this badge is tappable */}
+            {nextStatus && (
+              <span className="text-[10px] opacity-50 ml-0.5 hidden sm:inline">›</span>
+            )}
+          </button>
+          {/* First-time hint — visible until user taps a status badge */}
+          {showBadgeHint && nextStatus && (
+            <span className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] ml-1.5 animate-[fadeIn_500ms_ease-out] whitespace-nowrap">
+              tap to advance →
+            </span>
+          )}
+          {/* Hover hint — shows what tapping does */}
           {ghostStatus && game.status !== 'played' && game.status !== 'bailed' && (
             <span
-              className="absolute inset-0 flex items-center justify-center gap-1.5 rounded-md text-xs font-medium opacity-0 animate-[fadeIn_200ms_200ms_forwards]"
+              className="absolute left-full ml-1.5 whitespace-nowrap flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium font-[family-name:var(--font-mono)] opacity-0 animate-[fadeIn_150ms_100ms_forwards] pointer-events-none z-10"
               style={{
                 backgroundColor: STATUS_CONFIG[ghostStatus].bg,
                 color: STATUS_CONFIG[ghostStatus].color,
               }}
             >
-              <span className="emoji-icon">{STATUS_CONFIG[ghostStatus].icon}</span>
-              <span className="ascii-icon hidden">{STATUS_CONFIG[ghostStatus].asciiIcon}</span>
-              <span className="hidden sm:inline">{STATUS_CONFIG[ghostStatus].label}</span>
+              → {STATUS_CONFIG[ghostStatus].label}
             </span>
           )}
-        </button>
+        </div>
 
         {/* Game Name */}
-        <span className="flex-1 text-sm font-medium text-text-primary truncate">
+        <span className="flex-1 text-base font-semibold text-text-primary truncate">
           {upNextIndex && (
-            <span className="text-accent-purple font-bold font-[family-name:var(--font-mono)] mr-1.5 text-xs">
+            <span className="text-accent-purple font-bold font-[family-name:var(--font-mono)] mr-1.5 text-sm">
               {upNextIndex}.
             </span>
           )}
@@ -146,242 +227,338 @@ export default function GameCard({ game, upNextIndex }: GameCardProps) {
           </span>
         </div>
 
-        {/* Expand indicator */}
-        <svg
-          className={`w-4 h-4 text-text-dim transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
+        {/* Expand indicator — hidden when forced open in modal */}
+        {!forceExpanded && (
+          <svg
+            aria-hidden="true"
+            className={`w-4 h-4 text-text-dim transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        )}
       </div>
 
-      {/* Bail Confirmation */}
-      {showBailConfirm && (
+      {/* Bail Confirmation — inline strip */}
+      {showBailConfirm && !expanded && (
         <div className="px-3.5 py-2 border-t flex items-center gap-2" style={{ borderColor: 'var(--color-border-subtle)' }}>
-          <span className="text-xs text-text-muted">Bail on this one?</span>
+          <span className="text-xs text-text-muted">Drawing the line?</span>
           <button
             onClick={handleBail}
             className="px-2 py-0.5 text-xs rounded-md font-medium"
             style={{ backgroundColor: STATUS_CONFIG.bailed.bg, color: STATUS_CONFIG.bailed.color }}
           >
-            🚪 Bail
+            ✊ Done
           </button>
           <button
             onClick={() => setShowBailConfirm(false)}
             className="px-2 py-0.5 text-xs rounded-md text-text-dim hover:text-text-muted"
           >
-            Nah
+            Maybe later
           </button>
         </div>
       )}
 
       {/* Expanded View */}
       {expanded && (
-        <div className="px-3.5 pb-3.5 border-t space-y-3" style={{ borderColor: 'var(--color-border-subtle)' }}>
-          {/* Cover Art + Vibes row */}
+        <div className="px-3.5 pb-3.5 border-t" style={{ borderColor: 'var(--color-border-subtle)' }}>
+          {/* Row 1: Cover + Info Grid */}
           <div className="flex gap-3 pt-3">
             {game.coverUrl && (
               <img
                 src={game.coverUrl}
                 alt=""
-                className="w-24 h-14 rounded-lg object-cover shrink-0 bg-bg-primary"
+                className="w-20 h-28 rounded-lg object-cover shrink-0 bg-bg-primary"
               />
             )}
-            <div className="flex-1 space-y-2">
-              {/* Vibe Tags */}
-              {game.vibes.length > 0 && (
-                <div className="flex flex-wrap gap-1.5">
-                  {game.vibes.map((vibe) => (
-                    <span
-                      key={vibe}
-                      className="px-2 py-0.5 rounded-full text-[11px] font-medium font-[family-name:var(--font-mono)]"
-                      style={{
-                        backgroundColor: `${getVibeColor(vibe)}15`,
-                        color: getVibeColor(vibe),
-                        border: `1px solid ${getVibeColor(vibe)}30`,
-                      }}
-                    >
-                      {vibe}
-                    </span>
-                  ))}
+            <div className="flex-1 min-w-0 space-y-2">
+              {/* Quick stats row */}
+              <div className="flex flex-wrap items-center gap-2 text-sm font-[family-name:var(--font-mono)]">
+                {game.hoursPlayed > 0 && (
+                  <span className="text-text-primary font-semibold">{game.hoursPlayed}h played</span>
+                )}
+                <span className="text-text-muted">{SOURCE_LABELS[game.source]}</span>
+                {game.metacritic && (
+                  <span
+                    className="px-1.5 py-0.5 rounded text-xs font-bold"
+                    style={{
+                      backgroundColor: game.metacritic >= 75 ? 'rgba(34,197,94,0.15)' : game.metacritic >= 50 ? 'rgba(234,179,8,0.15)' : 'rgba(239,68,68,0.15)',
+                      color: game.metacritic >= 75 ? '#22c55e' : game.metacritic >= 50 ? '#eab308' : '#ef4444',
+                    }}
+                  >
+                    {game.metacritic}
+                  </span>
+                )}
+              </div>
+
+              {/* Genres */}
+              {game.genres && game.genres.length > 0 && (
+                <div className="text-xs text-text-dim font-[family-name:var(--font-mono)]">
+                  {game.genres.slice(0, 3).join(' · ')}
                 </div>
               )}
 
-              {/* Metadata */}
-              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-text-dim font-[family-name:var(--font-mono)]">
-                {game.hoursPlayed > 0 && (
-                  <span className="text-text-muted">{game.hoursPlayed} hrs</span>
-                )}
-                <span>{SOURCE_LABELS[game.source]}</span>
-                <span>{tierConfig.icon} {tierConfig.label}</span>
-                {game.metacritic && <span>Metacritic: {game.metacritic}</span>}
-                {game.genres && game.genres.length > 0 && (
-                  <span>{game.genres.slice(0, 3).join(', ')}</span>
+              {/* Synopsis — from RAWG */}
+              {game.description && (
+                <p className="text-xs text-text-muted leading-relaxed">
+                  {game.description}
+                </p>
+              )}
+
+              {/* Descriptor — opinionated one-liner */}
+              {descriptor && (
+                <div
+                  className="text-sm leading-relaxed italic"
+                  style={{
+                    color: descriptor.confidence === 'curated' ? '#a78bfa'
+                      : descriptor.confidence === 'scored' ? 'var(--color-text-muted)'
+                      : 'var(--color-text-dim)',
+                  }}
+                >
+                  &ldquo;{descriptor.line}&rdquo;
+                </div>
+              )}
+
+              {/* HLTB + Mood Tags row */}
+              {(game.hltbMain || (game.moodTags && game.moodTags.length > 0)) && (
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {game.hltbMain && (
+                    <span className="text-[11px] font-[family-name:var(--font-mono)] text-text-dim px-1.5 py-0.5 rounded bg-bg-primary border border-border-subtle">
+                      🕐 ~{game.hltbMain}h to beat
+                    </span>
+                  )}
+                  {game.moodTags?.map((mood) => {
+                    const config = MOOD_TAG_CONFIG[mood];
+                    return config ? (
+                      <span
+                        key={mood}
+                        className="text-[11px] font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded"
+                        style={{
+                          backgroundColor: `${config.color}15`,
+                          color: config.color,
+                          border: `1px solid ${config.color}25`,
+                        }}
+                      >
+                        {config.icon} {config.label}
+                      </span>
+                    ) : null;
+                  })}
+                </div>
+              )}
+
+              {/* Playtime roast */}
+              {game.hoursPlayed > 0 && (() => {
+                const roast = getPlaytimeRoast(game.name, game.hoursPlayed);
+                return roast ? (
+                  <p className="text-[11px] text-amber-400/80 italic font-[family-name:var(--font-mono)]">
+                    {roast}
+                  </p>
+                ) : null;
+              })()}
+
+              {/* Notes — single editable field, auto-saves */}
+              <div className="relative">
+                <textarea
+                  value={game.notes}
+                  onChange={(e) => {
+                    updateGame(game.id, { notes: e.target.value });
+                    setNotesSaved(true);
+                    setTimeout(() => setNotesSaved(false), 2000);
+                  }}
+                  placeholder="Add notes..."
+                  aria-label="Game notes"
+                  className="w-full text-sm bg-bg-primary border border-border-subtle rounded-lg px-3 py-2 text-text-secondary placeholder-text-faint resize-none focus:outline-none focus:border-accent-purple"
+                  rows={2}
+                />
+                {notesSaved && (
+                  <span className="absolute right-2 bottom-2 text-[10px] text-green-400/70 font-[family-name:var(--font-mono)] animate-[fadeIn_150ms_ease-out]">
+                    saved ✓
+                  </span>
                 )}
               </div>
             </div>
           </div>
 
-          {/* Notes */}
-          {game.notes && (
-            <p className="text-xs text-text-muted leading-relaxed">{game.notes}</p>
-          )}
-
-          {/* Inline Edit Section */}
-          <div className="space-y-2 pt-1">
-            {/* Edit Notes */}
-            <textarea
-              value={game.notes}
-              onChange={(e) => updateGame(game.id, { notes: e.target.value })}
-              placeholder="Add notes..."
-              className="w-full text-xs bg-bg-primary border border-border-subtle rounded-lg px-3 py-2 text-text-secondary placeholder-text-faint resize-none focus:outline-none focus:border-accent-purple"
-              rows={2}
-            />
-
-            {/* Edit Vibes */}
-            <div className="flex flex-wrap gap-1.5">
-              {DEFAULT_VIBES.map((vibe) => (
-                <button
-                  key={vibe}
-                  onClick={() => {
-                    const newVibes = game.vibes.includes(vibe)
-                      ? game.vibes.filter((v) => v !== vibe)
-                      : [...game.vibes, vibe];
-                    updateGame(game.id, { vibes: newVibes });
-                  }}
-                  className={`px-2 py-0.5 rounded-full text-[11px] font-medium font-[family-name:var(--font-mono)] transition-opacity ${
-                    game.vibes.includes(vibe) ? 'opacity-100' : 'opacity-40 hover:opacity-70'
-                  }`}
-                  style={{
-                    backgroundColor: `${getVibeColor(vibe)}15`,
-                    color: getVibeColor(vibe),
-                    border: `1px solid ${getVibeColor(vibe)}30`,
-                  }}
-                >
-                  {vibe}
-                </button>
-              ))}
-            </div>
-
-            {/* Edit Category & Time Tier */}
-            <div className="flex gap-2">
+          {/* Row 2: Category, Time Tier, Launch — all inline */}
+          <div className="flex items-center gap-2 mt-3">
+            <div className="flex-1 min-w-0">
+              <label htmlFor={`shelf-${game.id}`} className="block text-[10px] text-text-faint font-[family-name:var(--font-mono)] mb-0.5 ml-1">Shelf</label>
               <select
+                id={`shelf-${game.id}`}
                 value={game.category}
                 onChange={(e) => updateGame(game.id, { category: e.target.value })}
-                className="flex-1 text-xs bg-bg-primary border border-border-subtle rounded-lg px-2 py-1.5 text-text-secondary focus:outline-none focus:border-accent-purple"
+                className="w-full text-sm bg-bg-primary border border-border-subtle rounded-lg px-2.5 py-2 text-text-secondary focus:outline-none focus:border-accent-purple"
               >
                 {categories.map((cat) => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
-              <button
-                onClick={() =>
-                  updateGame(game.id, {
-                    timeTier: game.timeTier === 'wind-down' ? 'deep-cut' : 'wind-down',
-                  })
-                }
-                className="px-3 py-1.5 text-xs rounded-lg border font-[family-name:var(--font-mono)]"
+            </div>
+            <div className="shrink-0">
+              <label htmlFor={`session-${game.id}`} className="block text-[10px] text-text-faint font-[family-name:var(--font-mono)] mb-0.5 ml-1">Session</label>
+              <select
+                id={`session-${game.id}`}
+                value={game.timeTier}
+                onChange={(e) => updateGame(game.id, { timeTier: e.target.value as TimeTier })}
+                className="text-sm bg-bg-primary border border-border-subtle rounded-lg px-2.5 py-2 text-text-secondary font-[family-name:var(--font-mono)] focus:outline-none focus:border-accent-purple"
+              >
+                {(Object.entries(TIME_TIER_CONFIG) as [TimeTier, typeof TIME_TIER_CONFIG[TimeTier]][]).map(
+                  ([tier, config]) => (
+                    <option key={tier} value={tier}>{config.icon} {config.label}</option>
+                  )
+                )}
+              </select>
+            </div>
+            {game.steamAppId && (
+              <a
+                href={`steam://run/${game.steamAppId}`}
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold rounded-lg shrink-0 transition-all hover:scale-[1.02] active:scale-[0.98]"
                 style={{
-                  borderColor: 'var(--color-border-subtle)',
-                  backgroundColor: 'var(--color-bg-primary)',
-                  color: 'var(--color-text-secondary)',
+                  backgroundColor: 'rgba(124, 58, 237, 0.15)',
+                  color: '#a78bfa',
+                  border: '1px solid rgba(124, 58, 237, 0.3)',
                 }}
               >
-                {TIME_TIER_CONFIG[game.timeTier].icon} {TIME_TIER_CONFIG[game.timeTier].label}
-              </button>
-            </div>
+                🚀 Launch
+              </a>
+            )}
           </div>
 
-          {/* Deals */}
-          <DealBadge gameName={game.name} />
+          {/* Row 4: Deals */}
+          <div className="mt-2">
+            <DealBadge gameName={game.name} />
+          </div>
 
-          {/* Launch button for Steam games */}
-          {game.steamAppId && (
-            <a
-              href={`steam://run/${game.steamAppId}`}
-              onClick={(e) => e.stopPropagation()}
-              className="flex items-center justify-center gap-2 w-full px-3 py-2 text-xs font-bold rounded-lg transition-all hover:scale-[1.01] active:scale-[0.99]"
-              style={{
-                background: 'linear-gradient(135deg, #7c3aed, #a78bfa)',
-                color: 'white',
-              }}
-            >
-              🚀 Launch in Steam
-            </a>
-          )}
+          {/* Row 5: Status-specific actions + bail + delete */}
+          <div className="flex items-center gap-2 mt-3 pt-2 border-t" style={{ borderColor: 'var(--color-border-subtle)' }}>
+            {game.status === 'played' && (
+              <>
+                <button
+                  onClick={handlePlayAgain}
+                  className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer"
+                  style={{
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    color: '#f59e0b',
+                    border: '1px solid rgba(245, 158, 11, 0.25)',
+                  }}
+                >
+                  🔥 Replay?
+                </button>
+                <button
+                  onClick={handleNewGamePlus}
+                  className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer"
+                  style={{
+                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                    color: '#38bdf8',
+                    border: '1px solid rgba(56, 189, 248, 0.25)',
+                  }}
+                >
+                  🎯 DLC / New Game+?
+                </button>
+              </>
+            )}
 
-          {/* Status-specific actions */}
-          {game.status === 'played' && (
-            <div className="flex gap-2 pt-1">
+            {(game.status === 'playing' || game.status === 'on-deck') && (
               <button
-                onClick={handlePlayAgain}
-                className="flex-1 px-3 py-2 text-xs font-medium rounded-lg transition-colors"
+                onClick={handleShelve}
+                className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer"
                 style={{
-                  backgroundColor: STATUS_CONFIG.playing.bg,
-                  color: STATUS_CONFIG.playing.color,
+                  backgroundColor: STATUS_CONFIG.buried.bg,
+                  color: STATUS_CONFIG.buried.color,
+                  border: `1px solid ${STATUS_CONFIG.buried.color}40`,
                 }}
               >
-                🔥 Play Again
+                📚 Return to The Pile
               </button>
+            )}
+
+            {game.status === 'bailed' && (
               <button
-                onClick={handleNewGamePlus}
-                className="flex-1 px-3 py-2 text-xs font-medium rounded-lg transition-colors"
+                onClick={handleUnBail}
+                className="px-3 py-1.5 text-xs font-medium rounded-lg transition-colors"
                 style={{
-                  backgroundColor: STATUS_CONFIG['on-deck'].bg,
-                  color: STATUS_CONFIG['on-deck'].color,
+                  backgroundColor: STATUS_CONFIG.buried.bg,
+                  color: STATUS_CONFIG.buried.color,
                 }}
               >
-                🎯 New Game +
+                Give it another shot?
               </button>
-            </div>
-          )}
+            )}
 
-          {game.status === 'bailed' && (
-            <button
-              onClick={handleUnBail}
-              className="w-full px-3 py-2 text-xs font-medium rounded-lg transition-colors"
-              style={{
-                backgroundColor: STATUS_CONFIG.buried.bg,
-                color: STATUS_CONFIG.buried.color,
-              }}
-            >
-              Give it another shot?
-            </button>
-          )}
-
-          {/* Delete */}
-          {!showDeleteConfirm ? (
-            <button
-              onClick={() => setShowDeleteConfirm(true)}
-              className="w-full px-3 py-1.5 text-[10px] text-text-faint hover:text-red-400 transition-colors font-[family-name:var(--font-mono)]"
-            >
-              Remove from library
-            </button>
-          ) : (
-            <div className="flex items-center gap-2 pt-1">
-              <span className="text-[10px] text-text-muted font-[family-name:var(--font-mono)]">
-                Gone forever. Sure?
-              </span>
+            {/* Bail / Eject — visible button for non-played, non-bailed games */}
+            {canBail && !showBailConfirm && (
               <button
-                onClick={() => {
-                  deleteGame(game.id);
-                  showToast(`${game.name} removed. It was never here.`);
+                onClick={() => setShowBailConfirm(true)}
+                className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97]"
+                style={{
+                  backgroundColor: 'rgba(239, 68, 68, 0.08)',
+                  color: '#ef4444',
+                  border: '1px dashed rgba(239, 68, 68, 0.3)',
                 }}
-                className="px-2.5 py-1 text-[10px] font-medium rounded-md bg-red-500/15 text-red-400 hover:bg-red-500/25 transition-colors"
+                title="Draw the line on this one"
               >
-                Delete
+                🚪 Give up on this one
               </button>
+            )}
+
+            {/* Bail confirmation inline */}
+            {canBail && showBailConfirm && (
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">Drawing the line?</span>
+                <button
+                  onClick={handleBail}
+                  className="px-2.5 py-1 text-xs font-bold rounded-md transition-all hover:scale-[1.02]"
+                  style={{
+                    backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                    color: '#ef4444',
+                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                  }}
+                >
+                  ✊ Yeah, I&apos;m done
+                </button>
+                <button
+                  onClick={() => setShowBailConfirm(false)}
+                  className="px-2 py-1 text-xs text-text-dim hover:text-text-muted transition-colors"
+                >
+                  Maybe later
+                </button>
+              </div>
+            )}
+
+            {/* Delete — pushed to the right */}
+            <div className="flex-1" />
+            {!showDeleteConfirm ? (
               <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="px-2.5 py-1 text-[10px] text-text-dim hover:text-text-muted transition-colors"
+                onClick={() => setShowDeleteConfirm(true)}
+                className="text-xs text-text-faint hover:text-red-400 transition-colors font-[family-name:var(--font-mono)]"
               >
-                Nah
+                Remove
               </button>
-            </div>
-          )}
+            ) : (
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">Remove forever? You&apos;d need to re-import or re-add this game manually.</span>
+                <button
+                  onClick={() => {
+                    deleteGame(game.id);
+                    showToast(`${game.name} removed. It was never here.`);
+                  }}
+                  className="px-2 py-1 text-xs font-medium rounded-md bg-red-500/15 text-red-400 hover:bg-red-500/25 transition-colors"
+                >
+                  Remove
+                </button>
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="px-2 py-1 text-xs text-text-dim hover:text-text-muted transition-colors"
+                >
+                  Maybe later
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

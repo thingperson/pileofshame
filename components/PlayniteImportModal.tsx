@@ -181,7 +181,7 @@ export default function PlayniteImportModal({ open, onClose }: PlayniteImportMod
         status: mapStatus(game.completionStatus),
         category: DEFAULT_CATEGORIES[0],
         vibes: [],
-        timeTier: game.playtimeHours > 20 ? 'deep-cut' : 'wind-down',
+        timeTier: game.playtimeHours > 50 ? 'marathon' : game.playtimeHours > 20 ? 'deep-cut' : game.playtimeHours > 5 ? 'wind-down' : 'quick-hit',
         notes: game.notes,
         hoursPlayed: game.playtimeHours,
         genres: game.genres.length > 0 ? game.genres : undefined,

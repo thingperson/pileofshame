@@ -15,7 +15,7 @@ const SECTIONS = [
     items: [
       {
         q: 'What is Pile Of Shame?',
-        a: 'Your gaming backlog, organized. Add your games, tag them however you want, then hit "Get Playing" and we\'ll pick one for you. No more staring at your library wondering what to play.',
+        a: 'Your gaming backlog, organized. Add your games, tag them however you want, then hit "What Should I Play?" and we\'ll pick one for you. No more staring at your library wondering what to play.',
       },
       {
         q: 'How do I add games?',
@@ -23,7 +23,7 @@ const SECTIONS = [
       },
       {
         q: 'What happens to my data?',
-        a: 'Everything saves to your browser automatically. Sign in with Discord or Google to sync across devices. Your local library stays either way — we never delete it.',
+        a: 'Everything saves to your browser automatically. Sign in with Discord or Google to sync across devices. Your local library stays either way. We never delete it.',
       },
     ],
   },
@@ -37,39 +37,39 @@ const SECTIONS = [
         a: 'The default. These are games you own (or want to play) but haven\'t started yet. Your pile. The whole point of being here.',
       },
       {
-        q: '🎯 Up Next',
-        a: 'Your numbered queue — games you\'ve earmarked to play soon, in order. Click a game\'s status badge to move it from Backlog → Up Next. They show up as 1. 2. 3. so you always know what\'s next.',
+        q: '🎯 Play Next',
+        a: 'Your numbered queue. Games you\'ve earmarked to play soon, in order. Click a game\'s status badge to move it from Backlog → Play Next. They show up as 1. 2. 3. so you always know what\'s next.',
       },
       {
         q: '🔥 Now Playing',
-        a: 'You\'re actively playing this one. These games get a special glow so they stand out. You can have multiple games here — we don\'t judge. When "Get Playing" picks a game and you hit "Let\'s go," it moves here automatically.',
+        a: 'You\'re actively playing this one. These games get a special glow so they stand out. You can have multiple games here. We don\'t judge. When "What Should I Play?" picks a game and you hit "Let\'s go," it moves here automatically.',
       },
       {
         q: '✅ Played',
-        a: 'Done. Finished. Credits rolled (or you decided you\'re done). This is terminal — no more status cycling. You can still "Play Again" or start a "New Game+" from the expanded card.',
+        a: 'Done. Finished. Credits rolled (or you decided you\'re done). No more status cycling. You can still "Play Again" or start a "New Game+" from the expanded card.',
       },
       {
         q: '🚪 Bailed',
-        a: 'Not for you. Long-press any status badge to bail on a game. No shame — life\'s too short. You can always "Give it another shot" later.',
+        a: 'Not for you. Long-press any status badge to bail on a game. No shame. Life\'s too short. You can always "Give it another shot" later.',
       },
       {
         q: 'How do I change a game\'s status?',
-        a: 'Click the colored status badge on any game card. It cycles forward: Backlog → Up Next → Now Playing → Played. Long-press the badge to bail. Hover to preview the next status.',
+        a: 'Click the colored status badge on any game card. It cycles forward: Backlog → Play Next → Now Playing → Played. Long-press the badge to bail. Hover to preview the next status.',
       },
     ],
   },
   {
     id: 'getplaying',
-    title: 'Get Playing (Reroll)',
+    title: 'What Should I Play?',
     icon: '🎲',
     items: [
       {
-        q: 'What does "Get Playing" do?',
-        a: 'It randomly picks a game from your backlog. Hit "Let\'s go" to commit and start playing, "Reroll" to try again, or "Not now" to walk away. Simple.',
+        q: 'What does "What Should I Play?" do?',
+        a: 'It randomly picks a game from your backlog. Hit "Let\'s go" to commit and start playing, "Roll Again" to try another, or "Not now" to walk away. Simple.',
       },
       {
         q: 'What are the different modes?',
-        a: '🎲 Get Playing — random from everything.\n🌙 Quick Session — only picks short games (wind-down tier, ~30-60 min sessions).\n🔥 Deep Cut — only picks long games (deep-cut tier, 2+ hour sessions).\n▶ Keep Playing — only picks from games you\'re already playing, for when you can\'t decide which one to continue.',
+        a: '🎲 What Should I Play? Random from everything.\n🌙 Quick Session: picks shorter games (Quick Hit + Wind-Down).\n🔥 Deep Cut: picks longer games (Deep Cut + Marathon).\n▶ Keep Playing: only picks from games you\'re already playing, for when you can\'t decide which one to continue.',
       },
       {
         q: 'What if I keep rerolling?',
@@ -84,11 +84,7 @@ const SECTIONS = [
     items: [
       {
         q: 'What are Categories?',
-        a: 'Folders for your games. Default ones: The Pile (your main backlog), Sleeping On (overlooked gems), Philosopher\'s Shelf (thought-provoking), Family Night, Comfort Food (familiar favorites), Hidden Gem Deep Cuts. You can create your own in settings.',
-      },
-      {
-        q: 'What are Vibes?',
-        a: 'Tags that describe the feel of a game: cozy, narrative, atmospheric, challenge, mindless, philosophical. Tap them in the expanded card to toggle. Use them to filter your library by mood.',
+        a: 'Folders for your games. Default ones: The Pile (your main backlog), Favorites, and Quick Wins. You can create your own in settings.',
       },
       {
         q: 'What are Time Tiers?',
@@ -107,7 +103,7 @@ const SECTIONS = [
     items: [
       {
         q: 'How does search work?',
-        a: 'Type in the search bar to filter by game name or notes. All other filters (category, vibe, time tier) stack on top — they\'re AND filters, so everything narrows together.',
+        a: 'Type in the search bar to filter by game name or notes. All other filters (shelf, mood, session length) stack on top. They\'re AND filters, so everything narrows together.',
       },
       {
         q: 'Why can\'t I see some games?',
@@ -115,7 +111,7 @@ const SECTIONS = [
       },
       {
         q: 'What does the platform preference do?',
-        a: 'In settings, set "I play on" to PC, Mac, Console, or Any. This filters what "Get Playing" picks — it won\'t suggest a PlayStation game if you set Mac, for example. Doesn\'t hide games from your library, just from the randomizer.',
+        a: 'In settings, set "I play on" to PC, Mac, Console, or Any. This filters what "What Should I Play?" picks. It won\'t suggest a PlayStation game if you set Mac, for example. Doesn\'t hide games from your library, just from the randomizer.',
       },
     ],
   },
@@ -130,7 +126,7 @@ const SECTIONS = [
       },
       {
         q: 'Are the deal links affiliate links?',
-        a: 'Some stores use CheapShark affiliate links — buying through them supports CheapShark (the free price API we use). We don\'t take a cut.',
+        a: 'Some stores use CheapShark affiliate links. Buying through them supports CheapShark (the free price API we use). We don\'t take a cut.',
       },
     ],
   },
@@ -218,7 +214,7 @@ export default function HelpModal({ open, onClose }: HelpModalProps) {
         {/* Footer */}
         <div className="px-5 py-3 border-t shrink-0" style={{ borderColor: 'var(--color-border-subtle)' }}>
           <p className="text-[10px] text-text-faint text-center font-[family-name:var(--font-mono)]">
-            Still stuck? Grab a game and start playing. That&apos;s literally the whole app.
+            Still stuck? We&apos;re always improving — check back, things get better all the time.
           </p>
         </div>
       </div>

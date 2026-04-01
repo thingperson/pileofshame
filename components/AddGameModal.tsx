@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { GameSource, TimeTier } from '@/lib/types';
 import { useStore } from '@/lib/store';
-import { DEFAULT_VIBES, getVibeColor, SOURCE_LABELS, TIME_TIER_CONFIG } from '@/lib/constants';
+import { SOURCE_LABELS, TIME_TIER_CONFIG } from '@/lib/constants';
 import { useToast } from './Toast';
 import GameSearch from './GameSearch';
 
@@ -64,11 +64,55 @@ export default function AddGameModal({ open, onClose }: AddGameModalProps) {
     onClose();
   };
 
-  const toggleVibe = (vibe: string) => {
-    setVibes((prev) =>
-      prev.includes(vibe) ? prev.filter((v) => v !== vibe) : [...prev, vibe]
-    );
-  };
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Escape to close + focus trapping
+  useEffect(() => {
+    if (!open) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        resetAndClose();
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        const modal = modalRef.current;
+        if (!modal) return;
+        const focusable = modal.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    // Focus first focusable element on mount
+    const modal = modalRef.current;
+    if (modal) {
+      const first = modal.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      first?.focus();
+    }
+
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [open]);
 
   if (!open) return null;
 
@@ -82,6 +126,9 @@ export default function AddGameModal({ open, onClose }: AddGameModalProps) {
 
       {/* Modal */}
       <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
         className="relative w-full max-w-md rounded-2xl border p-5 space-y-4 animate-[scaleIn_300ms_ease-out]"
         style={{
           backgroundColor: 'var(--color-bg-elevated)',
@@ -143,6 +190,7 @@ export default function AddGameModal({ open, onClose }: AddGameModalProps) {
             <select
               value={source}
               onChange={(e) => setSource(e.target.value as GameSource)}
+              aria-label="Game source"
               className="flex-1 text-sm bg-bg-primary border border-border-subtle rounded-lg px-2 py-2 text-text-secondary focus:outline-none focus:border-accent-purple"
             >
               {(Object.keys(SOURCE_LABELS) as GameSource[]).map((s) => (
@@ -152,38 +200,13 @@ export default function AddGameModal({ open, onClose }: AddGameModalProps) {
             <select
               value={category || categories[0]}
               onChange={(e) => setCategory(e.target.value)}
+              aria-label="Game category"
               className="flex-1 text-sm bg-bg-primary border border-border-subtle rounded-lg px-2 py-2 text-text-secondary focus:outline-none focus:border-accent-purple"
             >
               {categories.map((cat) => (
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
-          </div>
-
-          {/* Vibes */}
-          <div>
-            <label className="block text-xs text-text-dim font-[family-name:var(--font-mono)] mb-1.5">
-              Vibes
-            </label>
-            <div className="flex flex-wrap gap-1.5">
-              {DEFAULT_VIBES.map((vibe) => (
-                <button
-                  key={vibe}
-                  type="button"
-                  onClick={() => toggleVibe(vibe)}
-                  className={`px-2.5 py-1 rounded-full text-xs font-medium font-[family-name:var(--font-mono)] transition-opacity ${
-                    vibes.includes(vibe) ? 'opacity-100' : 'opacity-40 hover:opacity-70'
-                  }`}
-                  style={{
-                    backgroundColor: `${getVibeColor(vibe)}15`,
-                    color: getVibeColor(vibe),
-                    border: `1px solid ${getVibeColor(vibe)}30`,
-                  }}
-                >
-                  {vibe}
-                </button>
-              ))}
-            </div>
           </div>
 
           {/* Time Tier */}
@@ -217,6 +240,7 @@ export default function AddGameModal({ open, onClose }: AddGameModalProps) {
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Notes (optional)"
+            aria-label="Game notes"
             className="w-full text-sm bg-bg-primary border border-border-subtle rounded-lg px-3 py-2 text-text-secondary placeholder-text-faint resize-none focus:outline-none focus:border-accent-purple"
             rows={2}
           />

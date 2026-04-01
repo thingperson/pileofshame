@@ -3,7 +3,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useStore } from '@/lib/store';
 
-// Visitor counter — persists in localStorage
+// ============================
+// 90s MODE COMPONENTS
+// ============================
+
 function useVisitorCount() {
   const [count, setCount] = useState(0);
   useEffect(() => {
@@ -16,18 +19,16 @@ function useVisitorCount() {
   return count;
 }
 
-// Cursor sparkle trail
-function CursorTrail() {
+function CursorTrail({ emojis, className }: { emojis: string[]; className?: string }) {
   const [sparkles, setSparkles] = useState<{ id: number; x: number; y: number; emoji: string }[]>([]);
   const nextId = useRef(0);
   const lastTime = useRef(0);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     const now = Date.now();
-    if (now - lastTime.current < 50) return; // throttle
+    if (now - lastTime.current < 50) return;
     lastTime.current = now;
 
-    const emojis = ['✨', '⭐', '💫', '🌟', '✦'];
     const id = nextId.current++;
     const sparkle = {
       id,
@@ -41,7 +42,7 @@ function CursorTrail() {
     setTimeout(() => {
       setSparkles((prev) => prev.filter((s) => s.id !== id));
     }, 600);
-  }, []);
+  }, [emojis]);
 
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
@@ -53,7 +54,7 @@ function CursorTrail() {
       {sparkles.map((s) => (
         <span
           key={s.id}
-          className="absolute text-sm"
+          className={`absolute text-sm ${className || ''}`}
           style={{
             left: s.x,
             top: s.y,
@@ -68,7 +69,6 @@ function CursorTrail() {
   );
 }
 
-// Marquee banner
 function MarqueeBanner() {
   return (
     <div className="nineties-marquee">
@@ -88,7 +88,6 @@ function MarqueeBanner() {
   );
 }
 
-// Under construction banner
 function UnderConstruction() {
   return (
     <div className="under-construction">
@@ -97,7 +96,6 @@ function UnderConstruction() {
   );
 }
 
-// Webring footer
 function WebringFooter() {
   return (
     <div className="webring-bar">
@@ -111,7 +109,6 @@ function WebringFooter() {
   );
 }
 
-// Visitor counter display
 function VisitorCounter() {
   const count = useVisitorCount();
   return (
@@ -126,7 +123,6 @@ function VisitorCounter() {
   );
 }
 
-// Netscape badge
 function NetscapeBadge() {
   return (
     <div className="text-center py-2" style={{ background: '#000080' }}>
@@ -162,7 +158,6 @@ function NetscapeBadge() {
   );
 }
 
-// Guestbook (localStorage-based for now)
 interface GuestbookEntry {
   name: string;
   message: string;
@@ -180,7 +175,6 @@ function Guestbook() {
     if (saved) {
       try { setEntries(JSON.parse(saved)); } catch { /* ignore */ }
     } else {
-      // Seed with some fun defaults
       const defaults: GuestbookEntry[] = [
         { name: 'x_DarkLink_x', message: 'cool site!!! check out mine too!!', date: '1999-03-14' },
         { name: 'GameMaster2000', message: 'finally a place to track my games. bookmarked!!!', date: '1999-05-22' },
@@ -313,39 +307,265 @@ function Guestbook() {
   );
 }
 
-// Rainbow HR divider
 function RainbowHR() {
   return <div className="nineties-hr" style={{ height: '4px', background: 'linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00ff00, #0088ff, #8800ff, #ff0000)' }} />;
 }
 
-// Main 90s wrapper — renders all the 90s chrome around the app
-export default function NinetiesMode({ children }: { children: React.ReactNode }) {
-  const theme = useStore((s) => s.settings.theme);
-  const is90s = theme === '90s';
+// ============================
+// 80s SYNTHWAVE COMPONENTS
+// ============================
 
+function SynthwaveBanner() {
+  return (
+    <div className="synthwave-banner">
+      <div className="synthwave-banner-text">
+        P I L E &nbsp; O F &nbsp; S H A M E
+      </div>
+      <div className="synthwave-banner-sub">
+        ▸▸ INSERT COIN TO CONTINUE ▸▸
+      </div>
+    </div>
+  );
+}
+
+function ScanLines() {
+  return <div className="scanlines" />;
+}
+
+function VHSTracker() {
+  const [time, setTime] = useState('');
   useEffect(() => {
-    if (is90s) {
-      document.body.classList.add('theme-90s');
-    } else {
-      document.body.classList.remove('theme-90s');
-    }
-    return () => document.body.classList.remove('theme-90s');
-  }, [is90s]);
-
-  if (!is90s) return <>{children}</>;
+    const update = () => {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      setTime(`${h}:${m}:${s}`);
+    };
+    update();
+    const id = setInterval(update, 1000);
+    return () => clearInterval(id);
+  }, []);
 
   return (
-    <>
-      <CursorTrail />
-      <MarqueeBanner />
-      <UnderConstruction />
-      <RainbowHR />
-      {children}
-      <RainbowHR />
-      <Guestbook />
-      <VisitorCounter />
-      <NetscapeBadge />
-      <WebringFooter />
-    </>
+    <div className="vhs-tracker">
+      <span className="vhs-rec">● REC</span>
+      <span className="vhs-time">{time}</span>
+      <span className="vhs-sp">SP</span>
+    </div>
   );
+}
+
+function SynthwaveFooter() {
+  return (
+    <div className="synthwave-footer">
+      <div className="synthwave-footer-grid" />
+      <div className="synthwave-footer-text">
+        🌅 SUNSET DRIVE • PILE OF SHAME™ • EST. 2024 • TURBO EDITION
+      </div>
+    </div>
+  );
+}
+
+// ============================
+// FUTURE MODE COMPONENTS
+// ============================
+
+function FutureBanner() {
+  return (
+    <div className="future-banner">
+      <div className="future-banner-inner">
+        <span className="future-glyph">◈</span>
+        <span className="future-banner-text">PILE_OF_SHAME</span>
+        <span className="future-banner-version">v4.2.1</span>
+        <span className="future-glyph">◈</span>
+      </div>
+      <div className="future-status-bar">
+        <span>SYS.OK</span>
+        <span>BACKLOG.CRITICAL</span>
+        <span>SHAME.LEVEL: ELEVATED</span>
+      </div>
+    </div>
+  );
+}
+
+function HoloParticles() {
+  const [particles, setParticles] = useState<{ id: number; x: number; y: number; delay: number; size: number }[]>([]);
+
+  useEffect(() => {
+    const p = Array.from({ length: 30 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      delay: Math.random() * 8,
+      size: 1 + Math.random() * 3,
+    }));
+    setParticles(p);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-[1]" style={{ opacity: 0.4 }}>
+      {particles.map((p) => (
+        <div
+          key={p.id}
+          className="future-particle"
+          style={{
+            left: `${p.x}%`,
+            top: `${p.y}%`,
+            width: p.size,
+            height: p.size,
+            animationDelay: `${p.delay}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function FutureFooter() {
+  return (
+    <div className="future-footer">
+      <div className="future-footer-line" />
+      <div className="future-footer-text">
+        <span>◇ NEURAL.LINK: ACTIVE</span>
+        <span>◇ BACKLOG.AI: MONITORING</span>
+        <span>◇ SHAME.INDEX: CALCULATING...</span>
+      </div>
+    </div>
+  );
+}
+
+// ============================
+// DINO MODE COMPONENTS
+// ============================
+
+function DinoBanner() {
+  return (
+    <div className="dino-banner">
+      <div className="dino-banner-text">
+        <span className="dino-walk">🦕</span>
+        PILE OF SHAME
+        <span className="dino-walk-reverse">🦖</span>
+      </div>
+      <div className="dino-banner-sub">
+        RAWR means &ldquo;play your backlog&rdquo; in dinosaur
+      </div>
+    </div>
+  );
+}
+
+function DinoFooter() {
+  const footprints = ['🦶', '🦶', '🦶', '🦶', '🦶'];
+  return (
+    <div className="dino-footer">
+      <div className="dino-footprints">
+        {footprints.map((f, i) => (
+          <span key={i} className="dino-footprint" style={{ animationDelay: `${i * 0.3}s` }}>
+            {f}
+          </span>
+        ))}
+      </div>
+      <div className="dino-footer-text">
+        🌋 Backlog extinction event in progress 🌋
+      </div>
+    </div>
+  );
+}
+
+function DinoFact() {
+  const facts = [
+    'Did you know? A T-Rex could clear 47 games in a single sitting. Short arms, big heart.',
+    'Fun fact: Velociraptors were known to hoard games they never played. Sound familiar?',
+    'The Stegosaurus had a brain the size of a walnut. Still finished more games than you.',
+    'Pterodactyls had excellent taste in indie games. Mostly platformers.',
+    'The Brontosaurus backlog was 200 million years long. Yours is catching up.',
+    'Triceratops used their three horns to open three games at once. The original multitasker.',
+  ];
+  const [fact] = useState(() => facts[Math.floor(Math.random() * facts.length)]);
+
+  return (
+    <div className="dino-fact">
+      🦴 {fact}
+    </div>
+  );
+}
+
+// ============================
+// MAIN THEME WRAPPER
+// ============================
+
+const THEME_CLASSES = ['theme-90s', 'theme-80s', 'theme-future', 'theme-light', 'theme-dino'];
+
+export default function NinetiesMode({ children }: { children: React.ReactNode }) {
+  const theme = useStore((s) => s.settings.theme);
+
+  useEffect(() => {
+    // Remove all theme classes
+    THEME_CLASSES.forEach((cls) => document.body.classList.remove(cls));
+    // Add current theme class
+    const cls = `theme-${theme}`;
+    if (THEME_CLASSES.includes(cls)) {
+      document.body.classList.add(cls);
+    }
+
+    return () => {
+      THEME_CLASSES.forEach((c) => document.body.classList.remove(c));
+    };
+  }, [theme]);
+
+  if (theme === '90s') {
+    return (
+      <>
+        <CursorTrail emojis={['✨', '⭐', '💫', '🌟', '✦']} />
+        <MarqueeBanner />
+        <UnderConstruction />
+        <RainbowHR />
+        {children}
+        <RainbowHR />
+        <Guestbook />
+        <VisitorCounter />
+        <NetscapeBadge />
+        <WebringFooter />
+      </>
+    );
+  }
+
+  if (theme === '80s') {
+    return (
+      <>
+        <ScanLines />
+        <VHSTracker />
+        <CursorTrail emojis={['▲', '◆', '★', '▶', '●']} className="synthwave-trail" />
+        <SynthwaveBanner />
+        {children}
+        <SynthwaveFooter />
+      </>
+    );
+  }
+
+  if (theme === 'future') {
+    return (
+      <>
+        <HoloParticles />
+        <FutureBanner />
+        {children}
+        <FutureFooter />
+      </>
+    );
+  }
+
+  if (theme === 'dino') {
+    return (
+      <>
+        <CursorTrail emojis={['🦕', '🦖', '🌿', '🦴', '🥚']} />
+        <DinoBanner />
+        {children}
+        <DinoFact />
+        <DinoFooter />
+      </>
+    );
+  }
+
+  // dark and light — no chrome, just CSS variables
+  return <>{children}</>;
 }

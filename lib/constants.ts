@@ -2,11 +2,8 @@ import { GameStatus, GameSource, TimeTier } from './types';
 
 export const DEFAULT_CATEGORIES = [
   'The Pile',
-  'Sleeping On',
-  "Philosopher's Shelf",
-  'Family Night',
-  'Comfort Food',
-  'Hidden Gem Deep Cuts',
+  'Favorites',
+  'Quick Wins',
 ];
 
 export const DEFAULT_VIBES = [
@@ -44,7 +41,7 @@ export const STATUS_CONFIG: Record<GameStatus, {
   bg: string;
 }> = {
   buried: { label: 'Backlog', icon: '📚', asciiIcon: '[=]', color: '#64748b', bg: '#1e293b' },
-  'on-deck': { label: 'Up Next', icon: '🎯', asciiIcon: '>>>', color: '#38bdf8', bg: '#082f49' },
+  'on-deck': { label: 'Play Next', icon: '🎯', asciiIcon: '>>>', color: '#38bdf8', bg: '#082f49' },
   playing: { label: 'Now Playing', icon: '🔥', asciiIcon: '(~)', color: '#f59e0b', bg: '#422006' },
   played: { label: 'Played', icon: '✅', asciiIcon: '[x]', color: '#22c55e', bg: '#052e16' },
   bailed: { label: 'Bailed', icon: '🚪', asciiIcon: '[!]', color: '#ef4444', bg: '#450a0a' },
@@ -73,8 +70,10 @@ export const SOURCE_LABELS: Record<GameSource, string> = {
 };
 
 export const TIME_TIER_CONFIG: Record<TimeTier, { label: string; icon: string; description: string }> = {
-  'wind-down': { label: 'Wind-Down', icon: '🌙', description: '30–60 min sessions' },
-  'deep-cut': { label: 'Deep Cut', icon: '🔥', description: '2+ hours' },
+  'quick-hit': { label: 'Quick Hit', icon: '⚡', description: '20 min brain-off session' },
+  'wind-down': { label: 'Wind-Down', icon: '🌙', description: '30–60 min, unwind mode' },
+  'deep-cut': { label: 'Deep Cut', icon: '🔥', description: 'Clear the schedule, 2–3 hrs' },
+  'marathon': { label: 'Marathon', icon: '🏔️', description: 'This IS the plan tonight' },
 };
 
 export const REROLL_MESSAGES: Record<number, string> = {
@@ -85,11 +84,8 @@ export const REROLL_MESSAGES: Record<number, string> = {
 
 export const CATEGORY_ICONS: Record<string, string> = {
   'The Pile': '🗻',
-  'Sleeping On': '💤',
-  "Philosopher's Shelf": '🧠',
-  'Family Night': '🎮',
-  'Comfort Food': '🍜',
-  'Hidden Gem Deep Cuts': '💎',
+  'Favorites': '⭐',
+  'Quick Wins': '⚡',
 };
 
 export function getVibeColor(vibe: string): string {

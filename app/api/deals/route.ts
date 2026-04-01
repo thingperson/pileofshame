@@ -5,6 +5,13 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const CHEAPSHARK_BASE = 'https://www.cheapshark.com/api/1.0';
 
+const FETCH_OPTS: RequestInit = {
+  headers: {
+    'User-Agent': 'PileOfShame/1.0 (https://pileofsha.me)',
+    'Accept': 'application/json',
+  },
+};
+
 // Store ID → affiliate-friendly store names
 const STORE_MAP: Record<string, { name: string; isAffiliate: boolean }> = {
   '1': { name: 'Steam', isAffiliate: false },
@@ -43,10 +50,12 @@ export async function GET(req: NextRequest) {
 
       // First, search for the game to get its CheapShark ID
       const searchRes = await fetch(
-        `${CHEAPSHARK_BASE}/games?title=${encodeURIComponent(title)}&limit=1`
+        `${CHEAPSHARK_BASE}/games?title=${encodeURIComponent(title)}&limit=1`,
+        FETCH_OPTS,
       );
       if (!searchRes.ok) {
-        return NextResponse.json({ error: 'CheapShark search failed' }, { status: 502 });
+        console.error(`CheapShark search failed: ${searchRes.status} ${searchRes.statusText}`);
+        return NextResponse.json({ error: `CheapShark search failed: ${searchRes.status}` }, { status: 502 });
       }
 
       const games = await searchRes.json();
@@ -58,7 +67,8 @@ export async function GET(req: NextRequest) {
 
       // Now get deals for this specific game
       const dealsRes = await fetch(
-        `${CHEAPSHARK_BASE}/games?id=${game.gameID}`
+        `${CHEAPSHARK_BASE}/games?id=${game.gameID}`,
+        FETCH_OPTS,
       );
       if (!dealsRes.ok) {
         return NextResponse.json({ results: [] });
@@ -105,7 +115,8 @@ export async function GET(req: NextRequest) {
       for (const title of titleList) {
         try {
           const searchRes = await fetch(
-            `${CHEAPSHARK_BASE}/deals?title=${encodeURIComponent(title.trim())}&onSale=1&sortBy=Price&pageSize=1`
+            `${CHEAPSHARK_BASE}/deals?title=${encodeURIComponent(title.trim())}&onSale=1&sortBy=Price&pageSize=1`,
+            FETCH_OPTS,
           );
           if (searchRes.ok) {
             const deals = await searchRes.json();
@@ -134,40 +145,36 @@ export async function GET(req: NextRequest) {
     }
 
     // Price lookup: get retail prices for a list of games (for backlog value estimation)
+    // Uses the /deals endpoint — single call per game, returns normalPrice (retail)
     if (action === 'prices') {
       const titles = searchParams.get('titles');
       if (!titles) {
         return NextResponse.json({ error: 'titles required (comma-separated)' }, { status: 400 });
       }
 
-      const titleList = titles.split(',').slice(0, 25); // max 25
+      const titleList = titles.split(',').slice(0, 15); // max 15 to stay fast
       const prices: { title: string; retailPrice: number }[] = [];
 
       for (const title of titleList) {
         try {
           const searchRes = await fetch(
-            `${CHEAPSHARK_BASE}/games?title=${encodeURIComponent(title.trim())}&limit=1`
+            `${CHEAPSHARK_BASE}/deals?title=${encodeURIComponent(title.trim())}&pageSize=1`,
+            FETCH_OPTS,
           );
           if (searchRes.ok) {
-            const games = await searchRes.json();
-            if (games && games.length > 0) {
-              const cheapest = parseFloat(games[0].cheapest);
-              // Use cheapest as a proxy — it's usually close to retail for non-sale
-              // The game listing also has the retail context
-              const gameRes = await fetch(`${CHEAPSHARK_BASE}/games?id=${games[0].gameID}`);
-              if (gameRes.ok) {
-                const gameData = await gameRes.json();
-                const topDeal = gameData.deals?.[0];
-                if (topDeal) {
-                  prices.push({
-                    title: title.trim(),
-                    retailPrice: parseFloat(topDeal.retailPrice),
-                  });
-                }
+            const deals = await searchRes.json();
+            if (deals && deals.length > 0) {
+              const normalPrice = parseFloat(deals[0].normalPrice);
+              if (normalPrice > 0) {
+                prices.push({
+                  title: title.trim(),
+                  retailPrice: normalPrice,
+                });
               }
             }
           }
-          await new Promise((r) => setTimeout(r, 150));
+          // Be respectful — 100ms between requests
+          await new Promise((r) => setTimeout(r, 100));
         } catch {
           // skip failures
         }

@@ -4,13 +4,13 @@
   --color-bg-primary: #0a0a0f;
   --color-bg-card: #111118;
   --color-bg-elevated: #1e293b;
-  --color-border-subtle: #1a1a24;
-  --color-border-active: #334155;
+  --color-border-subtle: #232333;
+  --color-border-active: #3d4f63;
   --color-text-primary: #f8fafc;
   --color-text-secondary: #e2e8f0;
-  --color-text-muted: #94a3b8;
-  --color-text-dim: #64748b;
-  --color-text-faint: #475569;
+  --color-text-muted: #b0bec9;
+  --color-text-dim: #8896a7;
+  --color-text-faint: #7e8fa0;
   --color-accent-purple: #a78bfa;
   --color-accent-pink: #f9a8d4;
 
@@ -85,6 +85,11 @@ body::before {
   to { opacity: 1; }
 }
 
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
 @keyframes scaleIn {
   from {
     opacity: 0;
@@ -93,6 +98,17 @@ body::before {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -364,4 +380,691 @@ body::before {
 .guestbook-entry .gb-date {
   color: #808080;
   font-size: 10px;
+}
+
+/* ======================================
+   🌆 80s MODE — SYNTHWAVE / RETROWAVE
+   ====================================== */
+
+@keyframes synthwave-glow {
+  0%, 100% { text-shadow: 0 0 10px #ff6ec7, 0 0 20px #ff6ec7, 0 0 40px #ff6ec7; }
+  50% { text-shadow: 0 0 5px #ff6ec7, 0 0 10px #ff6ec7, 0 0 20px #ff6ec7; }
+}
+
+@keyframes synthwave-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes grid-scroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 40px; }
+}
+
+@keyframes float-up {
+  0% { transform: translateY(0); opacity: 0.4; }
+  50% { opacity: 0.8; }
+  100% { transform: translateY(-100vh); opacity: 0; }
+}
+
+@keyframes vhs-flicker {
+  0%, 95%, 100% { opacity: 1; }
+  96% { opacity: 0.8; transform: translateX(2px); }
+  97% { opacity: 1; transform: translateX(-1px); }
+  98% { opacity: 0.9; transform: translateX(0); }
+}
+
+.theme-80s {
+  --color-bg-primary: #0d0221;
+  --color-bg-card: #1a0a3e;
+  --color-bg-elevated: #241359;
+  --color-border-subtle: #3d1f8e;
+  --color-border-active: #ff6ec7;
+  --color-text-primary: #f0e4ff;
+  --color-text-secondary: #d4b8ff;
+  --color-text-muted: #a878e8;
+  --color-text-dim: #7c4dbe;
+  --color-text-faint: #5a3399;
+  --color-accent-purple: #ff6ec7;
+  --color-accent-pink: #ff2975;
+
+  --color-status-buried: #7c4dbe;
+  --color-status-buried-bg: #241359;
+  --color-status-on-deck: #00d4ff;
+  --color-status-on-deck-bg: #0a2a4a;
+  --color-status-playing: #ff6ec7;
+  --color-status-playing-bg: #3d0a2e;
+  --color-status-played: #00ff9f;
+  --color-status-played-bg: #0a3d2e;
+  --color-status-bailed: #ff2975;
+  --color-status-bailed-bg: #3d0a1a;
+
+  background: linear-gradient(180deg, #0d0221 0%, #150535 40%, #1a0a3e 100%) !important;
+  background-attachment: fixed !important;
+}
+
+.theme-80s::before {
+  display: none !important;
+}
+
+/* Chrome text glow */
+.theme-80s h1 {
+  background: linear-gradient(180deg, #ff6ec7 0%, #ff2975 50%, #ff6ec7 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  filter: drop-shadow(0 0 8px rgba(255, 110, 199, 0.5));
+}
+
+.theme-80s h2, .theme-80s h3 {
+  text-shadow: 0 0 10px rgba(255, 110, 199, 0.4);
+}
+
+/* Neon border glow on cards */
+.theme-80s .group {
+  border-color: rgba(255, 110, 199, 0.2) !important;
+  border-left-color: rgba(255, 110, 199, 0.2) !important;
+  box-shadow: 0 0 15px rgba(255, 110, 199, 0.05), inset 0 0 15px rgba(255, 110, 199, 0.02);
+}
+.theme-80s .group:hover {
+  box-shadow: 0 0 20px rgba(255, 110, 199, 0.12), inset 0 0 20px rgba(255, 110, 199, 0.04);
+}
+
+/* Neon buttons */
+.theme-80s button {
+  border-color: rgba(255, 110, 199, 0.3) !important;
+}
+.theme-80s button:hover {
+  box-shadow: 0 0 12px rgba(255, 110, 199, 0.2);
+}
+
+/* Scanlines overlay */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+  animation: vhs-flicker 8s infinite;
+}
+
+/* VHS tracker top-right */
+.vhs-tracker {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  pointer-events: none;
+}
+.vhs-rec {
+  color: #ff2975;
+  animation: synthwave-pulse 1s infinite;
+  font-weight: bold;
+}
+.vhs-time {
+  color: #f0e4ff;
+  letter-spacing: 2px;
+}
+.vhs-sp {
+  color: #7c4dbe;
+  font-weight: bold;
+}
+
+/* Synthwave banner */
+.synthwave-banner {
+  text-align: center;
+  padding: 20px 16px 16px;
+  background: linear-gradient(180deg, #150535, transparent);
+  position: relative;
+  overflow: hidden;
+}
+.synthwave-banner-text {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 8px;
+  background: linear-gradient(180deg, #ff6ec7, #ff2975, #ff6ec7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: synthwave-glow 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(255, 110, 199, 0.6));
+}
+.synthwave-banner-sub {
+  color: #00d4ff;
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  letter-spacing: 4px;
+  margin-top: 6px;
+  animation: synthwave-pulse 2s ease-in-out infinite;
+}
+
+/* Synthwave footer — perspective grid */
+.synthwave-footer {
+  position: relative;
+  height: 120px;
+  overflow: hidden;
+  background: linear-gradient(180deg, transparent, #0d0221);
+}
+.synthwave-footer-grid {
+  position: absolute;
+  bottom: 0;
+  left: -50%;
+  right: -50%;
+  height: 80px;
+  background:
+    linear-gradient(90deg, rgba(255, 110, 199, 0.15) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255, 110, 199, 0.15) 1px, transparent 1px);
+  background-size: 40px 20px;
+  transform: perspective(200px) rotateX(45deg);
+  transform-origin: bottom;
+  animation: grid-scroll 2s linear infinite;
+}
+.synthwave-footer-text {
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #ff6ec7;
+  text-shadow: 0 0 10px rgba(255, 110, 199, 0.5);
+}
+
+/* Synthwave cursor trail */
+.synthwave-trail {
+  color: #ff6ec7 !important;
+  text-shadow: 0 0 6px #ff6ec7;
+}
+
+
+/* ======================================
+   🔮 FUTURE MODE — HOLOGRAPHIC / SCI-FI
+   ====================================== */
+
+@keyframes holo-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes future-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-100vh); }
+}
+
+@keyframes future-scan {
+  0% { top: -2px; }
+  100% { top: 100%; }
+}
+
+@keyframes future-glow-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+.theme-future {
+  --color-bg-primary: #05080f;
+  --color-bg-card: #0a1020;
+  --color-bg-elevated: #0f1830;
+  --color-border-subtle: #1a2a4a;
+  --color-border-active: #00f0ff;
+  --color-text-primary: #e0f4ff;
+  --color-text-secondary: #a0d4f0;
+  --color-text-muted: #6aadcc;
+  --color-text-dim: #3d7a99;
+  --color-text-faint: #2a5570;
+  --color-accent-purple: #00f0ff;
+  --color-accent-pink: #ff00aa;
+
+  --color-status-buried: #3d7a99;
+  --color-status-buried-bg: #0a1a2a;
+  --color-status-on-deck: #00f0ff;
+  --color-status-on-deck-bg: #0a1a30;
+  --color-status-playing: #ff00aa;
+  --color-status-playing-bg: #200a1a;
+  --color-status-played: #00ff88;
+  --color-status-played-bg: #0a2a1a;
+  --color-status-bailed: #ff3355;
+  --color-status-bailed-bg: #200a10;
+
+  background: #05080f !important;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(0, 240, 255, 0.03) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 50%, rgba(255, 0, 170, 0.03) 0%, transparent 60%) !important;
+  background-attachment: fixed !important;
+}
+
+.theme-future::before {
+  display: none !important;
+}
+
+/* Holographic text effect on titles */
+.theme-future h1 {
+  background: linear-gradient(90deg, #00f0ff, #ff00aa, #00f0ff) !important;
+  background-size: 200% 100% !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  animation: holo-shift 4s ease-in-out infinite;
+}
+
+.theme-future h2, .theme-future h3 {
+  color: #00f0ff;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+}
+
+/* Cards — thin border glow */
+.theme-future .group {
+  border-color: rgba(0, 240, 255, 0.12) !important;
+  border-left-color: rgba(0, 240, 255, 0.12) !important;
+  position: relative;
+  overflow: hidden;
+}
+.theme-future .group::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00f0ff, transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.theme-future .group:hover::after {
+  opacity: 1;
+}
+
+/* Buttons — cyan accent */
+.theme-future button {
+  border-color: rgba(0, 240, 255, 0.2) !important;
+}
+.theme-future button:hover {
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.15);
+  border-color: rgba(0, 240, 255, 0.4) !important;
+}
+
+/* Future particles */
+.future-particle {
+  position: absolute;
+  background: #00f0ff;
+  border-radius: 50%;
+  animation: future-float 12s linear infinite;
+}
+
+/* Future banner */
+.future-banner {
+  border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+  padding: 12px 16px 8px;
+  background: linear-gradient(180deg, rgba(0, 240, 255, 0.04), transparent);
+}
+.future-banner-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.future-glyph {
+  color: #00f0ff;
+  font-size: 14px;
+  animation: future-glow-pulse 3s ease-in-out infinite;
+}
+.future-banner-text {
+  font-family: "Courier New", monospace;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  background: linear-gradient(90deg, #00f0ff, #ff00aa, #00f0ff);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: holo-shift 4s ease-in-out infinite;
+}
+.future-banner-version {
+  font-family: "Courier New", monospace;
+  font-size: 10px;
+  color: #3d7a99;
+  letter-spacing: 2px;
+}
+.future-status-bar {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 6px;
+  font-family: "Courier New", monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #3d7a99;
+}
+.future-status-bar span:nth-child(2) {
+  color: #ff3355;
+}
+
+/* Future footer */
+.future-footer {
+  margin-top: 24px;
+  padding: 16px;
+  border-top: 1px solid rgba(0, 240, 255, 0.1);
+}
+.future-footer-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #00f0ff, transparent);
+  margin-bottom: 12px;
+  opacity: 0.3;
+}
+.future-footer-text {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  font-family: "Courier New", monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #2a5570;
+}
+
+/* Future scrollbar */
+.theme-future ::-webkit-scrollbar-thumb {
+  background: rgba(0, 240, 255, 0.2);
+  border-radius: 2px;
+}
+.theme-future ::-webkit-scrollbar-track {
+  background: rgba(0, 240, 255, 0.05);
+}
+
+
+/* ======================================
+   ☀️ LIGHT MODE
+   ====================================== */
+
+.theme-light {
+  --color-bg-primary: #f4f5f7;
+  --color-bg-card: #ffffff;
+  --color-bg-elevated: #edeef1;
+  --color-border-subtle: #d4d6dc;
+  --color-border-active: #7c3aed;
+  --color-text-primary: #111827;
+  --color-text-secondary: #1f2937;
+  --color-text-muted: #4b5563;
+  --color-text-dim: #6b7280;
+  --color-text-faint: #9ca3af;
+  --color-accent-purple: #7c3aed;
+  --color-accent-pink: #ec4899;
+
+  --color-status-buried: #6b7280;
+  --color-status-buried-bg: #f3f4f6;
+  --color-status-on-deck: #2563eb;
+  --color-status-on-deck-bg: #dbeafe;
+  --color-status-playing: #d97706;
+  --color-status-playing-bg: #fef3c7;
+  --color-status-played: #16a34a;
+  --color-status-played-bg: #dcfce7;
+  --color-status-bailed: #dc2626;
+  --color-status-bailed-bg: #fee2e2;
+
+  background: #f4f5f7 !important;
+}
+
+.theme-light::before {
+  display: none !important;
+}
+
+/* Light mode cards — shadow instead of glow, solid backgrounds */
+.theme-light .group {
+  background-color: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  border-color: #d4d6dc !important;
+}
+.theme-light .group:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* All text in light mode needs dark colors */
+.theme-light .text-text-primary,
+.theme-light [class*="text-text-primary"] {
+  color: #111827 !important;
+}
+
+/* Fix select/input/textarea backgrounds */
+.theme-light select,
+.theme-light input,
+.theme-light textarea {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  border-color: #d4d6dc !important;
+}
+.theme-light select option {
+  background-color: #ffffff;
+  color: #111827;
+}
+
+/* Fix filter bar buttons/dropdowns */
+.theme-light .bg-bg-primary {
+  background-color: #f4f5f7 !important;
+}
+.theme-light .bg-bg-card {
+  background-color: #ffffff !important;
+}
+
+/* Fix elevated panels (stats, modals) */
+.theme-light [style*="bg-elevated"],
+.theme-light [style*="color-bg-elevated"] {
+  background-color: #edeef1 !important;
+}
+
+/* Fix gradient buttons in light mode — keep white text */
+.theme-light button[style*="linear-gradient"] {
+  color: white !important;
+}
+
+/* Fix modals and dropdowns */
+.theme-light [class*="rounded-2xl"],
+.theme-light [class*="rounded-xl"] {
+  color: #111827;
+}
+
+/* Settings menu / dropdown panels */
+.theme-light .z-40 {
+  background-color: #ffffff !important;
+  border-color: #d4d6dc !important;
+}
+
+/* Status badge text legibility */
+.theme-light button[style*="status"] {
+  font-weight: 600 !important;
+}
+
+/* Light scrollbar */
+.theme-light ::-webkit-scrollbar-thumb {
+  background: #c4c4d0;
+  border-radius: 4px;
+}
+.theme-light ::-webkit-scrollbar-track {
+  background: #f0f0f5;
+}
+
+
+/* ======================================
+   🦕 DINO MODE — JURASSIC THEME
+   ====================================== */
+
+@keyframes dino-walk {
+  0%, 100% { transform: translateX(0) scaleX(1); }
+  25% { transform: translateX(4px) scaleX(1); }
+  50% { transform: translateX(8px) scaleX(1); }
+  75% { transform: translateX(4px) scaleX(1); }
+}
+@keyframes dino-walk-reverse {
+  0%, 100% { transform: translateX(0) scaleX(-1); }
+  25% { transform: translateX(-4px) scaleX(-1); }
+  50% { transform: translateX(-8px) scaleX(-1); }
+  75% { transform: translateX(-4px) scaleX(-1); }
+}
+@keyframes dino-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes footprint-fade {
+  0% { opacity: 0; transform: scale(0.5); }
+  30% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
+.theme-dino {
+  --color-bg-primary: #1a2e1a;
+  --color-bg-card: #233323;
+  --color-bg-elevated: #2d4a2d;
+  --color-border-subtle: #3d5a3d;
+  --color-border-active: #6dbf6d;
+  --color-text-primary: #e8f5e8;
+  --color-text-secondary: #c4dcc4;
+  --color-text-muted: #8fb88f;
+  --color-text-dim: #6d9a6d;
+  --color-text-faint: #4d7a4d;
+  --color-accent-purple: #6dbf6d;
+  --color-accent-pink: #d4a24e;
+
+  --color-status-buried: #6d9a6d;
+  --color-status-buried-bg: #1a2e1a;
+  --color-status-on-deck: #4a9fd4;
+  --color-status-on-deck-bg: #1a2a3a;
+  --color-status-playing: #d4a24e;
+  --color-status-playing-bg: #2e2a1a;
+  --color-status-played: #6dbf6d;
+  --color-status-played-bg: #1a2e1a;
+  --color-status-bailed: #d45a4a;
+  --color-status-bailed-bg: #2e1a1a;
+
+  background: #1a2e1a !important;
+  background-image:
+    radial-gradient(ellipse at 30% 80%, rgba(109, 191, 109, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 20%, rgba(212, 162, 78, 0.04) 0%, transparent 50%) !important;
+  background-attachment: fixed !important;
+}
+
+.theme-dino::before {
+  display: none !important;
+}
+
+/* Dino heading — earthy glow */
+.theme-dino h1 {
+  color: #d4a24e !important;
+  text-shadow: 0 0 10px rgba(212, 162, 78, 0.3);
+}
+.theme-dino h2, .theme-dino h3 {
+  color: #6dbf6d;
+}
+
+/* Cards — leaf-like borders */
+.theme-dino .group {
+  border-color: rgba(109, 191, 109, 0.2) !important;
+  border-left-color: rgba(109, 191, 109, 0.2) !important;
+}
+.theme-dino .group:hover {
+  border-color: rgba(109, 191, 109, 0.4) !important;
+  box-shadow: 0 0 15px rgba(109, 191, 109, 0.08);
+}
+
+/* Buttons */
+.theme-dino button {
+  border-color: rgba(109, 191, 109, 0.25) !important;
+}
+
+/* Dino banner */
+.dino-banner {
+  text-align: center;
+  padding: 16px;
+  background: linear-gradient(180deg, rgba(212, 162, 78, 0.08), transparent);
+  border-bottom: 1px solid rgba(109, 191, 109, 0.15);
+}
+.dino-banner-text {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #d4a24e;
+  text-shadow: 0 0 15px rgba(212, 162, 78, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.dino-walk {
+  display: inline-block;
+  animation: dino-walk 2s ease-in-out infinite;
+  font-size: 32px;
+}
+.dino-walk-reverse {
+  display: inline-block;
+  animation: dino-walk-reverse 2.5s ease-in-out infinite;
+  font-size: 32px;
+}
+.dino-banner-sub {
+  color: #6dbf6d;
+  font-size: 12px;
+  font-style: italic;
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+/* Dino fact */
+.dino-fact {
+  text-align: center;
+  padding: 12px 24px;
+  font-size: 13px;
+  color: #8fb88f;
+  font-style: italic;
+  border-top: 1px solid rgba(109, 191, 109, 0.1);
+  margin-top: 16px;
+}
+
+/* Dino footer */
+.dino-footer {
+  text-align: center;
+  padding: 16px;
+}
+.dino-footprints {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 8px;
+}
+.dino-footprint {
+  font-size: 18px;
+  opacity: 0.3;
+  animation: dino-bounce 1.5s ease-in-out infinite;
+}
+.dino-footer-text {
+  font-size: 11px;
+  color: #6d9a6d;
+  letter-spacing: 2px;
+}
+
+/* Dino scrollbar */
+.theme-dino ::-webkit-scrollbar-thumb {
+  background: rgba(109, 191, 109, 0.25);
+  border-radius: 4px;
+}
+.theme-dino ::-webkit-scrollbar-track {
+  background: rgba(109, 191, 109, 0.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

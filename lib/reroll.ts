@@ -45,9 +45,9 @@ export function getEligibleGames(games: Game[], mode: RerollMode, platformPrefer
       case 'anything':
         return true;
       case 'quick-session':
-        return game.timeTier === 'wind-down';
+        return game.timeTier === 'quick-hit' || game.timeTier === 'wind-down';
       case 'deep-cut':
-        return game.timeTier === 'deep-cut';
+        return game.timeTier === 'deep-cut' || game.timeTier === 'marathon';
       case 'continue':
         return game.status === 'playing';
       default:

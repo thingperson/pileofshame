@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Game } from '@/lib/types';
 import { useStore } from '@/lib/store';
-import { STATUS_CONFIG, REROLL_MESSAGES, TIME_TIER_CONFIG, getVibeColor } from '@/lib/constants';
+import { STATUS_CONFIG, REROLL_MESSAGES, TIME_TIER_CONFIG } from '@/lib/constants';
+import { getGameDescriptor } from '@/lib/descriptors';
 import { REROLL_MODES, RerollMode, getEligibleGames, pickRandom } from '@/lib/reroll';
 import { useToast } from './Toast';
 
@@ -125,6 +126,55 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, skipModePicker]);
 
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Escape to close + focus trapping
+  useEffect(() => {
+    if (!open) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleNotNow();
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        const modal = modalRef.current;
+        if (!modal) return;
+        const focusable = modal.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    const modal = modalRef.current;
+    if (modal) {
+      const first = modal.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      first?.focus();
+    }
+
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [open]);
+
   if (!open) return null;
 
   const forcedPicks = reroll.lastThreePicks;
@@ -139,6 +189,9 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
 
       {/* Modal */}
       <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
         className="relative w-full max-w-lg rounded-2xl border overflow-hidden"
         style={{
           backgroundColor: 'var(--color-bg-elevated)',
@@ -149,7 +202,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
         {/* Header */}
         <div className="px-5 pt-5 pb-3 text-center">
           <h2 className="text-2xl font-extrabold text-text-primary tracking-tight">
-            🎲 Reroll
+            🎲 {currentPick ? 'Roll Again' : 'What Should I Play?'}
           </h2>
           {currentPick ? (
             <p className="text-xs text-text-dim mt-1 font-[family-name:var(--font-mono)]">
@@ -219,38 +272,54 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
 
             {/* Game reveal */}
             <div
-              className="rounded-xl border p-5 mb-4 text-center"
+              className="rounded-xl border overflow-hidden mb-4 text-center"
               style={{
                 backgroundColor: 'var(--color-bg-card)',
                 borderColor: 'var(--color-border-active)',
               }}
             >
+              {/* Cover art hero */}
+              {currentPick.coverUrl ? (
+                <div className="relative w-full h-40 sm:h-48 overflow-hidden">
+                  <img
+                    src={currentPick.coverUrl}
+                    alt={currentPick.name}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-card)] via-transparent to-transparent" />
+                </div>
+              ) : (
+                <div className="w-full h-24 flex items-center justify-center text-4xl" style={{ backgroundColor: 'var(--color-bg-primary)' }}>
+                  🎮
+                </div>
+              )}
+              <div className="px-5 pb-5 pt-3">
               <h3 className="text-xl font-bold text-text-primary mb-2">
                 {currentPick.name}
               </h3>
-              <div className="flex flex-wrap justify-center gap-1.5 mb-3">
-                {currentPick.vibes.map((vibe) => (
-                  <span
-                    key={vibe}
-                    className="px-2 py-0.5 rounded-full text-[11px] font-medium font-[family-name:var(--font-mono)]"
-                    style={{
-                      backgroundColor: `${getVibeColor(vibe)}15`,
-                      color: getVibeColor(vibe),
-                      border: `1px solid ${getVibeColor(vibe)}30`,
-                    }}
-                  >
-                    {vibe}
-                  </span>
-                ))}
-              </div>
               <div className="flex justify-center gap-4 text-xs text-text-dim font-[family-name:var(--font-mono)]">
                 <span>{TIME_TIER_CONFIG[currentPick.timeTier].icon} {TIME_TIER_CONFIG[currentPick.timeTier].label}</span>
                 <span>{STATUS_CONFIG[currentPick.status].icon} {STATUS_CONFIG[currentPick.status].label}</span>
                 {currentPick.hoursPlayed > 0 && <span>{currentPick.hoursPlayed}h logged</span>}
               </div>
+              {/* Descriptor */}
+              {(() => {
+                const desc = getGameDescriptor(currentPick.name, currentPick.metacritic, currentPick.genres);
+                return desc ? (
+                  <p
+                    className="text-sm mt-3 leading-relaxed italic"
+                    style={{
+                      color: desc.confidence === 'curated' ? '#a78bfa' : 'var(--color-text-muted)',
+                    }}
+                  >
+                    &ldquo;{desc.line}&rdquo;
+                  </p>
+                ) : null;
+              })()}
               {currentPick.notes && (
-                <p className="text-xs text-text-muted mt-3 leading-relaxed">{currentPick.notes}</p>
+                <p className="text-xs text-text-muted mt-2 leading-relaxed">{currentPick.notes}</p>
               )}
+              </div>
             </div>
 
             {/* Action buttons */}
@@ -266,7 +335,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                 disabled={reroll.sessionCount >= 10}
                 className="flex-1 px-3 py-2.5 text-sm font-medium rounded-xl border border-border-subtle text-text-secondary hover:border-accent-purple transition-all disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                🎲 Reroll
+                🎲 Roll Again
               </button>
               <button
                 onClick={() => handleLetsGo(currentPick)}
@@ -299,15 +368,9 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                     borderColor: 'var(--color-border-subtle)',
                   }}
                 >
-                  <span
-                    className="px-2 py-0.5 rounded-md text-xs font-medium font-[family-name:var(--font-mono)]"
-                    style={{
-                      backgroundColor: STATUS_CONFIG[game.status].bg,
-                      color: STATUS_CONFIG[game.status].color,
-                    }}
-                  >
-                    {STATUS_CONFIG[game.status].icon}
-                  </span>
+                  {game.coverUrl && (
+                    <img src={game.coverUrl} alt="" className="w-10 h-10 rounded-lg object-cover shrink-0" />
+                  )}
                   <span className="flex-1 text-sm font-medium text-text-primary text-left truncate">
                     {game.name}
                   </span>

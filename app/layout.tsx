@@ -88,7 +88,7 @@ export default function RootLayout({
                 'Steam wishlist import',
                 'Xbox library import',
                 'Playnite CSV import',
-                'Game randomizer (Get Playing / Reroll)',
+                'Game randomizer (What Should I Play?)',
                 'Backlog tracking with 5-status pipeline',
                 'Deal checking via CheapShark',
                 'Cover art and Metacritic scores via RAWG',

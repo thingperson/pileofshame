@@ -1,8 +1,11 @@
 'use client';
 
 import { useStore } from '@/lib/store';
-import { DEFAULT_VIBES, TIME_TIER_CONFIG } from '@/lib/constants';
-import { TimeTier } from '@/lib/types';
+import { TIME_TIER_CONFIG } from '@/lib/constants';
+import { TimeTier, MoodTag } from '@/lib/types';
+import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
+
+const MOOD_OPTIONS: MoodTag[] = ['chill', 'intense', 'story-rich', 'brainless', 'atmospheric', 'competitive', 'spooky', 'creative', 'strategic', 'emotional'];
 
 export default function FilterBar() {
   const filters = useStore((s) => s.filters);
@@ -10,71 +13,57 @@ export default function FilterBar() {
   const setFilter = useStore((s) => s.setFilter);
 
   return (
-    <div className="space-y-2">
-      {/* Search */}
-      <div className="relative">
-        <svg
-          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-dim"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <input
-          type="text"
-          value={filters.search}
-          onChange={(e) => setFilter('search', e.target.value)}
-          placeholder="Search games..."
-          className="w-full text-sm bg-bg-card border border-border-subtle rounded-xl pl-9 pr-3 py-2 text-text-primary placeholder-text-faint focus:outline-none focus:border-accent-purple"
-        />
-      </div>
-
+    <div>
       {/* Filter Row */}
       <div className="flex flex-wrap gap-2">
-        {/* Category */}
+        {/* Shelf/Category */}
         <select
           value={filters.category}
           onChange={(e) => setFilter('category', e.target.value)}
-          className="text-xs bg-bg-card border border-border-subtle rounded-lg px-2 py-1.5 text-text-secondary focus:outline-none focus:border-accent-purple"
+          aria-label="Filter by shelf"
+          className="text-sm bg-bg-card border border-border-subtle rounded-lg px-3 py-2 text-text-secondary focus:outline-none focus:border-accent-purple"
         >
-          <option value="">All Categories</option>
+          <option value="">All Shelves</option>
           {categories.map((cat) => (
             <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
 
-        {/* Vibe */}
+        {/* Mood — auto-inferred from genres */}
         <select
-          value={filters.vibe}
-          onChange={(e) => setFilter('vibe', e.target.value)}
-          className="text-xs bg-bg-card border border-border-subtle rounded-lg px-2 py-1.5 text-text-secondary focus:outline-none focus:border-accent-purple"
+          value={filters.mood}
+          onChange={(e) => setFilter('mood', e.target.value as '' | MoodTag)}
+          aria-label="Filter by mood"
+          className="text-sm bg-bg-card border border-border-subtle rounded-lg px-3 py-2 text-text-secondary focus:outline-none focus:border-accent-purple"
         >
-          <option value="">All Vibes</option>
-          {DEFAULT_VIBES.map((vibe) => (
-            <option key={vibe} value={vibe}>{vibe}</option>
-          ))}
+          <option value="">I&apos;m in the mood for...</option>
+          {MOOD_OPTIONS.map((mood) => {
+            const config = MOOD_TAG_CONFIG[mood];
+            return (
+              <option key={mood} value={mood}>{config.icon} {config.label}</option>
+            );
+          })}
         </select>
 
-        {/* Time Tier */}
+        {/* Session Length */}
         <select
           value={filters.timeTier}
           onChange={(e) => setFilter('timeTier', e.target.value as '' | TimeTier)}
-          className="text-xs bg-bg-card border border-border-subtle rounded-lg px-2 py-1.5 text-text-secondary focus:outline-none focus:border-accent-purple"
+          aria-label="Filter by session length"
+          className="text-sm bg-bg-card border border-border-subtle rounded-lg px-3 py-2 text-text-secondary focus:outline-none focus:border-accent-purple"
         >
-          <option value="">All Tiers</option>
-          {(Object.entries(TIME_TIER_CONFIG) as [TimeTier, typeof TIME_TIER_CONFIG[TimeTier]][]).map(
-            ([tier, config]) => (
-              <option key={tier} value={tier}>{config.icon} {config.label}</option>
-            )
-          )}
+          <option value="">I have time for...</option>
+          <option value="quick-hit">⚡ Quick Hit: under an hour</option>
+          <option value="wind-down">🌙 A couple hours</option>
+          <option value="deep-cut">🔥 Clear the schedule, 2-3 hrs</option>
+          <option value="marathon">🏔️ Marathon: 4+ hours</option>
         </select>
 
         {/* Status toggles */}
         <button
           onClick={() => setFilter('showPlayed', !filters.showPlayed)}
-          className={`text-xs px-2 py-1.5 rounded-lg border font-[family-name:var(--font-mono)] transition-opacity ${
+          aria-pressed={filters.showPlayed}
+          className={`text-sm px-3 py-2 rounded-lg border font-[family-name:var(--font-mono)] transition-opacity ${
             filters.showPlayed ? 'opacity-100' : 'opacity-50'
           }`}
           style={{
@@ -86,7 +75,8 @@ export default function FilterBar() {
         </button>
         <button
           onClick={() => setFilter('showBailed', !filters.showBailed)}
-          className={`text-xs px-2 py-1.5 rounded-lg border font-[family-name:var(--font-mono)] transition-opacity ${
+          aria-pressed={filters.showBailed}
+          className={`text-sm px-3 py-2 rounded-lg border font-[family-name:var(--font-mono)] transition-opacity ${
             filters.showBailed ? 'opacity-100' : 'opacity-50'
           }`}
           style={{

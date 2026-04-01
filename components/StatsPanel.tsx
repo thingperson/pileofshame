@@ -2,18 +2,64 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { Game } from '@/lib/types';
+import { getAllMatchingArchetypes, PlayerArchetype } from '@/lib/archetypes';
 import { useToast } from './Toast';
 
 interface StatsPanelProps {
   games: Game[];
 }
 
-// Fallback MSRP estimate when CheapShark lookup fails
-const FALLBACK_AVG_PRICE = 18;
+// --- Price & HLTB cache (localStorage-backed) ---
 
-function estimateValue(count: number, avgPrice: number): number {
-  return Math.round(count * avgPrice);
+const PRICE_CACHE_KEY = 'pos-price-cache';
+const HLTB_CACHE_KEY = 'pos-hltb-cache';
+const CACHE_TTL = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+interface CacheEntry<T> {
+  value: T;
+  ts: number;
 }
+
+function loadCache<T>(key: string): Map<string, T> {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return new Map();
+    const entries: Record<string, CacheEntry<T>> = JSON.parse(raw);
+    const now = Date.now();
+    const valid = new Map<string, T>();
+    for (const [k, v] of Object.entries(entries)) {
+      if (now - v.ts < CACHE_TTL) valid.set(k, v.value);
+    }
+    return valid;
+  } catch {
+    return new Map();
+  }
+}
+
+function saveCache<T>(key: string, cache: Map<string, T>) {
+  const entries: Record<string, CacheEntry<T>> = {};
+  const now = Date.now();
+  cache.forEach((value, k) => {
+    entries[k] = { value, ts: now };
+  });
+  try {
+    localStorage.setItem(key, JSON.stringify(entries));
+  } catch {
+    // quota exceeded — clear and retry
+    localStorage.removeItem(key);
+  }
+}
+
+function getCacheKey(name: string): string {
+  return name.trim().toLowerCase();
+}
+
+// --- Pluralization helper ---
+function plural(n: number, word: string): string {
+  return `${n} ${word}${n === 1 ? '' : 's'}`;
+}
+
+// --- Stats helpers ---
 
 function getOldestBacklogGame(games: Game[]): { name: string; days: number } | null {
   const backlog = games.filter(
@@ -57,7 +103,6 @@ function useCountUp(target: number, active: boolean, duration = 1500): number {
     const animate = (now: number) => {
       const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
-      // Ease-out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       setCurrent(Math.floor(eased * target));
       if (progress < 1) {
@@ -71,7 +116,8 @@ function useCountUp(target: number, active: boolean, duration = 1500): number {
   return current;
 }
 
-// Pre-cooked roast templates — pick one based on stats
+// --- Share text ---
+
 function generateShameText(stats: {
   backlogSize: number;
   gamesCleared: number;
@@ -80,64 +126,141 @@ function generateShameText(stats: {
   playedValue: number;
   oldest: { name: string; days: number } | null;
   streak: number;
+  backlogHours?: number | null;
+  confidence?: number;
 }): string {
   const lines: string[] = [];
 
-  // Opening roast
-  if (stats.backlogSize > 200) {
-    lines.push(`I have ${stats.backlogSize} unplayed games. That's not a backlog, that's a graveyard.`);
+  if (stats.backlogSize > 250) {
+    lines.push(`My ${stats.backlogSize} games are a Pile of Shame so big, even the James Webb Telescope couldn't put that into frame. I may never see sunlight again.`);
+  } else if (stats.backlogSize > 200) {
+    lines.push(`I have ${stats.backlogSize} unplayed games. That's a whole suite of issues no one can fix. But pileofsha.me is at least going to help me clear up the game backlog part.`);
   } else if (stats.backlogSize > 100) {
     lines.push(`${stats.backlogSize} games in my backlog and I keep buying more. Send help.`);
   } else if (stats.backlogSize > 50) {
     lines.push(`Only ${stats.backlogSize} games in my backlog. I'm practically a minimalist.`);
   } else if (stats.backlogSize > 0) {
-    lines.push(`${stats.backlogSize} games in the pile. Getting there.`);
+    lines.push(`${stats.backlogSize} games left in the pile. Getting there.`);
   } else {
-    lines.push(`I actually cleared my backlog. Yes, I'm real.`);
+    lines.push(`I actually cleared my gaming backlog. Yes, I'm real.`);
   }
 
-  // The money shot
   if (stats.unplayedValue > 0) {
     lines.push(`That's ~$${stats.unplayedValue.toLocaleString()} of games collecting digital dust.`);
   }
 
-  // Victory lap
+  if (stats.backlogHours && stats.backlogHours > 0) {
+    if (stats.backlogHours > 5000) {
+      const yrs = Math.round(stats.backlogHours / 24 / 365 * 10) / 10;
+      lines.push(`${stats.backlogHours.toLocaleString()} hours to clear it all. That's ${yrs} ${yrs === 1 ? 'year' : 'years'} of non-stop gaming.`);
+    } else {
+      lines.push(`~${stats.backlogHours.toLocaleString()} hours to play them all. No big deal.`);
+    }
+  }
+
   if (stats.gamesCleared > 0) {
     lines.push(`${stats.gamesCleared} cleared${stats.playedValue > 0 ? ` ($${stats.playedValue.toLocaleString()} redeemed)` : ''}.`);
   }
 
-  // Oldest shame
   if (stats.oldest && stats.oldest.days > 30) {
-    lines.push(`${stats.oldest.name} has been sitting there for ${stats.oldest.days} days. It's fine.`);
+    lines.push(`${stats.oldest.name} has been sitting there for ${plural(stats.oldest.days, 'day')}. It's fine.`);
   }
 
-  // Streak flex
   if (stats.streak >= 5) {
-    lines.push(`${stats.streak} games cleared without bailing. On a roll.`);
+    lines.push(`${plural(stats.streak, 'game')} cleared without bailing. On a roll.`);
   }
-
-  lines.push(`\nCheck your own shame → pileofsha.me`);
 
   return lines.join('\n');
 }
 
+function getShareCTA(platform: 'twitter' | 'reddit' | 'discord'): string {
+  switch (platform) {
+    case 'twitter':
+      // Twitter auto-links URLs
+      return '\nCheck your own Pile Of Shame → https://pileofsha.me';
+    case 'reddit':
+      // Reddit markdown
+      return '\n\nCheck your own **Pile Of Shame** → [pileofsha.me](https://pileofsha.me)';
+    case 'discord':
+      // Discord markdown
+      return '\n\nCheck your own **Pile Of Shame** → <https://pileofsha.me>';
+  }
+}
+
 function shareToTwitter(text: string) {
-  const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-  window.open(url, '_blank', 'width=550,height=420');
+  const fullText = text + getShareCTA('twitter');
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(fullText)}`, '_blank', 'width=550,height=420');
 }
 
 function shareToReddit(text: string) {
-  const url = `https://reddit.com/submit?selftext=true&title=${encodeURIComponent('My Pile of Shame stats are... concerning')}&text=${encodeURIComponent(text)}`;
-  window.open(url, '_blank');
+  const fullText = text + getShareCTA('reddit');
+  window.open(`https://reddit.com/submit?selftext=true&title=${encodeURIComponent('My Pile of Shame stats are... concerning at best')}&text=${encodeURIComponent(fullText)}`, '_blank');
 }
+
+function getDiscordText(text: string): string {
+  return text + getShareCTA('discord');
+}
+
+// --- Batch fetch helpers ---
+
+async function fetchPricesBatch(titles: string[]): Promise<Map<string, number>> {
+  const results = new Map<string, number>();
+  if (titles.length === 0) return results;
+
+  try {
+    const res = await fetch(`/api/deals?action=prices&titles=${encodeURIComponent(titles.join(','))}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.prices) {
+        for (const p of data.prices) {
+          results.set(getCacheKey(p.title), p.retailPrice);
+        }
+      }
+    }
+  } catch { /* fail silently */ }
+
+  return results;
+}
+
+async function fetchHltbBatch(titles: string[]): Promise<Map<string, number>> {
+  const results = new Map<string, number>();
+  if (titles.length === 0) return results;
+
+  try {
+    const res = await fetch(`/api/hltb?action=batch&titles=${encodeURIComponent(titles.join(','))}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.results) {
+        for (const r of data.results) {
+          if (r.found && r.main > 0) {
+            results.set(getCacheKey(r.title), r.main);
+          }
+        }
+      }
+    }
+  } catch { /* fail silently */ }
+
+  return results;
+}
+
+// --- Main Component ---
 
 export default function StatsPanel({ games }: StatsPanelProps) {
   const [expanded, setExpanded] = useState(false);
   const [calculating, setCalculating] = useState(false);
   const [calculated, setCalculated] = useState(false);
-  const [avgPrice, setAvgPrice] = useState(FALLBACK_AVG_PRICE);
-  const [priceSource, setPriceSource] = useState<'estimate' | 'cheapshark'>('estimate');
+  const [enriching, setEnriching] = useState(false); // background enrichment running
+  const [archetypeIndex, setArchetypeIndex] = useState(0);
+
+  // Calculated values (weighted)
+  const [unplayedValue, setUnplayedValue] = useState(0);
+  const [playedValue, setPlayedValue] = useState(0);
+  const [backlogHours, setBacklogHours] = useState<number | null>(null);
+  const [priceConfidence, setPriceConfidence] = useState({ known: 0, total: 0 });
+  const [hltbConfidence, setHltbConfidence] = useState({ known: 0, total: 0 });
+
   const { showToast } = useToast();
+  const enrichAbortRef = useRef(false);
 
   const stats = useMemo(() => {
     const backlogSize = games.filter(
@@ -153,50 +276,205 @@ export default function StatsPanel({ games }: StatsPanelProps) {
     return { backlogSize, gamesCleared, bailedCount, nowPlaying, totalHours, streak, oldest };
   }, [games]);
 
-  const unplayedValue = estimateValue(stats.backlogSize, avgPrice);
-  const playedValue = estimateValue(stats.gamesCleared + stats.nowPlaying, avgPrice);
-
   const countedUnplayed = useCountUp(unplayedValue, calculating);
   const countedPlayed = useCountUp(playedValue, calculating);
+  const countedBacklogHours = useCountUp(backlogHours || 0, calculating && backlogHours !== null);
+
+  // Compute weighted value from cache + fallback for unknowns
+  const computeValues = useCallback((
+    priceCache: Map<string, number>,
+    hltbCache: Map<string, number>,
+  ) => {
+    const FALLBACK_PRICE = 18;
+    const FALLBACK_HOURS = 12;
+
+    const backlogGames = games.filter((g) => g.status === 'buried' || g.status === 'on-deck');
+    const playedGames = games.filter((g) => g.status === 'played' || g.status === 'playing');
+
+    // --- Prices ---
+    let knownPriceSum = 0;
+    let knownPriceCount = 0;
+    const allRelevant = [...backlogGames, ...playedGames];
+
+    for (const g of allRelevant) {
+      const cached = priceCache.get(getCacheKey(g.name));
+      if (cached !== undefined && cached > 0) {
+        knownPriceSum += cached;
+        knownPriceCount++;
+      }
+    }
+
+    // Weighted avg: use known avg for unknowns, or fallback if we have nothing
+    const knownAvg = knownPriceCount >= 3 ? knownPriceSum / knownPriceCount : FALLBACK_PRICE;
+    const unknownCount = allRelevant.length - knownPriceCount;
+
+    const backlogValue = backlogGames.reduce((sum, g) => {
+      const cached = priceCache.get(getCacheKey(g.name));
+      return sum + (cached && cached > 0 ? cached : knownAvg);
+    }, 0);
+
+    const playedVal = playedGames.reduce((sum, g) => {
+      const cached = priceCache.get(getCacheKey(g.name));
+      return sum + (cached && cached > 0 ? cached : knownAvg);
+    }, 0);
+
+    setUnplayedValue(Math.round(backlogValue));
+    setPlayedValue(Math.round(playedVal));
+    setPriceConfidence({ known: knownPriceCount, total: allRelevant.length });
+
+    // --- HLTB ---
+    let knownHoursSum = 0;
+    let knownHoursCount = 0;
+
+    for (const g of backlogGames) {
+      const cached = hltbCache.get(getCacheKey(g.name));
+      if (cached !== undefined && cached > 0) {
+        knownHoursSum += cached;
+        knownHoursCount++;
+      }
+    }
+
+    const hoursAvg = knownHoursCount >= 3 ? knownHoursSum / knownHoursCount : FALLBACK_HOURS;
+    const totalHours = backlogGames.reduce((sum, g) => {
+      const cached = hltbCache.get(getCacheKey(g.name));
+      return sum + (cached && cached > 0 ? cached : hoursAvg);
+    }, 0);
+
+    if (knownHoursCount > 0 || backlogGames.length > 0) {
+      setBacklogHours(Math.round(totalHours));
+      setHltbConfidence({ known: knownHoursCount, total: backlogGames.length });
+    }
+  }, [games]);
+
+  // Background enrichment — fetch uncached games in batches
+  const enrichInBackground = useCallback(async (
+    priceCache: Map<string, number>,
+    hltbCache: Map<string, number>,
+  ) => {
+    enrichAbortRef.current = false;
+    setEnriching(true);
+
+    const allGames = games.filter((g) => g.name.length > 2);
+
+    // Find uncached games
+    const uncachedForPrice = allGames.filter((g) => !priceCache.has(getCacheKey(g.name)));
+    const uncachedForHltb = allGames
+      .filter((g) => g.status === 'buried' || g.status === 'on-deck')
+      .filter((g) => !hltbCache.has(getCacheKey(g.name)));
+
+    // Fetch prices in batches of 15
+    for (let i = 0; i < uncachedForPrice.length; i += 15) {
+      if (enrichAbortRef.current) break;
+      const batch = uncachedForPrice.slice(i, i + 15).map((g) => g.name);
+      const results = await fetchPricesBatch(batch);
+      results.forEach((v, k) => priceCache.set(k, v));
+      saveCache(PRICE_CACHE_KEY, priceCache);
+      computeValues(priceCache, hltbCache);
+      // Throttle between batches
+      await new Promise((r) => setTimeout(r, 500));
+    }
+
+    // Fetch HLTB in batches of 10
+    for (let i = 0; i < uncachedForHltb.length; i += 10) {
+      if (enrichAbortRef.current) break;
+      const batch = uncachedForHltb.slice(i, i + 10).map((g) => g.name);
+      const results = await fetchHltbBatch(batch);
+      results.forEach((v, k) => hltbCache.set(k, v));
+      saveCache(HLTB_CACHE_KEY, hltbCache);
+      computeValues(priceCache, hltbCache);
+      await new Promise((r) => setTimeout(r, 500));
+    }
+
+    setEnriching(false);
+  }, [games, computeValues]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => { enrichAbortRef.current = true; };
+  }, []);
 
   const handleCalculate = useCallback(async () => {
     setCalculating(true);
 
-    // Sample up to 20 random games for price lookup
-    const sampleGames = [...games]
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 20);
+    // Load caches
+    const priceCache = loadCache<number>(PRICE_CACHE_KEY);
+    const hltbCache = loadCache<number>(HLTB_CACHE_KEY);
 
-    try {
-      const titles = sampleGames.map((g) => g.name).join(',');
-      const res = await fetch(`/api/deals?action=prices&titles=${encodeURIComponent(titles)}`);
-      if (res.ok) {
-        const data = await res.json();
-        if (data.prices && data.prices.length >= 3) {
-          const avg = data.prices.reduce((sum: number, p: { retailPrice: number }) => sum + p.retailPrice, 0) / data.prices.length;
-          if (avg > 0) {
-            setAvgPrice(Math.round(avg * 100) / 100);
-            setPriceSource('cheapshark');
-          }
-        }
-      }
-    } catch {
-      // Fall back to estimate — no big deal
+    const allGames = games.filter((g) => g.name.length > 2);
+
+    // Find uncached games and fetch an initial batch
+    const uncachedForPrice = allGames
+      .filter((g) => !priceCache.has(getCacheKey(g.name)))
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 15);
+
+    const backlogUncachedForHltb = allGames
+      .filter((g) => g.status === 'buried' || g.status === 'on-deck')
+      .filter((g) => !hltbCache.has(getCacheKey(g.name)))
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 10);
+
+    // Fetch initial batches in parallel
+    const [priceResults, hltbResults] = await Promise.allSettled([
+      fetchPricesBatch(uncachedForPrice.map((g) => g.name)),
+      fetchHltbBatch(backlogUncachedForHltb.map((g) => g.name)),
+    ]);
+
+    // Merge into cache
+    if (priceResults.status === 'fulfilled') {
+      priceResults.value.forEach((v, k) => priceCache.set(k, v));
+      saveCache(PRICE_CACHE_KEY, priceCache);
+    }
+    if (hltbResults.status === 'fulfilled') {
+      hltbResults.value.forEach((v, k) => hltbCache.set(k, v));
+      saveCache(HLTB_CACHE_KEY, hltbCache);
     }
 
-    setTimeout(() => setCalculated(true), 1600);
-  }, [games]);
+    // Compute with everything we have
+    computeValues(priceCache, hltbCache);
+
+    setTimeout(() => {
+      setCalculated(true);
+      // Continue enriching in background
+      enrichInBackground(priceCache, hltbCache);
+    }, 1600);
+  }, [games, computeValues, enrichInBackground]);
 
   if (games.length === 0) return null;
+
+  const confidencePct = priceConfidence.total > 0
+    ? Math.round((priceConfidence.known / priceConfidence.total) * 100)
+    : 0;
+
+  const hltbPct = hltbConfidence.total > 0
+    ? Math.round((hltbConfidence.known / hltbConfidence.total) * 100)
+    : 0;
+
+  // Player archetype
+  const archetypes = useMemo(() => getAllMatchingArchetypes(games), [games]);
+  const currentArchetype = archetypes[archetypeIndex % archetypes.length];
+
+  const handleRerollArchetype = useCallback(() => {
+    if (archetypes.length <= 1) return;
+    setArchetypeIndex((i) => (i + 1) % archetypes.length);
+  }, [archetypes.length]);
+
+  const shareData = { ...stats, unplayedValue, playedValue, backlogHours, confidence: confidencePct };
 
   return (
     <div className="mb-6">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="flex items-center gap-2 text-xs font-medium text-text-dim hover:text-text-muted transition-colors font-[family-name:var(--font-mono)]"
+        className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border transition-all hover:border-accent-purple hover:text-text-primary font-[family-name:var(--font-mono)]"
+        style={{
+          backgroundColor: expanded ? 'var(--color-bg-card)' : 'transparent',
+          borderColor: expanded ? 'var(--color-border-active)' : 'var(--color-border-subtle)',
+          color: expanded ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+        }}
       >
+        📊 {expanded ? 'Your Stats' : 'View Your Stats'}
         <svg
-          className={`w-3 h-3 transition-transform duration-200 ${expanded ? '' : '-rotate-90'}`}
+          className={`w-3.5 h-3.5 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -204,7 +482,6 @@ export default function StatsPanel({ games }: StatsPanelProps) {
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
-        📊 Your Stats
       </button>
 
       {expanded && (
@@ -226,6 +503,7 @@ export default function StatsPanel({ games }: StatsPanelProps) {
               value={stats.totalHours > 0 ? stats.totalHours.toLocaleString(undefined, { maximumFractionDigits: 0 }) : '—'}
               icon="⏱️"
               color="#38bdf8"
+              sublabel={stats.totalHours === 0 ? 'via Steam import' : undefined}
             />
           </div>
 
@@ -242,19 +520,73 @@ export default function StatsPanel({ games }: StatsPanelProps) {
                 sublabel={stats.oldest.name.length > 18 ? stats.oldest.name.substring(0, 16) + '...' : stats.oldest.name}
               />
             ) : (
-              <StatCard label="Oldest" value="—" icon="⏳" color="#d97706" />
+              <StatCard label="Oldest" value="✓" icon="⏳" color="#22c55e" sublabel="no backlog!" />
             )}
             <StatCard label="Total" value={games.length.toString()} icon="🎮" color="#94a3b8" sublabel="games tracked" />
           </div>
+
+          {/* Player Archetype */}
+          {games.length >= 3 && (
+            <div
+              className="rounded-lg p-4 mb-3 relative overflow-hidden"
+              style={{
+                backgroundColor: 'var(--color-bg-elevated)',
+                border: `1px solid ${
+                  currentArchetype.tone === 'roast' ? 'rgba(239, 68, 68, 0.3)'
+                  : currentArchetype.tone === 'respect' ? 'rgba(34, 197, 94, 0.3)'
+                  : 'rgba(167, 139, 250, 0.3)'
+                }`,
+              }}
+            >
+              <div className="flex items-start gap-3">
+                <div className="text-3xl shrink-0">{currentArchetype.icon}</div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-base font-bold text-text-primary">{currentArchetype.title}</span>
+                    <span
+                      className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase font-[family-name:var(--font-mono)]"
+                      style={{
+                        backgroundColor: currentArchetype.tone === 'roast' ? 'rgba(239, 68, 68, 0.15)'
+                          : currentArchetype.tone === 'respect' ? 'rgba(34, 197, 94, 0.15)'
+                          : 'rgba(167, 139, 250, 0.15)',
+                        color: currentArchetype.tone === 'roast' ? '#ef4444'
+                          : currentArchetype.tone === 'respect' ? '#22c55e'
+                          : '#a78bfa',
+                      }}
+                    >
+                      {currentArchetype.tone === 'roast' ? '🔥 roast' : currentArchetype.tone === 'respect' ? '👑 respect' : '🔮 reading'}
+                    </span>
+                  </div>
+                  <p className="text-sm text-text-muted leading-relaxed">
+                    {currentArchetype.description}
+                  </p>
+                </div>
+              </div>
+              {archetypes.length > 1 && (
+                <button
+                  onClick={handleRerollArchetype}
+                  className="mt-3 w-full py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+                  style={{
+                    backgroundColor: 'rgba(167, 139, 250, 0.08)',
+                    border: '1px solid rgba(167, 139, 250, 0.2)',
+                    color: '#a78bfa',
+                  }}
+                >
+                  🔮 Read me again ({archetypeIndex % archetypes.length + 1}/{archetypes.length})
+                </button>
+              )}
+            </div>
+          )}
 
           {/* The Big One — Backlog Value Calculator */}
           {!calculating && !calculated && (
             <button
               onClick={handleCalculate}
-              className="w-full py-3 rounded-lg text-xs font-semibold font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+              className="w-full py-3 rounded-lg text-sm font-semibold font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
               style={{
-                background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05))',
-                border: '1px dashed rgba(239, 68, 68, 0.3)',
+                backgroundColor: 'var(--color-bg-elevated)',
+                background: 'linear-gradient(135deg, var(--color-bg-elevated), rgba(239, 68, 68, 0.08))',
+                border: '1px dashed rgba(239, 68, 68, 0.35)',
                 color: '#ef4444',
               }}
             >
@@ -266,53 +598,146 @@ export default function StatsPanel({ games }: StatsPanelProps) {
             <div
               className="rounded-lg p-4 text-center"
               style={{
-                background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(239, 68, 68, 0.03))',
-                border: '1px solid rgba(239, 68, 68, 0.2)',
+                backgroundColor: 'var(--color-bg-elevated)',
+                background: 'linear-gradient(135deg, var(--color-bg-elevated), rgba(239, 68, 68, 0.06))',
+                border: '1px solid rgba(239, 68, 68, 0.25)',
               }}
             >
-              <div className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] mb-1">
+              <div className="text-xs text-text-muted font-[family-name:var(--font-mono)] mb-1">
                 💸 Estimated unplayed value
               </div>
               <div
-                className="text-2xl sm:text-3xl font-bold font-[family-name:var(--font-mono)] tracking-tight"
+                className="text-3xl sm:text-4xl font-bold font-[family-name:var(--font-mono)] tracking-tight"
                 style={{ color: '#ef4444' }}
               >
                 ~${countedUnplayed.toLocaleString()}
               </div>
-              <div className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] mt-1">
-                {priceSource === 'cheapshark'
-                  ? `based on $${avgPrice.toFixed(0)} avg retail price × ${stats.backlogSize} unplayed`
-                  : `based on ~$${avgPrice} est. avg × ${stats.backlogSize} unplayed`
-                }
-              </div>
-              {priceSource === 'cheapshark' && (
-                <div className="text-[9px] text-text-faint font-[family-name:var(--font-mono)] mt-0.5 opacity-60">
-                  prices via CheapShark (sampled from your library)
+
+              {/* Confidence indicator */}
+              {calculated && priceConfidence.total > 0 && (
+                <div className="mt-2 space-y-1">
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-32 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
+                      <div
+                        className="h-full rounded-full transition-all duration-1000"
+                        style={{
+                          width: `${confidencePct}%`,
+                          backgroundColor: confidencePct > 75 ? '#22c55e' : confidencePct > 40 ? '#f59e0b' : '#ef4444',
+                        }}
+                      />
+                    </div>
+                    <span className="text-xs text-text-dim font-[family-name:var(--font-mono)]">
+                      {priceConfidence.known} of {priceConfidence.total} priced
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">
+                    {confidencePct >= 80
+                      ? 'high confidence: most games priced via retail data'
+                      : confidencePct >= 40
+                      ? 'moderate confidence: rest estimated from your library avg'
+                      : enriching
+                      ? 'improving... fetching more prices in background'
+                      : 'low confidence: tap again to fetch more prices'
+                    }
+                  </div>
                 </div>
               )}
 
               {calculated && playedValue > 0 && (
                 <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                  <div className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] mb-0.5">
+                  <div className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-0.5">
                     💰 Value recovered by playing
                   </div>
                   <div
-                    className="text-lg font-bold font-[family-name:var(--font-mono)]"
+                    className="text-xl font-bold font-[family-name:var(--font-mono)]"
                     style={{ color: '#22c55e' }}
                   >
                     ${countedPlayed.toLocaleString()}
                   </div>
                 </div>
               )}
+
+              {/* Time to clear backlog */}
+              {calculated && backlogHours !== null && backlogHours > 0 && (
+                <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                  <div className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-0.5">
+                    ⏳ Time to clear your backlog
+                  </div>
+                  <div
+                    className="text-xl font-bold font-[family-name:var(--font-mono)]"
+                    style={{ color: '#f59e0b' }}
+                  >
+                    ~{countedBacklogHours.toLocaleString()} hours
+                  </div>
+
+                  {/* HLTB confidence */}
+                  {hltbConfidence.total > 0 && (
+                    <div className="flex items-center justify-center gap-2 mt-1.5">
+                      <div className="w-24 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
+                        <div
+                          className="h-full rounded-full transition-all duration-1000"
+                          style={{
+                            width: `${hltbPct}%`,
+                            backgroundColor: hltbPct > 75 ? '#22c55e' : hltbPct > 40 ? '#f59e0b' : '#ef4444',
+                          }}
+                        />
+                      </div>
+                      <span className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">
+                        {hltbConfidence.known} of {hltbConfidence.total} timed
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="text-xs text-text-faint font-[family-name:var(--font-mono)] mt-1.5 italic">
+                    {backlogHours > 5000
+                      ? `That's ${(backlogHours / 24 / 365).toFixed(1)} years of non-stop gaming. No sleep. No food. Just backlog.`
+                      : backlogHours > 1000
+                      ? `At 2 hours a day, that's ${plural(Math.round(backlogHours / 2 / 30), 'month')}. Better get started.`
+                      : backlogHours > 200
+                      ? `Totally doable. At 2 hours a day, that's ${plural(Math.round(backlogHours / 2 / 7), 'week')}.`
+                      : `Actually manageable. You could knock this out in ${plural(Math.round(backlogHours / 2 / 7), 'week')}.`
+                    }
+                  </div>
+                  <div className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] mt-0.5 opacity-60">
+                    completion times via HowLongToBeat
+                  </div>
+                </div>
+              )}
+
+              {/* Enrichment status */}
+              {enriching && (
+                <div className="mt-2 text-[11px] text-accent-purple font-[family-name:var(--font-mono)] animate-pulse">
+                  🔄 Fetching more data... estimates updating live
+                </div>
+              )}
             </div>
+          )}
+
+          {/* Recalculate button — shown after first calc to improve accuracy */}
+          {calculated && !enriching && confidencePct < 90 && (
+            <button
+              onClick={() => {
+                setCalculated(false);
+                setCalculating(false);
+                setTimeout(() => handleCalculate(), 50);
+              }}
+              className="w-full mt-2 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+              style={{
+                backgroundColor: 'rgba(167, 139, 250, 0.08)',
+                border: '1px solid rgba(167, 139, 250, 0.2)',
+                color: '#a78bfa',
+              }}
+            >
+              🔄 Refine estimate ({priceConfidence.known}/{priceConfidence.total} games priced)
+            </button>
           )}
 
           {/* Share Your Shame */}
           {calculated && (
             <div className="mt-3 flex flex-col sm:flex-row gap-2">
               <button
-                onClick={() => shareToTwitter(generateShameText({ ...stats, unplayedValue, playedValue }))}
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+                onClick={() => shareToTwitter(generateShameText(shareData))}
+                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{
                   backgroundColor: 'rgba(29, 161, 242, 0.1)',
                   border: '1px solid rgba(29, 161, 242, 0.2)',
@@ -322,8 +747,8 @@ export default function StatsPanel({ games }: StatsPanelProps) {
                 𝕏 Share your shame
               </button>
               <button
-                onClick={() => shareToReddit(generateShameText({ ...stats, unplayedValue, playedValue }))}
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+                onClick={() => shareToReddit(generateShameText(shareData))}
+                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{
                   backgroundColor: 'rgba(255, 69, 0, 0.1)',
                   border: '1px solid rgba(255, 69, 0, 0.2)',
@@ -334,10 +759,10 @@ export default function StatsPanel({ games }: StatsPanelProps) {
               </button>
               <button
                 onClick={() => {
-                  navigator.clipboard.writeText(generateShameText({ ...stats, unplayedValue, playedValue }));
+                  navigator.clipboard.writeText(getDiscordText(generateShameText(shareData)));
                   showToast('Copied to clipboard. Go paste your shame.');
                 }}
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{
                   backgroundColor: 'rgba(88, 101, 242, 0.1)',
                   border: '1px solid rgba(88, 101, 242, 0.2)',
@@ -371,21 +796,21 @@ function StatCard({
     <div
       className="rounded-lg p-3"
       style={{
-        backgroundColor: 'var(--color-bg-primary)',
+        backgroundColor: 'var(--color-bg-elevated)',
         border: '1px solid var(--color-border-subtle)',
       }}
     >
-      <div className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] mb-0.5">
+      <div className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-0.5">
         {icon} {label}
       </div>
       <div
-        className="text-lg font-bold font-[family-name:var(--font-mono)]"
+        className="text-xl font-bold font-[family-name:var(--font-mono)]"
         style={{ color }}
       >
         {value}
       </div>
       {sublabel && (
-        <div className="text-[9px] text-text-faint font-[family-name:var(--font-mono)] mt-0.5 truncate">
+        <div className="text-[11px] text-text-faint font-[family-name:var(--font-mono)] mt-0.5 truncate">
           {sublabel}
         </div>
       )}

@@ -206,7 +206,7 @@ export default function SteamWishlistModal({ open, onClose }: SteamWishlistModal
               style={{ backgroundColor: 'var(--color-bg-card)' }}
             >
               <p className="text-text-muted font-medium">Why import your wishlist?</p>
-              <p>We&apos;ll flag when games on your list go on sale — so you can grab them at the right price and add them to your pile.</p>
+              <p>We&apos;ll flag when games on your list go on sale, so you can grab them at the right price and add them to your pile.</p>
               <p className="pt-1">
                 <a
                   href="https://store.steampowered.com/wishlist/"
@@ -274,7 +274,7 @@ export default function SteamWishlistModal({ open, onClose }: SteamWishlistModal
                   color: '#0a0a0f',
                 }}
               >
-                {loading ? 'Loading...' : "That's me — fetch wishlist"}
+                {loading ? 'Loading...' : "That's me, fetch wishlist"}
               </button>
             </div>
           </div>
