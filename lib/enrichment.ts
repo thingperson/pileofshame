@@ -174,45 +174,45 @@ export const MOOD_TAG_CONFIG: Record<MoodTag, { label: string; icon: string; col
 export function getPlaytimeRoast(gameName: string, hours: number): string | null {
   if (hours < 50) return null;
 
-  // Game-specific roasts
+  // Game-specific — playful ribbing + comfort game acknowledgment
   const nameLower = gameName.toLowerCase();
   if (nameLower.includes('rocket league') && hours > 500) {
-    return `${hours.toLocaleString()}h of car soccer. Your pile isn't clearing itself while you're doing aerials.`;
+    return `${hours.toLocaleString()}h of car soccer. Your pile isn't clearing itself while you're doing aerials. But we get it — this one's home.`;
   }
   if (nameLower.includes('stardew') && hours > 100) {
-    return `${hours.toLocaleString()}h. The farm isn't going to water itself, but your backlog isn't either.`;
+    return `${hours.toLocaleString()}h. The farm isn't going to water itself. Neither is your backlog, but hey — comfort is comfort.`;
   }
   if ((nameLower.includes('dota') || nameLower.includes('league of legends')) && hours > 500) {
-    return `${hours.toLocaleString()}h. You could've beaten your entire backlog in this time. Twice.`;
+    return `${hours.toLocaleString()}h. This isn't a game, it's a lifestyle. Your pile can wait. (It's been waiting.)`;
   }
   if (nameLower.includes('civilization') && hours > 200) {
-    return `${hours.toLocaleString()}h. "Just one more turn" is why you have a pile.`;
+    return `${hours.toLocaleString()}h. "Just one more turn" is why you have a pile. But also why you're happy.`;
   }
   if (nameLower.includes('factorio') && hours > 200) {
-    return `${hours.toLocaleString()}h. The factory must grow. Your pile must not.`;
+    return `${hours.toLocaleString()}h. The factory must grow. Your pile must not. ...The factory wins.`;
   }
   if (nameLower.includes('skyrim') && hours > 200) {
-    return `${hours.toLocaleString()}h and you probably still haven't finished the main quest.`;
+    return `${hours.toLocaleString()}h and you probably still haven't finished the main quest. Classic comfort game behavior.`;
   }
   if (nameLower.includes('counter-strike') && hours > 500) {
-    return `${hours.toLocaleString()}h. Your rank went up. Your pile didn't go down.`;
+    return `${hours.toLocaleString()}h. Your rank went up. Your pile didn't go down. Worth it though.`;
   }
 
-  // Generic roasts by hour threshold
+  // Generic — warm ribbing with comfort game nod at high hours
   if (hours >= 1000) {
-    return `${hours.toLocaleString()}h in this one game. That's literally weeks of your life. No wonder your pile isn't shrinking.`;
+    return `${hours.toLocaleString()}h in this one game. At this point it's not backlog — it IS the game. Everything else is a side quest.`;
   }
   if (hours >= 500) {
-    return `${hours.toLocaleString()}h. This game alone could've cleared half your backlog.`;
+    return `${hours.toLocaleString()}h. This is clearly your comfort game. Your pile is jealous, but we understand.`;
   }
   if (hours >= 200) {
-    return `${hours.toLocaleString()}h. Is this a game or a second job?`;
+    return `${hours.toLocaleString()}h. Is this a game or a second job? Either way, it hits different.`;
   }
   if (hours >= 100) {
-    return `${hours.toLocaleString()}h. You clearly like this one, but your other games are getting jealous.`;
+    return `${hours.toLocaleString()}h. You clearly love this one. Your other games are side-eyeing you though.`;
   }
   if (hours >= 50) {
-    return `${hours.toLocaleString()}h. That's a solid investment. Time to move on?`;
+    return `${hours.toLocaleString()}h. That's a solid investment. Your pile would like a word.`;
   }
 
   return null;

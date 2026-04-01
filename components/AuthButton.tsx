@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/lib/useAuth';
 
 export default function AuthButton() {
-  const { user, loading, isSignedIn, signInWithDiscord, signInWithGoogle, signInWithApple, signInWithEmail, signOut } = useAuth();
+  const { user, loading, isSignedIn, signInWithDiscord, signInWithGoogle, signInWithEmail, signOut } = useAuth();
   const [showMenu, setShowMenu] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
   const [showEmailInput, setShowEmailInput] = useState(false);
@@ -122,17 +122,6 @@ export default function AuthButton() {
                   </svg>
                   Google
                 </button>
-                <button
-                  onClick={() => { signInWithApple(); setShowSignIn(false); }}
-                  className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-xl transition-all hover:scale-[1.01] active:scale-[0.99]"
-                  style={{ backgroundColor: '#000000', color: '#ffffff', border: '1px solid #333' }}
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
-                  </svg>
-                  Apple
-                </button>
-
                 <div className="flex items-center gap-2 my-1">
                   <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
                   <span className="text-[10px] text-text-faint">or</span>

@@ -65,17 +65,6 @@ export function useAuth() {
     if (error) console.error('Google sign-in error:', error);
   }, []);
 
-  const signInWithApple = useCallback(async () => {
-    if (!supabase) return;
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'apple',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-    if (error) console.error('Apple sign-in error:', error);
-  }, []);
-
   const signInWithEmail = useCallback(async (email: string) => {
     if (!supabase) return { error: null };
     const { error } = await supabase.auth.signInWithOtp({
@@ -97,7 +86,6 @@ export function useAuth() {
     ...authState,
     signInWithDiscord,
     signInWithGoogle,
-    signInWithApple,
     signInWithEmail,
     signOut,
     isSignedIn: !!authState.user,

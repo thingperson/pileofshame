@@ -349,12 +349,12 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
                 </div>
               )}
 
-              {/* Playtime roast */}
+              {/* Playtime insight */}
               {game.hoursPlayed > 0 && (() => {
-                const roast = getPlaytimeRoast(game.name, game.hoursPlayed);
-                return roast ? (
-                  <p className="text-[11px] text-amber-400/80 italic font-[family-name:var(--font-mono)]">
-                    {roast}
+                const insight = getPlaytimeRoast(game.name, game.hoursPlayed);
+                return insight ? (
+                  <p className="text-[11px] text-amber-300/70 italic font-[family-name:var(--font-mono)]">
+                    {insight}
                   </p>
                 ) : null;
               })()}

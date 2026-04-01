@@ -118,7 +118,7 @@ function useCountUp(target: number, active: boolean, duration = 1500): number {
 
 // --- Share text ---
 
-function generateShameText(stats: {
+function generateShareText(stats: {
   backlogSize: number;
   gamesCleared: number;
   bailedCount: number;
@@ -132,13 +132,11 @@ function generateShameText(stats: {
   const lines: string[] = [];
 
   if (stats.backlogSize > 250) {
-    lines.push(`My ${stats.backlogSize} games are a Pile of Shame so big, even the James Webb Telescope couldn't put that into frame. I may never see sunlight again.`);
-  } else if (stats.backlogSize > 200) {
-    lines.push(`I have ${stats.backlogSize} unplayed games. That's a whole suite of issues no one can fix. But pileofsha.me is at least going to help me clear up the game backlog part.`);
+    lines.push(`${stats.backlogSize} games in my pile. That's not a backlog, that's a lifestyle.`);
   } else if (stats.backlogSize > 100) {
-    lines.push(`${stats.backlogSize} games in my backlog and I keep buying more. Send help.`);
+    lines.push(`${stats.backlogSize} games in my pile and I keep buying more. At least I'm self-aware now.`);
   } else if (stats.backlogSize > 50) {
-    lines.push(`Only ${stats.backlogSize} games in my backlog. I'm practically a minimalist.`);
+    lines.push(`Only ${stats.backlogSize} games in my pile. Practically a minimalist.`);
   } else if (stats.backlogSize > 0) {
     lines.push(`${stats.backlogSize} games left in the pile. Getting there.`);
   } else {
@@ -146,28 +144,32 @@ function generateShameText(stats: {
   }
 
   if (stats.unplayedValue > 0) {
-    lines.push(`That's ~$${stats.unplayedValue.toLocaleString()} of games collecting digital dust.`);
+    lines.push(`~$${stats.unplayedValue.toLocaleString()} of untapped gaming sitting right there.`);
   }
 
   if (stats.backlogHours && stats.backlogHours > 0) {
     if (stats.backlogHours > 5000) {
       const yrs = Math.round(stats.backlogHours / 24 / 365 * 10) / 10;
-      lines.push(`${stats.backlogHours.toLocaleString()} hours to clear it all. That's ${yrs} ${yrs === 1 ? 'year' : 'years'} of non-stop gaming.`);
+      lines.push(`${stats.backlogHours.toLocaleString()} hours to play them all. That's ${yrs} ${yrs === 1 ? 'year' : 'years'} of non-stop gaming. I'm set for life.`);
     } else {
       lines.push(`~${stats.backlogHours.toLocaleString()} hours to play them all. No big deal.`);
     }
   }
 
   if (stats.gamesCleared > 0) {
-    lines.push(`${stats.gamesCleared} cleared${stats.playedValue > 0 ? ` ($${stats.playedValue.toLocaleString()} redeemed)` : ''}.`);
+    lines.push(`${stats.gamesCleared} cleared${stats.playedValue > 0 ? ` ($${stats.playedValue.toLocaleString()} worth of value unlocked)` : ''}.`);
+  }
+
+  if (stats.bailedCount > 0) {
+    lines.push(`Drew the line on ${stats.bailedCount}. That's progress too.`);
   }
 
   if (stats.oldest && stats.oldest.days > 30) {
-    lines.push(`${stats.oldest.name} has been sitting there for ${plural(stats.oldest.days, 'day')}. It's fine.`);
+    lines.push(`${stats.oldest.name} has been in the pile for ${plural(stats.oldest.days, 'day')}. It's fine.`);
   }
 
   if (stats.streak >= 5) {
-    lines.push(`${plural(stats.streak, 'game')} cleared without bailing. On a roll.`);
+    lines.push(`${plural(stats.streak, 'game')} cleared in a row. On a roll.`);
   }
 
   return lines.join('\n');
@@ -194,7 +196,7 @@ function shareToTwitter(text: string) {
 
 function shareToReddit(text: string) {
   const fullText = text + getShareCTA('reddit');
-  window.open(`https://reddit.com/submit?selftext=true&title=${encodeURIComponent('My Pile of Shame stats are... concerning at best')}&text=${encodeURIComponent(fullText)}`, '_blank');
+  window.open(`https://reddit.com/submit?selftext=true&title=${encodeURIComponent('My gaming library stats — how does yours compare?')}&text=${encodeURIComponent(fullText)}`, '_blank');
 }
 
 function getDiscordText(text: string): string {
@@ -507,10 +509,10 @@ export default function StatsPanel({ games }: StatsPanelProps) {
             />
           </div>
 
-          {/* Shame Row */}
+          {/* Library Row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
-            <StatCard label="Backlog" value={stats.backlogSize.toString()} icon="📚" color="#64748b" />
-            <StatCard label="Bailed" value={stats.bailedCount.toString()} icon="🚪" color="#ef4444" />
+            <StatCard label="To Explore" value={stats.backlogSize.toString()} icon="📚" color="#64748b" />
+            <StatCard label="Lines Drawn" value={stats.bailedCount.toString()} icon="✊" color="#94a3b8" />
             {stats.oldest ? (
               <StatCard
                 label="Oldest"
@@ -585,12 +587,12 @@ export default function StatsPanel({ games }: StatsPanelProps) {
               className="w-full py-3 rounded-lg text-sm font-semibold font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
               style={{
                 backgroundColor: 'var(--color-bg-elevated)',
-                background: 'linear-gradient(135deg, var(--color-bg-elevated), rgba(239, 68, 68, 0.08))',
-                border: '1px dashed rgba(239, 68, 68, 0.35)',
-                color: '#ef4444',
+                background: 'linear-gradient(135deg, var(--color-bg-elevated), rgba(167, 139, 250, 0.08))',
+                border: '1px dashed rgba(167, 139, 250, 0.35)',
+                color: '#a78bfa',
               }}
             >
-              💸 Dare to calculate your backlog&apos;s value?
+              💎 What&apos;s your library worth?
             </button>
           )}
 
@@ -599,16 +601,16 @@ export default function StatsPanel({ games }: StatsPanelProps) {
               className="rounded-lg p-4 text-center"
               style={{
                 backgroundColor: 'var(--color-bg-elevated)',
-                background: 'linear-gradient(135deg, var(--color-bg-elevated), rgba(239, 68, 68, 0.06))',
-                border: '1px solid rgba(239, 68, 68, 0.25)',
+                background: 'linear-gradient(135deg, var(--color-bg-elevated), rgba(167, 139, 250, 0.06))',
+                border: '1px solid rgba(167, 139, 250, 0.25)',
               }}
             >
               <div className="text-xs text-text-muted font-[family-name:var(--font-mono)] mb-1">
-                💸 Estimated unplayed value
+                💎 Untapped library value
               </div>
               <div
                 className="text-3xl sm:text-4xl font-bold font-[family-name:var(--font-mono)] tracking-tight"
-                style={{ color: '#ef4444' }}
+                style={{ color: '#a78bfa' }}
               >
                 ~${countedUnplayed.toLocaleString()}
               </div>
@@ -646,7 +648,7 @@ export default function StatsPanel({ games }: StatsPanelProps) {
               {calculated && playedValue > 0 && (
                 <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
                   <div className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-0.5">
-                    💰 Value recovered by playing
+                    💰 Value unlocked by playing
                   </div>
                   <div
                     className="text-xl font-bold font-[family-name:var(--font-mono)]"
@@ -690,7 +692,7 @@ export default function StatsPanel({ games }: StatsPanelProps) {
 
                   <div className="text-xs text-text-faint font-[family-name:var(--font-mono)] mt-1.5 italic">
                     {backlogHours > 5000
-                      ? `That's ${(backlogHours / 24 / 365).toFixed(1)} years of non-stop gaming. No sleep. No food. Just backlog.`
+                      ? `That's ${(backlogHours / 24 / 365).toFixed(1)} years of non-stop gaming. You're set for life. Possibly several lives.`
                       : backlogHours > 1000
                       ? `At 2 hours a day, that's ${plural(Math.round(backlogHours / 2 / 30), 'month')}. Better get started.`
                       : backlogHours > 200
@@ -736,7 +738,7 @@ export default function StatsPanel({ games }: StatsPanelProps) {
           {calculated && (
             <div className="mt-3 flex flex-col sm:flex-row gap-2">
               <button
-                onClick={() => shareToTwitter(generateShameText(shareData))}
+                onClick={() => shareToTwitter(generateShareText(shareData))}
                 className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{
                   backgroundColor: 'rgba(29, 161, 242, 0.1)',
@@ -744,10 +746,10 @@ export default function StatsPanel({ games }: StatsPanelProps) {
                   color: '#1da1f2',
                 }}
               >
-                𝕏 Share your shame
+                𝕏 Share your stats
               </button>
               <button
-                onClick={() => shareToReddit(generateShameText(shareData))}
+                onClick={() => shareToReddit(generateShareText(shareData))}
                 className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{
                   backgroundColor: 'rgba(255, 69, 0, 0.1)',
@@ -759,8 +761,8 @@ export default function StatsPanel({ games }: StatsPanelProps) {
               </button>
               <button
                 onClick={() => {
-                  navigator.clipboard.writeText(getDiscordText(generateShameText(shareData)));
-                  showToast('Copied to clipboard. Go paste your shame.');
+                  navigator.clipboard.writeText(getDiscordText(generateShareText(shareData)));
+                  showToast('Copied to clipboard — go share it!');
                 }}
                 className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{
