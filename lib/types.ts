@@ -37,7 +37,7 @@ export interface LibrarySettings {
   showPlayed: boolean;
   showBailed: boolean;
   viewMode: ViewMode;
-  theme: 'dark';
+  theme: 'dark' | '90s';
   platformPreference: PlatformPreference;
 }
 

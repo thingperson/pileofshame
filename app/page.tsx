@@ -12,6 +12,7 @@ import ImportHub from '@/components/ImportHub';
 import SettingsMenu from '@/components/SettingsMenu';
 import ViewToggle from '@/components/ViewToggle';
 import { ToastProvider } from '@/components/Toast';
+import NinetiesMode from '@/components/NinetiesMode';
 
 function AppContent() {
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -251,7 +252,9 @@ function AppContent() {
 export default function Home() {
   return (
     <ToastProvider>
-      <AppContent />
+      <NinetiesMode>
+        <AppContent />
+      </NinetiesMode>
     </ToastProvider>
   );
 }

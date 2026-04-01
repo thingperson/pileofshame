@@ -114,6 +114,33 @@ export default function SettingsMenu() {
           >
             {!confirmImport ? (
               <>
+                {/* Theme Toggle */}
+                <div className="px-3 py-2 space-y-1.5">
+                  <p className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">Theme</p>
+                  <div className="flex gap-1">
+                    {[
+                      { value: 'dark', label: '🌙 Dark' },
+                      { value: '90s', label: '🚧 90s' },
+                    ].map((opt) => (
+                      <button
+                        key={opt.value}
+                        onClick={() => {
+                          useStore.setState((s) => ({
+                            settings: { ...s.settings, theme: opt.value as 'dark' | '90s' },
+                          }));
+                        }}
+                        className={`px-2 py-1 text-[11px] rounded-md font-medium transition-all ${
+                          settings.theme === opt.value
+                            ? 'bg-accent-purple/20 text-accent-purple border border-accent-purple/30'
+                            : 'text-text-dim hover:text-text-muted border border-transparent'
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Platform Preference */}
                 <div className="px-3 py-2 space-y-1.5">
                   <p className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">I play on</p>
