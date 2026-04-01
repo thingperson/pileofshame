@@ -1,4 +1,4 @@
-export type GameSource = 'steam' | 'playstation' | 'epic' | 'xbox' | 'switch' | 'other';
+export type GameSource = 'steam' | 'playstation' | 'epic' | 'xbox' | 'switch' | 'gog' | 'other';
 export type TimeTier = 'wind-down' | 'deep-cut';
 export type GameStatus = 'buried' | 'on-deck' | 'playing' | 'played' | 'bailed';
 

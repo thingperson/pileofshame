@@ -7,7 +7,7 @@ import CategorySection from '@/components/CategorySection';
 import FilterBar from '@/components/FilterBar';
 import AddGameModal from '@/components/AddGameModal';
 import Reroll from '@/components/Reroll';
-import SteamImportModal from '@/components/SteamImportModal';
+import ImportHub from '@/components/ImportHub';
 import SettingsMenu from '@/components/SettingsMenu';
 import ViewToggle from '@/components/ViewToggle';
 import { ToastProvider } from '@/components/Toast';
@@ -15,7 +15,7 @@ import { ToastProvider } from '@/components/Toast';
 function AppContent() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [rerollOpen, setRerollOpen] = useState(false);
-  const [steamImportOpen, setSteamImportOpen] = useState(false);
+  const [importHubOpen, setImportHubOpen] = useState(false);
 
   const games = useStore((s) => s.games);
   const categories = useStore((s) => s.categories);
@@ -68,6 +68,15 @@ function AppContent() {
     return map;
   }, [filteredGames, categories]);
 
+  // Quick stats
+  const stats = useMemo(() => {
+    const playing = games.filter((g) => g.status === 'playing').length;
+    const buried = games.filter((g) => g.status === 'buried' || g.status === 'on-deck').length;
+    const played = games.filter((g) => g.status === 'played').length;
+    const totalHrs = games.reduce((s, g) => s + (g.hoursPlayed || 0), 0);
+    return { playing, buried, played, total: games.length, totalHrs };
+  }, [games]);
+
   const isEmpty = games.length === 0;
   const noResults = games.length > 0 && filteredGames.length === 0;
 
@@ -79,17 +88,29 @@ function AppContent() {
           <h1 className="text-2xl font-extrabold tracking-tight text-text-primary">
             Pile of Shame
           </h1>
-          <p className="text-[10px] sm:text-xs text-text-dim font-[family-name:var(--font-mono)] mt-0.5 hidden sm:block">
-            Your backlog isn&apos;t going to play itself.
-          </p>
+          {!isEmpty ? (
+            <div className="flex gap-3 text-[10px] sm:text-xs font-[family-name:var(--font-mono)] mt-0.5">
+              <span><span style={{ color: '#f59e0b' }}>{stats.playing}</span> <span className="text-text-faint">playing</span></span>
+              <span><span className="text-text-muted">{stats.buried}</span> <span className="text-text-faint">backlog</span></span>
+              <span><span style={{ color: '#22c55e' }}>{stats.played}</span> <span className="text-text-faint">done</span></span>
+              <span className="hidden sm:inline"><span className="text-accent-purple">{stats.total}</span> <span className="text-text-faint">total</span></span>
+              {stats.totalHrs > 0 && (
+                <span className="hidden sm:inline"><span className="text-accent-pink">{stats.totalHrs.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span> <span className="text-text-faint">hrs</span></span>
+              )}
+            </div>
+          ) : (
+            <p className="text-[10px] sm:text-xs text-text-dim font-[family-name:var(--font-mono)] mt-0.5">
+              Your backlog isn&apos;t going to play itself.
+            </p>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <ViewToggle />
           <button
-            onClick={() => setSteamImportOpen(true)}
+            onClick={() => setImportHubOpen(true)}
             className="px-3 py-1.5 text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
           >
-            🎮 Steam
+            📥 Import
           </button>
           <button
             onClick={() => setAddModalOpen(true)}
@@ -129,10 +150,10 @@ function AppContent() {
             + Add Your First Game
           </button>
           <button
-            onClick={() => setSteamImportOpen(true)}
+            onClick={() => setImportHubOpen(true)}
             className="mt-3 px-4 py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-muted hover:border-accent-purple hover:text-text-secondary transition-all"
           >
-            🎮 Or import from Steam
+            📥 Or import your library
           </button>
         </div>
       )}
@@ -176,7 +197,7 @@ function AppContent() {
 
       {/* Modals */}
       <AddGameModal open={addModalOpen} onClose={() => setAddModalOpen(false)} />
-      <SteamImportModal open={steamImportOpen} onClose={() => setSteamImportOpen(false)} />
+      <ImportHub open={importHubOpen} onClose={() => setImportHubOpen(false)} />
       <Reroll open={rerollOpen} onClose={() => setRerollOpen(false)} />
     </div>
   );

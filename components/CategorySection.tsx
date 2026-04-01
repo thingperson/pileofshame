@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Game } from '@/lib/types';
 import { useStore } from '@/lib/store';
+import { CATEGORY_ICONS } from '@/lib/constants';
 import GameCard from './GameCard';
 import GridCard from './GridCard';
 
@@ -17,7 +18,22 @@ export default function CategorySection({ name, games }: CategorySectionProps) {
 
   if (games.length === 0) return null;
 
-  const sorted = [...games].sort((a, b) => a.priority - b.priority);
+  // Sort: playing first, then on-deck, then buried, then by priority
+  const statusOrder: Record<string, number> = {
+    'playing': 0,
+    'on-deck': 1,
+    'buried': 2,
+    'played': 3,
+    'bailed': 4,
+  };
+  const sorted = [...games].sort((a, b) => {
+    const sa = statusOrder[a.status] ?? 2;
+    const sb = statusOrder[b.status] ?? 2;
+    if (sa !== sb) return sa - sb;
+    return a.priority - b.priority;
+  });
+
+  const icon = CATEGORY_ICONS[name] || '';
 
   return (
     <div className="space-y-2">
@@ -34,6 +50,7 @@ export default function CategorySection({ name, games }: CategorySectionProps) {
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
+        {icon && <span className="text-lg">{icon}</span>}
         <h2 className="text-sm font-semibold text-text-secondary tracking-wide">
           {name}
         </h2>

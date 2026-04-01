@@ -57,6 +57,7 @@ export const SOURCE_ICONS: Record<GameSource, string> = {
   epic: '🎮',
   xbox: '🎮',
   switch: '🕹️',
+  gog: '🎮',
   other: '🎲',
 };
 
@@ -66,6 +67,7 @@ export const SOURCE_LABELS: Record<GameSource, string> = {
   epic: 'Epic',
   xbox: 'Xbox',
   switch: 'Switch',
+  gog: 'GOG',
   other: 'Other',
 };
 
@@ -78,6 +80,15 @@ export const REROLL_MESSAGES: Record<number, string> = {
   3: 'Getting picky?',
   5: 'The dice are getting tired.',
   7: "You're here to play, not spin.",
+};
+
+export const CATEGORY_ICONS: Record<string, string> = {
+  'Your Queue': '⚡',
+  'Sleeping On': '💤',
+  "Philosopher's Shelf": '🧠',
+  'Family Night': '🎮',
+  'Comfort Food': '🍜',
+  'Hidden Gem Deep Cuts': '💎',
 };
 
 export function getVibeColor(vibe: string): string {
