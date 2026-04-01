@@ -327,6 +327,14 @@ body::before {
   color: #ffff00 !important;
 }
 
+/* Hide emojis in 90s mode — they didn't exist yet */
+.theme-90s .emoji-icon {
+  display: none !important;
+}
+.theme-90s .ascii-icon {
+  display: inline !important;
+}
+
 /* Horizontal rule — 90s style */
 .theme-90s hr, .nineties-hr {
   border: none;

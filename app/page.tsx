@@ -123,7 +123,7 @@ function AppContent() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setHelpOpen(true)}
-              className="px-2 py-1 text-sm text-text-dim hover:text-text-muted transition-colors"
+              className="w-8 h-8 flex items-center justify-center text-sm text-text-dim hover:text-text-muted transition-colors rounded-lg hover:bg-white/5"
               title="Help & FAQ"
             >
               ?
@@ -136,13 +136,13 @@ function AppContent() {
           <ViewToggle />
           <button
             onClick={() => setImportHubOpen(true)}
-            className="px-3 py-1.5 text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+            className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
           >
             📥 Import Library
           </button>
           <button
             onClick={() => setAddModalOpen(true)}
-            className="px-3 py-1.5 text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+            className="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
           >
             + Add Game
           </button>

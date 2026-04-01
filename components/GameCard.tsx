@@ -105,8 +105,9 @@ export default function GameCard({ game, upNextIndex }: GameCardProps) {
           }}
           title={game.status === 'played' ? 'Played — expand card for options' : undefined}
         >
-          <span>{statusConfig.icon}</span>
-          <span>{statusConfig.label}</span>
+          <span className="emoji-icon">{statusConfig.icon}</span>
+          <span className="ascii-icon hidden">{statusConfig.asciiIcon}</span>
+          <span className="hidden sm:inline">{statusConfig.label}</span>
           {/* Ghost preview */}
           {ghostStatus && game.status !== 'played' && game.status !== 'bailed' && (
             <span
@@ -116,8 +117,9 @@ export default function GameCard({ game, upNextIndex }: GameCardProps) {
                 color: STATUS_CONFIG[ghostStatus].color,
               }}
             >
-              <span>{STATUS_CONFIG[ghostStatus].icon}</span>
-              <span>{STATUS_CONFIG[ghostStatus].label}</span>
+              <span className="emoji-icon">{STATUS_CONFIG[ghostStatus].icon}</span>
+              <span className="ascii-icon hidden">{STATUS_CONFIG[ghostStatus].asciiIcon}</span>
+              <span className="hidden sm:inline">{STATUS_CONFIG[ghostStatus].label}</span>
             </span>
           )}
         </button>

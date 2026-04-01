@@ -39,14 +39,15 @@ export const VIBE_COLORS: Record<string, string> = {
 export const STATUS_CONFIG: Record<GameStatus, {
   label: string;
   icon: string;
+  asciiIcon: string;
   color: string;
   bg: string;
 }> = {
-  buried: { label: 'Backlog', icon: '📚', color: '#64748b', bg: '#1e293b' },
-  'on-deck': { label: 'Up Next', icon: '🎯', color: '#38bdf8', bg: '#082f49' },
-  playing: { label: 'Now Playing', icon: '🔥', color: '#f59e0b', bg: '#422006' },
-  played: { label: 'Played', icon: '✅', color: '#22c55e', bg: '#052e16' },
-  bailed: { label: 'Bailed', icon: '🚪', color: '#ef4444', bg: '#450a0a' },
+  buried: { label: 'Backlog', icon: '📚', asciiIcon: '[=]', color: '#64748b', bg: '#1e293b' },
+  'on-deck': { label: 'Up Next', icon: '🎯', asciiIcon: '>>>', color: '#38bdf8', bg: '#082f49' },
+  playing: { label: 'Now Playing', icon: '🔥', asciiIcon: '(~)', color: '#f59e0b', bg: '#422006' },
+  played: { label: 'Played', icon: '✅', asciiIcon: '[x]', color: '#22c55e', bg: '#052e16' },
+  bailed: { label: 'Bailed', icon: '🚪', asciiIcon: '[!]', color: '#ef4444', bg: '#450a0a' },
 };
 
 export const STATUS_CYCLE: GameStatus[] = ['buried', 'on-deck', 'playing', 'played'];
