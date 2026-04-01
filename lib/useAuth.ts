@@ -14,10 +14,12 @@ export function useAuth() {
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
     session: null,
-    loading: true,
+    loading: !supabase ? false : true, // If no supabase, skip loading state
   });
 
   useEffect(() => {
+    if (!supabase) return;
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setAuthState({
@@ -42,6 +44,7 @@ export function useAuth() {
   }, []);
 
   const signInWithDiscord = useCallback(async () => {
+    if (!supabase) return;
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'discord',
       options: {
@@ -52,6 +55,7 @@ export function useAuth() {
   }, []);
 
   const signInWithGoogle = useCallback(async () => {
+    if (!supabase) return;
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -62,6 +66,7 @@ export function useAuth() {
   }, []);
 
   const signOut = useCallback(async () => {
+    if (!supabase) return;
     await supabase.auth.signOut();
   }, []);
 

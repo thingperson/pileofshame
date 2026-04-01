@@ -263,16 +263,16 @@ function AppContent() {
           href="https://ko-fi.com/pileofshame"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium rounded-full border transition-all hover:scale-[1.02] hover:border-accent-pink"
+          className="inline-flex items-center gap-1.5 px-5 py-2.5 text-xs font-semibold rounded-full border transition-all hover:scale-[1.03] hover:border-accent-pink hover:text-accent-pink"
           style={{
-            borderColor: 'var(--color-border-subtle)',
-            color: 'var(--color-text-muted)',
+            borderColor: 'var(--color-border-active)',
+            color: 'var(--color-text-secondary)',
           }}
         >
-          🍕 Grab me a slice
+          🍕 Buy me a slice — support Pile Of Shame
         </a>
         <p className="text-[10px] text-text-faint font-[family-name:var(--font-mono)]">
-          Get playing for free, forever. Slices keep the lights on.
+          ❤️ Free forever. Tips keep the servers running and new features coming.
         </p>
       </footer>
     </div>

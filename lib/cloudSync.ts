@@ -12,6 +12,8 @@ interface CloudLibrary {
 
 // Save library to Supabase — upserts the entire library as JSONB
 export async function saveToCloud(userId: string, library: CloudLibrary): Promise<boolean> {
+  if (!supabase) return false;
+
   const { error } = await supabase
     .from('libraries')
     .upsert({
@@ -31,6 +33,8 @@ export async function saveToCloud(userId: string, library: CloudLibrary): Promis
 
 // Load library from Supabase
 export async function loadFromCloud(userId: string): Promise<CloudLibrary | null> {
+  if (!supabase) return null;
+
   const { data, error } = await supabase
     .from('libraries')
     .select('library_data')
@@ -39,7 +43,6 @@ export async function loadFromCloud(userId: string): Promise<CloudLibrary | null
 
   if (error || !data) {
     if (error?.code === 'PGRST116') {
-      // No rows — user hasn't saved yet, not an error
       return null;
     }
     console.error('Cloud load error:', error);
@@ -55,6 +58,8 @@ export async function saveProfile(userId: string, profile: {
   avatarUrl?: string;
   isPublic?: boolean;
 }): Promise<boolean> {
+  if (!supabase) return false;
+
   const { error } = await supabase
     .from('profiles')
     .upsert({
@@ -76,6 +81,8 @@ export async function saveProfile(userId: string, profile: {
 
 // Load public profile by slug
 export async function loadPublicProfile(slug: string) {
+  if (!supabase) return null;
+
   const { data, error } = await supabase
     .from('profiles')
     .select('display_name, avatar_url, user_id')
@@ -85,7 +92,6 @@ export async function loadPublicProfile(slug: string) {
 
   if (error || !data) return null;
 
-  // Also load their library
   const library = await loadFromCloud(data.user_id);
 
   return {
