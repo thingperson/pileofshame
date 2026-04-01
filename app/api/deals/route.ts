@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// CheapShark API — free, no key required
-// Docs: https://apidocs.cheapshark.com/
+// IsThereAnyDeal API — better data, built-in affiliate links
+// Docs: https://docs.isthereanydeal.com/
 
-const CHEAPSHARK_BASE = 'https://www.cheapshark.com/api/1.0';
+const ITAD_BASE = 'https://api.isthereanydeal.com';
+const ITAD_KEY = process.env.ITAD_API_KEY || '';
 
 const FETCH_OPTS: RequestInit = {
   headers: {
@@ -12,33 +13,91 @@ const FETCH_OPTS: RequestInit = {
   },
 };
 
-// Store ID → affiliate-friendly store names
-const STORE_MAP: Record<string, { name: string; isAffiliate: boolean }> = {
-  '1': { name: 'Steam', isAffiliate: false },
-  '2': { name: 'GamersGate', isAffiliate: true },
-  '3': { name: 'GreenManGaming', isAffiliate: true },
-  '7': { name: 'GOG', isAffiliate: true },
-  '8': { name: 'Origin', isAffiliate: false },
-  '11': { name: 'Humble Bundle', isAffiliate: true },
-  '13': { name: 'Uplay', isAffiliate: false },
-  '15': { name: 'Fanatical', isAffiliate: true },
-  '21': { name: 'WinGameStore', isAffiliate: true },
-  '23': { name: 'GameBillet', isAffiliate: true },
-  '24': { name: 'Voidu', isAffiliate: true },
-  '25': { name: 'Epic Games', isAffiliate: false },
-  '27': { name: 'Gamesplanet', isAffiliate: true },
-  '28': { name: 'Gamesload', isAffiliate: true },
-  '29': { name: '2Game', isAffiliate: true },
-  '30': { name: 'IndieGala', isAffiliate: true },
-  '31': { name: 'Blizzard', isAffiliate: false },
-  '33': { name: 'DLGamer', isAffiliate: true },
-  '34': { name: 'Noctre', isAffiliate: true },
-  '35': { name: 'DreamGame', isAffiliate: true },
-};
+// In-memory cache for game ID lookups (title → ITAD UUID)
+const idCache = new Map<string, string | null>();
+
+async function lookupGameId(title: string): Promise<string | null> {
+  const key = title.trim().toLowerCase();
+  if (idCache.has(key)) return idCache.get(key) || null;
+
+  try {
+    const res = await fetch(
+      `${ITAD_BASE}/games/search/v1?key=${ITAD_KEY}&title=${encodeURIComponent(title.trim())}&results=1`,
+      FETCH_OPTS,
+    );
+    if (!res.ok) {
+      console.error(`ITAD search failed: ${res.status}`);
+      return null;
+    }
+    const data = await res.json();
+    if (data && data.length > 0) {
+      const id = data[0].id;
+      idCache.set(key, id);
+      return id;
+    }
+    idCache.set(key, null);
+    return null;
+  } catch (err) {
+    console.error('ITAD lookup error:', err);
+    return null;
+  }
+}
+
+async function getPrices(gameIds: string[]): Promise<Record<string, {
+  deals: Array<{ shop: string; price: number; regular: number; cut: number; url: string }>;
+  historyLow: number | null;
+}>> {
+  if (gameIds.length === 0) return {};
+
+  try {
+    const res = await fetch(
+      `${ITAD_BASE}/games/prices/v3?key=${ITAD_KEY}&country=US&capacity=5&nondeals=true`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent': 'PileOfShame/1.0 (https://pileofsha.me)',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(gameIds),
+      },
+    );
+    if (!res.ok) {
+      console.error(`ITAD prices failed: ${res.status}`);
+      return {};
+    }
+    const data = await res.json();
+    const result: Record<string, {
+      deals: Array<{ shop: string; price: number; regular: number; cut: number; url: string }>;
+      historyLow: number | null;
+    }> = {};
+
+    for (const game of data) {
+      result[game.id] = {
+        deals: (game.deals || []).map((d: { shop: { name: string }; price: { amount: number }; regular: { amount: number }; cut: number; url: string }) => ({
+          shop: d.shop?.name || 'Unknown',
+          price: d.price?.amount || 0,
+          regular: d.regular?.amount || 0,
+          cut: d.cut || 0,
+          url: d.url || '',
+        })),
+        historyLow: game.historyLow?.all?.amount ?? null,
+      };
+    }
+    return result;
+  } catch (err) {
+    console.error('ITAD prices error:', err);
+    return {};
+  }
+}
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const action = searchParams.get('action') || 'search';
+
+  if (!ITAD_KEY) {
+    return NextResponse.json({ error: 'ITAD API key not configured' }, { status: 500 });
+  }
 
   try {
     // Search for deals by game title
@@ -48,57 +107,40 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: 'title required' }, { status: 400 });
       }
 
-      // First, search for the game to get its CheapShark ID
-      const searchRes = await fetch(
-        `${CHEAPSHARK_BASE}/games?title=${encodeURIComponent(title)}&limit=1`,
-        FETCH_OPTS,
-      );
-      if (!searchRes.ok) {
-        console.error(`CheapShark search failed: ${searchRes.status} ${searchRes.statusText}`);
-        return NextResponse.json({ error: `CheapShark search failed: ${searchRes.status}` }, { status: 502 });
+      const gameId = await lookupGameId(title);
+      if (!gameId) {
+        return NextResponse.json({ results: [], deals: [] });
       }
 
-      const games = await searchRes.json();
-      if (!games || games.length === 0) {
-        return NextResponse.json({ results: [] });
+      const prices = await getPrices([gameId]);
+      const gameData = prices[gameId];
+      if (!gameData || gameData.deals.length === 0) {
+        return NextResponse.json({ results: [], deals: [] });
       }
 
-      const game = games[0];
-
-      // Now get deals for this specific game
-      const dealsRes = await fetch(
-        `${CHEAPSHARK_BASE}/games?id=${game.gameID}`,
-        FETCH_OPTS,
-      );
-      if (!dealsRes.ok) {
-        return NextResponse.json({ results: [] });
-      }
-
-      const gameData = await dealsRes.json();
-      const deals = (gameData.deals || [])
-        .map((deal: { storeID: string; price: string; retailPrice: string; dealID: string; savings: string }) => ({
-          store: STORE_MAP[deal.storeID]?.name || `Store ${deal.storeID}`,
-          storeId: deal.storeID,
-          price: parseFloat(deal.price),
-          retailPrice: parseFloat(deal.retailPrice),
-          dealId: deal.dealID,
-          savings: Math.round(parseFloat(deal.savings)),
-          dealUrl: `https://www.cheapshark.com/redirect?dealID=${deal.dealID}`,
-          isAffiliate: STORE_MAP[deal.storeID]?.isAffiliate || false,
-        }))
-        .filter((d: { price: number }) => d.price > 0) // exclude free-to-play noise
-        .sort((a: { price: number }, b: { price: number }) => a.price - b.price)
-        .slice(0, 5);
+      // Sort by price ascending
+      const sortedDeals = gameData.deals
+        .filter(d => d.price > 0)
+        .sort((a, b) => a.price - b.price)
+        .slice(0, 5)
+        .map(d => ({
+          store: d.shop,
+          price: d.price,
+          retailPrice: d.regular,
+          savings: d.cut,
+          dealUrl: d.url, // ITAD URLs include affiliate tags — do NOT modify per TOS
+          isAffiliate: true,
+        }));
 
       return NextResponse.json({
-        gameId: game.gameID,
-        name: game.external,
-        cheapest: game.cheapest,
-        cheapestEver: gameData.cheapestPriceEver ? {
-          price: parseFloat(gameData.cheapestPriceEver.price),
-          date: new Date(gameData.cheapestPriceEver.date * 1000).toISOString().split('T')[0],
+        gameId,
+        name: title.trim(),
+        cheapest: sortedDeals[0]?.price.toFixed(2) || null,
+        cheapestEver: gameData.historyLow ? {
+          price: gameData.historyLow,
+          date: null,
         } : null,
-        deals,
+        deals: sortedDeals,
       });
     }
 
@@ -109,35 +151,41 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: 'titles required (comma-separated)' }, { status: 400 });
       }
 
-      const titleList = titles.split(',').slice(0, 10); // max 10 at a time
+      const titleList = titles.split(',').slice(0, 10);
       const results = [];
 
+      // Look up all game IDs (with small delays)
+      const idMap: { title: string; id: string }[] = [];
       for (const title of titleList) {
-        try {
-          const searchRes = await fetch(
-            `${CHEAPSHARK_BASE}/deals?title=${encodeURIComponent(title.trim())}&onSale=1&sortBy=Price&pageSize=1`,
-            FETCH_OPTS,
-          );
-          if (searchRes.ok) {
-            const deals = await searchRes.json();
-            if (deals && deals.length > 0) {
-              const deal = deals[0];
+        const id = await lookupGameId(title.trim());
+        if (id) {
+          idMap.push({ title: title.trim(), id });
+        }
+        await new Promise(r => setTimeout(r, 100));
+      }
+
+      if (idMap.length > 0) {
+        // Batch price lookup
+        const prices = await getPrices(idMap.map(g => g.id));
+
+        for (const { title, id } of idMap) {
+          const gameData = prices[id];
+          if (gameData && gameData.deals.length > 0) {
+            const best = gameData.deals
+              .filter(d => d.cut > 0)
+              .sort((a, b) => a.price - b.price)[0];
+            if (best) {
               results.push({
-                title: deal.title,
-                searchTitle: title.trim(),
-                salePrice: parseFloat(deal.salePrice),
-                normalPrice: parseFloat(deal.normalPrice),
-                savings: Math.round(parseFloat(deal.savings)),
-                store: STORE_MAP[deal.storeID]?.name || `Store ${deal.storeID}`,
-                dealUrl: `https://www.cheapshark.com/redirect?dealID=${deal.dealID}`,
-                metacritic: deal.metacriticScore ? parseInt(deal.metacriticScore) : null,
+                title,
+                searchTitle: title,
+                salePrice: best.price,
+                normalPrice: best.regular,
+                savings: best.cut,
+                store: best.shop,
+                dealUrl: best.url,
               });
             }
           }
-          // Small delay to be nice to CheapShark
-          await new Promise((r) => setTimeout(r, 100));
-        } catch {
-          // skip individual failures
         }
       }
 
@@ -145,38 +193,37 @@ export async function GET(req: NextRequest) {
     }
 
     // Price lookup: get retail prices for a list of games (for backlog value estimation)
-    // Uses the /deals endpoint — single call per game, returns normalPrice (retail)
     if (action === 'prices') {
       const titles = searchParams.get('titles');
       if (!titles) {
         return NextResponse.json({ error: 'titles required (comma-separated)' }, { status: 400 });
       }
 
-      const titleList = titles.split(',').slice(0, 15); // max 15 to stay fast
+      const titleList = titles.split(',').slice(0, 15);
       const prices: { title: string; retailPrice: number }[] = [];
 
+      // Look up all game IDs
+      const idMap: { title: string; id: string }[] = [];
       for (const title of titleList) {
-        try {
-          const searchRes = await fetch(
-            `${CHEAPSHARK_BASE}/deals?title=${encodeURIComponent(title.trim())}&pageSize=1`,
-            FETCH_OPTS,
-          );
-          if (searchRes.ok) {
-            const deals = await searchRes.json();
-            if (deals && deals.length > 0) {
-              const normalPrice = parseFloat(deals[0].normalPrice);
-              if (normalPrice > 0) {
-                prices.push({
-                  title: title.trim(),
-                  retailPrice: normalPrice,
-                });
-              }
+        const id = await lookupGameId(title.trim());
+        if (id) {
+          idMap.push({ title: title.trim(), id });
+        }
+        await new Promise(r => setTimeout(r, 100));
+      }
+
+      if (idMap.length > 0) {
+        const priceData = await getPrices(idMap.map(g => g.id));
+
+        for (const { title, id } of idMap) {
+          const gameData = priceData[id];
+          if (gameData && gameData.deals.length > 0) {
+            // Use the highest regular price as retail
+            const retailPrice = Math.max(...gameData.deals.map(d => d.regular));
+            if (retailPrice > 0) {
+              prices.push({ title, retailPrice });
             }
           }
-          // Be respectful — 100ms between requests
-          await new Promise((r) => setTimeout(r, 100));
-        } catch {
-          // skip failures
         }
       }
 
