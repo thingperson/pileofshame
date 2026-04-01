@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useRef } from 'react';
 import { Game } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
@@ -66,10 +66,20 @@ export default function UpNextSection({ games }: UpNextSectionProps) {
   const updateGame = useStore((s) => s.updateGame);
   const { showToast } = useToast();
 
-  // Suggest a game when queue is empty
+  // Suggest a game when queue is empty — stabilize so it doesn't flicker during enrichment
+  const suggestionRef = useRef<Game | null>(null);
   const suggestion = useMemo(() => {
-    if (upNextGames.length > 0) return null;
-    return pickSuggestion(games);
+    if (upNextGames.length > 0) {
+      suggestionRef.current = null;
+      return null;
+    }
+    // If we already have a valid suggestion and that game still exists in the library, keep it
+    if (suggestionRef.current && games.some(g => g.id === suggestionRef.current!.id && g.status === 'buried')) {
+      return suggestionRef.current;
+    }
+    const pick = pickSuggestion(games);
+    suggestionRef.current = pick;
+    return pick;
   }, [games, upNextGames.length]);
 
   const handleAddSuggestion = useCallback(() => {
