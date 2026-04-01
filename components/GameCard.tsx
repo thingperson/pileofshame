@@ -5,6 +5,7 @@ import { Game, GameStatus, TimeTier } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { STATUS_CONFIG, STATUS_CYCLE, TIME_TIER_CONFIG, SOURCE_LABELS, SOURCE_ICONS, DEFAULT_VIBES, DEFAULT_CATEGORIES, getVibeColor } from '@/lib/constants';
 import { useToast } from './Toast';
+import DealBadge from './DealBadge';
 
 interface GameCardProps {
   game: Game;
@@ -283,6 +284,9 @@ export default function GameCard({ game }: GameCardProps) {
               </button>
             </div>
           </div>
+
+          {/* Deals */}
+          <DealBadge gameName={game.name} />
 
           {/* Launch button for Steam games */}
           {game.steamAppId && (

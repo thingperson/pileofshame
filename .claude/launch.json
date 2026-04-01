@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "getplaying",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "export PATH=\"$HOME/.fnm:$HOME/.fnm/node-versions/v22.22.2/installation/bin:$PATH\" && npm run dev"],
+      "port": 3000
+    }
+  ]
+}

@@ -225,6 +225,25 @@ function AppContent() {
       <AddGameModal open={addModalOpen} onClose={() => setAddModalOpen(false)} />
       <ImportHub open={importHubOpen} onClose={() => setImportHubOpen(false)} />
       <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} />
+
+      {/* Footer */}
+      <footer className="mt-12 pb-6 text-center space-y-2">
+        <a
+          href="https://ko-fi.com/pileofshame"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium rounded-full border transition-all hover:scale-[1.02] hover:border-accent-pink"
+          style={{
+            borderColor: 'var(--color-border-subtle)',
+            color: 'var(--color-text-muted)',
+          }}
+        >
+          🍕 Grab me a slice
+        </a>
+        <p className="text-[10px] text-text-faint font-[family-name:var(--font-mono)]">
+          Get playing for free, forever. Slices keep the lights on.
+        </p>
+      </footer>
     </div>
   );
 }
