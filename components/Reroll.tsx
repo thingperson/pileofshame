@@ -29,8 +29,9 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   const updateGame = useStore((s) => s.updateGame);
   const { showToast } = useToast();
 
-  const doRoll = useCallback(() => {
-    const eligible = getEligibleGames(games, mode);
+  const doRoll = useCallback((overrideMode?: RerollMode) => {
+    const rollMode = overrideMode || mode;
+    const eligible = getEligibleGames(games, rollMode);
     const pick = pickRandom(eligible);
     if (!pick) {
       showToast('No games match this mode. Add some games first.');
@@ -149,9 +150,15 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
           <h2 className="text-2xl font-extrabold text-text-primary tracking-tight">
             🎲 Reroll
           </h2>
-          <p className="text-xs text-text-dim mt-1 font-[family-name:var(--font-mono)]">
-            {currentPick ? `Roll ${reroll.sessionCount}` : 'Pick a mode and roll'}
-          </p>
+          {currentPick ? (
+            <p className="text-xs text-text-dim mt-1 font-[family-name:var(--font-mono)]">
+              Roll {reroll.sessionCount}
+            </p>
+          ) : (
+            <p className="text-xs text-text-dim mt-1 font-[family-name:var(--font-mono)]">
+              Pick a mode and roll
+            </p>
+          )}
         </div>
 
         {/* Mode Selector (only before first roll, skip if mode pre-selected) */}
@@ -192,6 +199,23 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
         {/* Current Pick */}
         {currentPick && !showForced && (
           <div className={`px-5 pb-5 transition-all duration-500 ${revealed ? 'opacity-100' : 'opacity-0'}`}>
+            {/* Mode switcher pills */}
+            <div className="flex justify-center gap-1.5 mb-4">
+              {REROLL_MODES.map(({ mode: m, icon }) => (
+                <button
+                  key={m}
+                  onClick={() => { setMode(m); doRoll(m); }}
+                  className={`px-2.5 py-1 rounded-full text-[11px] font-medium font-[family-name:var(--font-mono)] transition-all ${
+                    mode === m
+                      ? 'bg-white/10 text-text-primary'
+                      : 'text-text-dim hover:text-text-muted hover:bg-white/5'
+                  }`}
+                >
+                  {icon}
+                </button>
+              ))}
+            </div>
+
             {/* Game reveal */}
             <div
               className="rounded-xl border p-5 mb-4 text-center"
@@ -237,7 +261,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                 Not now
               </button>
               <button
-                onClick={doRoll}
+                onClick={() => doRoll()}
                 disabled={reroll.sessionCount >= 10}
                 className="flex-1 px-3 py-2.5 text-sm font-medium rounded-xl border border-border-subtle text-text-secondary hover:border-accent-purple transition-all disabled:opacity-30 disabled:cursor-not-allowed"
               >
