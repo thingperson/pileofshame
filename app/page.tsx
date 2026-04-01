@@ -76,7 +76,7 @@ function AppContent() {
       <header className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight text-text-primary">
-            Get Playing
+            Pile of Shame
           </h1>
           <p className="text-[10px] sm:text-xs text-text-dim font-[family-name:var(--font-mono)] mt-0.5 hidden sm:block">
             Your backlog isn&apos;t going to play itself.
