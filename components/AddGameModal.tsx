@@ -5,6 +5,7 @@ import { GameSource, TimeTier } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { DEFAULT_VIBES, getVibeColor, SOURCE_LABELS, TIME_TIER_CONFIG } from '@/lib/constants';
 import { useToast } from './Toast';
+import GameSearch from './GameSearch';
 
 interface AddGameModalProps {
   open: boolean;
@@ -18,6 +19,10 @@ export default function AddGameModal({ open, onClose }: AddGameModalProps) {
   const [vibes, setVibes] = useState<string[]>([]);
   const [timeTier, setTimeTier] = useState<TimeTier>('wind-down');
   const [notes, setNotes] = useState('');
+  const [coverUrl, setCoverUrl] = useState<string | undefined>();
+  const [rawgSlug, setRawgSlug] = useState<string | undefined>();
+  const [metacritic, setMetacritic] = useState<number | undefined>();
+  const [genres, setGenres] = useState<string[] | undefined>();
 
   const addGame = useStore((s) => s.addGame);
   const categories = useStore((s) => s.categories);
@@ -35,6 +40,10 @@ export default function AddGameModal({ open, onClose }: AddGameModalProps) {
       timeTier,
       notes: notes.trim(),
       status: 'buried',
+      coverUrl,
+      rawgSlug,
+      metacritic,
+      genres,
     });
 
     showToast(`Added to ${category || categories[0]}. Now go play it.`);
@@ -48,6 +57,10 @@ export default function AddGameModal({ open, onClose }: AddGameModalProps) {
     setVibes([]);
     setTimeTier('wind-down');
     setNotes('');
+    setCoverUrl(undefined);
+    setRawgSlug(undefined);
+    setMetacritic(undefined);
+    setGenres(undefined);
     onClose();
   };
 
@@ -78,15 +91,52 @@ export default function AddGameModal({ open, onClose }: AddGameModalProps) {
         <h2 className="text-lg font-bold text-text-primary">Add Game</h2>
 
         <form onSubmit={handleSubmit} className="space-y-3">
-          {/* Name */}
-          <input
-            type="text"
+          {/* Name — RAWG search with autocomplete */}
+          <GameSearch
             value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Game name"
-            autoFocus
-            className="w-full text-sm bg-bg-primary border border-border-subtle rounded-lg px-3 py-2.5 text-text-primary placeholder-text-faint focus:outline-none focus:border-accent-purple"
+            onChange={setName}
+            onSelect={(result) => {
+              setCoverUrl(result.coverUrl || undefined);
+              setRawgSlug(result.slug);
+              setMetacritic(result.metacritic || undefined);
+              setGenres(result.genres.length > 0 ? result.genres : undefined);
+            }}
           />
+
+          {/* Cover art preview */}
+          {coverUrl && (
+            <div className="flex items-center gap-3">
+              <img
+                src={coverUrl}
+                alt=""
+                className="w-20 h-12 rounded-lg object-cover bg-bg-primary"
+              />
+              <div className="flex-1 min-w-0">
+                {metacritic && (
+                  <span className="text-xs font-[family-name:var(--font-mono)] text-text-dim">
+                    Metacritic: {metacritic}
+                  </span>
+                )}
+                {genres && genres.length > 0 && (
+                  <p className="text-[11px] text-text-faint truncate">
+                    {genres.join(', ')}
+                  </p>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setCoverUrl(undefined);
+                  setRawgSlug(undefined);
+                  setMetacritic(undefined);
+                  setGenres(undefined);
+                }}
+                className="text-xs text-text-dim hover:text-text-muted"
+              >
+                ✕
+              </button>
+            </div>
+          )}
 
           {/* Source & Category */}
           <div className="flex gap-2">

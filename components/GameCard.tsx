@@ -165,30 +165,45 @@ export default function GameCard({ game }: GameCardProps) {
       {/* Expanded View */}
       {expanded && (
         <div className="px-3.5 pb-3.5 border-t space-y-3" style={{ borderColor: 'var(--color-border-subtle)' }}>
-          {/* Vibe Tags */}
-          {game.vibes.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 pt-3">
-              {game.vibes.map((vibe) => (
-                <span
-                  key={vibe}
-                  className="px-2 py-0.5 rounded-full text-[11px] font-medium font-[family-name:var(--font-mono)]"
-                  style={{
-                    backgroundColor: `${getVibeColor(vibe)}15`,
-                    color: getVibeColor(vibe),
-                    border: `1px solid ${getVibeColor(vibe)}30`,
-                  }}
-                >
-                  {vibe}
-                </span>
-              ))}
-            </div>
-          )}
+          {/* Cover Art + Vibes row */}
+          <div className="flex gap-3 pt-3">
+            {game.coverUrl && (
+              <img
+                src={game.coverUrl}
+                alt=""
+                className="w-24 h-14 rounded-lg object-cover shrink-0 bg-bg-primary"
+              />
+            )}
+            <div className="flex-1 space-y-2">
+              {/* Vibe Tags */}
+              {game.vibes.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {game.vibes.map((vibe) => (
+                    <span
+                      key={vibe}
+                      className="px-2 py-0.5 rounded-full text-[11px] font-medium font-[family-name:var(--font-mono)]"
+                      style={{
+                        backgroundColor: `${getVibeColor(vibe)}15`,
+                        color: getVibeColor(vibe),
+                        border: `1px solid ${getVibeColor(vibe)}30`,
+                      }}
+                    >
+                      {vibe}
+                    </span>
+                  ))}
+                </div>
+              )}
 
-          {/* Metadata */}
-          <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-text-dim font-[family-name:var(--font-mono)]">
-            <span>{SOURCE_LABELS[game.source]}</span>
-            <span>{tierConfig.icon} {tierConfig.label}</span>
-            {game.metacritic && <span>Metacritic: {game.metacritic}</span>}
+              {/* Metadata */}
+              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-text-dim font-[family-name:var(--font-mono)]">
+                <span>{SOURCE_LABELS[game.source]}</span>
+                <span>{tierConfig.icon} {tierConfig.label}</span>
+                {game.metacritic && <span>Metacritic: {game.metacritic}</span>}
+                {game.genres && game.genres.length > 0 && (
+                  <span>{game.genres.slice(0, 3).join(', ')}</span>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Notes */}

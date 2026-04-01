@@ -9,6 +9,7 @@ import AddGameModal from '@/components/AddGameModal';
 import Reroll from '@/components/Reroll';
 import SteamImportModal from '@/components/SteamImportModal';
 import SettingsMenu from '@/components/SettingsMenu';
+import ViewToggle from '@/components/ViewToggle';
 import { ToastProvider } from '@/components/Toast';
 
 function AppContent() {
@@ -83,6 +84,7 @@ function AppContent() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <ViewToggle />
           <button
             onClick={() => setSteamImportOpen(true)}
             className="px-3 py-1.5 text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"

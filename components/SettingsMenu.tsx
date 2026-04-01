@@ -9,10 +9,45 @@ export default function SettingsMenu() {
   const [open, setOpen] = useState(false);
   const [confirmImport, setConfirmImport] = useState(false);
   const [pendingImport, setPendingImport] = useState<string | null>(null);
+  const [enriching, setEnriching] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const exportState = useStore((s) => s.exportState);
   const importState = useStore((s) => s.importState);
+  const games = useStore((s) => s.games);
+  const updateGame = useStore((s) => s.updateGame);
   const { showToast } = useToast();
+
+  const gamesWithoutArt = games.filter((g) => !g.coverUrl);
+
+  const handleEnrichArt = async () => {
+    setEnriching(true);
+    let enriched = 0;
+    const batch = gamesWithoutArt.slice(0, 20); // 20 at a time to avoid rate limits
+    for (const game of batch) {
+      try {
+        const res = await fetch(`/api/rawg?search=${encodeURIComponent(game.name)}`);
+        if (!res.ok) continue;
+        const data = await res.json();
+        const match = data.results?.[0];
+        if (match && match.coverUrl) {
+          updateGame(game.id, {
+            coverUrl: match.coverUrl,
+            rawgSlug: match.slug,
+            metacritic: match.metacritic || undefined,
+            genres: match.genres?.length > 0 ? match.genres : undefined,
+          });
+          enriched++;
+        }
+      } catch {
+        // skip failures
+      }
+      // Small delay to avoid hammering the API
+      await new Promise((r) => setTimeout(r, 200));
+    }
+    const remaining = gamesWithoutArt.length - enriched;
+    showToast(`Added cover art to ${enriched} games.${remaining > 0 ? ` ${remaining} remaining — run again.` : ''}`);
+    setEnriching(false);
+  };
 
   const handleExport = () => {
     const data = exportState();
@@ -90,6 +125,15 @@ export default function SettingsMenu() {
                 >
                   📥 Import Library
                 </button>
+                {gamesWithoutArt.length > 0 && (
+                  <button
+                    onClick={handleEnrichArt}
+                    disabled={enriching}
+                    className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors disabled:opacity-50"
+                  >
+                    {enriching ? '⏳ Fetching...' : `🖼️ Fetch Cover Art (${gamesWithoutArt.length})`}
+                  </button>
+                )}
               </>
             ) : (
               <div className="p-2 space-y-2">

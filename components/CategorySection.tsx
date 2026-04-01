@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import { Game } from '@/lib/types';
+import { useStore } from '@/lib/store';
 import GameCard from './GameCard';
+import GridCard from './GridCard';
 
 interface CategorySectionProps {
   name: string;
@@ -11,8 +13,11 @@ interface CategorySectionProps {
 
 export default function CategorySection({ name, games }: CategorySectionProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const viewMode = useStore((s) => s.settings.viewMode);
 
   if (games.length === 0) return null;
+
+  const sorted = [...games].sort((a, b) => a.priority - b.priority);
 
   return (
     <div className="space-y-2">
@@ -37,13 +42,19 @@ export default function CategorySection({ name, games }: CategorySectionProps) {
         </span>
       </button>
 
-      {!collapsed && (
+      {!collapsed && viewMode === 'list' && (
         <div className="space-y-1.5 pl-0.5">
-          {games
-            .sort((a, b) => a.priority - b.priority)
-            .map((game) => (
-              <GameCard key={game.id} game={game} />
-            ))}
+          {sorted.map((game) => (
+            <GameCard key={game.id} game={game} />
+          ))}
+        </div>
+      )}
+
+      {!collapsed && viewMode === 'grid' && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 pl-0.5">
+          {sorted.map((game) => (
+            <GridCard key={game.id} game={game} />
+          ))}
         </div>
       )}
     </div>

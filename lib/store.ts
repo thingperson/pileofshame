@@ -8,7 +8,7 @@ import { DEFAULT_CATEGORIES, DEFAULT_VIBES, STATUS_CYCLE } from './constants';
 
 interface StoreActions {
   // Game CRUD
-  addGame: (game: Omit<Game, 'id' | 'priority' | 'addedAt' | 'updatedAt' | 'hoursPlayed' | 'installed'>) => void;
+  addGame: (game: Omit<Game, 'id' | 'priority' | 'addedAt' | 'updatedAt' | 'hoursPlayed' | 'installed'> & { hoursPlayed?: number }) => void;
   updateGame: (id: string, updates: Partial<Game>) => void;
   deleteGame: (id: string) => void;
 
@@ -75,7 +75,7 @@ export const useStore = create<LibraryState & StoreActions>()(
         const newGame: Game = {
           ...gameData,
           id: uuidv4(),
-          hoursPlayed: 0,
+          hoursPlayed: gameData.hoursPlayed ?? 0,
           installed: false,
           priority: categoryGames.length,
           addedAt: now,
