@@ -1,26 +1,91 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-bg-primary: #0a0a0f;
+  --color-bg-card: #111118;
+  --color-bg-elevated: #1e293b;
+  --color-border-subtle: #1a1a24;
+  --color-border-active: #334155;
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #e2e8f0;
+  --color-text-muted: #94a3b8;
+  --color-text-dim: #64748b;
+  --color-text-faint: #475569;
+  --color-accent-purple: #a78bfa;
+  --color-accent-pink: #f9a8d4;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-status-buried: #64748b;
+  --color-status-buried-bg: #1e293b;
+  --color-status-on-deck: #38bdf8;
+  --color-status-on-deck-bg: #082f49;
+  --color-status-playing: #f59e0b;
+  --color-status-playing-bg: #422006;
+  --color-status-played: #22c55e;
+  --color-status-played-bg: #052e16;
+  --color-status-bailed: #ef4444;
+  --color-status-bailed-bg: #450a0a;
+
+  --color-vibe-cozy: #f9a8d4;
+  --color-vibe-narrative: #93c5fd;
+  --color-vibe-atmospheric: #a78bfa;
+  --color-vibe-challenge: #f87171;
+  --color-vibe-mindless: #fbbf24;
+  --color-vibe-philosophical: #34d399;
+
+  --font-display: "Outfit", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  min-height: 100vh;
+}
+
+/* Ambient background gradients */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(ellipse 600px 400px at 80% 10%, rgba(167, 139, 250, 0.06), transparent),
+    radial-gradient(ellipse 500px 400px at 20% 90%, rgba(249, 168, 212, 0.04), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

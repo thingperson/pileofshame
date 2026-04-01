@@ -1,0 +1,281 @@
+'use client';
+
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { v4 as uuidv4 } from 'uuid';
+import { Game, GameStatus, LibraryState, FilterState, TimeTier } from './types';
+import { DEFAULT_CATEGORIES, DEFAULT_VIBES, STATUS_CYCLE } from './constants';
+
+interface StoreActions {
+  // Game CRUD
+  addGame: (game: Omit<Game, 'id' | 'priority' | 'addedAt' | 'updatedAt' | 'hoursPlayed' | 'installed'>) => void;
+  updateGame: (id: string, updates: Partial<Game>) => void;
+  deleteGame: (id: string) => void;
+
+  // Status
+  cycleStatus: (id: string) => GameStatus | null;
+  getNextStatus: (status: GameStatus) => GameStatus | null;
+  setBailed: (id: string) => void;
+  unBail: (id: string) => void;
+  playAgain: (id: string) => void;
+  newGamePlus: (id: string) => void;
+
+  // Filters
+  setFilter: <K extends keyof FilterState>(key: K, value: FilterState[K]) => void;
+  resetFilters: () => void;
+
+  // Reroll
+  incrementReroll: () => void;
+  pushLastPick: (game: Game) => void;
+  resetReroll: () => void;
+
+  // Categories
+  addCategory: (name: string) => void;
+  removeCategory: (name: string) => void;
+
+  // Backup
+  exportState: () => string;
+  importState: (json: string) => boolean;
+}
+
+const DEFAULT_FILTERS: FilterState = {
+  search: '',
+  category: '',
+  vibe: '',
+  timeTier: '',
+  showPlayed: false,
+  showBailed: false,
+};
+
+export const useStore = create<LibraryState & StoreActions>()(
+  persist(
+    (set, get) => ({
+      // State
+      games: [],
+      categories: [...DEFAULT_CATEGORIES],
+      customVibes: [],
+      settings: {
+        showPlayed: false,
+        showBailed: false,
+        viewMode: 'list' as const,
+        theme: 'dark' as const,
+      },
+      reroll: {
+        sessionCount: 0,
+        lastThreePicks: [],
+      },
+      filters: { ...DEFAULT_FILTERS },
+      lastSaved: new Date().toISOString(),
+
+      // Game CRUD
+      addGame: (gameData) => {
+        const now = new Date().toISOString();
+        const state = get();
+        const categoryGames = state.games.filter(g => g.category === gameData.category);
+        const newGame: Game = {
+          ...gameData,
+          id: uuidv4(),
+          hoursPlayed: 0,
+          installed: false,
+          priority: categoryGames.length,
+          addedAt: now,
+          updatedAt: now,
+        };
+        set({
+          games: [...state.games, newGame],
+          lastSaved: now,
+        });
+      },
+
+      updateGame: (id, updates) => {
+        const now = new Date().toISOString();
+        set((state) => ({
+          games: state.games.map((g) =>
+            g.id === id ? { ...g, ...updates, updatedAt: now } : g
+          ),
+          lastSaved: now,
+        }));
+      },
+
+      deleteGame: (id) => {
+        set((state) => ({
+          games: state.games.filter((g) => g.id !== id),
+          lastSaved: new Date().toISOString(),
+        }));
+      },
+
+      // Status
+      getNextStatus: (status: GameStatus): GameStatus | null => {
+        const idx = STATUS_CYCLE.indexOf(status);
+        if (idx === -1 || idx === STATUS_CYCLE.length - 1) return null;
+        return STATUS_CYCLE[idx + 1];
+      },
+
+      cycleStatus: (id) => {
+        const state = get();
+        const game = state.games.find((g) => g.id === id);
+        if (!game) return null;
+        const nextStatus = state.getNextStatus(game.status);
+        if (!nextStatus) return null;
+        const now = new Date().toISOString();
+        set({
+          games: state.games.map((g) =>
+            g.id === id ? { ...g, status: nextStatus, updatedAt: now } : g
+          ),
+          lastSaved: now,
+        });
+        return nextStatus;
+      },
+
+      setBailed: (id) => {
+        const now = new Date().toISOString();
+        set((state) => ({
+          games: state.games.map((g) =>
+            g.id === id && g.status !== 'played'
+              ? { ...g, status: 'bailed' as GameStatus, updatedAt: now }
+              : g
+          ),
+          lastSaved: now,
+        }));
+      },
+
+      unBail: (id) => {
+        const now = new Date().toISOString();
+        set((state) => ({
+          games: state.games.map((g) =>
+            g.id === id && g.status === 'bailed'
+              ? { ...g, status: 'buried' as GameStatus, updatedAt: now }
+              : g
+          ),
+          lastSaved: now,
+        }));
+      },
+
+      playAgain: (id) => {
+        const now = new Date().toISOString();
+        set((state) => ({
+          games: state.games.map((g) =>
+            g.id === id && g.status === 'played'
+              ? { ...g, status: 'playing' as GameStatus, updatedAt: now }
+              : g
+          ),
+          lastSaved: now,
+        }));
+      },
+
+      newGamePlus: (id) => {
+        const now = new Date().toISOString();
+        set((state) => ({
+          games: state.games.map((g) =>
+            g.id === id && g.status === 'played'
+              ? {
+                  ...g,
+                  status: 'on-deck' as GameStatus,
+                  notes: g.notes ? `${g.notes}\nRound 2` : 'Round 2',
+                  updatedAt: now,
+                }
+              : g
+          ),
+          lastSaved: now,
+        }));
+      },
+
+      // Filters
+      setFilter: (key, value) => {
+        set((state) => ({
+          filters: { ...state.filters, [key]: value },
+        }));
+      },
+
+      resetFilters: () => {
+        set({ filters: { ...DEFAULT_FILTERS } });
+      },
+
+      // Reroll
+      incrementReroll: () => {
+        set((state) => ({
+          reroll: {
+            ...state.reroll,
+            sessionCount: state.reroll.sessionCount + 1,
+          },
+        }));
+      },
+
+      pushLastPick: (game) => {
+        set((state) => ({
+          reroll: {
+            ...state.reroll,
+            lastThreePicks: [...state.reroll.lastThreePicks, game].slice(-3),
+          },
+        }));
+      },
+
+      resetReroll: () => {
+        set({
+          reroll: { sessionCount: 0, lastThreePicks: [] },
+        });
+      },
+
+      // Categories
+      addCategory: (name) => {
+        set((state) => ({
+          categories: state.categories.includes(name)
+            ? state.categories
+            : [...state.categories, name],
+        }));
+      },
+
+      removeCategory: (name) => {
+        set((state) => ({
+          categories: state.categories.filter((c) => c !== name),
+        }));
+      },
+
+      // Backup
+      exportState: () => {
+        const state = get();
+        const exportData = {
+          games: state.games,
+          categories: state.categories,
+          customVibes: state.customVibes,
+          settings: state.settings,
+          lastSaved: state.lastSaved,
+        };
+        return JSON.stringify(exportData, null, 2);
+      },
+
+      importState: (json: string) => {
+        try {
+          const data = JSON.parse(json);
+          if (!data.games || !Array.isArray(data.games)) return false;
+          set({
+            games: data.games,
+            categories: data.categories || [...DEFAULT_CATEGORIES],
+            customVibes: data.customVibes || [],
+            settings: data.settings || {
+              showPlayed: false,
+              showBailed: false,
+              viewMode: 'list',
+              theme: 'dark',
+            },
+            lastSaved: new Date().toISOString(),
+          });
+          return true;
+        } catch {
+          return false;
+        }
+      },
+    }),
+    {
+      name: 'getplaying-library',
+      partialize: (state) => ({
+        games: state.games,
+        categories: state.categories,
+        customVibes: state.customVibes,
+        settings: state.settings,
+        reroll: state.reroll,
+        lastSaved: state.lastSaved,
+      }),
+    }
+  )
+);
