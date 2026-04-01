@@ -22,6 +22,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   const [skipModePicker, setSkipModePicker] = useState(false);
 
   const games = useStore((s) => s.games);
+  const platformPreference = useStore((s) => s.settings.platformPreference) || 'any';
   const reroll = useStore((s) => s.reroll);
   const incrementReroll = useStore((s) => s.incrementReroll);
   const pushLastPick = useStore((s) => s.pushLastPick);
@@ -31,7 +32,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
 
   const doRoll = useCallback((overrideMode?: RerollMode) => {
     const rollMode = overrideMode || mode;
-    const eligible = getEligibleGames(games, rollMode);
+    const eligible = getEligibleGames(games, rollMode, platformPreference);
     const pick = pickRandom(eligible);
     if (!pick) {
       showToast('No games match this mode. Add some games first.');
@@ -86,7 +87,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   }, [resetReroll, onClose]);
 
   const handleFirstRoll = useCallback(() => {
-    const eligible = getEligibleGames(games, mode);
+    const eligible = getEligibleGames(games, mode, platformPreference);
     if (eligible.length === 0) {
       showToast('No games match this mode.');
       return;
@@ -113,7 +114,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   // Auto-roll on open when mode is pre-selected
   useEffect(() => {
     if (open && skipModePicker && !currentPick && !rolling) {
-      const eligible = getEligibleGames(games, mode);
+      const eligible = getEligibleGames(games, mode, platformPreference);
       if (eligible.length > 0) {
         doRoll();
       } else {

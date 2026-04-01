@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import SteamImportModal from './SteamImportModal';
+import SteamWishlistModal from './SteamWishlistModal';
 import XboxImportModal from './XboxImportModal';
 import PlayniteImportModal from './PlayniteImportModal';
 
@@ -16,6 +17,13 @@ const PLATFORMS = [
     name: 'Steam',
     icon: '🟦',
     desc: 'Import via Steam username or profile URL',
+    available: true,
+  },
+  {
+    id: 'steam-wishlist',
+    name: 'Steam Wishlist',
+    icon: '⭐',
+    desc: 'Track deals on games you want — get notified when prices drop',
     available: true,
   },
   {
@@ -76,6 +84,9 @@ export default function ImportHub({ open, onClose }: ImportHubProps) {
   }
   if (activeImport === 'xbox') {
     return <XboxImportModal open={true} onClose={() => { setActiveImport(null); onClose(); }} />;
+  }
+  if (activeImport === 'steam-wishlist') {
+    return <SteamWishlistModal open={true} onClose={() => { setActiveImport(null); onClose(); }} />;
   }
   if (activeImport === 'playnite') {
     return <PlayniteImportModal open={true} onClose={() => { setActiveImport(null); onClose(); }} />;

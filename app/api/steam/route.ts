@@ -66,6 +66,59 @@ export async function GET(request: NextRequest) {
     }
     const { steamId } = resolved;
 
+    // Action: wishlist — fetch Steam wishlist
+    if (action === 'wishlist') {
+      const wishlistGames = [];
+      let page = 0;
+      let hasMore = true;
+
+      while (hasMore && page < 10) {
+        const wishRes = await fetch(
+          `https://store.steampowered.com/wishlist/profiles/${steamId}/wishlistdata/?p=${page}`
+        );
+
+        if (!wishRes.ok) {
+          if (page === 0) {
+            return NextResponse.json({
+              error: 'Could not load wishlist. Make sure your Steam wishlist is set to public.',
+            }, { status: 404 });
+          }
+          break;
+        }
+
+        const wishData = await wishRes.json();
+
+        // Empty object or "success: 2" means no more pages
+        if (!wishData || Object.keys(wishData).length === 0 || wishData.success === 2) {
+          hasMore = false;
+          break;
+        }
+
+        for (const [appid, info] of Object.entries(wishData)) {
+          const game = info as { name: string; capsule: string; review_score: number; release_string: string; tags: string[]; type: string; free: boolean; subs?: { price: string }[] };
+          wishlistGames.push({
+            appid: parseInt(appid),
+            name: game.name,
+            headerUrl: game.capsule?.replace('capsule_sm_120', 'header') || `https://cdn.akamai.steamstatic.com/steam/apps/${appid}/header.jpg`,
+            reviewScore: game.review_score,
+            releaseDate: game.release_string,
+            tags: (game.tags || []).slice(0, 3),
+            isFree: game.free || false,
+          });
+        }
+
+        page++;
+        // Small delay between pages
+        await new Promise((r) => setTimeout(r, 200));
+      }
+
+      return NextResponse.json({
+        steamId,
+        wishlistCount: wishlistGames.length,
+        games: wishlistGames,
+      });
+    }
+
     // Action: resolve — return profile info for user confirmation
     if (action === 'resolve') {
       const profile = await getPlayerSummary(steamId);

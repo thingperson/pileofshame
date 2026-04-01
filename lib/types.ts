@@ -19,9 +19,12 @@ export interface Game {
   priority: number;
   notes: string;
   status: GameStatus;
+  isWishlisted?: boolean;
   addedAt: string;
   updatedAt: string;
 }
+
+export type PlatformPreference = 'any' | 'pc' | 'mac' | 'console';
 
 export interface RerollState {
   sessionCount: number;
@@ -35,6 +38,7 @@ export interface LibrarySettings {
   showBailed: boolean;
   viewMode: ViewMode;
   theme: 'dark';
+  platformPreference: PlatformPreference;
 }
 
 export interface FilterState {

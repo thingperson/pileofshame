@@ -15,6 +15,7 @@ export default function SettingsMenu() {
   const importState = useStore((s) => s.importState);
   const games = useStore((s) => s.games);
   const updateGame = useStore((s) => s.updateGame);
+  const settings = useStore((s) => s.settings);
   const { showToast } = useToast();
 
   const gamesWithoutArt = games.filter((g) => !g.coverUrl);
@@ -105,7 +106,7 @@ export default function SettingsMenu() {
         <>
           <div className="fixed inset-0 z-30" onClick={() => { setOpen(false); setConfirmImport(false); }} />
           <div
-            className="absolute right-0 top-full mt-2 w-56 rounded-xl border p-2 space-y-1 z-40"
+            className="absolute right-0 top-full mt-2 w-64 rounded-xl border p-2 space-y-1 z-40"
             style={{
               backgroundColor: 'var(--color-bg-elevated)',
               borderColor: 'var(--color-border-active)',
@@ -113,6 +114,37 @@ export default function SettingsMenu() {
           >
             {!confirmImport ? (
               <>
+                {/* Platform Preference */}
+                <div className="px-3 py-2 space-y-1.5">
+                  <p className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">I play on</p>
+                  <div className="flex gap-1">
+                    {[
+                      { value: 'any', label: 'Any' },
+                      { value: 'pc', label: '🖥️ PC' },
+                      { value: 'mac', label: '🍎 Mac' },
+                      { value: 'console', label: '🎮 Console' },
+                    ].map((opt) => (
+                      <button
+                        key={opt.value}
+                        onClick={() => {
+                          useStore.setState((s) => ({
+                            settings: { ...s.settings, platformPreference: opt.value as 'any' | 'pc' | 'mac' | 'console' },
+                          }));
+                        }}
+                        className={`px-2 py-1 text-[11px] rounded-md font-medium transition-all ${
+                          settings.platformPreference === opt.value
+                            ? 'bg-accent-purple/20 text-accent-purple border border-accent-purple/30'
+                            : 'text-text-dim hover:text-text-muted border border-transparent'
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="h-px mx-3" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+
                 <button
                   onClick={handleExport}
                   className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors"

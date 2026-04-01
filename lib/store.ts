@@ -3,12 +3,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
-import { Game, GameStatus, LibraryState, FilterState, TimeTier } from './types';
+import { Game, GameStatus, LibraryState, FilterState, TimeTier, PlatformPreference } from './types';
 import { DEFAULT_CATEGORIES, DEFAULT_VIBES, STATUS_CYCLE } from './constants';
 
 interface StoreActions {
   // Game CRUD
-  addGame: (game: Omit<Game, 'id' | 'priority' | 'addedAt' | 'updatedAt' | 'hoursPlayed' | 'installed'> & { hoursPlayed?: number }) => void;
+  addGame: (game: Omit<Game, 'id' | 'priority' | 'addedAt' | 'updatedAt' | 'hoursPlayed' | 'installed'> & { hoursPlayed?: number; isWishlisted?: boolean }) => void;
   updateGame: (id: string, updates: Partial<Game>) => void;
   deleteGame: (id: string) => void;
 
@@ -59,6 +59,7 @@ export const useStore = create<LibraryState & StoreActions>()(
         showBailed: false,
         viewMode: 'list' as const,
         theme: 'dark' as const,
+        platformPreference: 'any' as PlatformPreference,
       },
       reroll: {
         sessionCount: 0,
@@ -77,6 +78,7 @@ export const useStore = create<LibraryState & StoreActions>()(
           id: uuidv4(),
           hoursPlayed: gameData.hoursPlayed ?? 0,
           installed: false,
+          isWishlisted: gameData.isWishlisted || false,
           priority: categoryGames.length,
           addedAt: now,
           updatedAt: now,
@@ -257,6 +259,7 @@ export const useStore = create<LibraryState & StoreActions>()(
               showBailed: false,
               viewMode: 'list',
               theme: 'dark',
+              platformPreference: 'any',
             },
             lastSaved: new Date().toISOString(),
           });

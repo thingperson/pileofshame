@@ -123,6 +123,7 @@ export default function GameCard({ game }: GameCardProps) {
 
         {/* Game Name */}
         <span className="flex-1 text-sm font-medium text-text-primary truncate">
+          {game.isWishlisted && <span className="text-yellow-400 mr-1" title="Wishlisted">⭐</span>}
           {game.name}
         </span>
 
