@@ -1,7 +1,7 @@
 import { GameStatus, GameSource, TimeTier } from './types';
 
 export const DEFAULT_CATEGORIES = [
-  'Your Queue',
+  'The Pile',
   'Sleeping On',
   "Philosopher's Shelf",
   'Family Night',
@@ -43,8 +43,8 @@ export const STATUS_CONFIG: Record<GameStatus, {
   bg: string;
 }> = {
   buried: { label: 'Backlog', icon: '📚', color: '#64748b', bg: '#1e293b' },
-  'on-deck': { label: 'On Deck', icon: '🎯', color: '#38bdf8', bg: '#082f49' },
-  playing: { label: 'Playing', icon: '🔥', color: '#f59e0b', bg: '#422006' },
+  'on-deck': { label: 'Up Next', icon: '🎯', color: '#38bdf8', bg: '#082f49' },
+  playing: { label: 'Now Playing', icon: '🔥', color: '#f59e0b', bg: '#422006' },
   played: { label: 'Played', icon: '✅', color: '#22c55e', bg: '#052e16' },
   bailed: { label: 'Bailed', icon: '🚪', color: '#ef4444', bg: '#450a0a' },
 };
@@ -83,7 +83,7 @@ export const REROLL_MESSAGES: Record<number, string> = {
 };
 
 export const CATEGORY_ICONS: Record<string, string> = {
-  'Your Queue': '⚡',
+  'The Pile': '🗻',
   'Sleeping On': '💤',
   "Philosopher's Shelf": '🧠',
   'Family Night': '🎮',

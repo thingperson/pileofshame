@@ -138,13 +138,13 @@ function AppContent() {
             onClick={() => setImportHubOpen(true)}
             className="px-3 py-1.5 text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
           >
-            📥 Import
+            📥 Import Library
           </button>
           <button
             onClick={() => setAddModalOpen(true)}
             className="px-3 py-1.5 text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
           >
-            + Add
+            + Add Game
           </button>
         </div>
       </header>

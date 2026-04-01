@@ -37,12 +37,12 @@ const SECTIONS = [
         a: 'The default. These are games you own (or want to play) but haven\'t started yet. Your pile. The whole point of being here.',
       },
       {
-        q: '🎯 On Deck',
-        a: 'Games you\'ve earmarked to play soon. Click a game\'s status badge to move it from Backlog → On Deck. Think of it as your short list.',
+        q: '🎯 Up Next',
+        a: 'Your numbered queue — games you\'ve earmarked to play soon, in order. Click a game\'s status badge to move it from Backlog → Up Next. They show up as 1. 2. 3. so you always know what\'s next.',
       },
       {
-        q: '🔥 Playing',
-        a: 'You\'re actively playing this one. When "Get Playing" picks a game and you hit "Let\'s go," it moves here automatically.',
+        q: '🔥 Now Playing',
+        a: 'You\'re actively playing this one. These games get a special glow so they stand out. You can have multiple games here — we don\'t judge. When "Get Playing" picks a game and you hit "Let\'s go," it moves here automatically.',
       },
       {
         q: '✅ Played',
@@ -54,7 +54,7 @@ const SECTIONS = [
       },
       {
         q: 'How do I change a game\'s status?',
-        a: 'Click the colored status badge on any game card. It cycles forward: Backlog → On Deck → Playing → Played. Long-press the badge to bail. Hover to preview the next status.',
+        a: 'Click the colored status badge on any game card. It cycles forward: Backlog → Up Next → Now Playing → Played. Long-press the badge to bail. Hover to preview the next status.',
       },
     ],
   },
@@ -84,7 +84,7 @@ const SECTIONS = [
     items: [
       {
         q: 'What are Categories?',
-        a: 'Folders for your games. Default ones: Your Queue (up next), Sleeping On (overlooked gems), Philosopher\'s Shelf (thought-provoking), Family Night, Comfort Food (familiar favorites), Hidden Gem Deep Cuts. You can create your own in settings.',
+        a: 'Folders for your games. Default ones: The Pile (your main backlog), Sleeping On (overlooked gems), Philosopher\'s Shelf (thought-provoking), Family Night, Comfort Food (familiar favorites), Hidden Gem Deep Cuts. You can create your own in settings.',
       },
       {
         q: 'What are Vibes?',

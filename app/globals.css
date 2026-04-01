@@ -73,6 +73,12 @@ body::before {
   background: #475569;
 }
 
+/* Now Playing glow */
+.now-playing-glow {
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.2), 0 0 4px rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.4) !important;
+}
+
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }

@@ -271,6 +271,25 @@ export const useStore = create<LibraryState & StoreActions>()(
     }),
     {
       name: 'getplaying-library',
+      version: 1,
+      migrate: (persisted: unknown, version: number) => {
+        const state = persisted as Record<string, unknown>;
+        if (version === 0) {
+          // Rename "Your Queue" category → "The Pile"
+          const cats = state.categories as string[] | undefined;
+          if (cats) {
+            state.categories = cats.map((c: string) => c === 'Your Queue' ? 'The Pile' : c);
+          }
+          // Migrate games in "Your Queue" category
+          const games = state.games as Array<{ category: string }> | undefined;
+          if (games) {
+            games.forEach((g) => {
+              if (g.category === 'Your Queue') g.category = 'The Pile';
+            });
+          }
+        }
+        return state;
+      },
       partialize: (state) => ({
         games: state.games,
         categories: state.categories,

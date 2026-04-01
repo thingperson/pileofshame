@@ -9,9 +9,10 @@ import DealBadge from './DealBadge';
 
 interface GameCardProps {
   game: Game;
+  upNextIndex?: number; // 1-based index for Up Next games
 }
 
-export default function GameCard({ game }: GameCardProps) {
+export default function GameCard({ game, upNextIndex }: GameCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [ghostStatus, setGhostStatus] = useState<GameStatus | null>(null);
   const [showBailConfirm, setShowBailConfirm] = useState(false);
@@ -71,7 +72,7 @@ export default function GameCard({ game }: GameCardProps) {
 
   return (
     <div
-      className="group relative rounded-xl border transition-all duration-150 hover:-translate-y-[1px]"
+      className={`group relative rounded-xl border transition-all duration-150 hover:-translate-y-[1px] ${game.status === 'playing' ? 'now-playing-glow' : ''}`}
       style={{
         backgroundColor: 'var(--color-bg-card)',
         borderColor: expanded ? 'var(--color-border-active)' : 'var(--color-border-subtle)',
@@ -123,6 +124,11 @@ export default function GameCard({ game }: GameCardProps) {
 
         {/* Game Name */}
         <span className="flex-1 text-sm font-medium text-text-primary truncate">
+          {upNextIndex && (
+            <span className="text-accent-purple font-bold font-[family-name:var(--font-mono)] mr-1.5 text-xs">
+              {upNextIndex}.
+            </span>
+          )}
           {game.isWishlisted && <span className="text-yellow-400 mr-1" title="Wishlisted">⭐</span>}
           {game.name}
         </span>

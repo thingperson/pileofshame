@@ -71,9 +71,17 @@ export default function CategorySection({ name, games }: CategorySectionProps) {
 
       {!collapsed && viewMode === 'list' && (
         <div className="space-y-1.5 pl-0.5">
-          {paginatedGames.map((game) => (
-            <GameCard key={game.id} game={game} />
-          ))}
+          {paginatedGames.map((game, i) => {
+            // Track Up Next numbering — count all on-deck games in sorted order
+            let upNextIndex: number | undefined;
+            if (game.status === 'on-deck') {
+              const allOnDeck = sorted.filter((g) => g.status === 'on-deck');
+              upNextIndex = allOnDeck.indexOf(game) + 1;
+            }
+            return (
+              <GameCard key={game.id} game={game} upNextIndex={upNextIndex} />
+            );
+          })}
         </div>
       )}
 
