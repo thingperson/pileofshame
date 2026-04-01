@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pile of Shame",
+  title: "Pile Of Shame",
   description: "Your backlog isn't going to play itself.",
 };
 

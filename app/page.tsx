@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { useStore } from '@/lib/store';
 import { Game } from '@/lib/types';
+import { RerollMode } from '@/lib/reroll';
 import CategorySection from '@/components/CategorySection';
 import FilterBar from '@/components/FilterBar';
 import AddGameModal from '@/components/AddGameModal';
@@ -15,7 +16,13 @@ import { ToastProvider } from '@/components/Toast';
 function AppContent() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [rerollOpen, setRerollOpen] = useState(false);
+  const [rerollMode, setRerollMode] = useState<RerollMode | undefined>();
   const [importHubOpen, setImportHubOpen] = useState(false);
+
+  const openReroll = (mode?: RerollMode) => {
+    setRerollMode(mode);
+    setRerollOpen(true);
+  };
 
   const games = useStore((s) => s.games);
   const categories = useStore((s) => s.categories);
@@ -86,7 +93,7 @@ function AppContent() {
       <header className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight text-text-primary">
-            Pile of Shame
+            Pile Of Shame
           </h1>
           {!isEmpty ? (
             <div className="flex gap-3 text-[10px] sm:text-xs font-[family-name:var(--font-mono)] mt-0.5">
@@ -124,8 +131,42 @@ function AppContent() {
 
       {/* Filters */}
       {!isEmpty && (
-        <div className="mb-5">
+        <div className="mb-4">
           <FilterBar />
+        </div>
+      )}
+
+      {/* Get Playing buttons */}
+      {!isEmpty && (
+        <div className="flex gap-2 flex-wrap mb-6">
+          <button
+            onClick={() => openReroll('anything')}
+            className="px-4 py-2 text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/20 active:scale-[0.97]"
+            style={{ background: 'linear-gradient(135deg, #7c3aed, #a78bfa)' }}
+          >
+            🎲 Get Playing
+          </button>
+          <button
+            onClick={() => openReroll('quick-session')}
+            className="px-4 py-2 text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+            style={{ background: 'linear-gradient(135deg, #6366f1, #818cf8)' }}
+          >
+            🌙 Quick Session
+          </button>
+          <button
+            onClick={() => openReroll('deep-cut')}
+            className="px-4 py-2 text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+            style={{ background: 'linear-gradient(135deg, #dc2626, #f87171)' }}
+          >
+            🔥 Deep Cut
+          </button>
+          <button
+            onClick={() => openReroll('continue')}
+            className="px-4 py-2 text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+            style={{ background: 'linear-gradient(135deg, #d97706, #fbbf24)' }}
+          >
+            ▶ Continue
+          </button>
         </div>
       )}
 
@@ -180,25 +221,10 @@ function AppContent() {
         </div>
       )}
 
-      {/* Reroll FAB */}
-      {!isEmpty && (
-        <button
-          onClick={() => setRerollOpen(true)}
-          className="fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-lg shadow-black/40 transition-all hover:scale-110 active:scale-95 z-30"
-          style={{
-            backgroundColor: 'var(--color-accent-purple)',
-            color: '#0a0a0f',
-          }}
-          title="Reroll"
-        >
-          🎲
-        </button>
-      )}
-
       {/* Modals */}
       <AddGameModal open={addModalOpen} onClose={() => setAddModalOpen(false)} />
       <ImportHub open={importHubOpen} onClose={() => setImportHubOpen(false)} />
-      <Reroll open={rerollOpen} onClose={() => setRerollOpen(false)} />
+      <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} />
     </div>
   );
 }

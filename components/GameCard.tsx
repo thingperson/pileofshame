@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { Game, GameStatus, TimeTier } from '@/lib/types';
 import { useStore } from '@/lib/store';
-import { STATUS_CONFIG, STATUS_CYCLE, TIME_TIER_CONFIG, SOURCE_LABELS, DEFAULT_VIBES, DEFAULT_CATEGORIES, getVibeColor } from '@/lib/constants';
+import { STATUS_CONFIG, STATUS_CYCLE, TIME_TIER_CONFIG, SOURCE_LABELS, SOURCE_ICONS, DEFAULT_VIBES, DEFAULT_CATEGORIES, getVibeColor } from '@/lib/constants';
 import { useToast } from './Toast';
 
 interface GameCardProps {
@@ -125,10 +125,15 @@ export default function GameCard({ game }: GameCardProps) {
           {game.name}
         </span>
 
-        {/* Time Tier Icon */}
-        <span className="text-sm shrink-0" title={tierConfig.label}>
-          {tierConfig.icon}
-        </span>
+        {/* Time Tier + Source Icons */}
+        <div className="flex items-center gap-1 shrink-0">
+          <span className="text-sm" title={tierConfig.label}>
+            {tierConfig.icon}
+          </span>
+          <span className="text-xs text-text-faint" title={SOURCE_LABELS[game.source]}>
+            {SOURCE_ICONS[game.source]}
+          </span>
+        </div>
 
         {/* Expand indicator */}
         <svg
@@ -196,6 +201,9 @@ export default function GameCard({ game }: GameCardProps) {
 
               {/* Metadata */}
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-text-dim font-[family-name:var(--font-mono)]">
+                {game.hoursPlayed > 0 && (
+                  <span className="text-text-muted">{game.hoursPlayed} hrs</span>
+                )}
                 <span>{SOURCE_LABELS[game.source]}</span>
                 <span>{tierConfig.icon} {tierConfig.label}</span>
                 {game.metacritic && <span>Metacritic: {game.metacritic}</span>}
@@ -275,6 +283,21 @@ export default function GameCard({ game }: GameCardProps) {
               </button>
             </div>
           </div>
+
+          {/* Launch button for Steam games */}
+          {game.steamAppId && (
+            <a
+              href={`steam://run/${game.steamAppId}`}
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center justify-center gap-2 w-full px-3 py-2 text-xs font-bold rounded-lg transition-all hover:scale-[1.01] active:scale-[0.99]"
+              style={{
+                background: 'linear-gradient(135deg, #7c3aed, #a78bfa)',
+                color: 'white',
+              }}
+            >
+              🚀 Launch in Steam
+            </a>
+          )}
 
           {/* Status-specific actions */}
           {game.status === 'played' && (

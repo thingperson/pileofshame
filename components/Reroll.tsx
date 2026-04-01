@@ -10,14 +10,16 @@ import { useToast } from './Toast';
 interface RerollProps {
   open: boolean;
   onClose: () => void;
+  initialMode?: RerollMode;
 }
 
-export default function Reroll({ open, onClose }: RerollProps) {
+export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   const [mode, setMode] = useState<RerollMode>('anything');
   const [currentPick, setCurrentPick] = useState<Game | null>(null);
   const [rolling, setRolling] = useState(false);
   const [showForced, setShowForced] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const [skipModePicker, setSkipModePicker] = useState(false);
 
   const games = useStore((s) => s.games);
   const reroll = useStore((s) => s.reroll);
@@ -91,15 +93,35 @@ export default function Reroll({ open, onClose }: RerollProps) {
     doRoll();
   }, [games, mode, doRoll, showToast]);
 
-  // Reset state when modal opens
+  // Reset state when modal opens — if initialMode provided, auto-roll
   useEffect(() => {
     if (open) {
       setCurrentPick(null);
       setShowForced(false);
       setRevealed(false);
-      setMode('anything');
+      if (initialMode) {
+        setMode(initialMode);
+        setSkipModePicker(true);
+      } else {
+        setMode('anything');
+        setSkipModePicker(false);
+      }
     }
-  }, [open]);
+  }, [open, initialMode]);
+
+  // Auto-roll on open when mode is pre-selected
+  useEffect(() => {
+    if (open && skipModePicker && !currentPick && !rolling) {
+      const eligible = getEligibleGames(games, mode);
+      if (eligible.length > 0) {
+        doRoll();
+      } else {
+        showToast('No games match this mode.');
+        onClose();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, skipModePicker]);
 
   if (!open) return null;
 
@@ -132,8 +154,8 @@ export default function Reroll({ open, onClose }: RerollProps) {
           </p>
         </div>
 
-        {/* Mode Selector (only before first roll) */}
-        {!currentPick && !showForced && (
+        {/* Mode Selector (only before first roll, skip if mode pre-selected) */}
+        {!currentPick && !showForced && !skipModePicker && (
           <div className="px-5 pb-4">
             <div className="grid grid-cols-2 gap-2">
               {REROLL_MODES.map(({ mode: m, label, icon, description }) => (
@@ -199,9 +221,10 @@ export default function Reroll({ open, onClose }: RerollProps) {
               <div className="flex justify-center gap-4 text-xs text-text-dim font-[family-name:var(--font-mono)]">
                 <span>{TIME_TIER_CONFIG[currentPick.timeTier].icon} {TIME_TIER_CONFIG[currentPick.timeTier].label}</span>
                 <span>{STATUS_CONFIG[currentPick.status].icon} {STATUS_CONFIG[currentPick.status].label}</span>
+                {currentPick.hoursPlayed > 0 && <span>{currentPick.hoursPlayed}h logged</span>}
               </div>
               {currentPick.notes && (
-                <p className="text-xs text-text-muted mt-2 italic">{currentPick.notes}</p>
+                <p className="text-xs text-text-muted mt-3 leading-relaxed">{currentPick.notes}</p>
               )}
             </div>
 
