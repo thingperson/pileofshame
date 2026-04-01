@@ -133,6 +133,49 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ results });
     }
 
+    // Price lookup: get retail prices for a list of games (for backlog value estimation)
+    if (action === 'prices') {
+      const titles = searchParams.get('titles');
+      if (!titles) {
+        return NextResponse.json({ error: 'titles required (comma-separated)' }, { status: 400 });
+      }
+
+      const titleList = titles.split(',').slice(0, 25); // max 25
+      const prices: { title: string; retailPrice: number }[] = [];
+
+      for (const title of titleList) {
+        try {
+          const searchRes = await fetch(
+            `${CHEAPSHARK_BASE}/games?title=${encodeURIComponent(title.trim())}&limit=1`
+          );
+          if (searchRes.ok) {
+            const games = await searchRes.json();
+            if (games && games.length > 0) {
+              const cheapest = parseFloat(games[0].cheapest);
+              // Use cheapest as a proxy — it's usually close to retail for non-sale
+              // The game listing also has the retail context
+              const gameRes = await fetch(`${CHEAPSHARK_BASE}/games?id=${games[0].gameID}`);
+              if (gameRes.ok) {
+                const gameData = await gameRes.json();
+                const topDeal = gameData.deals?.[0];
+                if (topDeal) {
+                  prices.push({
+                    title: title.trim(),
+                    retailPrice: parseFloat(topDeal.retailPrice),
+                  });
+                }
+              }
+            }
+          }
+          await new Promise((r) => setTimeout(r, 150));
+        } catch {
+          // skip failures
+        }
+      }
+
+      return NextResponse.json({ prices });
+    }
+
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
   } catch (err) {
     console.error('Deals API error:', err);
