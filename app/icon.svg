@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#a78bfa"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+  <g transform="translate(256,240)">
+    <!-- Skull -->
+    <ellipse cx="0" cy="-20" rx="110" ry="100" fill="#f8fafc"/>
+    <rect x="-70" y="40" width="140" height="50" rx="10" fill="#f8fafc"/>
+    <!-- Eyes -->
+    <ellipse cx="-42" cy="-35" rx="28" ry="30" fill="#0a0a0f"/>
+    <ellipse cx="42" cy="-35" rx="28" ry="30" fill="#0a0a0f"/>
+    <!-- Eye glints -->
+    <circle cx="-32" cy="-45" r="8" fill="#a78bfa" opacity="0.7"/>
+    <circle cx="52" cy="-45" r="8" fill="#a78bfa" opacity="0.7"/>
+    <!-- Nose -->
+    <path d="M-12,15 L0,30 L12,15 Z" fill="#0a0a0f" opacity="0.6"/>
+    <!-- Teeth -->
+    <line x1="-35" y1="55" x2="-35" y2="85" stroke="#0a0a0f" stroke-width="5" stroke-linecap="round"/>
+    <line x1="-12" y1="55" x2="-12" y2="85" stroke="#0a0a0f" stroke-width="5" stroke-linecap="round"/>
+    <line x1="12" y1="55" x2="12" y2="85" stroke="#0a0a0f" stroke-width="5" stroke-linecap="round"/>
+    <line x1="35" y1="55" x2="35" y2="85" stroke="#0a0a0f" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <!-- Game controller hint - d-pad on forehead -->
+  <g transform="translate(256,188)" opacity="0.15">
+    <rect x="-6" y="-18" width="12" height="36" rx="2" fill="#0a0a0f"/>
+    <rect x="-18" y="-6" width="36" height="12" rx="2" fill="#0a0a0f"/>
+  </g>
+</svg>
