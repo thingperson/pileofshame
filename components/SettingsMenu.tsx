@@ -28,6 +28,7 @@ export default function SettingsMenu() {
 
   const gamesWithoutArt = games.filter((g) => !g.coverUrl);
   const steamGames = games.filter((g) => g.steamAppId);
+  const psnGames = games.filter((g) => g.source === 'playstation');
   const gamesNeedingEnrichment = games.filter((g) => !g.enrichedAt || !g.description || !g.moodTags || g.moodTags.length === 0);
 
   const handleEnrichAll = async () => {
@@ -299,6 +300,33 @@ export default function SettingsMenu() {
                     ))}
                   </div>
                 </div>
+
+                {/* Connected Platforms */}
+                {(linkedSteamId || psnGames.length > 0) && (
+                  <div className="px-3 py-2 space-y-1.5">
+                    <p className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">Connected Platforms</p>
+                    <div className="space-y-1">
+                      {linkedSteamId && (
+                        <div className="flex items-center gap-2 text-xs text-text-muted">
+                          <span className="text-sm">🟢</span>
+                          <span className="flex-1">Steam</span>
+                          <span className="text-[10px] text-text-dim font-[family-name:var(--font-mono)]">
+                            {steamGames.length} games
+                          </span>
+                        </div>
+                      )}
+                      {psnGames.length > 0 && (
+                        <div className="flex items-center gap-2 text-xs text-text-muted">
+                          <span className="text-sm">🔵</span>
+                          <span className="flex-1">PlayStation</span>
+                          <span className="text-[10px] text-text-dim font-[family-name:var(--font-mono)]">
+                            {psnGames.length} games
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 <div className="h-px mx-3" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
 

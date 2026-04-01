@@ -15,6 +15,7 @@ interface PSNGameData {
   trophiesTotal: number;
   hasPlatinum: boolean;
   earnedPlatinum: boolean;
+  source: 'purchased' | 'trophy' | 'both';
 }
 
 interface PSNImportModalProps {
@@ -140,7 +141,7 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
           <p className="text-xs text-text-dim mt-1">
             {step === 'instructions' && 'Quick setup. Takes about 30 seconds'}
             {step === 'paste' && 'Paste your NPSSO token below'}
-            {step === 'select' && `${games.length} games found · ${selected.size} selected`}
+            {step === 'select' && `${games.length} games found (full catalog) · ${selected.size} selected`}
           </p>
         </div>
 
@@ -330,6 +331,7 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
                       {game.platform}
                       {game.trophiesEarned > 0 && ` · ${game.trophiesEarned}/${game.trophiesTotal} trophies`}
                       {game.earnedPlatinum && ' 🏆'}
+                      {game.source === 'purchased' && ' · Owned, never launched'}
                     </p>
                   </div>
 
