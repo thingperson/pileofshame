@@ -1,0 +1,227 @@
+'use client';
+
+import { useState } from 'react';
+
+interface HelpModalProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+const SECTIONS = [
+  {
+    id: 'basics',
+    title: 'The Basics',
+    icon: '🎮',
+    items: [
+      {
+        q: 'What is Pile Of Shame?',
+        a: 'Your gaming backlog, organized. Add your games, tag them however you want, then hit "Get Playing" and we\'ll pick one for you. No more staring at your library wondering what to play.',
+      },
+      {
+        q: 'How do I add games?',
+        a: 'Two ways: click "+ Add" to manually add one, or click "Import" to pull your Steam library, Steam wishlist, Xbox collection, or a Playnite export. Imported games land in your backlog automatically.',
+      },
+      {
+        q: 'What happens to my data?',
+        a: 'Everything saves to your browser automatically. Sign in with Discord or Google to sync across devices. Your local library stays either way — we never delete it.',
+      },
+    ],
+  },
+  {
+    id: 'statuses',
+    title: 'Game Statuses',
+    icon: '📊',
+    items: [
+      {
+        q: '📚 Backlog',
+        a: 'The default. These are games you own (or want to play) but haven\'t started yet. Your pile. The whole point of being here.',
+      },
+      {
+        q: '🎯 On Deck',
+        a: 'Games you\'ve earmarked to play soon. Click a game\'s status badge to move it from Backlog → On Deck. Think of it as your short list.',
+      },
+      {
+        q: '🔥 Playing',
+        a: 'You\'re actively playing this one. When "Get Playing" picks a game and you hit "Let\'s go," it moves here automatically.',
+      },
+      {
+        q: '✅ Played',
+        a: 'Done. Finished. Credits rolled (or you decided you\'re done). This is terminal — no more status cycling. You can still "Play Again" or start a "New Game+" from the expanded card.',
+      },
+      {
+        q: '🚪 Bailed',
+        a: 'Not for you. Long-press any status badge to bail on a game. No shame — life\'s too short. You can always "Give it another shot" later.',
+      },
+      {
+        q: 'How do I change a game\'s status?',
+        a: 'Click the colored status badge on any game card. It cycles forward: Backlog → On Deck → Playing → Played. Long-press the badge to bail. Hover to preview the next status.',
+      },
+    ],
+  },
+  {
+    id: 'getplaying',
+    title: 'Get Playing (Reroll)',
+    icon: '🎲',
+    items: [
+      {
+        q: 'What does "Get Playing" do?',
+        a: 'It randomly picks a game from your backlog. Hit "Let\'s go" to commit and start playing, "Reroll" to try again, or "Not now" to walk away. Simple.',
+      },
+      {
+        q: 'What are the different modes?',
+        a: '🎲 Get Playing — random from everything.\n🌙 Quick Session — only picks short games (wind-down tier, ~30-60 min sessions).\n🔥 Deep Cut — only picks long games (deep-cut tier, 2+ hour sessions).\n▶ Keep Playing — only picks from games you\'re already playing, for when you can\'t decide which one to continue.',
+      },
+      {
+        q: 'What if I keep rerolling?',
+        a: 'We\'ll gently roast you at rolls 3, 5, and 7. At roll 10, you\'re forced to pick from your last three results. You\'re here to play, not spin.',
+      },
+    ],
+  },
+  {
+    id: 'organizing',
+    title: 'Organizing Your Pile',
+    icon: '🗂️',
+    items: [
+      {
+        q: 'What are Categories?',
+        a: 'Folders for your games. Default ones: Your Queue (up next), Sleeping On (overlooked gems), Philosopher\'s Shelf (thought-provoking), Family Night, Comfort Food (familiar favorites), Hidden Gem Deep Cuts. You can create your own in settings.',
+      },
+      {
+        q: 'What are Vibes?',
+        a: 'Tags that describe the feel of a game: cozy, narrative, atmospheric, challenge, mindless, philosophical. Tap them in the expanded card to toggle. Use them to filter your library by mood.',
+      },
+      {
+        q: 'What are Time Tiers?',
+        a: '🌙 Wind-Down = short sessions (30-60 min). Great for a quick game before bed.\n🔥 Deep Cut = long sessions (2+ hours). For when you\'re settling in for a marathon.\nEvery game gets one. Tap the tier in the expanded card to switch.',
+      },
+      {
+        q: 'What does the ⭐ mean?',
+        a: 'That game came from your Steam wishlist import. We\'ll check for deals on wishlisted games so you know when to buy.',
+      },
+    ],
+  },
+  {
+    id: 'filters',
+    title: 'Filtering & Finding',
+    icon: '🔍',
+    items: [
+      {
+        q: 'How does search work?',
+        a: 'Type in the search bar to filter by game name or notes. All other filters (category, vibe, time tier) stack on top — they\'re AND filters, so everything narrows together.',
+      },
+      {
+        q: 'Why can\'t I see some games?',
+        a: 'Played and Bailed games are hidden by default. Toggle "Show played" or "Show bailed" in the filter bar to reveal them.',
+      },
+      {
+        q: 'What does the platform preference do?',
+        a: 'In settings, set "I play on" to PC, Mac, Console, or Any. This filters what "Get Playing" picks — it won\'t suggest a PlayStation game if you set Mac, for example. Doesn\'t hide games from your library, just from the randomizer.',
+      },
+    ],
+  },
+  {
+    id: 'deals',
+    title: 'Deals & Prices',
+    icon: '💰',
+    items: [
+      {
+        q: 'How do deal checks work?',
+        a: 'Expand any game card and click "Check deals." We search CheapShark for current prices across Steam, GOG, Humble, and more. Results are cached for 30 minutes.',
+      },
+      {
+        q: 'Are the deal links affiliate links?',
+        a: 'Some stores use CheapShark affiliate links — buying through them supports CheapShark (the free price API we use). We don\'t take a cut.',
+      },
+    ],
+  },
+];
+
+export default function HelpModal({ open, onClose }: HelpModalProps) {
+  const [activeSection, setActiveSection] = useState('basics');
+
+  if (!open) return null;
+
+  const section = SECTIONS.find((s) => s.id === activeSection) || SECTIONS[0];
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={onClose} />
+
+      {/* Modal */}
+      <div
+        className="relative w-full max-w-2xl max-h-[85vh] rounded-2xl border overflow-hidden flex flex-col"
+        style={{
+          backgroundColor: 'var(--color-bg-elevated)',
+          borderColor: 'var(--color-border-active)',
+          animation: 'scaleIn 400ms ease-out',
+        }}
+      >
+        {/* Header */}
+        <div className="px-5 pt-5 pb-3 flex items-center justify-between shrink-0">
+          <div>
+            <h2 className="text-xl font-extrabold text-text-primary tracking-tight">
+              How It Works
+            </h2>
+            <p className="text-xs text-text-dim mt-0.5 font-[family-name:var(--font-mono)]">
+              Everything you need to know
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-text-dim hover:text-text-muted transition-colors text-xl leading-none px-2"
+          >
+            &times;
+          </button>
+        </div>
+
+        {/* Section Tabs */}
+        <div className="px-5 pb-3 flex gap-1.5 overflow-x-auto shrink-0">
+          {SECTIONS.map((s) => (
+            <button
+              key={s.id}
+              onClick={() => setActiveSection(s.id)}
+              className={`px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+                activeSection === s.id
+                  ? 'bg-accent-purple/15 text-accent-purple'
+                  : 'text-text-dim hover:text-text-muted hover:bg-white/5'
+              }`}
+            >
+              {s.icon} {s.title}
+            </button>
+          ))}
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto px-5 pb-5">
+          <div className="space-y-3">
+            {section.items.map((item, i) => (
+              <div
+                key={i}
+                className="rounded-xl border p-4"
+                style={{
+                  backgroundColor: 'var(--color-bg-card)',
+                  borderColor: 'var(--color-border-subtle)',
+                }}
+              >
+                <h3 className="text-sm font-semibold text-text-primary mb-1.5">
+                  {item.q}
+                </h3>
+                <p className="text-xs text-text-muted leading-relaxed whitespace-pre-line">
+                  {item.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="px-5 py-3 border-t shrink-0" style={{ borderColor: 'var(--color-border-subtle)' }}>
+          <p className="text-[10px] text-text-faint text-center font-[family-name:var(--font-mono)]">
+            Still stuck? Grab a game and start playing. That&apos;s literally the whole app.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}

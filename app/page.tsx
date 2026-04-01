@@ -13,6 +13,7 @@ import SettingsMenu from '@/components/SettingsMenu';
 import ViewToggle from '@/components/ViewToggle';
 import AuthButton from '@/components/AuthButton';
 import CloudSync from '@/components/CloudSync';
+import HelpModal from '@/components/HelpModal';
 import { ToastProvider } from '@/components/Toast';
 import NinetiesMode from '@/components/NinetiesMode';
 
@@ -21,6 +22,7 @@ function AppContent() {
   const [rerollOpen, setRerollOpen] = useState(false);
   const [rerollMode, setRerollMode] = useState<RerollMode | undefined>();
   const [importHubOpen, setImportHubOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const openReroll = (mode?: RerollMode) => {
     setRerollMode(mode);
@@ -96,7 +98,10 @@ function AppContent() {
       <header className="mb-6 space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-extrabold tracking-tight text-text-primary">
+            <h1
+              className="text-2xl font-extrabold tracking-tight text-text-primary cursor-pointer hover:text-accent-purple transition-colors"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
               Pile Of Shame
             </h1>
             {!isEmpty ? (
@@ -116,6 +121,13 @@ function AppContent() {
             )}
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setHelpOpen(true)}
+              className="px-2 py-1 text-sm text-text-dim hover:text-text-muted transition-colors"
+              title="Help & FAQ"
+            >
+              ?
+            </button>
             <AuthButton />
             <SettingsMenu />
           </div>
@@ -144,37 +156,42 @@ function AppContent() {
         </div>
       )}
 
-      {/* Get Playing buttons */}
+      {/* Get Playing — Hero Action */}
       {!isEmpty && (
-        <div className="flex gap-2 flex-wrap mb-6">
+        <div className="mb-6 space-y-2">
           <button
             onClick={() => openReroll('anything')}
-            className="px-4 py-2 text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/20 active:scale-[0.97]"
+            className="w-full px-6 py-3.5 text-base font-bold rounded-xl text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98]"
             style={{ background: 'linear-gradient(135deg, #7c3aed, #a78bfa)' }}
           >
             🎲 Get Playing
           </button>
-          <button
-            onClick={() => openReroll('quick-session')}
-            className="px-4 py-2 text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
-            style={{ background: 'linear-gradient(135deg, #6366f1, #818cf8)' }}
-          >
-            🌙 Quick Session
-          </button>
-          <button
-            onClick={() => openReroll('deep-cut')}
-            className="px-4 py-2 text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
-            style={{ background: 'linear-gradient(135deg, #dc2626, #f87171)' }}
-          >
-            🔥 Deep Cut
-          </button>
-          <button
-            onClick={() => openReroll('continue')}
-            className="px-4 py-2 text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
-            style={{ background: 'linear-gradient(135deg, #d97706, #fbbf24)' }}
-          >
-            ▶ Continue
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => openReroll('quick-session')}
+              className="flex-1 px-3 py-2 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+              style={{ background: 'linear-gradient(135deg, #6366f1, #818cf8)' }}
+              title="Pick a game you can finish in one sitting"
+            >
+              🌙 Quick Session
+            </button>
+            <button
+              onClick={() => openReroll('deep-cut')}
+              className="flex-1 px-3 py-2 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+              style={{ background: 'linear-gradient(135deg, #dc2626, #f87171)' }}
+              title="Pick a long game you can really sink into"
+            >
+              🔥 Deep Cut
+            </button>
+            <button
+              onClick={() => openReroll('continue')}
+              className="flex-1 px-3 py-2 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+              style={{ background: 'linear-gradient(135deg, #d97706, #fbbf24)' }}
+              title="Pick from games you already started"
+            >
+              ▶ Keep Playing
+            </button>
+          </div>
         </div>
       )}
 
@@ -233,6 +250,7 @@ function AppContent() {
       <AddGameModal open={addModalOpen} onClose={() => setAddModalOpen(false)} />
       <ImportHub open={importHubOpen} onClose={() => setImportHubOpen(false)} />
       <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} />
+      <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
       <CloudSync />
 
       {/* Footer */}

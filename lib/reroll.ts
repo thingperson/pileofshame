@@ -6,7 +6,7 @@ export const REROLL_MODES: { mode: RerollMode; label: string; icon: string; desc
   { mode: 'anything', label: 'Anything', icon: '🎲', description: 'Random from all games' },
   { mode: 'quick-session', label: 'Quick Session', icon: '🌙', description: 'Wind-down tier only' },
   { mode: 'deep-cut', label: 'Deep Cut', icon: '🔥', description: 'Deep-cut tier only' },
-  { mode: 'continue', label: 'Continue', icon: '▶', description: 'Currently playing only' },
+  { mode: 'continue', label: 'Keep Playing', icon: '▶', description: 'Pick from games you started' },
 ];
 
 // Sources that are PC-compatible (Steam can be Mac too, handled separately)

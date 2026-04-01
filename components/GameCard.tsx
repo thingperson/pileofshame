@@ -66,7 +66,7 @@ export default function GameCard({ game }: GameCardProps) {
 
   const handleUnBail = useCallback(() => {
     unBail(game.id);
-    showToast(`${game.name} → back in the pile 💀`);
+    showToast(`${game.name} → back in the backlog 📚`);
   }, [game.id, game.name, unBail, showToast]);
 
   return (

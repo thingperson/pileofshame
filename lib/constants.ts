@@ -42,7 +42,7 @@ export const STATUS_CONFIG: Record<GameStatus, {
   color: string;
   bg: string;
 }> = {
-  buried: { label: 'Buried', icon: '💀', color: '#64748b', bg: '#1e293b' },
+  buried: { label: 'Backlog', icon: '📚', color: '#64748b', bg: '#1e293b' },
   'on-deck': { label: 'On Deck', icon: '🎯', color: '#38bdf8', bg: '#082f49' },
   playing: { label: 'Playing', icon: '🔥', color: '#f59e0b', bg: '#422006' },
   played: { label: 'Played', icon: '✅', color: '#22c55e', bg: '#052e16' },
