@@ -11,6 +11,7 @@ import Reroll from '@/components/Reroll';
 import ImportHub from '@/components/ImportHub';
 import SettingsMenu from '@/components/SettingsMenu';
 import ViewToggle from '@/components/ViewToggle';
+import StatsPanel from '@/components/StatsPanel';
 import AuthButton from '@/components/AuthButton';
 import CloudSync from '@/components/CloudSync';
 import HelpModal from '@/components/HelpModal';
@@ -194,6 +195,9 @@ function AppContent() {
           </div>
         </div>
       )}
+
+      {/* Stats Panel */}
+      {!isEmpty && <StatsPanel games={games} />}
 
       {/* Empty State */}
       {isEmpty && (
