@@ -93,26 +93,32 @@ function AppContent() {
   return (
     <div className="relative z-10 w-full max-w-[960px] mx-auto px-4 py-6 pb-24">
       {/* Header */}
-      <header className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-text-primary">
-            Pile Of Shame
-          </h1>
-          {!isEmpty ? (
-            <div className="flex gap-3 text-[10px] sm:text-xs font-[family-name:var(--font-mono)] mt-0.5">
-              <span><span style={{ color: '#f59e0b' }}>{stats.playing}</span> <span className="text-text-faint">playing</span></span>
-              <span><span className="text-text-muted">{stats.buried}</span> <span className="text-text-faint">backlog</span></span>
-              <span><span style={{ color: '#22c55e' }}>{stats.played}</span> <span className="text-text-faint">done</span></span>
-              <span className="hidden sm:inline"><span className="text-accent-purple">{stats.total}</span> <span className="text-text-faint">total</span></span>
-              {stats.totalHrs > 0 && (
-                <span className="hidden sm:inline"><span className="text-accent-pink">{stats.totalHrs.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span> <span className="text-text-faint">hrs</span></span>
-              )}
-            </div>
-          ) : (
-            <p className="text-[10px] sm:text-xs text-text-dim font-[family-name:var(--font-mono)] mt-0.5">
-              Your backlog isn&apos;t going to play itself.
-            </p>
-          )}
+      <header className="mb-6 space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-extrabold tracking-tight text-text-primary">
+              Pile Of Shame
+            </h1>
+            {!isEmpty ? (
+              <div className="flex gap-3 text-[10px] sm:text-xs font-[family-name:var(--font-mono)] mt-0.5">
+                <span><span style={{ color: '#f59e0b' }}>{stats.playing}</span> <span className="text-text-faint">playing</span></span>
+                <span><span className="text-text-muted">{stats.buried}</span> <span className="text-text-faint">backlog</span></span>
+                <span><span style={{ color: '#22c55e' }}>{stats.played}</span> <span className="text-text-faint">done</span></span>
+                <span className="hidden sm:inline"><span className="text-accent-purple">{stats.total}</span> <span className="text-text-faint">total</span></span>
+                {stats.totalHrs > 0 && (
+                  <span className="hidden sm:inline"><span className="text-accent-pink">{stats.totalHrs.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span> <span className="text-text-faint">hrs</span></span>
+                )}
+              </div>
+            ) : (
+              <p className="text-[10px] sm:text-xs text-text-dim font-[family-name:var(--font-mono)] mt-0.5">
+                Your backlog isn&apos;t going to play itself.
+              </p>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            <AuthButton />
+            <SettingsMenu />
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <ViewToggle />
@@ -128,8 +134,6 @@ function AppContent() {
           >
             + Add
           </button>
-          <SettingsMenu />
-          <AuthButton />
         </div>
       </header>
 

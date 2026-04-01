@@ -257,7 +257,7 @@ body::before {
 .nineties-marquee span {
   display: inline-block;
   white-space: nowrap;
-  animation: marquee 15s linear infinite;
+  animation: marquee 40s linear infinite;
 }
 
 /* 90s status badges */

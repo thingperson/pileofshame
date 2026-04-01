@@ -12,8 +12,13 @@ interface CategorySectionProps {
   games: Game[];
 }
 
+const PAGE_SIZES = [20, 50, 100, Infinity] as const;
+const PAGE_LABELS: Record<number, string> = { 20: '20', 50: '50', 100: '100', [Infinity]: 'All' };
+
 export default function CategorySection({ name, games }: CategorySectionProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const [pageSize, setPageSize] = useState<number>(20);
+  const [currentPage, setCurrentPage] = useState(0);
   const viewMode = useStore((s) => s.settings.viewMode);
 
   if (games.length === 0) return null;
@@ -34,6 +39,11 @@ export default function CategorySection({ name, games }: CategorySectionProps) {
   });
 
   const icon = CATEGORY_ICONS[name] || '';
+  const totalPages = pageSize === Infinity ? 1 : Math.ceil(sorted.length / pageSize);
+  const paginatedGames = pageSize === Infinity
+    ? sorted
+    : sorted.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
+  const showPagination = sorted.length > 20;
 
   return (
     <div className="space-y-2">
@@ -61,7 +71,7 @@ export default function CategorySection({ name, games }: CategorySectionProps) {
 
       {!collapsed && viewMode === 'list' && (
         <div className="space-y-1.5 pl-0.5">
-          {sorted.map((game) => (
+          {paginatedGames.map((game) => (
             <GameCard key={game.id} game={game} />
           ))}
         </div>
@@ -69,9 +79,54 @@ export default function CategorySection({ name, games }: CategorySectionProps) {
 
       {!collapsed && viewMode === 'grid' && (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 pl-0.5">
-          {sorted.map((game) => (
+          {paginatedGames.map((game) => (
             <GridCard key={game.id} game={game} />
           ))}
+        </div>
+      )}
+
+      {/* Pagination Controls */}
+      {!collapsed && showPagination && (
+        <div className="flex items-center justify-between pt-2 px-1">
+          <div className="flex items-center gap-1">
+            {totalPages > 1 && (
+              <>
+                <button
+                  onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
+                  disabled={currentPage === 0}
+                  className="px-2 py-1 text-[11px] text-text-dim hover:text-text-muted disabled:opacity-30 font-[family-name:var(--font-mono)]"
+                >
+                  ← Prev
+                </button>
+                <span className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">
+                  {currentPage + 1}/{totalPages}
+                </span>
+                <button
+                  onClick={() => setCurrentPage(Math.min(totalPages - 1, currentPage + 1))}
+                  disabled={currentPage >= totalPages - 1}
+                  className="px-2 py-1 text-[11px] text-text-dim hover:text-text-muted disabled:opacity-30 font-[family-name:var(--font-mono)]"
+                >
+                  Next →
+                </button>
+              </>
+            )}
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="text-[10px] text-text-faint">Show:</span>
+            {PAGE_SIZES.map((size) => (
+              <button
+                key={size}
+                onClick={() => { setPageSize(size); setCurrentPage(0); }}
+                className={`px-1.5 py-0.5 text-[10px] rounded font-[family-name:var(--font-mono)] transition-colors ${
+                  pageSize === size
+                    ? 'text-accent-purple bg-accent-purple/10'
+                    : 'text-text-faint hover:text-text-dim'
+                }`}
+              >
+                {PAGE_LABELS[size]}
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </div>
