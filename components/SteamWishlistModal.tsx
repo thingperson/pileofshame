@@ -207,6 +207,17 @@ export default function SteamWishlistModal({ open, onClose }: SteamWishlistModal
             >
               <p className="text-text-muted font-medium">Why import your wishlist?</p>
               <p>We&apos;ll flag when games on your list go on sale — so you can grab them at the right price and add them to your pile.</p>
+              <p className="pt-1">
+                <a
+                  href="https://store.steampowered.com/wishlist/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent-purple hover:underline"
+                >
+                  Open your Steam wishlist →
+                </a>
+                {' '}to find your profile URL.
+              </p>
             </div>
 
             <button

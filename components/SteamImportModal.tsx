@@ -195,13 +195,20 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
               </p>
             )}
 
-            <p className="text-[11px] text-text-faint">
-              Paste your full profile URL for best results:
-              <br />
-              steamcommunity.com/profiles/<strong>your-id</strong>
-              <br />
-              Your profile and game details must be set to public.
-            </p>
+            <div className="text-[11px] text-text-faint space-y-1">
+              <p>
+                <a
+                  href="https://steamcommunity.com/my/profile"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent-purple hover:underline"
+                >
+                  Open your Steam profile →
+                </a>
+                {' '}and copy the URL from your browser.
+              </p>
+              <p>Your profile and game details must be set to public.</p>
+            </div>
 
             <button
               onClick={handleClose}

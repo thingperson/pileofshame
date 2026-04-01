@@ -16,8 +16,9 @@ export default function GameCard({ game, upNextIndex }: GameCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [ghostStatus, setGhostStatus] = useState<GameStatus | null>(null);
   const [showBailConfirm, setShowBailConfirm] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
-  const { cycleStatus, getNextStatus, setBailed, unBail, playAgain, newGamePlus, updateGame } = useStore();
+  const { cycleStatus, getNextStatus, setBailed, unBail, playAgain, newGamePlus, updateGame, deleteGame } = useStore();
   const { showToast } = useToast();
   const categories = useStore((s) => s.categories);
 
@@ -349,6 +350,37 @@ export default function GameCard({ game, upNextIndex }: GameCardProps) {
             >
               Give it another shot?
             </button>
+          )}
+
+          {/* Delete */}
+          {!showDeleteConfirm ? (
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="w-full px-3 py-1.5 text-[10px] text-text-faint hover:text-red-400 transition-colors font-[family-name:var(--font-mono)]"
+            >
+              Remove from library
+            </button>
+          ) : (
+            <div className="flex items-center gap-2 pt-1">
+              <span className="text-[10px] text-text-muted font-[family-name:var(--font-mono)]">
+                Gone forever. Sure?
+              </span>
+              <button
+                onClick={() => {
+                  deleteGame(game.id);
+                  showToast(`${game.name} removed. It was never here.`);
+                }}
+                className="px-2.5 py-1 text-[10px] font-medium rounded-md bg-red-500/15 text-red-400 hover:bg-red-500/25 transition-colors"
+              >
+                Delete
+              </button>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="px-2.5 py-1 text-[10px] text-text-dim hover:text-text-muted transition-colors"
+              >
+                Nah
+              </button>
+            </div>
           )}
         </div>
       )}
