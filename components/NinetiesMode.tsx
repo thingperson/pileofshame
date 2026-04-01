@@ -156,7 +156,7 @@ function NetscapeBadge() {
           marginTop: '4px',
         }}
       >
-        Made with 💖 on a Pentium II
+        Built with FrontPage Express on a Pentium MMX 233
       </div>
     </div>
   );
