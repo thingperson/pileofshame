@@ -5,6 +5,7 @@ import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
 import { trackImport } from '@/lib/analytics';
 import { DEFAULT_CATEGORIES } from '@/lib/constants';
+import { getDupeNudge } from '@/lib/descriptors';
 
 interface SteamGameData {
   appid: number;
@@ -137,6 +138,17 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
     }
 
     trackImport('steam', count);
+
+    // Check for cross-platform dupes
+    const allGames = useStore.getState().games;
+    for (const game of toImport) {
+      const nudge = getDupeNudge(game.name, allGames);
+      if (nudge) {
+        showToast(`${game.name}: ${nudge}`);
+        break;
+      }
+    }
+
     showToast(`Imported ${count} games from Steam. Now go play one.`);
     handleClose();
   };

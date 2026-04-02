@@ -5,6 +5,7 @@ import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
 import { trackImport } from '@/lib/analytics';
 import { DEFAULT_CATEGORIES } from '@/lib/constants';
+import { getDupeNudge } from '@/lib/descriptors';
 
 interface PSNGameData {
   name: string;
@@ -114,6 +115,17 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
     });
 
     trackImport('playstation', count);
+
+    // Check for cross-platform dupes
+    const allGames = useStore.getState().games;
+    for (const game of toImport) {
+      const nudge = getDupeNudge(game.name, allGames);
+      if (nudge) {
+        showToast(`${game.name}: ${nudge}`);
+        break;
+      }
+    }
+
     showToast(`Imported ${count} PlayStation games. Sony would be proud.`);
     handleClose();
   };

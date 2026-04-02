@@ -8,6 +8,7 @@ import { useToast } from './Toast';
 import DealBadge from './DealBadge';
 import { getGameDescriptor } from '@/lib/descriptors';
 import { MOOD_TAG_CONFIG, getPlaytimeRoast } from '@/lib/enrichment';
+import { trackStatusChange } from '@/lib/analytics';
 
 interface GameCardProps {
   game: Game;
@@ -60,6 +61,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
 
     const newStatus = cycleStatus(game.id);
     if (newStatus) {
+      trackStatusChange(game.status, newStatus);
       const cfg = STATUS_CONFIG[newStatus];
       if (newStatus === 'on-deck') {
         // Play Next celebrations
@@ -312,7 +314,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
               <img
                 src={game.coverUrl}
                 alt=""
-                className="w-20 h-28 rounded-lg object-cover shrink-0 bg-bg-primary"
+                className="w-16 h-24 sm:w-20 sm:h-28 rounded-lg object-cover shrink-0 bg-bg-primary"
               />
             )}
             <div className="flex-1 min-w-0 space-y-2">
@@ -477,13 +479,13 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
                   ))}
                 </select>
               </div>
-              <div className="shrink-0">
+              <div className="min-w-0 shrink-0 sm:shrink-0 max-w-[45%] sm:max-w-none">
                 <label htmlFor={`session-${game.id}`} className="block text-[10px] text-text-faint font-[family-name:var(--font-mono)] mb-0.5 ml-1">Session</label>
                 <select
                   id={`session-${game.id}`}
                   value={game.timeTier}
                   onChange={(e) => updateGame(game.id, { timeTier: e.target.value as TimeTier })}
-                  className="text-xs sm:text-sm bg-bg-primary border border-border-subtle rounded-lg px-2 sm:px-2.5 py-1.5 sm:py-2 text-text-secondary font-[family-name:var(--font-mono)] focus:outline-none focus:border-accent-purple"
+                  className="w-full text-xs sm:text-sm bg-bg-primary border border-border-subtle rounded-lg px-2 sm:px-2.5 py-1.5 sm:py-2 text-text-secondary font-[family-name:var(--font-mono)] focus:outline-none focus:border-accent-purple"
                 >
                   {(Object.entries(TIME_TIER_CONFIG) as [TimeTier, typeof TIME_TIER_CONFIG[TimeTier]][]).map(
                     ([tier, config]) => (
@@ -589,7 +591,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
 
             {/* Bail confirmation inline */}
             {canBail && showBailConfirm && (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">Drawing the line?</span>
                 <button
                   onClick={handleBail}

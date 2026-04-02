@@ -6,6 +6,7 @@ import { useToast } from './Toast';
 import { trackImport } from '@/lib/analytics';
 import { GameSource } from '@/lib/types';
 import { DEFAULT_CATEGORIES } from '@/lib/constants';
+import { getDupeNudge } from '@/lib/descriptors';
 
 interface ParsedGame {
   name: string;
@@ -189,6 +190,17 @@ export default function PlayniteImportModal({ open, onClose }: PlayniteImportMod
       });
     }
     trackImport('playnite', toImport.length);
+
+    // Check for cross-platform dupes
+    const allGames = useStore.getState().games;
+    for (const game of toImport) {
+      const nudge = getDupeNudge(game.name, allGames);
+      if (nudge) {
+        showToast(`${game.name}: ${nudge}`);
+        break;
+      }
+    }
+
     showToast(`Imported ${toImport.length} games from Playnite.`);
     handleClose();
   };
