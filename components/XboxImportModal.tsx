@@ -123,6 +123,12 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
         timeTier: 'wind-down',
         notes: '',
         coverUrl: game.imageUrl || undefined,
+        achievements: game.achievements ? {
+          earned: game.achievements.earned,
+          total: game.achievements.total,
+          gamerscore: game.achievements.gamerscore,
+          totalGamerscore: game.achievements.totalGamerscore,
+        } : undefined,
       });
     }
     showToast(`Imported ${toImport.length} Xbox games.`);

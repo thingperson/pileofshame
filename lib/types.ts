@@ -4,6 +4,15 @@ export type GameStatus = 'buried' | 'on-deck' | 'playing' | 'played' | 'bailed';
 
 export type MoodTag = 'chill' | 'intense' | 'story-rich' | 'brainless' | 'atmospheric' | 'competitive' | 'spooky' | 'creative' | 'strategic' | 'emotional';
 
+export interface GameAchievements {
+  earned: number;
+  total: number;
+  gamerscore?: number;        // Xbox gamerscore
+  totalGamerscore?: number;   // Xbox total possible gamerscore
+  hasPlatinum?: boolean;      // PSN: has a platinum trophy
+  earnedPlatinum?: boolean;   // PSN: earned the platinum
+}
+
 export interface Game {
   id: string;
   name: string;
@@ -26,6 +35,9 @@ export interface Game {
   completedAt?: string; // ISO date when marked as played
   addedAt: string;
   updatedAt: string;
+
+  // Achievements / Trophies (populated on import from PSN, Xbox)
+  achievements?: GameAchievements;
 
   // Auto-enrichment fields (populated from RAWG, HLTB, Steam)
   description?: string;        // Game synopsis from RAWG

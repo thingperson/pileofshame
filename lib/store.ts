@@ -9,7 +9,7 @@ import { SEED_GAMES } from './seedData';
 
 interface StoreActions {
   // Game CRUD
-  addGame: (game: Omit<Game, 'id' | 'priority' | 'addedAt' | 'updatedAt' | 'hoursPlayed' | 'installed'> & { hoursPlayed?: number; isWishlisted?: boolean }) => void;
+  addGame: (game: Omit<Game, 'id' | 'priority' | 'addedAt' | 'updatedAt' | 'hoursPlayed' | 'installed'> & { hoursPlayed?: number; isWishlisted?: boolean; achievements?: Game['achievements'] }) => void;
   updateGame: (id: string, updates: Partial<Game>) => void;
   deleteGame: (id: string) => void;
 

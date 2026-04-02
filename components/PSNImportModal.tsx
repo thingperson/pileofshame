@@ -100,10 +100,14 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
         category: DEFAULT_CATEGORIES[0],
         vibes: [],
         timeTier: game.progress > 50 ? 'deep-cut' : 'wind-down',
-        notes: game.trophiesEarned > 0
-          ? `${game.trophiesEarned}/${game.trophiesTotal} trophies${game.earnedPlatinum ? ' 🏆 Platinum!' : ''} · ${game.platform}`
-          : game.platform,
+        notes: game.platform,
         status: game.progress === 100 ? 'played' : 'buried',
+        achievements: game.trophiesTotal > 0 ? {
+          earned: game.trophiesEarned,
+          total: game.trophiesTotal,
+          hasPlatinum: game.hasPlatinum,
+          earnedPlatinum: game.earnedPlatinum,
+        } : undefined,
       });
       count++;
     });

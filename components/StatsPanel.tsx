@@ -275,7 +275,19 @@ export default function StatsPanel({ games }: StatsPanelProps) {
     const streak = getCurrentStreak(games);
     const oldest = getOldestBacklogGame(games);
 
-    return { backlogSize, gamesCleared, bailedCount, nowPlaying, totalHours, streak, oldest };
+    // Achievement totals
+    const gamesWithAchievements = games.filter((g) => g.achievements && g.achievements.total > 0);
+    const totalAchievementsEarned = gamesWithAchievements.reduce((sum, g) => sum + (g.achievements?.earned || 0), 0);
+    const totalAchievements = gamesWithAchievements.reduce((sum, g) => sum + (g.achievements?.total || 0), 0);
+    const platinumsEarned = games.filter((g) => g.achievements?.earnedPlatinum).length;
+    const perfectGames = gamesWithAchievements.filter((g) => g.achievements!.earned === g.achievements!.total).length;
+    const totalGamerscore = games.reduce((sum, g) => sum + (g.achievements?.gamerscore || 0), 0);
+
+    return {
+      backlogSize, gamesCleared, bailedCount, nowPlaying, totalHours, streak, oldest,
+      totalAchievementsEarned, totalAchievements, platinumsEarned, perfectGames,
+      totalGamerscore, hasAchievementData: gamesWithAchievements.length > 0,
+    };
   }, [games]);
 
   const countedUnplayed = useCountUp(unplayedValue, calculating);
@@ -508,6 +520,28 @@ export default function StatsPanel({ games }: StatsPanelProps) {
               sublabel={stats.totalHours === 0 ? 'via Steam import' : undefined}
             />
           </div>
+
+          {/* Trophy Case Row */}
+          {stats.hasAchievementData && (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
+              <StatCard
+                label="Trophies"
+                value={stats.totalAchievementsEarned.toLocaleString()}
+                icon="🏆"
+                color="#f59e0b"
+                sublabel={stats.totalAchievements > 0 ? `of ${stats.totalAchievements.toLocaleString()} total` : undefined}
+              />
+              {stats.platinumsEarned > 0 && (
+                <StatCard label="Platinums" value={stats.platinumsEarned.toString()} icon="💎" color="#e2e8f0" />
+              )}
+              {stats.perfectGames > 0 && (
+                <StatCard label="100% Complete" value={stats.perfectGames.toString()} icon="⭐" color="#22c55e" />
+              )}
+              {stats.totalGamerscore > 0 && (
+                <StatCard label="Gamerscore" value={stats.totalGamerscore.toLocaleString()} icon="🟢" color="#22c55e" sublabel="Xbox" />
+              )}
+            </div>
+          )}
 
           {/* Library Row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">

@@ -334,13 +334,13 @@ export default function SettingsMenu() {
                   onClick={handleExport}
                   className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors"
                 >
-                  📦 Export Library
+                  📦 Export Backup
                 </button>
                 <button
                   onClick={handleImportClick}
                   className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors"
                 >
-                  📥 Import Library
+                  📥 Restore Backup
                 </button>
                 {gamesWithoutArt.length > 0 && (
                   <button

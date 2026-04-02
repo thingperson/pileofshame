@@ -20,6 +20,7 @@ import CompletionCelebration from '@/components/CompletionCelebration';
 import HelpModal from '@/components/HelpModal';
 import { ToastProvider } from '@/components/Toast';
 import EnrichmentIndicator from '@/components/EnrichmentIndicator';
+import JustFiveMinutes from '@/components/JustFiveMinutes';
 import NinetiesMode from '@/components/NinetiesMode';
 import { useAutoEnrich } from '@/hooks/useAutoEnrich';
 
@@ -296,6 +297,7 @@ function AppContent() {
             >
               ▶&nbsp; <span className="hidden sm:inline">Keep </span>Playing
             </button>
+            <JustFiveMinutes games={games} />
           </div>
         </div>
       )}

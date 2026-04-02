@@ -217,8 +217,22 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
           {game.name}
         </span>
 
-        {/* Time Tier + Source Icons */}
-        <div className="flex items-center gap-1 shrink-0">
+        {/* Achievement mini + Time Tier + Source Icons */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          {game.achievements && game.achievements.total > 0 && (
+            <span
+              className="text-[10px] font-bold font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded"
+              title={`${game.achievements.earned}/${game.achievements.total}${game.achievements.earnedPlatinum ? ' 🏆' : ''}`}
+              style={{
+                backgroundColor: game.achievements.earned === game.achievements.total
+                  ? 'rgba(34,197,94,0.15)' : 'rgba(167,139,250,0.12)',
+                color: game.achievements.earned === game.achievements.total
+                  ? '#22c55e' : '#a78bfa',
+              }}
+            >
+              {game.achievements.earnedPlatinum ? '🏆' : `${Math.round((game.achievements.earned / game.achievements.total) * 100)}%`}
+            </span>
+          )}
           <span className="text-sm" title={tierConfig.label}>
             {tierConfig.icon}
           </span>
@@ -293,6 +307,44 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
                   </span>
                 )}
               </div>
+
+              {/* Achievement / Trophy Progress */}
+              {game.achievements && game.achievements.total > 0 && (() => {
+                const pct = Math.round((game.achievements.earned / game.achievements.total) * 100);
+                const isComplete = game.achievements.earned === game.achievements.total;
+                return (
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
+                        <div
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{
+                            width: `${pct}%`,
+                            backgroundColor: isComplete ? '#22c55e' : '#a78bfa',
+                          }}
+                        />
+                      </div>
+                      <span className="text-[11px] font-bold font-[family-name:var(--font-mono)] shrink-0" style={{ color: isComplete ? '#22c55e' : '#a78bfa' }}>
+                        {game.achievements.earned}/{game.achievements.total}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-[10px] text-text-dim font-[family-name:var(--font-mono)]">
+                      <span>
+                        {game.source === 'playstation' ? '🏆 Trophies' : game.source === 'xbox' ? '🏆 Achievements' : '🏆 Achievements'}
+                      </span>
+                      {game.achievements.earnedPlatinum && (
+                        <span className="text-yellow-400 font-bold">Platinum earned!</span>
+                      )}
+                      {game.achievements.gamerscore !== undefined && game.achievements.gamerscore > 0 && (
+                        <span>{game.achievements.gamerscore}/{game.achievements.totalGamerscore} G</span>
+                      )}
+                      {isComplete && !game.achievements.earnedPlatinum && (
+                        <span className="text-green-400 font-bold">100% complete!</span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* Genres */}
               {game.genres && game.genres.length > 0 && (
