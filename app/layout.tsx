@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Inventory Full: Gaming Backlog Manager',
-    description: 'Your backlog is full. Your time doesn\'t have to be. Import from Steam & Xbox, clear space, recover fun.',
+    description: 'Because your backlog should feel exciting, not a warehouse of good intentions.',
     images: ['/opengraph-image'],
   },
   other: {
@@ -92,7 +92,7 @@ export default function RootLayout({
               '@type': 'WebApplication',
               name: 'Inventory Full',
               url: 'https://inventoryfull.gg',
-              description: 'Gaming backlog manager. Your backlog is full. Your time doesn\'t have to be. Import from Steam, Xbox, Playnite. Clear space, recover fun.',
+              description: 'Gaming backlog manager. Your backlog should feel exciting, not a warehouse of good intentions. Import from Steam, Xbox, Playnite. Clear space, recover fun.',
               applicationCategory: 'GameApplication',
               operatingSystem: 'Web',
               offers: {

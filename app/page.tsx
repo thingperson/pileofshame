@@ -202,7 +202,7 @@ function AppContent() {
               Inventory Full
             </h1>
             <p className="text-sm text-text-dim mt-0.5 italic">
-              Your backlog is full. Your time doesn&apos;t have to be.
+              Your backlog should feel exciting, not a warehouse of good intentions.
             </p>
             {!isEmpty && (
               <div className="flex gap-3 text-xs font-[family-name:var(--font-mono)] mt-1.5">

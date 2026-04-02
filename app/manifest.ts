@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Inventory Full',
     short_name: 'Inventory Full',
-    description: 'Your backlog is full. Your time doesn\'t have to be. Clear space, recover fun.',
+    description: 'Your backlog should feel exciting, not a warehouse of good intentions. Clear space, recover fun.',
     start_url: '/',
     display: 'standalone',
     background_color: '#0a0a0f',

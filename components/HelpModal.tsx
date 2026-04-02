@@ -16,7 +16,7 @@ const SECTIONS = [
     items: [
       {
         q: 'What is Inventory Full?',
-        a: 'Your backlog is full. Your time doesn\'t have to be. Add your games, tell us your mood, and we\'ll find your game tonight. No more staring at your library wondering what to play.',
+        a: 'Your backlog should feel exciting, not a warehouse of good intentions. Add your games, tell us your mood, and we\'ll find your game tonight. No more staring at your library wondering what to play.',
       },
       {
         q: 'How do I add games?',
