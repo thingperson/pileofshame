@@ -122,11 +122,11 @@ const SECTIONS = [
     items: [
       {
         q: 'How do deal checks work?',
-        a: 'Expand any game card and click "Check deals." We search CheapShark for current prices across Steam, GOG, Humble, and more. Results are cached for 30 minutes.',
+        a: 'Expand any game card and click "Check deals." We search IsThereAnyDeal for current prices across Steam, GOG, Humble, and more. Results are cached for 30 minutes.',
       },
       {
         q: 'Are the deal links affiliate links?',
-        a: 'Some stores use CheapShark affiliate links. Buying through them supports CheapShark (the free price API we use). We don\'t take a cut.',
+        a: 'Some deal links include affiliate parameters from IsThereAnyDeal. If you buy through them, it helps keep the app free. We never inflate prices.',
       },
     ],
   },

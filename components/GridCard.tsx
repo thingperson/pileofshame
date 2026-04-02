@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react';
 import { Game } from '@/lib/types';
 import { useStore } from '@/lib/store';
-import { STATUS_CONFIG, TIME_TIER_CONFIG, SOURCE_LABELS } from '@/lib/constants';
+import { STATUS_CONFIG, TIME_TIER_CONFIG, SOURCE_LABELS, SOURCE_SHORT, SOURCE_COLORS } from '@/lib/constants';
 import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
 import { useToast } from './Toast';
 import GameDetailModal from './GameDetailModal';
@@ -12,16 +12,7 @@ interface GridCardProps {
   game: Game;
 }
 
-/** Compact platform label for cover overlay */
-const PLATFORM_SHORT: Record<string, string> = {
-  steam: 'STM',
-  playstation: 'PSN',
-  xbox: 'XBX',
-  epic: 'EPC',
-  switch: 'NSW',
-  gog: 'GOG',
-  other: '???',
-};
+// Platform colors and labels imported from constants
 
 export default function GridCard({ game }: GridCardProps) {
   const [detailOpen, setDetailOpen] = useState(false);
@@ -123,10 +114,15 @@ export default function GridCard({ game }: GridCardProps) {
 
           {/* Platform source — bottom left of cover */}
           <span
-            className="absolute bottom-1.5 left-2 text-[9px] font-bold font-[family-name:var(--font-mono)] tracking-wide text-white/70 z-10"
+            className="absolute bottom-1.5 left-2 text-[10px] font-bold font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded backdrop-blur-sm z-10"
+            style={{
+              backgroundColor: SOURCE_COLORS[game.source].bg,
+              color: SOURCE_COLORS[game.source].text,
+              border: `1px solid ${SOURCE_COLORS[game.source].text}30`,
+            }}
             title={SOURCE_LABELS[game.source]}
           >
-            {PLATFORM_SHORT[game.source]}
+            {SOURCE_SHORT[game.source]}
           </span>
 
           {/* Metacritic badge — bottom right of cover */}

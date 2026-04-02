@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Inventory Full — Gaming Backlog Manager",
+  title: "Inventory Full: Gaming Backlog Manager",
   description: "Your backlog is full. Your time doesn't have to be. Import your games, tell us your mood, and we'll find your game tonight.",
   metadataBase: new URL('https://inventoryfull.gg'),
   keywords: ['gaming backlog', 'backlog manager', 'game tracker', 'inventory full', 'steam backlog', 'xbox backlog', 'gaming queue', 'what to play next', 'game randomizer', 'backlog tracker', 'backlog payback'],
@@ -32,13 +32,13 @@ export const metadata: Metadata = {
         url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'Inventory Full — Gaming Backlog Manager',
+        alt: 'Inventory Full: Gaming Backlog Manager',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Inventory Full — Gaming Backlog Manager',
+    title: 'Inventory Full: Gaming Backlog Manager',
     description: 'Your backlog is full. Your time doesn\'t have to be. Import from Steam & Xbox, clear space, recover fun.',
     images: ['/opengraph-image'],
   },
@@ -91,7 +91,7 @@ export default function RootLayout({
                 'Game randomizer (What Should I Play?)',
                 'Backlog tracking with 5-status pipeline',
                 'Backlog Payback — value recovered tracking',
-                'Deal checking via CheapShark',
+                'Deal checking via IsThereAnyDeal',
                 'Cover art and Metacritic scores via RAWG',
                 'Cloud sync with Discord and Google sign-in',
                 'Multiple themes including retro modes',

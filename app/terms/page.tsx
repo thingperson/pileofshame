@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Terms of Service — Inventory Full',
+  title: 'Terms of Service | Inventory Full',
   description: 'The rules. They are short and reasonable.',
 };
 
@@ -67,7 +67,7 @@ export default function TermsPage() {
             <h2 className="text-lg font-bold text-text-primary mb-3">4. Game data and third parties</h2>
             <p>
               Game metadata (descriptions, images, prices, completion times) comes from third-party
-              APIs including RAWG, CheapShark, HowLongToBeat, Steam, and PlayStation Network. This
+              APIs including RAWG, IsThereAnyDeal, HowLongToBeat, Steam, and PlayStation Network. This
               data is provided by those services and may change. We don&apos;t guarantee its accuracy.
             </p>
             <p className="mt-2">

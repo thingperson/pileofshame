@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Privacy Policy — Inventory Full',
+  title: 'Privacy Policy | Inventory Full',
   description: 'How we handle your data. Short version: we keep it minimal.',
 };
 
@@ -82,7 +82,7 @@ export default function PrivacyPage() {
             </p>
             <ul className="list-disc list-inside space-y-1.5 text-text-muted">
               <li><strong>RAWG API</strong> — game metadata, descriptions, genres, screenshots</li>
-              <li><strong>CheapShark API</strong> — current game prices and deals across stores</li>
+              <li><strong>IsThereAnyDeal API</strong> — current game prices and deals across stores</li>
               <li><strong>HowLongToBeat</strong> — estimated completion times</li>
               <li><strong>Steam Web API</strong> — game library, playtime, achievements (when importing)</li>
               <li><strong>Supabase</strong> — authentication and cloud sync (when signed in)</li>
@@ -92,7 +92,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-bold text-text-primary mb-3">Affiliate links</h2>
             <p>
-              When we show game deals via CheapShark, some links may include affiliate parameters.
+              When we show game deals via IsThereAnyDeal, some links may include affiliate parameters.
               If you purchase a game through one of these links, we may receive a small commission at
               no extra cost to you. This is how we keep the app free.
             </p>

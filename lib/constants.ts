@@ -50,13 +50,35 @@ export const STATUS_CONFIG: Record<GameStatus, {
 export const STATUS_CYCLE: GameStatus[] = ['buried', 'on-deck', 'playing', 'played'];
 
 export const SOURCE_ICONS: Record<GameSource, string> = {
-  steam: '🎮',
-  playstation: '🎮',
-  epic: '🎮',
-  xbox: '🎮',
-  switch: '🕹️',
-  gog: '🎮',
+  steam: '🟦',
+  playstation: '🔵',
+  epic: '⬛',
+  xbox: '🟩',
+  switch: '🔴',
+  gog: '🟣',
   other: '🎲',
+};
+
+/** Short platform labels for badges */
+export const SOURCE_SHORT: Record<GameSource, string> = {
+  steam: 'Steam',
+  playstation: 'PS',
+  epic: 'Epic',
+  xbox: 'Xbox',
+  switch: 'NSW',
+  gog: 'GOG',
+  other: '???',
+};
+
+/** Platform badge colors for visual distinction */
+export const SOURCE_COLORS: Record<GameSource, { bg: string; text: string }> = {
+  steam: { bg: 'rgba(66, 133, 244, 0.15)', text: '#6ba4f7' },
+  playstation: { bg: 'rgba(0, 112, 210, 0.15)', text: '#4da3e8' },
+  epic: { bg: 'rgba(255, 255, 255, 0.08)', text: '#999' },
+  xbox: { bg: 'rgba(16, 124, 16, 0.15)', text: '#4ec44e' },
+  switch: { bg: 'rgba(230, 0, 18, 0.12)', text: '#e85555' },
+  gog: { bg: 'rgba(165, 100, 235, 0.15)', text: '#b98ce8' },
+  other: { bg: 'rgba(255, 255, 255, 0.06)', text: '#777' },
 };
 
 export const SOURCE_LABELS: Record<GameSource, string> = {

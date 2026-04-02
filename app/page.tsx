@@ -378,7 +378,7 @@ function AppContent() {
       {/* Footer */}
       <footer className="mt-12 pb-6 text-center space-y-2">
         <a
-          href="https://ko-fi.com/pileofshame"
+          href="https://ko-fi.com/inventoryfull"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 px-5 py-2.5 text-sm font-semibold rounded-full border transition-all hover:scale-[1.03] hover:border-accent-pink hover:text-accent-pink"

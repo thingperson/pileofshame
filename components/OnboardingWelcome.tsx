@@ -69,7 +69,7 @@ export default function OnboardingWelcome({ onImport, onAddManual }: OnboardingW
               </h2>
               <p className="text-sm text-text-muted leading-relaxed">
                 You bought those games because something in each one genuinely excited you.
-                That excitement is still in there — buried under 200 tiles and the
+                That excitement is still in there, buried under 200 tiles and the
                 world&apos;s worst multiple-choice question.
               </p>
               <p className="text-sm text-text-secondary leading-relaxed font-medium">

@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Game, GameStatus, TimeTier } from '@/lib/types';
 import { useStore } from '@/lib/store';
-import { STATUS_CONFIG, TIME_TIER_CONFIG, SOURCE_LABELS, SOURCE_ICONS } from '@/lib/constants';
+import { STATUS_CONFIG, TIME_TIER_CONFIG, SOURCE_LABELS, SOURCE_SHORT, SOURCE_COLORS } from '@/lib/constants';
 import { useToast } from './Toast';
 import DealBadge from './DealBadge';
 import { getGameDescriptor } from '@/lib/descriptors';
@@ -237,8 +237,15 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
           <span className="text-sm" title={tierConfig.label}>
             {tierConfig.icon}
           </span>
-          <span className="text-xs text-text-faint" title={SOURCE_LABELS[game.source]}>
-            {SOURCE_ICONS[game.source]}
+          <span
+            className="text-[10px] font-bold font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded"
+            style={{
+              backgroundColor: SOURCE_COLORS[game.source].bg,
+              color: SOURCE_COLORS[game.source].text,
+            }}
+            title={SOURCE_LABELS[game.source]}
+          >
+            {SOURCE_SHORT[game.source]}
           </span>
         </div>
 
@@ -475,8 +482,9 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
                   color: '#a78bfa',
                   border: '1px solid rgba(124, 58, 237, 0.3)',
                 }}
+                title="Opens in Steam (or Steam Link on mobile)"
               >
-                🚀 Launch
+                🚀 <span className="hidden sm:inline">Launch</span><span className="sm:hidden">Play</span>
               </a>
             )}
           </div>

@@ -195,7 +195,7 @@ function shareToTwitter(text: string) {
 
 function shareToReddit(text: string) {
   const fullText = text + getShareCTA('reddit');
-  window.open(`https://reddit.com/submit?selftext=true&title=${encodeURIComponent('My gaming library stats — how does yours compare?')}&text=${encodeURIComponent(fullText)}`, '_blank');
+  window.open(`https://reddit.com/submit?selftext=true&title=${encodeURIComponent('My gaming library stats. How does yours compare?')}&text=${encodeURIComponent(fullText)}`, '_blank');
 }
 
 function getDiscordText(text: string): string {
@@ -846,7 +846,7 @@ export default function StatsPanel({ games }: StatsPanelProps) {
                 onClick={() => {
                   const dynStats = { backlog: stats.backlogSize, cleared: stats.gamesCleared, bailed: stats.bailedCount, hours: stats.totalHours, unplayedValue: countedUnplayed, playedValue: countedPlayed, backlogHours: backlogHours || 0, streak: stats.streak, oldest: stats.oldest?.name || '', pct: explorationPct };
                   navigator.clipboard.writeText(generateDynamicShareText(dynStats, 'discord'));
-                  showToast('Copied to clipboard — go share it!');
+                  showToast('Copied to clipboard. Go share it!');
                 }}
                 className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{

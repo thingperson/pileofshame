@@ -23,7 +23,7 @@ interface DealBadgeProps {
   compact?: boolean;
 }
 
-// Simple in-memory cache to avoid hammering CheapShark
+// Simple in-memory cache to avoid hammering IsThereAnyDeal
 const dealCache = new Map<string, { data: DealData | null; timestamp: number }>();
 const CACHE_TTL = 1000 * 60 * 30; // 30 minutes
 
