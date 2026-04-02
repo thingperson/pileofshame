@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/useAuth';
 import { useStore } from '@/lib/store';
 import { saveToCloud, loadFromCloud } from '@/lib/cloudSync';
 import { useToast } from './Toast';
+import { DEFAULT_CATEGORIES } from '@/lib/constants';
 
 // Debounced auto-sync component — sits invisibly in the app
 export default function CloudSync() {
@@ -36,7 +37,7 @@ export default function CloudSync() {
         // Reset store to empty
         importState(JSON.stringify({
           games: [],
-          categories: ['The Pile', 'Brain Off', 'The Shame Wall'],
+          categories: [...DEFAULT_CATEGORIES],
           customVibes: [],
           settings: { showPlayed: false, showBailed: false, viewMode: 'list', theme: 'dark', platformPreference: 'any' },
           lastSaved: new Date().toISOString(),
@@ -56,7 +57,7 @@ export default function CloudSync() {
           if (cloudData.games.length > 0) {
             showToast('Library loaded from cloud.');
           }
-        } else if (cloudData.lastSaved > lastSaved) {
+        } else if (cloudData.lastSaved > useStore.getState().lastSaved) {
           // Cloud is newer — cloud wins
           importState(JSON.stringify(cloudData));
           showToast('Synced with cloud (newer data found).');
@@ -74,7 +75,8 @@ export default function CloudSync() {
     };
 
     loadCloud();
-  }, [isSignedIn, user, hasLoaded, lastSaved, importState, showToast]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSignedIn, user, hasLoaded, importState, showToast]);
 
   // Clear local user tracking on sign-out
   useEffect(() => {

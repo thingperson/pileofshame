@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useCallback, useRef } from 'react';
+import { useMemo, useCallback, useRef, useState, useEffect } from 'react';
 import { Game } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
@@ -67,19 +67,22 @@ export default function UpNextSection({ games }: UpNextSectionProps) {
   const { showToast } = useToast();
 
   // Suggest a game when queue is empty — stabilize so it doesn't flicker during enrichment
-  const suggestionRef = useRef<Game | null>(null);
-  const suggestion = useMemo(() => {
+  const [suggestion, setSuggestion] = useState<Game | null>(null);
+  const lastSuggestionId = useRef<string | null>(null);
+
+  useEffect(() => {
     if (upNextGames.length > 0) {
-      suggestionRef.current = null;
-      return null;
+      setSuggestion(null);
+      lastSuggestionId.current = null;
+      return;
     }
     // If we already have a valid suggestion and that game still exists in the library, keep it
-    if (suggestionRef.current && games.some(g => g.id === suggestionRef.current!.id && g.status === 'buried')) {
-      return suggestionRef.current;
+    if (lastSuggestionId.current && games.some(g => g.id === lastSuggestionId.current && g.status === 'buried')) {
+      return;
     }
     const pick = pickSuggestion(games);
-    suggestionRef.current = pick;
-    return pick;
+    setSuggestion(pick);
+    lastSuggestionId.current = pick?.id ?? null;
   }, [games, upNextGames.length]);
 
   const handleAddSuggestion = useCallback(() => {
@@ -112,7 +115,7 @@ export default function UpNextSection({ games }: UpNextSectionProps) {
 
       {/* Play Next Queue */}
       <div>
-        <h2 className="flex items-center gap-2 text-sm font-semibold text-text-secondary tracking-wide mb-2">
+        <h2 className="flex items-center gap-2 text-lg font-bold text-text-primary tracking-tight mb-2.5">
           <span className="text-lg">📋</span> Play Next
           {upNextGames.length > 0 && (
             <span className="text-sm text-text-muted font-[family-name:var(--font-mono)]">

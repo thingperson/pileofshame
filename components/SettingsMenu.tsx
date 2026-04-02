@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { useStore } from '@/lib/store';
 import { LibrarySettings } from '@/lib/types';
 import { downloadBackup, readBackupFile } from '@/lib/backup';
@@ -26,10 +26,10 @@ export default function SettingsMenu() {
   const linkedSteamId = useStore((s) => s.linkedSteamId);
   const { showToast } = useToast();
 
-  const gamesWithoutArt = games.filter((g) => !g.coverUrl);
-  const steamGames = games.filter((g) => g.steamAppId);
-  const psnGames = games.filter((g) => g.source === 'playstation');
-  const gamesNeedingEnrichment = games.filter((g) => !g.enrichedAt || !g.description || !g.moodTags || g.moodTags.length === 0);
+  const gamesWithoutArt = useMemo(() => games.filter((g) => !g.coverUrl), [games]);
+  const steamGames = useMemo(() => games.filter((g) => g.steamAppId), [games]);
+  const psnGames = useMemo(() => games.filter((g) => g.source === 'playstation'), [games]);
+  const gamesNeedingEnrichment = useMemo(() => games.filter((g) => !g.enrichedAt || !g.description || !g.moodTags || g.moodTags.length === 0), [games]);
 
   const handleEnrichAll = async () => {
     setEnrichingAll(true);

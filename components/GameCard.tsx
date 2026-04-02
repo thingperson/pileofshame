@@ -168,6 +168,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
               backgroundColor: statusConfig.bg,
               color: statusConfig.color,
             }}
+            aria-label={`Status: ${statusConfig.label}${nextStatus ? `. Tap to move to ${STATUS_CONFIG[nextStatus].label}` : ''}`}
             title={
               game.status === 'played'
                 ? 'Played. Expand card for options'
@@ -315,7 +316,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
                 return (
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
+                      <div className="flex-1 h-2 rounded-full overflow-hidden" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label={`${game.source === 'playstation' ? 'Trophy' : 'Achievement'} progress: ${pct}%`} style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
                         <div
                           className="h-full rounded-full transition-all duration-500"
                           style={{
@@ -328,9 +329,9 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
                         {game.achievements.earned}/{game.achievements.total}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 text-[10px] text-text-dim font-[family-name:var(--font-mono)]">
+                    <div className="flex items-center gap-2 text-[11px] text-text-dim font-[family-name:var(--font-mono)]">
                       <span>
-                        {game.source === 'playstation' ? '🏆 Trophies' : game.source === 'xbox' ? '🏆 Achievements' : '🏆 Achievements'}
+                        {game.source === 'playstation' ? '🏆 Trophies' : '🏆 Achievements'}
                       </span>
                       {game.achievements.earnedPlatinum && (
                         <span className="text-yellow-400 font-bold">Platinum earned!</span>

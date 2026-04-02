@@ -220,8 +220,9 @@ function AppContent() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setHelpOpen(true)}
-              className="w-8 h-8 flex items-center justify-center text-sm text-text-dim hover:text-text-muted transition-colors rounded-lg hover:bg-white/5"
+              className="w-10 h-10 flex items-center justify-center text-sm text-text-dim hover:text-text-muted transition-colors rounded-lg hover:bg-white/5"
               title="Help & FAQ"
+              aria-label="Help and FAQ"
             >
               ?
             </button>

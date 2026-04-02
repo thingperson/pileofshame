@@ -4,28 +4,26 @@ Based on deep research into gaming backlog psychology (analysis paralysis, decis
 
 ---
 
-## 1. "Just 5 Minutes" Mode
+## 1. "Just 5 Minutes" Mode -- SHIPPED
 
 **Psychology**: Behavioral Activation (Martell et al.) — the hardest part of any task is starting. The 5-minute rule lowers the commitment threshold to near-zero. Once someone starts, they usually continue (Zeigarnik Effect — incomplete tasks create psychological tension that motivates completion).
 
 **How it works**:
-- Button in hero section: "⚡ Just 5 Minutes"
-- Picks a game from library (prioritize: short games, games with progress, games user hasn't tried)
-- Shows: "Give [Game] just 5 minutes. That's it. No commitment."
-- After 5 minutes (honor system), show: "5 minutes done. Want to keep going, or call it? Either way, you showed up."
-- Both "Keep playing" and "Done for now" are celebrated equally
-- Track "sessions started" as a win metric, not just completions
+- Button in hero section: "⚡ Just 5 Min"
+- Weighted game picker prioritizes quick-hit and wind-down time tiers, games with some progress (< 20h), and recently added games
+- 3-phase triage flow:
+  1. **Suggest** — shows a game card with "Give it 5 minutes. Then decide where it goes." + start timer / skip buttons
+  2. **Timing** — floating pill anchored to bottom of viewport with circular SVG progress ring, countdown, game name, "go play -- we'll wait" copy, and "I've decided" early exit button
+  3. **Triage** — 4-way decision grid: Playing this now / Play Next / Back to The Pile / Not for me, plus "Try another game instead"
+- Every triage decision gets a warm 🙌 toast ("You tried it, you liked it, you're in" / "5 minutes saved you hours. That's a win." / etc.)
+- All four outcomes are celebrated equally
+- Skip/reroll available at suggest phase; early triage available during timer
 
-**Implementation**:
-- New reroll mode in the reroll modal
-- Timer is optional/honor-system (no intrusive countdown)
-- Toast on completion: warm, not performative
-
-**Effort**: Medium — new reroll mode + timer UI + session tracking
+**Implementation**: Standalone `components/JustFiveMinutes.tsx` — weighted picker, 300s interval timer, floating pill UI, triage actions dispatched to store (`updateGame` / `setBailed`), warm toasts via `useToast`
 
 ---
 
-## 2. Time-Aware Nudges
+## 2. Time-Aware Nudges -- NOT YET SHIPPED
 
 **Psychology**: Circadian rhythm affects game preference. Evening = lower executive function = preference for familiar/simple. Morning/afternoon = higher capacity for new/complex. (Baumeister & Tierney, "Willpower")
 
@@ -49,7 +47,7 @@ Based on deep research into gaming backlog psychology (analysis paralysis, decis
 
 ---
 
-## 3. Energy Matching
+## 3. Energy Matching -- NOT YET SHIPPED
 
 **Psychology**: Ryan & Deci's Self-Determination Theory — intrinsic motivation requires autonomy, competence, and relatedness. When energy is low, complex games threaten competence needs. Matching game demands to current energy preserves motivation.
 
@@ -71,52 +69,76 @@ Based on deep research into gaming backlog psychology (analysis paralysis, decis
 
 ---
 
-## 4. Comfort Game Acknowledgment (IMPLEMENTED)
+## 4. Comfort Game Acknowledgment -- SHIPPED (via playtime roasts)
 
 **Psychology**: Comfort games serve a legitimate psychological function (stress regulation, parasocial connection, flow state access). Shaming someone for 1000h in Stardew misunderstands why they play. These games are emotional regulation tools, not failures of commitment.
 
-**What we did**:
-- Reframed all playtime "roasts" as warm comfort game recognition
-- 500h+ games get ☁️ prefix and explicit comfort game acknowledgment
-- Game-specific lines are affectionate (Stardew: "This is your happy place, isn't it?")
-- Color changed from amber/warning to sky blue/calm
-- Message: "This isn't part of the pile. It IS the game. That's valid."
+**What shipped** (in `lib/enrichment.ts` `getPlaytimeRoast()`):
+- All playtime "roasts" reframed as warm, affectionate ribbing -- not shaming
+- 500h+ games get explicit comfort game acknowledgment ("This is clearly your comfort game. Your pile is jealous, but we understand.")
+- Game-specific lines for Stardew Valley, Rocket League, Dota/LoL, Skyrim, Counter-Strike -- playful and affectionate
+- Generic tiers scale from light teasing (50h) to full comfort-game recognition (500h+)
+- Tone is warm throughout -- "comfort is comfort", "we understand", not "you're wasting time"
+
+**What's NOT shipped yet** (from original plan):
+- Comfort game detection as a standalone feature/tag (separate from roasts)
+- Visual distinction (sky blue styling, cloud emoji prefix) for comfort games in the library UI -- roasts handle this in-context but there's no persistent "comfort game" badge or shelf
 
 ---
 
-## 5. Decisions as Wins (PARTIALLY IMPLEMENTED)
+## 5. Decisions as Wins -- SHIPPED
 
 **Psychology**: Schwartz's Paradox of Choice — the act of deciding is the hard part, not the outcome. A bail is a decision. A "not for me" is a decision. Progress = decisions made, not just games completed.
 
-**What we did**:
-- "Bailed" stat renamed to "Lines Drawn" with ✊ icon
-- Bail affirmation toasts celebrate the decision itself
-- Share text counts total decisions (cleared + bailed) as progress
-- "Lines Drawn" uses neutral gray, not shame-red
+**What shipped**:
+- "Bailed" stat renamed to "Lines Drawn" with ✊ icon (in `components/StatsPanel.tsx`)
+- "Lines Drawn" uses neutral slate gray (#94a3b8), not shame-red
+- Bail/triage toasts in Just 5 Minutes celebrate the decision itself ("5 minutes saved you hours. That's a win.")
+- Share text counts total decisions as progress
 
-**What's left**:
-- Track "decisions made this week/month" as a stat
-- Show "Decisions Made" as a victory metric alongside "Cleared"
-- Milestone celebrations for decision counts (10th decision, 50th, etc.)
+**What's NOT shipped yet**:
+- "Decisions made this week/month" as a tracked stat
+- "Decisions Made" as a named victory metric alongside "Cleared"
+- Mini celebrations / milestone toasts for decision count thresholds (10th, 50th, etc.)
 
 ---
 
-## 6. Stats Reframing (IMPLEMENTED)
+## 6. Stats Reframing -- SHIPPED
 
 **Psychology**: Overjustification Effect (Lepper et al., 1973) — external rewards/metrics can undermine intrinsic motivation. Shame-based framing ("your pile of shame is $4,200") creates anxiety, not motivation. Empowerment framing ("you have $4,200 of untapped gaming ahead") preserves curiosity.
 
-**What we changed**:
-- "Backlog" → "To Explore"
-- "Bailed" → "Lines Drawn"
-- "Dare to calculate your backlog's value?" → "What's your library worth?"
+**What shipped** (in `components/StatsPanel.tsx`):
+- "Backlog" → "To Explore" (with 📚 icon, neutral #64748b color)
+- "Bailed" → "Lines Drawn" (with ✊ icon, neutral #94a3b8 color)
+- "Dare to calculate your backlog's value?" → "What's your library worth?" (with 💎 icon)
 - "Estimated unplayed value" → "Untapped library value"
-- Red/shame styling → purple/neutral
-- Share text focuses on exploration % and decisions, not shame
-- Backlog hours framed as abundance ("you're set for life") not burden
+- Calculator button uses purple accent styling (hover:border-accent-purple)
+- Backlog hours framed as abundance, not burden
+- Share language softened throughout
 
 ---
 
-## 7. Future Considerations
+## 7. Completion Celebration Flow -- SHIPPED
+
+**Psychology**: Completion deserves recognition, but not in a gamified/performative way. Warm celebration preserves intrinsic motivation.
+
+**What shipped** (in `components/CompletionCelebration.tsx`):
+- Canvas-based confetti animation on game completion
+- Multi-stage celebration flow (celebrate → details)
+- Star rating for completed games
+- Stats impact shown (how clearing this game affects your numbers)
+- Warm, non-competitive tone
+
+---
+
+## 8. Future Considerations
+
+### Not Yet Shipped
+- **Time-aware nudges** (Section 2) — circadian weighting of suggestions
+- **Energy matching** (Section 3) — optional energy selector + genre mapping
+- **Comfort game detection as standalone feature** — persistent "comfort game" identification in library UI beyond the roast system
+- **Mini celebrations for milestones** — toast/confetti for 10th decision, 50th game cleared, etc.
+- **Decision tracking stats** — "decisions this week/month" as a visible metric
 
 ### Don't Over-Gamify
 The research is clear: adding points, badges, streaks, and leaderboards to backlog clearing risks the Overjustification Effect. People stop playing for joy and start playing for metrics. We should:

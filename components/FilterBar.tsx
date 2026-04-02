@@ -14,14 +14,14 @@ export default function FilterBar() {
 
   return (
     <div>
-      {/* Filter Row */}
-      <div className="flex flex-wrap gap-2">
+      {/* Filter Row — stacks on mobile, wraps on desktop */}
+      <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
         {/* Shelf/Category */}
         <select
           value={filters.category}
           onChange={(e) => setFilter('category', e.target.value)}
           aria-label="Filter by shelf"
-          className="text-sm bg-bg-card border border-border-subtle rounded-lg px-3 py-2 text-text-secondary focus:outline-none focus:border-accent-purple"
+          className="text-sm bg-bg-card border border-border-subtle rounded-lg px-3 py-2 text-text-secondary focus:border-accent-purple"
         >
           <option value="">All Shelves</option>
           {categories.map((cat) => (
@@ -34,7 +34,7 @@ export default function FilterBar() {
           value={filters.mood}
           onChange={(e) => setFilter('mood', e.target.value as '' | MoodTag)}
           aria-label="Filter by mood"
-          className="text-sm bg-bg-card border border-border-subtle rounded-lg px-3 py-2 text-text-secondary focus:outline-none focus:border-accent-purple"
+          className="text-sm bg-bg-card border border-border-subtle rounded-lg px-3 py-2 text-text-secondary focus:border-accent-purple"
         >
           <option value="">I&apos;m in the mood for...</option>
           {MOOD_OPTIONS.map((mood) => {
@@ -50,7 +50,7 @@ export default function FilterBar() {
           value={filters.timeTier}
           onChange={(e) => setFilter('timeTier', e.target.value as '' | TimeTier)}
           aria-label="Filter by session length"
-          className="text-sm bg-bg-card border border-border-subtle rounded-lg px-3 py-2 text-text-secondary focus:outline-none focus:border-accent-purple"
+          className="text-sm bg-bg-card border border-border-subtle rounded-lg px-3 py-2 text-text-secondary focus:border-accent-purple"
         >
           <option value="">I have time for...</option>
           <option value="quick-hit">⚡ Quick Hit: under an hour</option>

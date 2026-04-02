@@ -5,8 +5,6 @@ import { ViewMode } from '@/lib/types';
 
 export default function ViewToggle() {
   const viewMode = useStore((s) => s.settings.viewMode);
-  const updateSettings = useStore((s) => s.updateGame); // we'll use a dedicated action
-
   const setViewMode = (mode: ViewMode) => {
     useStore.setState((state) => ({
       settings: { ...state.settings, viewMode: mode },

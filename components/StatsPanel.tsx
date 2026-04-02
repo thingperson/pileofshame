@@ -454,6 +454,15 @@ export default function StatsPanel({ games }: StatsPanelProps) {
     }, 1600);
   }, [games, computeValues, enrichInBackground]);
 
+  // Player archetype (must be before early returns — hooks can't be conditional)
+  const archetypes = useMemo(() => getAllMatchingArchetypes(games), [games]);
+  const currentArchetype = archetypes[archetypeIndex % archetypes.length];
+
+  const handleRerollArchetype = useCallback(() => {
+    if (archetypes.length <= 1) return;
+    setArchetypeIndex((i) => (i + 1) % archetypes.length);
+  }, [archetypes.length]);
+
   if (games.length === 0) return null;
 
   const confidencePct = priceConfidence.total > 0
@@ -463,15 +472,6 @@ export default function StatsPanel({ games }: StatsPanelProps) {
   const hltbPct = hltbConfidence.total > 0
     ? Math.round((hltbConfidence.known / hltbConfidence.total) * 100)
     : 0;
-
-  // Player archetype
-  const archetypes = useMemo(() => getAllMatchingArchetypes(games), [games]);
-  const currentArchetype = archetypes[archetypeIndex % archetypes.length];
-
-  const handleRerollArchetype = useCallback(() => {
-    if (archetypes.length <= 1) return;
-    setArchetypeIndex((i) => (i + 1) % archetypes.length);
-  }, [archetypes.length]);
 
   const shareData = { ...stats, unplayedValue, playedValue, backlogHours, confidence: confidencePct };
 

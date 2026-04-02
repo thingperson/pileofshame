@@ -60,6 +60,14 @@ export default function GameDetailModal({ game, onClose }: GameDetailModalProps)
     // Prevent body scroll while modal is open
     document.body.style.overflow = 'hidden';
 
+    // Focus first interactive element
+    requestAnimationFrame(() => {
+      const first = modalRef.current?.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea'
+      );
+      first?.focus();
+    });
+
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';

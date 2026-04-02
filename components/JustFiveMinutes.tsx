@@ -5,6 +5,8 @@ import { Game, GameStatus } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
 
+const TIMER_SECONDS = 300; // 5 minutes
+
 interface JustFiveMinutesProps {
   games: Game[];
 }
@@ -46,8 +48,15 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { showToast } = useToast();
   const updateGame = useStore((s) => s.updateGame);
-  const cycleStatus = useStore((s) => s.cycleStatus);
   const setBailed = useStore((s) => s.setBailed);
+
+  const resetTimer = useCallback(() => {
+    setTimeLeft(TIMER_SECONDS);
+    setTimerRunning(false);
+    setTimerDone(false);
+    setStep('suggest');
+    if (intervalRef.current) clearInterval(intervalRef.current);
+  }, []);
 
   const startSession = useCallback(() => {
     const pick = pickFiveMinuteGame(games);
@@ -57,11 +66,8 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
     }
     setGame(pick);
     setActive(true);
-    setTimeLeft(300);
-    setTimerRunning(false);
-    setTimerDone(false);
-    setStep('suggest');
-  }, [games, showToast]);
+    resetTimer();
+  }, [games, showToast, resetTimer]);
 
   const startTimer = useCallback(() => {
     setTimerRunning(true);
@@ -115,10 +121,7 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
     const pick = pickFiveMinuteGame(games);
     if (pick) {
       setGame(pick);
-      setTimeLeft(300);
-      setTimerRunning(false);
-      setTimerDone(false);
-      setStep('suggest');
+      resetTimer();
     }
   };
 
@@ -132,10 +135,7 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
   const handleClose = () => {
     setActive(false);
     setGame(null);
-    setTimerRunning(false);
-    setTimerDone(false);
-    setStep('suggest');
-    if (intervalRef.current) clearInterval(intervalRef.current);
+    resetTimer();
   };
 
   const formatTime = (seconds: number) => {
@@ -144,7 +144,7 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
     return `${m}:${s.toString().padStart(2, '0')}`;
   };
 
-  const pct = ((300 - timeLeft) / 300) * 100;
+  const pct = ((300 - timeLeft) / TIMER_SECONDS) * 100;
 
   // Just the button when not active
   if (!active) {
@@ -178,13 +178,13 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
             <span className="text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider" style={{ color: '#34d399' }}>
               ⚡ Just 5 Minutes
             </span>
-            <button onClick={handleClose} className="text-text-dim hover:text-text-muted text-xs">✕</button>
+            <button onClick={handleClose} aria-label="Close Just 5 Minutes" className="text-text-dim hover:text-text-muted text-xs">✕</button>
           </div>
 
           {/* Game */}
           <div className="flex items-center gap-3">
             {game?.coverUrl && (
-              <img src={game.coverUrl} alt="" className="w-12 h-16 rounded-lg object-cover shrink-0" />
+              <img src={game.coverUrl} alt={`${game.name} cover art`} className="w-12 h-16 rounded-lg object-cover shrink-0" />
             )}
             <div className="flex-1 min-w-0">
               <p className="text-base font-bold text-text-primary truncate">{game?.name}</p>
@@ -284,7 +284,7 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
                 className="transition-all duration-1000"
               />
             </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold font-[family-name:var(--font-mono)] text-text-primary">
+            <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold font-[family-name:var(--font-mono)] text-text-primary" aria-live="off" aria-label={`${formatTime(timeLeft)} remaining`}>
               {formatTime(timeLeft)}
             </span>
           </div>
@@ -305,7 +305,8 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
           </button>
           <button
             onClick={handleClose}
-            className="w-7 h-7 flex items-center justify-center rounded-full text-text-dim hover:text-text-muted text-xs shrink-0"
+            aria-label="Close timer"
+            className="w-8 h-8 flex items-center justify-center rounded-full text-text-dim hover:text-text-muted text-xs shrink-0"
           >
             ✕
           </button>

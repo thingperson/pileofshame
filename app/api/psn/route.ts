@@ -16,6 +16,10 @@ interface PSNTitle {
   earnedTrophies: { bronze: number; silver: number; gold: number; platinum: number };
 }
 
+function sumTrophies(t: { bronze: number; silver: number; gold: number; platinum: number }): number {
+  return t.bronze + t.silver + t.gold + t.platinum;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { npsso } = await request.json();
@@ -37,15 +41,16 @@ export async function POST(request: NextRequest) {
     // Step 2: Exchange auth code for access token
     const authorization = await exchangeCodeForAccessToken(accessCode);
 
-    // Step 3: Fetch ALL purchased games (includes never-launched ones)
+    // Step 3+4: Fetch purchased games AND trophy titles in parallel
     const purchasedMap = new Map<string, {
       name: string;
       platform: string;
       imageUrl: string;
       productId: string;
     }>();
+    const trophyMap = new Map<string, PSNTitle>();
 
-    try {
+    const fetchPurchased = async () => {
       let start = 0;
       const size = 100;
       let hasMore = true;
@@ -60,10 +65,7 @@ export async function POST(request: NextRequest) {
         });
 
         const games = response?.data?.purchasedTitlesRetrieve?.games || [];
-        if (games.length === 0) {
-          hasMore = false;
-          break;
-        }
+        if (games.length === 0) break;
 
         for (const g of games) {
           const key = g.name.toLowerCase().trim();
@@ -79,18 +81,11 @@ export async function POST(request: NextRequest) {
 
         start += size;
         if (games.length < size) hasMore = false;
-
-        // Rate limit
         if (hasMore) await new Promise((r) => setTimeout(r, 300));
       }
-    } catch (err) {
-      console.error('getPurchasedGames error (falling back to trophy API):', err);
-      // Continue — we'll still have trophy data below
-    }
+    };
 
-    // Step 4: Fetch trophy titles (gives us progress, trophies, last played)
-    const trophyMap = new Map<string, PSNTitle>();
-    try {
+    const fetchTrophies = async () => {
       let offset = 0;
       const limit = 100;
       let totalItemCount = Infinity;
@@ -106,9 +101,12 @@ export async function POST(request: NextRequest) {
           await new Promise((r) => setTimeout(r, 300));
         }
       }
-    } catch (err) {
-      console.error('getUserTitles error:', err);
-    }
+    };
+
+    // Run both API loops concurrently
+    const [purchasedResult, trophyResult] = await Promise.allSettled([fetchPurchased(), fetchTrophies()]);
+    if (purchasedResult.status === 'rejected') console.error('getPurchasedGames error:', purchasedResult.reason);
+    if (trophyResult.status === 'rejected') console.error('getUserTitles error:', trophyResult.reason);
 
     // Step 5: Merge — purchased games as base, trophy data layered on top
     const mergedGames = new Map<string, {
@@ -134,10 +132,10 @@ export async function POST(request: NextRequest) {
         lastPlayed: trophy?.lastUpdatedDateTime || '',
         progress: trophy?.progress || 0,
         trophiesEarned: trophy
-          ? trophy.earnedTrophies.bronze + trophy.earnedTrophies.silver + trophy.earnedTrophies.gold + trophy.earnedTrophies.platinum
+          ? sumTrophies(trophy.earnedTrophies)
           : 0,
         trophiesTotal: trophy
-          ? trophy.definedTrophies.bronze + trophy.definedTrophies.silver + trophy.definedTrophies.gold + trophy.definedTrophies.platinum
+          ? sumTrophies(trophy.definedTrophies)
           : 0,
         hasPlatinum: trophy?.definedTrophies.platinum ? trophy.definedTrophies.platinum > 0 : false,
         earnedPlatinum: trophy?.earnedTrophies.platinum ? trophy.earnedTrophies.platinum > 0 : false,
@@ -154,8 +152,8 @@ export async function POST(request: NextRequest) {
           imageUrl: trophy.trophyTitleIconUrl,
           lastPlayed: trophy.lastUpdatedDateTime,
           progress: trophy.progress,
-          trophiesEarned: trophy.earnedTrophies.bronze + trophy.earnedTrophies.silver + trophy.earnedTrophies.gold + trophy.earnedTrophies.platinum,
-          trophiesTotal: trophy.definedTrophies.bronze + trophy.definedTrophies.silver + trophy.definedTrophies.gold + trophy.definedTrophies.platinum,
+          trophiesEarned: sumTrophies(trophy.earnedTrophies),
+          trophiesTotal: sumTrophies(trophy.definedTrophies),
           hasPlatinum: trophy.definedTrophies.platinum > 0,
           earnedPlatinum: trophy.earnedTrophies.platinum > 0,
           source: 'trophy',

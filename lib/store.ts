@@ -3,8 +3,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
-import { Game, GameStatus, LibraryState, FilterState, TimeTier, PlatformPreference } from './types';
-import { DEFAULT_CATEGORIES, DEFAULT_VIBES, STATUS_CYCLE } from './constants';
+import { Game, GameStatus, LibraryState, FilterState, PlatformPreference } from './types';
+import { DEFAULT_CATEGORIES, STATUS_CYCLE } from './constants';
 import { SEED_GAMES } from './seedData';
 
 interface StoreActions {

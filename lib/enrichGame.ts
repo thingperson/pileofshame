@@ -28,7 +28,8 @@ export async function enrichGame(game: Game): Promise<EnrichmentResult | null> {
   // Step 1: RAWG — fetch metadata if we don't have it or need description
   if (!game.description || !game.coverUrl || !game.metacritic) {
     try {
-      let rawgData: any = null;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let rawgData: Record<string, any> | null = null;
 
       if (game.rawgSlug) {
         // Fetch by slug (most accurate)
