@@ -134,25 +134,24 @@ Based on deep research into gaming backlog psychology (analysis paralysis, decis
 
 ## 8. Future Considerations
 
+### Recently Shipped
+- **Mini celebrations for milestones** — SHIPPED. Toast celebrations at cleared milestones (1, 5, 10, 25, 50) and decision milestones (10, 25, 50, 100). localStorage dedup so each fires once. 2s delay to avoid overlapping status toasts.
+- **Non-finishable game detection** — SHIPPED. Auto-detected during enrichment via RAWG genres (MMO, battle royale, multiplayer-only, sandbox). `isNonFinishable` flag on Game type. Exploration % counts non-finishable games as explored when playing.
+- **Games in Motion stat** — SHIPPED. 🚀 "In Motion" (on-deck + playing) shown in stats bar and expanded grid. Moving games out of the pile is now a visible win.
+
 ### Not Yet Shipped
 - **Time-aware nudges** (Section 2) — circadian weighting of suggestions
 - **Energy matching** (Section 3) — optional energy selector + genre mapping
 - **Comfort game detection as standalone feature** — persistent "comfort game" identification in library UI beyond the roast system
-- **Mini celebrations for milestones** — toast/confetti for 10th decision, 50th game cleared, etc.
 - **Decision tracking stats** — "decisions this week/month" as a visible metric
 
-### Non-Finishable Game Handling (build sooner)
-Many games have no "end" — MMOs, roguelikes, sandbox games, multiplayer-only titles (Rocket League, CS2, Overwatch, Minecraft, etc.). These shouldn't count as "unfinished" in the backlog or shame users for not "clearing" them.
+### Non-Finishable Game Handling (SHIPPED — core, remaining items below)
+**Shipped:** Auto-detection in enrichGame.ts (MMO, battle royale, multiplayer-only, sandbox-without-story), `isNonFinishable` flag, exploration % adjustment, "In Motion" stat.
 
-**What we need:**
-- Auto-tag games as "non-finishable" using genre data from RAWG (if genres include "MMO", "Massively Multiplayer", "Battle Royale", or HLTB returns no main story time)
-- Let users manually toggle the tag too
-- Non-finishable games should be sortable/filterable separately in The Pile
-- "Moving out of the pile" (buried → on-deck → playing) should be a win reflected in stats, not just clearing. Many non-finishable games are a win just to be actively playing.
-- Stats bar could track "games in motion" (on-deck + playing) as a positive metric alongside cleared count
-- Exploration % should count non-finishable games as "explored" once they hit playing status, not require cleared
-
-**Why this matters:** Without this, users with lots of multiplayer/endless games see an artificially inflated "to explore" count and feel worse about their progress than they should.
+**Still TODO:**
+- Let users manually toggle isNonFinishable (small UI addition in expanded GameCard)
+- Non-finishable filter option in FilterBar or CategorySection sorting
+- Visual badge/tag on non-finishable games in the library UI
 
 ### Multiplayer Matchmaking (build later — social feature)
 **Insight:** Users likely impulse-bought great multiplayer games but stopped playing because they had no one to play with. The games rot in the pile not because they're bad, but because they're lonely.
