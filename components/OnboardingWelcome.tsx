@@ -48,7 +48,7 @@ export default function OnboardingWelcome({ onImport, onAddManual }: OnboardingW
       >
         {/* Step indicator */}
         <div className="flex gap-1.5 px-6 pt-5">
-          {[0, 1, 2].map((i) => (
+          {[0, 2].map((i) => (
             <div
               key={i}
               className="h-1 rounded-full flex-1 transition-all duration-300"
@@ -68,85 +68,44 @@ export default function OnboardingWelcome({ onImport, onAddManual }: OnboardingW
                 You have games. Too many games.
               </h2>
               <p className="text-sm text-text-muted leading-relaxed">
-                We know. Everyone does. You bought them with good intentions, and now they sit there,
-                judging you from your library. This app fixes that.
+                You bought them because something in each one excited you. That excitement
+                is still in there. You just need a nudge past the scroll-and-freeze loop.
               </p>
               <p className="text-sm text-text-secondary leading-relaxed font-medium">
-                Import your library. Tell us your mood. We find your game. You play it. Done.
+                30 seconds to import. Tell us your mood. Play something great tonight.
               </p>
               <button
-                onClick={() => setStep(1)}
+                onClick={handleImport}
                 className="w-full py-3 rounded-xl text-sm font-bold transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{
                   background: 'linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%)',
                   color: '#ffffff',
                 }}
               >
-                Let&apos;s go
+                📥 Import my Steam / PSN library
               </button>
-              <button
-                onClick={dismiss}
-                className="w-full py-2 text-xs text-text-faint hover:text-text-muted transition-colors"
-              >
-                I know what I&apos;m doing, skip this
-              </button>
-            </div>
-          )}
-
-          {/* Step 1: Import */}
-          {step === 1 && (
-            <div className="card-enter space-y-4">
-              <div className="text-4xl">📥</div>
-              <h2 className="text-xl font-bold text-text-primary">
-                Get your games in here
-              </h2>
-              <p className="text-sm text-text-muted leading-relaxed">
-                The fastest way: import from Steam or PlayStation. We&apos;ll pull in your whole library
-                with cover art, playtime, and achievements. Takes about 30 seconds.
-              </p>
-              <p className="text-xs text-text-dim leading-relaxed">
-                We auto-fill descriptions, mood tags, and time estimates for every game. Zero work from you.
-              </p>
-
-              <div className="space-y-2">
-                <button
-                  onClick={handleImport}
-                  className="w-full py-3 rounded-xl text-sm font-bold transition-all hover:scale-[1.01] active:scale-[0.99]"
-                  style={{
-                    background: 'linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%)',
-                    color: '#ffffff',
-                  }}
-                >
-                  📥 Import my library
-                </button>
+              <div className="flex items-center gap-3">
                 <button
                   onClick={handleManual}
-                  className="w-full py-2.5 rounded-xl text-sm font-medium border transition-all hover:border-accent-purple"
+                  className="flex-1 py-2.5 rounded-xl text-sm font-medium border transition-all hover:border-accent-purple"
                   style={{
                     borderColor: 'var(--color-border-subtle)',
                     color: 'var(--color-text-muted)',
                   }}
                 >
-                  + Add games manually instead
-                </button>
-              </div>
-
-              <div className="flex items-center justify-between pt-1">
-                <button
-                  onClick={() => setStep(0)}
-                  className="text-xs text-text-faint hover:text-text-muted transition-colors"
-                >
-                  ← Back
+                  + Add manually
                 </button>
                 <button
                   onClick={() => setStep(2)}
-                  className="text-xs text-text-faint hover:text-text-muted transition-colors"
+                  className="flex-1 py-2.5 text-sm text-text-faint hover:text-text-muted transition-colors"
                 >
-                  I&apos;ll do this later →
+                  How does this work?
                 </button>
               </div>
             </div>
           )}
+
+          {/* Step 1: no longer used — step 0 handles import directly */}
 
           {/* Step 2: How it works */}
           {step === 2 && (
@@ -198,10 +157,10 @@ export default function OnboardingWelcome({ onImport, onAddManual }: OnboardingW
                 Got it. Let me at my pile.
               </button>
               <button
-                onClick={() => setStep(1)}
+                onClick={() => setStep(0)}
                 className="w-full py-2 text-xs text-text-faint hover:text-text-muted transition-colors"
               >
-                ← Back to import
+                ← Back
               </button>
             </div>
           )}

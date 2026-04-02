@@ -392,6 +392,10 @@ function AppContent() {
         <p className="text-xs text-text-faint font-[family-name:var(--font-mono)]">
           ❤️ Free forever. Tips keep the servers running and new features coming.
         </p>
+        <div className="flex items-center gap-4 mt-3">
+          <a href="/privacy" className="text-[11px] text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)]">Privacy</a>
+          <a href="/terms" className="text-[11px] text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)]">Terms</a>
+        </div>
       </footer>
     </div>
   );
