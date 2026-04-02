@@ -15,10 +15,22 @@ interface CategorySectionProps {
 const PAGE_SIZES = [20, 50, 100, Infinity] as const;
 const PAGE_LABELS: Record<number, string> = { 20: '20', 50: '50', 100: '100', [Infinity]: 'All' };
 
+type SortOption = 'default' | 'name' | 'rating' | 'hltb' | 'newest' | 'oldest';
+
+const SORT_OPTIONS: { value: SortOption; label: string }[] = [
+  { value: 'default', label: 'Default' },
+  { value: 'name', label: 'A-Z' },
+  { value: 'rating', label: 'Rating' },
+  { value: 'hltb', label: 'Shortest' },
+  { value: 'newest', label: 'Newest' },
+  { value: 'oldest', label: 'Oldest' },
+];
+
 export default function CategorySection({ name, games }: CategorySectionProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [pageSize, setPageSize] = useState<number>(20);
   const [currentPage, setCurrentPage] = useState(0);
+  const [sortBy, setSortBy] = useState<SortOption>('default');
   const viewMode = useStore((s) => s.settings.viewMode);
 
   if (games.length === 0) return null;
@@ -32,10 +44,26 @@ export default function CategorySection({ name, games }: CategorySectionProps) {
     'bailed': 4,
   };
   const sorted = [...games].sort((a, b) => {
+    // Status grouping always comes first
     const sa = statusOrder[a.status] ?? 2;
     const sb = statusOrder[b.status] ?? 2;
     if (sa !== sb) return sa - sb;
-    return a.priority - b.priority;
+
+    // Then apply user-selected sort within each status group
+    switch (sortBy) {
+      case 'name':
+        return a.name.localeCompare(b.name);
+      case 'rating':
+        return (b.metacritic || 0) - (a.metacritic || 0);
+      case 'hltb':
+        return (a.hltbMain || 9999) - (b.hltbMain || 9999);
+      case 'newest':
+        return new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime();
+      case 'oldest':
+        return new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime();
+      default:
+        return a.priority - b.priority;
+    }
   });
 
   const icon = CATEGORY_ICONS[name] || '';
@@ -47,28 +75,47 @@ export default function CategorySection({ name, games }: CategorySectionProps) {
 
   return (
     <div className="space-y-2">
-      <button
-        onClick={() => setCollapsed(!collapsed)}
-        className="flex items-center gap-2 w-full group"
-      >
-        <svg
-          aria-hidden="true"
-          className={`w-3.5 h-3.5 text-text-dim transition-transform duration-200 ${collapsed ? '-rotate-90' : ''}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
+      <div className="flex items-center justify-between">
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="flex items-center gap-2 group"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
-        {icon && <span className="text-xl">{icon}</span>}
-        <h2 className="text-lg font-bold text-text-primary tracking-tight">
-          {name}
-        </h2>
-        <span className="text-sm text-text-muted font-[family-name:var(--font-mono)]">
-          {games.length}
-        </span>
-      </button>
+          <svg
+            aria-hidden="true"
+            className={`w-3.5 h-3.5 text-text-dim transition-transform duration-200 ${collapsed ? '-rotate-90' : ''}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+          {icon && <span className="text-xl">{icon}</span>}
+          <h2 className="text-lg font-bold text-text-primary tracking-tight">
+            {name}
+          </h2>
+          <span className="text-sm text-text-muted font-[family-name:var(--font-mono)]">
+            {games.length}
+          </span>
+        </button>
+        {!collapsed && games.length > 5 && (
+          <div className="flex items-center gap-1">
+            {SORT_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => { setSortBy(opt.value); setCurrentPage(0); }}
+                className={`px-2 py-1 text-[10px] rounded font-[family-name:var(--font-mono)] transition-colors ${
+                  sortBy === opt.value
+                    ? 'text-accent-purple bg-accent-purple/10'
+                    : 'text-text-faint hover:text-text-dim'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       {!collapsed && viewMode === 'list' && (
         <div className="space-y-1.5 pl-0.5">

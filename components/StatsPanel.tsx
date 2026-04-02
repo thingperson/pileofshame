@@ -2,96 +2,21 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { Game } from '@/lib/types';
-import { getAllMatchingArchetypes, PlayerArchetype } from '@/lib/archetypes';
+import { getAllMatchingArchetypes } from '@/lib/archetypes';
 import { useToast } from './Toast';
-import ShareCard from './ShareCard';
-import { generateDynamicShareText } from '@/lib/shareTexts';
 import { trackStatsExpand } from '@/lib/analytics';
+import {
+  loadCache, saveCache, getCacheKey,
+  getCurrentStreak, getOldestBacklogGame,
+  fetchPricesBatch, fetchHltbBatch,
+  PRICE_CACHE_KEY, HLTB_CACHE_KEY,
+} from '@/lib/statsHelpers';
+import StatCard from './StatCard';
+import ArchetypeCard from './ArchetypeCard';
+import ValueCalculator from './ValueCalculator';
 
 interface StatsPanelProps {
   games: Game[];
-}
-
-// --- Price & HLTB cache (localStorage-backed) ---
-
-const PRICE_CACHE_KEY = 'pos-price-cache';
-const HLTB_CACHE_KEY = 'pos-hltb-cache';
-const CACHE_TTL = 7 * 24 * 60 * 60 * 1000; // 7 days
-
-interface CacheEntry<T> {
-  value: T;
-  ts: number;
-}
-
-function loadCache<T>(key: string): Map<string, T> {
-  try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return new Map();
-    const entries: Record<string, CacheEntry<T>> = JSON.parse(raw);
-    const now = Date.now();
-    const valid = new Map<string, T>();
-    for (const [k, v] of Object.entries(entries)) {
-      if (now - v.ts < CACHE_TTL) valid.set(k, v.value);
-    }
-    return valid;
-  } catch {
-    return new Map();
-  }
-}
-
-function saveCache<T>(key: string, cache: Map<string, T>) {
-  const entries: Record<string, CacheEntry<T>> = {};
-  const now = Date.now();
-  cache.forEach((value, k) => {
-    entries[k] = { value, ts: now };
-  });
-  try {
-    localStorage.setItem(key, JSON.stringify(entries));
-  } catch {
-    // quota exceeded — clear and retry
-    localStorage.removeItem(key);
-  }
-}
-
-function getCacheKey(name: string): string {
-  return name.trim().toLowerCase();
-}
-
-// --- Pluralization helper ---
-function plural(n: number, word: string): string {
-  return `${n} ${word}${n === 1 ? '' : 's'}`;
-}
-
-// --- Stats helpers ---
-
-function getOldestBacklogGame(games: Game[]): { name: string; days: number } | null {
-  const backlog = games.filter(
-    (g) => g.status === 'buried' || g.status === 'on-deck'
-  );
-  if (backlog.length === 0) return null;
-
-  let oldest = backlog[0];
-  for (const g of backlog) {
-    if (g.addedAt < oldest.addedAt) oldest = g;
-  }
-
-  const days = Math.floor(
-    (Date.now() - new Date(oldest.addedAt).getTime()) / (1000 * 60 * 60 * 24)
-  );
-  return { name: oldest.name, days };
-}
-
-function getCurrentStreak(games: Game[]): number {
-  const sorted = games
-    .filter((g) => g.status === 'played' || g.status === 'bailed')
-    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
-
-  let streak = 0;
-  for (const g of sorted) {
-    if (g.status === 'played') streak++;
-    else break;
-  }
-  return streak;
 }
 
 // Counting animation hook
@@ -119,139 +44,13 @@ function useCountUp(target: number, active: boolean, duration = 1500): number {
   return current;
 }
 
-// --- Share text ---
-
-function generateShareText(stats: {
-  backlogSize: number;
-  gamesCleared: number;
-  bailedCount: number;
-  unplayedValue: number;
-  playedValue: number;
-  oldest: { name: string; days: number } | null;
-  streak: number;
-  backlogHours?: number | null;
-  confidence?: number;
-}): string {
-  const lines: string[] = [];
-
-  if (stats.backlogSize > 250) {
-    lines.push(`${stats.backlogSize} games in my pile. At this point it's a lifestyle.`);
-  } else if (stats.backlogSize > 100) {
-    lines.push(`${stats.backlogSize} games in my pile and I keep buying more. At least I'm self-aware now.`);
-  } else if (stats.backlogSize > 50) {
-    lines.push(`Only ${stats.backlogSize} games in my pile. Practically a minimalist.`);
-  } else if (stats.backlogSize > 0) {
-    lines.push(`${stats.backlogSize} games left in the pile. Getting there.`);
-  } else {
-    lines.push(`I actually cleared my gaming backlog. Yes, I'm real.`);
-  }
-
-  if (stats.unplayedValue > 0) {
-    lines.push(`~$${stats.unplayedValue.toLocaleString()} of untapped gaming sitting right there.`);
-  }
-
-  if (stats.backlogHours && stats.backlogHours > 0) {
-    if (stats.backlogHours > 5000) {
-      const yrs = Math.round(stats.backlogHours / 24 / 365 * 10) / 10;
-      lines.push(`${stats.backlogHours.toLocaleString()} hours to play them all. That's ${yrs} ${yrs === 1 ? 'year' : 'years'} of non-stop gaming. I'm set for life.`);
-    } else {
-      lines.push(`~${stats.backlogHours.toLocaleString()} hours to play them all. No big deal.`);
-    }
-  }
-
-  if (stats.gamesCleared > 0) {
-    lines.push(`${stats.gamesCleared} cleared${stats.playedValue > 0 ? ` ($${stats.playedValue.toLocaleString()} worth of value unlocked)` : ''}.`);
-  }
-
-  if (stats.bailedCount > 0) {
-    lines.push(`Drew the line on ${stats.bailedCount}. That's progress too.`);
-  }
-
-  if (stats.oldest && stats.oldest.days > 30) {
-    lines.push(`${stats.oldest.name} has been in the pile for ${plural(stats.oldest.days, 'day')}. It's fine.`);
-  }
-
-  if (stats.streak >= 5) {
-    lines.push(`${plural(stats.streak, 'game')} cleared in a row. On a roll.`);
-  }
-
-  return lines.join('\n');
-}
-
-function getShareCTA(platform: 'twitter' | 'reddit' | 'discord'): string {
-  switch (platform) {
-    case 'twitter':
-      return '\nClear some space → https://inventoryfull.gg';
-    case 'reddit':
-      return '\n\nClear some space → [inventoryfull.gg](https://inventoryfull.gg)';
-    case 'discord':
-      return '\n\nClear some space → <https://inventoryfull.gg>';
-  }
-}
-
-function shareToTwitter(text: string) {
-  const fullText = text + getShareCTA('twitter');
-  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(fullText)}`, '_blank', 'width=550,height=420');
-}
-
-function shareToReddit(text: string) {
-  const fullText = text + getShareCTA('reddit');
-  window.open(`https://reddit.com/submit?selftext=true&title=${encodeURIComponent('My gaming library stats. How does yours compare?')}&text=${encodeURIComponent(fullText)}`, '_blank');
-}
-
-function getDiscordText(text: string): string {
-  return text + getShareCTA('discord');
-}
-
-// --- Batch fetch helpers ---
-
-async function fetchPricesBatch(titles: string[]): Promise<Map<string, number>> {
-  const results = new Map<string, number>();
-  if (titles.length === 0) return results;
-
-  try {
-    const res = await fetch(`/api/deals?action=prices&titles=${encodeURIComponent(titles.join(','))}`);
-    if (res.ok) {
-      const data = await res.json();
-      if (data.prices) {
-        for (const p of data.prices) {
-          results.set(getCacheKey(p.title), p.retailPrice);
-        }
-      }
-    }
-  } catch { /* fail silently */ }
-
-  return results;
-}
-
-async function fetchHltbBatch(titles: string[]): Promise<Map<string, number>> {
-  const results = new Map<string, number>();
-  if (titles.length === 0) return results;
-
-  try {
-    const res = await fetch(`/api/hltb?action=batch&titles=${encodeURIComponent(titles.join(','))}`);
-    if (res.ok) {
-      const data = await res.json();
-      if (data.results) {
-        for (const r of data.results) {
-          if (r.found && r.main > 0) {
-            results.set(getCacheKey(r.title), r.main);
-          }
-        }
-      }
-    }
-  } catch { /* fail silently */ }
-
-  return results;
-}
-
 // --- Main Component ---
 
 export default function StatsPanel({ games }: StatsPanelProps) {
   const [expanded, setExpanded] = useState(false);
   const [calculating, setCalculating] = useState(false);
   const [calculated, setCalculated] = useState(false);
-  const [enriching, setEnriching] = useState(false); // background enrichment running
+  const [enriching, setEnriching] = useState(false);
   const [archetypeIndex, setArchetypeIndex] = useState(0);
 
   // Calculated values (weighted)
@@ -318,9 +117,7 @@ export default function StatsPanel({ games }: StatsPanelProps) {
       }
     }
 
-    // Weighted avg: use known avg for unknowns, or fallback if we have nothing
     const knownAvg = knownPriceCount >= 3 ? knownPriceSum / knownPriceCount : FALLBACK_PRICE;
-    const unknownCount = allRelevant.length - knownPriceCount;
 
     const backlogValue = backlogGames.reduce((sum, g) => {
       const cached = priceCache.get(getCacheKey(g.name));
@@ -360,7 +157,7 @@ export default function StatsPanel({ games }: StatsPanelProps) {
     }
   }, [games]);
 
-  // Background enrichment — fetch uncached games in batches
+  // Background enrichment -- fetch uncached games in batches
   const enrichInBackground = useCallback(async (
     priceCache: Map<string, number>,
     hltbCache: Map<string, number>,
@@ -370,13 +167,11 @@ export default function StatsPanel({ games }: StatsPanelProps) {
 
     const allGames = games.filter((g) => g.name.length > 2);
 
-    // Find uncached games
     const uncachedForPrice = allGames.filter((g) => !priceCache.has(getCacheKey(g.name)));
     const uncachedForHltb = allGames
       .filter((g) => g.status === 'buried' || g.status === 'on-deck')
       .filter((g) => !hltbCache.has(getCacheKey(g.name)));
 
-    // Fetch prices in batches of 15
     for (let i = 0; i < uncachedForPrice.length; i += 15) {
       if (enrichAbortRef.current) break;
       const batch = uncachedForPrice.slice(i, i + 15).map((g) => g.name);
@@ -384,11 +179,9 @@ export default function StatsPanel({ games }: StatsPanelProps) {
       results.forEach((v, k) => priceCache.set(k, v));
       saveCache(PRICE_CACHE_KEY, priceCache);
       computeValues(priceCache, hltbCache);
-      // Throttle between batches
       await new Promise((r) => setTimeout(r, 500));
     }
 
-    // Fetch HLTB in batches of 10
     for (let i = 0; i < uncachedForHltb.length; i += 10) {
       if (enrichAbortRef.current) break;
       const batch = uncachedForHltb.slice(i, i + 10).map((g) => g.name);
@@ -410,13 +203,11 @@ export default function StatsPanel({ games }: StatsPanelProps) {
   const handleCalculate = useCallback(async () => {
     setCalculating(true);
 
-    // Load caches
     const priceCache = loadCache<number>(PRICE_CACHE_KEY);
     const hltbCache = loadCache<number>(HLTB_CACHE_KEY);
 
     const allGames = games.filter((g) => g.name.length > 2);
 
-    // Find uncached games and fetch an initial batch
     const uncachedForPrice = allGames
       .filter((g) => !priceCache.has(getCacheKey(g.name)))
       .sort(() => Math.random() - 0.5)
@@ -428,13 +219,11 @@ export default function StatsPanel({ games }: StatsPanelProps) {
       .sort(() => Math.random() - 0.5)
       .slice(0, 10);
 
-    // Fetch initial batches in parallel
     const [priceResults, hltbResults] = await Promise.allSettled([
       fetchPricesBatch(uncachedForPrice.map((g) => g.name)),
       fetchHltbBatch(backlogUncachedForHltb.map((g) => g.name)),
     ]);
 
-    // Merge into cache
     if (priceResults.status === 'fulfilled') {
       priceResults.value.forEach((v, k) => priceCache.set(k, v));
       saveCache(PRICE_CACHE_KEY, priceCache);
@@ -444,17 +233,21 @@ export default function StatsPanel({ games }: StatsPanelProps) {
       saveCache(HLTB_CACHE_KEY, hltbCache);
     }
 
-    // Compute with everything we have
     computeValues(priceCache, hltbCache);
 
     setTimeout(() => {
       setCalculated(true);
-      // Continue enriching in background
       enrichInBackground(priceCache, hltbCache);
     }, 1600);
   }, [games, computeValues, enrichInBackground]);
 
-  // Player archetype (must be before early returns — hooks can't be conditional)
+  const handleRecalculate = useCallback(() => {
+    setCalculated(false);
+    setCalculating(false);
+    setTimeout(() => handleCalculate(), 50);
+  }, [handleCalculate]);
+
+  // Player archetype
   const archetypes = useMemo(() => getAllMatchingArchetypes(games), [games]);
   const currentArchetype = archetypes[archetypeIndex % archetypes.length];
 
@@ -473,9 +266,6 @@ export default function StatsPanel({ games }: StatsPanelProps) {
     ? Math.round((hltbConfidence.known / hltbConfidence.total) * 100)
     : 0;
 
-  const shareData = { ...stats, unplayedValue, playedValue, backlogHours, confidence: confidencePct };
-
-  // Quick stats for the always-visible teaser
   const totalGames = games.length;
   const explorationPct = totalGames > 0 ? Math.round(((stats.gamesCleared + stats.bailedCount) / totalGames) * 100) : 0;
 
@@ -491,8 +281,28 @@ export default function StatsPanel({ games }: StatsPanelProps) {
         }}
       >
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4 sm:gap-6 overflow-x-auto">
-            {/* Key stats always visible */}
+          {/* Left: label + expand button */}
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="text-sm sm:text-base font-extrabold text-text-primary tracking-tight">My Progress</span>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all"
+              style={{ backgroundColor: expanded ? 'var(--color-accent-purple)' : 'rgba(167, 139, 250, 0.12)' }}
+            >
+              <span className={`text-xs font-semibold font-[family-name:var(--font-mono)] transition-colors ${expanded ? 'text-bg-primary' : 'text-accent-purple'}`}>
+                {expanded ? 'less' : 'more'}
+              </span>
+              <svg
+                className={`w-3.5 h-3.5 transition-all duration-200 ${expanded ? 'rotate-180 text-bg-primary' : 'text-accent-purple'}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+          {/* Right: stats */}
+          <div className="flex items-center gap-3 sm:gap-5 overflow-x-auto">
             <div className="flex items-center gap-1.5 shrink-0">
               <span className="text-sm">🎮</span>
               <span className="text-sm font-bold text-text-primary font-[family-name:var(--font-mono)]">{totalGames}</span>
@@ -514,8 +324,7 @@ export default function StatsPanel({ games }: StatsPanelProps) {
                 <span className="text-sm font-bold font-[family-name:var(--font-mono)]" style={{ color: '#38bdf8' }}>{stats.totalHours.toLocaleString(undefined, { maximumFractionDigits: 0 })}h</span>
               </div>
             )}
-            {/* Exploration progress — the teaser for the calculator */}
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-2 shrink-0 hidden sm:flex">
               <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
                 <div
                   className="h-full rounded-full transition-all duration-500"
@@ -524,22 +333,6 @@ export default function StatsPanel({ games }: StatsPanelProps) {
               </div>
               <span className="text-xs font-bold font-[family-name:var(--font-mono)]" style={{ color: '#a78bfa' }}>{explorationPct}%</span>
             </div>
-          </div>
-          <div className="flex items-center gap-1.5 shrink-0 ml-2 px-3 py-1.5 rounded-lg transition-all"
-            style={{ backgroundColor: expanded ? 'var(--color-accent-purple)' : 'rgba(167, 139, 250, 0.12)' }}
-          >
-            <span className={`text-xs font-semibold font-[family-name:var(--font-mono)] transition-colors ${expanded ? 'text-bg-primary' : 'text-accent-purple'}`}>
-              {expanded ? 'less' : 'more'}
-            </span>
-            <svg
-              className={`w-3.5 h-3.5 transition-all duration-200 ${expanded ? 'rotate-180 text-bg-primary' : 'text-accent-purple'}`}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
           </div>
         </div>
       </button>
@@ -609,321 +402,35 @@ export default function StatsPanel({ games }: StatsPanelProps) {
 
           {/* Player Archetype */}
           {games.length >= 3 && (
-            <div
-              className="rounded-lg p-4 mb-3 relative overflow-hidden"
-              style={{
-                backgroundColor: 'var(--color-bg-elevated)',
-                border: `1px solid ${
-                  currentArchetype.tone === 'roast' ? 'rgba(239, 68, 68, 0.3)'
-                  : currentArchetype.tone === 'respect' ? 'rgba(34, 197, 94, 0.3)'
-                  : 'rgba(167, 139, 250, 0.3)'
-                }`,
-              }}
-            >
-              <div className="flex items-start gap-3">
-                <div className="text-3xl shrink-0">{currentArchetype.icon}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-base font-bold text-text-primary">{currentArchetype.title}</span>
-                    <span
-                      className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase font-[family-name:var(--font-mono)]"
-                      style={{
-                        backgroundColor: currentArchetype.tone === 'roast' ? 'rgba(239, 68, 68, 0.15)'
-                          : currentArchetype.tone === 'respect' ? 'rgba(34, 197, 94, 0.15)'
-                          : 'rgba(167, 139, 250, 0.15)',
-                        color: currentArchetype.tone === 'roast' ? '#ef4444'
-                          : currentArchetype.tone === 'respect' ? '#22c55e'
-                          : '#a78bfa',
-                      }}
-                    >
-                      {currentArchetype.tone === 'roast' ? '🔥 roast' : currentArchetype.tone === 'respect' ? '👑 respect' : '🔮 reading'}
-                    </span>
-                  </div>
-                  <p className="text-sm text-text-muted leading-relaxed">
-                    {currentArchetype.description}
-                  </p>
-                </div>
-              </div>
-              {archetypes.length > 1 && (
-                <button
-                  onClick={handleRerollArchetype}
-                  className="mt-3 w-full py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-                  style={{
-                    backgroundColor: 'rgba(167, 139, 250, 0.08)',
-                    border: '1px solid rgba(167, 139, 250, 0.2)',
-                    color: '#a78bfa',
-                  }}
-                >
-                  🔮 Read me again ({archetypeIndex % archetypes.length + 1}/{archetypes.length})
-                </button>
-              )}
-            </div>
+            <ArchetypeCard
+              currentArchetype={currentArchetype}
+              archetypeIndex={archetypeIndex}
+              archetypesLength={archetypes.length}
+              onReroll={handleRerollArchetype}
+            />
           )}
 
-          {/* The Big One — Backlog Value Calculator */}
-          {!calculating && !calculated && (
-            <button
-              onClick={handleCalculate}
-              className="w-full py-3 rounded-lg text-sm font-semibold font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-              style={{
-                backgroundColor: 'var(--color-bg-elevated)',
-                background: 'linear-gradient(135deg, var(--color-bg-elevated), rgba(167, 139, 250, 0.08))',
-                border: '1px dashed rgba(167, 139, 250, 0.35)',
-                color: '#a78bfa',
-              }}
-            >
-              💎 What&apos;s your library worth?
-            </button>
-          )}
-
-          {(calculating || calculated) && (
-            <div
-              className="rounded-lg p-4 text-center"
-              style={{
-                backgroundColor: 'var(--color-bg-elevated)',
-                background: 'linear-gradient(135deg, var(--color-bg-elevated), rgba(167, 139, 250, 0.06))',
-                border: '1px solid rgba(167, 139, 250, 0.25)',
-              }}
-            >
-              <div className="text-xs text-text-muted font-[family-name:var(--font-mono)] mb-1">
-                💎 Untapped library value
-              </div>
-              <div
-                className="text-3xl sm:text-4xl font-bold font-[family-name:var(--font-mono)] tracking-tight"
-                style={{ color: '#a78bfa' }}
-              >
-                ~${countedUnplayed.toLocaleString()}
-              </div>
-
-              {/* Confidence indicator */}
-              {calculated && priceConfidence.total > 0 && (
-                <div className="mt-2 space-y-1">
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-32 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
-                      <div
-                        className="h-full rounded-full transition-all duration-1000"
-                        style={{
-                          width: `${confidencePct}%`,
-                          backgroundColor: confidencePct > 75 ? '#22c55e' : confidencePct > 40 ? '#f59e0b' : '#ef4444',
-                        }}
-                      />
-                    </div>
-                    <span className="text-xs text-text-dim font-[family-name:var(--font-mono)]">
-                      {priceConfidence.known} of {priceConfidence.total} priced
-                    </span>
-                  </div>
-                  <div className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">
-                    {confidencePct >= 80
-                      ? 'high confidence: most games priced via retail data'
-                      : confidencePct >= 40
-                      ? 'moderate confidence: rest estimated from your library avg'
-                      : enriching
-                      ? 'improving... fetching more prices in background'
-                      : 'low confidence: tap again to fetch more prices'
-                    }
-                  </div>
-                </div>
-              )}
-
-              {calculated && playedValue > 0 && (
-                <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                  <div className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-0.5">
-                    💰 Value unlocked by playing
-                  </div>
-                  <div
-                    className="text-xl font-bold font-[family-name:var(--font-mono)]"
-                    style={{ color: '#22c55e' }}
-                  >
-                    ${countedPlayed.toLocaleString()}
-                  </div>
-                </div>
-              )}
-
-              {/* Time to clear backlog */}
-              {calculated && backlogHours !== null && backlogHours > 0 && (
-                <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                  <div className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-0.5">
-                    ⏳ Time to clear your backlog
-                  </div>
-                  <div
-                    className="text-xl font-bold font-[family-name:var(--font-mono)]"
-                    style={{ color: '#f59e0b' }}
-                  >
-                    ~{countedBacklogHours.toLocaleString()} hours
-                  </div>
-
-                  {/* HLTB confidence */}
-                  {hltbConfidence.total > 0 && (
-                    <div className="flex items-center justify-center gap-2 mt-1.5">
-                      <div className="w-24 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
-                        <div
-                          className="h-full rounded-full transition-all duration-1000"
-                          style={{
-                            width: `${hltbPct}%`,
-                            backgroundColor: hltbPct > 75 ? '#22c55e' : hltbPct > 40 ? '#f59e0b' : '#ef4444',
-                          }}
-                        />
-                      </div>
-                      <span className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">
-                        {hltbConfidence.known} of {hltbConfidence.total} timed
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="text-xs text-text-faint font-[family-name:var(--font-mono)] mt-1.5 italic">
-                    {backlogHours > 5000
-                      ? `That's ${(backlogHours / 24 / 365).toFixed(1)} years of non-stop gaming. You're set for life. Possibly several lives.`
-                      : backlogHours > 1000
-                      ? `At 2 hours a day, that's ${plural(Math.round(backlogHours / 2 / 30), 'month')}. Better get started.`
-                      : backlogHours > 200
-                      ? `Totally doable. At 2 hours a day, that's ${plural(Math.round(backlogHours / 2 / 7), 'week')}.`
-                      : `Actually manageable. You could knock this out in ${plural(Math.round(backlogHours / 2 / 7), 'week')}.`
-                    }
-                  </div>
-                  <div className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] mt-0.5 opacity-60">
-                    completion times via HowLongToBeat
-                  </div>
-                </div>
-              )}
-
-              {/* Enrichment status */}
-              {enriching && (
-                <div className="mt-2 text-[11px] text-accent-purple font-[family-name:var(--font-mono)] animate-pulse">
-                  🔄 Fetching more data... estimates updating live
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Recalculate button — shown after first calc to improve accuracy */}
-          {calculated && !enriching && confidencePct < 90 && (
-            <button
-              onClick={() => {
-                setCalculated(false);
-                setCalculating(false);
-                setTimeout(() => handleCalculate(), 50);
-              }}
-              className="w-full mt-2 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-              style={{
-                backgroundColor: 'rgba(167, 139, 250, 0.08)',
-                border: '1px solid rgba(167, 139, 250, 0.2)',
-                color: '#a78bfa',
-              }}
-            >
-              🔄 Refine estimate ({priceConfidence.known}/{priceConfidence.total} games priced)
-            </button>
-          )}
-
-          {/* Share Your Shame */}
-          {calculated && (
-            <div className="mt-3 flex flex-col sm:flex-row gap-2">
-              <button
-                onClick={() => {
-                  const dynStats = { backlog: stats.backlogSize, cleared: stats.gamesCleared, bailed: stats.bailedCount, hours: stats.totalHours, unplayedValue: countedUnplayed, playedValue: countedPlayed, backlogHours: backlogHours || 0, streak: stats.streak, oldest: stats.oldest?.name || '', pct: explorationPct };
-                  shareToTwitter(generateDynamicShareText(dynStats, 'twitter'));
-                }}
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{
-                  backgroundColor: 'rgba(29, 161, 242, 0.1)',
-                  border: '1px solid rgba(29, 161, 242, 0.2)',
-                  color: '#1da1f2',
-                }}
-              >
-                𝕏 Share your stats
-              </button>
-              <button
-                onClick={() => {
-                  const dynStats = { backlog: stats.backlogSize, cleared: stats.gamesCleared, bailed: stats.bailedCount, hours: stats.totalHours, unplayedValue: countedUnplayed, playedValue: countedPlayed, backlogHours: backlogHours || 0, streak: stats.streak, oldest: stats.oldest?.name || '', pct: explorationPct };
-                  shareToReddit(generateDynamicShareText(dynStats, 'reddit'));
-                }}
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{
-                  backgroundColor: 'rgba(255, 69, 0, 0.1)',
-                  border: '1px solid rgba(255, 69, 0, 0.2)',
-                  color: '#ff4500',
-                }}
-              >
-                📮 Post to Reddit
-              </button>
-              <button
-                onClick={() => {
-                  const dynStats = { backlog: stats.backlogSize, cleared: stats.gamesCleared, bailed: stats.bailedCount, hours: stats.totalHours, unplayedValue: countedUnplayed, playedValue: countedPlayed, backlogHours: backlogHours || 0, streak: stats.streak, oldest: stats.oldest?.name || '', pct: explorationPct };
-                  navigator.clipboard.writeText(generateDynamicShareText(dynStats, 'discord'));
-                  showToast('Copied to clipboard. Go share it!');
-                }}
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{
-                  backgroundColor: 'rgba(88, 101, 242, 0.1)',
-                  border: '1px solid rgba(88, 101, 242, 0.2)',
-                  color: '#5865f2',
-                }}
-              >
-                📋 Copy for Discord
-              </button>
-            </div>
-          )}
-
-          {/* Visual Share Card */}
-          {calculated && (
-            <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-              <div className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-2">
-                🖼️ Or share as an image
-              </div>
-              <ShareCard
-                stats={{
-                  backlogSize: stats.backlogSize,
-                  gamesCleared: stats.gamesCleared,
-                  bailedCount: stats.bailedCount,
-                  totalHours: stats.totalHours,
-                  unplayedValue: countedUnplayed,
-                  playedValue: countedPlayed,
-                  backlogHours: backlogHours,
-                  oldest: stats.oldest,
-                  streak: stats.streak,
-                }}
-                rank={currentArchetype?.title}
-              />
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  icon,
-  color,
-  sublabel,
-}: {
-  label: string;
-  value: string;
-  icon: string;
-  color: string;
-  sublabel?: string;
-}) {
-  return (
-    <div
-      className="rounded-lg p-3"
-      style={{
-        backgroundColor: 'var(--color-bg-elevated)',
-        border: '1px solid var(--color-border-subtle)',
-      }}
-    >
-      <div className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-0.5">
-        {icon} {label}
-      </div>
-      <div
-        className="text-xl font-bold font-[family-name:var(--font-mono)] stat-number"
-        style={{ color }}
-      >
-        {value}
-      </div>
-      {sublabel && (
-        <div className="text-[11px] text-text-faint font-[family-name:var(--font-mono)] mt-0.5 truncate">
-          {sublabel}
+          {/* Value Calculator */}
+          <ValueCalculator
+            calculating={calculating}
+            calculated={calculated}
+            enriching={enriching}
+            countedUnplayed={countedUnplayed}
+            countedPlayed={countedPlayed}
+            countedBacklogHours={countedBacklogHours}
+            backlogHours={backlogHours}
+            playedValue={playedValue}
+            priceConfidence={priceConfidence}
+            hltbConfidence={hltbConfidence}
+            confidencePct={confidencePct}
+            hltbPct={hltbPct}
+            handleCalculate={handleCalculate}
+            handleRecalculate={handleRecalculate}
+            stats={stats}
+            explorationPct={explorationPct}
+            currentArchetype={currentArchetype}
+            showToast={showToast}
+          />
         </div>
       )}
     </div>

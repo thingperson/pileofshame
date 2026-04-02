@@ -4,7 +4,7 @@
 
 **Name:** Inventory Full
 **Domain:** inventoryfull.gg
-**Tagline:** Your backlog is full. Your time doesn't have to be.
+**Tagline:** Your backlog should feel exciting, not a warehouse of good intentions.
 **Core feature:** Backlog Payback
 **CTA:** Clear some space
 **Celebration state:** Mission Clear
@@ -70,8 +70,8 @@ These lines were reviewed against our voice-and-tone.md guide. Key principles ap
 - X/Twitter: `@inventoryfullgg` ✅
 - Instagram: `@inventoryfullgg` ✅
 - YouTube: `@inventoryfullgg` ✅
-- TikTok: `@inventoryfullgg` (pending 24hr cooldown)
-- Bluesky: `@inventoryfull.gg` (custom domain handle — TODO)
+- TikTok: `@inventoryfull.gg` ✅ (https://www.tiktok.com/@inventoryfull.gg)
+- Bluesky: `@inventoryfullgg.bsky.social` ✅ (https://bsky.app/profile/inventoryfullgg.bsky.social)
 - Discord: Server name "Inventory Full" (TODO when ready)
 - Reddit: r/inventoryfull (TODO when ready)
 
@@ -210,16 +210,17 @@ Use this order in all major content:
 - **Instagram:** https://www.instagram.com/inventoryfullgg/
 - **YouTube:** @inventoryfullgg (https://youtube.com/channel/UCF8xjuBazo-1Sfu6vLp27_w)
 - **TikTok:** Pending (24hr wait on new account creation)
-- **Bluesky:** Not yet registered
+- **Bluesky:** https://bsky.app/profile/inventoryfullgg.bsky.social
 - **Ko-fi:** https://ko-fi.com/inventoryfull
 - **ITAD App:** Registered (API key active, app name "Inventory Full")
 
 ## Action Items
 
 - [x] Register social handles (X, Instagram, YouTube done. TikTok pending 24hr. Bluesky TODO.)
-- [ ] Set up Bluesky custom domain handle (@inventoryfull.gg)
-- [ ] Register TikTok @inventoryfullgg (after 24hr cooldown)
-- [ ] Set up Porkbun email forwarding (hello@ and privacy@ → Gmail)
+- [x] Set up Bluesky handle (@inventoryfullgg.bsky.social)
+- [x] Register TikTok @inventoryfull.gg
+- [x] Set up Porkbun email forwarding (hello@, privacy@, and hi@ → Gmail)
 - [ ] Create profile banner graphic
+- [ ] Redesign OG image (app/opengraph-image.tsx) — Brady's design task. Current one is functional (backpack emoji, title, tagline, feature pills) but could be much stronger with a custom visual. Preview at inventoryfull.gg/opengraph-image
 - [ ] Write and pin launch post
 - [ ] Draft first 10 posts for content calendar

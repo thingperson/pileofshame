@@ -72,7 +72,7 @@ export default async function Image() {
             display: 'flex',
           }}
         >
-          Your backlog is full. Your time doesn&apos;t have to be.
+          Your backlog should feel exciting, not a warehouse of good intentions.
         </div>
 
         {/* Feature pills */}

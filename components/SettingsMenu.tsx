@@ -213,6 +213,7 @@ export default function SettingsMenu() {
                     }
                   }}
                   placeholder="Username, URL, or Steam ID"
+                  aria-label="Steam ID or profile URL"
                   autoFocus
                   className="w-full text-xs bg-bg-primary border border-border-subtle rounded-lg px-2.5 py-2 text-text-primary placeholder-text-faint focus:outline-none focus:border-accent-purple"
                 />

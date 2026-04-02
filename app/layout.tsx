@@ -19,13 +19,13 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Inventory Full: Gaming Backlog Manager",
-  description: "Your backlog is full. Your time doesn't have to be. Import your games, tell us your mood, and we'll find your game tonight.",
+  description: "Because your backlog should feel exciting, not a warehouse of good intentions. Import your games, tell us your mood, and we'll find your game tonight.",
   metadataBase: new URL('https://inventoryfull.gg'),
   keywords: ['gaming backlog', 'backlog manager', 'game tracker', 'inventory full', 'steam backlog', 'xbox backlog', 'gaming queue', 'what to play next', 'game randomizer', 'backlog tracker', 'backlog payback'],
   authors: [{ name: 'Inventory Full' }],
   openGraph: {
     title: 'Inventory Full',
-    description: 'Your backlog is full. Your time doesn\'t have to be. Clear space. Recover fun.',
+    description: 'Because your backlog should feel exciting, not a warehouse of good intentions.',
     url: 'https://inventoryfull.gg',
     siteName: 'Inventory Full',
     type: 'website',

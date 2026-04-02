@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
 import { trackImport } from '@/lib/analytics';
@@ -127,6 +127,12 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
     onClose();
   };
 
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') handleClose(); };
+    if (open) window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [open]);
+
   if (!open) return null;
 
   return (
@@ -134,6 +140,9 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleClose} />
 
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Import from PlayStation"
         className="relative w-full max-w-lg max-h-[85vh] rounded-2xl border overflow-hidden flex flex-col"
         style={{
           backgroundColor: 'var(--color-bg-elevated)',
@@ -242,6 +251,7 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
                 onChange={(e) => setNpsso(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && fetchGames()}
                 placeholder="Paste your NPSSO token here"
+                aria-label="PSN NPSSO token"
                 autoFocus
                 className="flex-1 text-sm bg-bg-primary border border-border-subtle rounded-lg px-3 py-2.5 text-text-primary placeholder-text-faint focus:outline-none focus:border-accent-purple font-[family-name:var(--font-mono)]"
               />

@@ -61,10 +61,29 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
     const newStatus = cycleStatus(game.id);
     if (newStatus) {
       const cfg = STATUS_CONFIG[newStatus];
-      // First-time Play Next celebration
-      if (newStatus === 'on-deck' && !localStorage.getItem('pos-first-playnext')) {
-        localStorage.setItem('pos-first-playnext', '1');
-        showToast(`${game.name} → Play Next 🎯 Nice. You just committed. That's the hard part.`);
+      if (newStatus === 'on-deck') {
+        // Play Next celebrations
+        if (!localStorage.getItem('pos-first-playnext')) {
+          localStorage.setItem('pos-first-playnext', '1');
+          showToast(`${game.name} → Play Next 🎯 Nice. You just committed. That's the hard part.`);
+        } else {
+          const playNextToasts = [
+            `${game.name} just made the list. Good pick. 🎯`,
+            `${game.name} → Play Next. The pile is shrinking. 🎯`,
+            `Locked in: ${game.name}. No more scrolling. 🎯`,
+            `${game.name} queued up. One step closer. 🎯`,
+            `${game.name} earned a spot on the list. Let's go. 🎯`,
+          ];
+          showToast(playNextToasts[Math.floor(Math.random() * playNextToasts.length)]);
+        }
+      } else if (newStatus === 'playing') {
+        const nowPlayingToasts = [
+          `${game.name} is live. Go play. 🔥`,
+          `Let's go. ${game.name} isn't going to play itself. 🔥`,
+          `${game.name} → Now Playing. This is happening. 🔥`,
+          `You're in. ${game.name} is loaded up. 🔥`,
+        ];
+        showToast(nowPlayingToasts[Math.floor(Math.random() * nowPlayingToasts.length)]);
       } else {
         showToast(`${game.name} → ${cfg.label} ${cfg.icon}`);
       }

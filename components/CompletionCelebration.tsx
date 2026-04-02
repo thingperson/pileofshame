@@ -227,6 +227,7 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
         ref={modalRef}
         role="dialog"
         aria-modal="true"
+        aria-label="Game completion celebration"
         className="relative w-full max-w-md rounded-2xl border overflow-hidden"
         style={{
           backgroundColor: 'var(--color-bg-card)',

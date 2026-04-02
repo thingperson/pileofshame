@@ -144,6 +144,12 @@ export default function HelpModal({ open, onClose }: HelpModalProps) {
     if (open) trackHelpOpen();
   }, [open]);
 
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    if (open) window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [open, onClose]);
+
   if (!open) return null;
 
   const section = SECTIONS.find((s) => s.id === activeSection) || SECTIONS[0];
@@ -155,6 +161,9 @@ export default function HelpModal({ open, onClose }: HelpModalProps) {
 
       {/* Modal */}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="How It Works"
         className="relative w-full max-w-2xl max-h-[85vh] rounded-2xl border overflow-hidden flex flex-col"
         style={{
           backgroundColor: 'var(--color-bg-elevated)',

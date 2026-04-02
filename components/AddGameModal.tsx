@@ -129,6 +129,7 @@ export default function AddGameModal({ open, onClose }: AddGameModalProps) {
         ref={modalRef}
         role="dialog"
         aria-modal="true"
+        aria-label="Add a game"
         className="relative w-full max-w-md rounded-2xl border p-5 space-y-4 animate-[scaleIn_300ms_ease-out]"
         style={{
           backgroundColor: 'var(--color-bg-elevated)',

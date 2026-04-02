@@ -195,6 +195,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
         ref={modalRef}
         role="dialog"
         aria-modal="true"
+        aria-label="What Should I Play"
         className="relative w-full max-w-lg rounded-2xl border overflow-hidden"
         style={{
           backgroundColor: 'var(--color-bg-elevated)',

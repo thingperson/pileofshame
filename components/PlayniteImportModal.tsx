@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
 import { trackImport } from '@/lib/analytics';
@@ -200,6 +200,12 @@ export default function PlayniteImportModal({ open, onClose }: PlayniteImportMod
     onClose();
   };
 
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') handleClose(); };
+    if (open) window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [open]);
+
   if (!open) return null;
 
   const selectedCount = games.filter((g) => g.selected).length;
@@ -209,6 +215,9 @@ export default function PlayniteImportModal({ open, onClose }: PlayniteImportMod
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleClose} />
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Import from Playnite"
         className="relative w-full max-w-lg max-h-[85vh] rounded-2xl border p-5 space-y-4 animate-[scaleIn_300ms_ease-out] flex flex-col"
         style={{
           backgroundColor: 'var(--color-bg-elevated)',

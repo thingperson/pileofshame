@@ -81,6 +81,7 @@ export default function GameSearch({ value, onChange, onSelect }: GameSearchProp
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => results.length > 0 && setShowDropdown(true)}
           placeholder="Search for a game..."
+          aria-label="Search for a game to add"
           autoFocus
           className="w-full text-sm bg-bg-primary border border-border-subtle rounded-lg px-3 py-2.5 text-text-primary placeholder-text-faint focus:outline-none focus:border-accent-purple"
         />

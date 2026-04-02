@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
 import { trackImport } from '@/lib/analytics';
@@ -147,6 +147,12 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
     onClose();
   };
 
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') handleClose(); };
+    if (open) window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [open]);
+
   if (!open) return null;
 
   const existingNames = new Set(existingGames.map((g) => g.name.toLowerCase()));
@@ -155,6 +161,9 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleClose} />
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Import from Xbox"
         className="relative w-full max-w-lg max-h-[85vh] rounded-2xl border p-5 space-y-4 animate-[scaleIn_300ms_ease-out] flex flex-col"
         style={{
           backgroundColor: 'var(--color-bg-elevated)',
@@ -176,6 +185,7 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
               onChange={(e) => setGamertag(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && resolveProfile()}
               placeholder="Gamertag"
+              aria-label="Xbox Gamertag"
               autoFocus
               className="w-full text-sm bg-bg-primary border border-border-subtle rounded-lg px-3 py-2.5 text-text-primary placeholder-text-faint focus:outline-none focus:border-accent-purple"
             />
