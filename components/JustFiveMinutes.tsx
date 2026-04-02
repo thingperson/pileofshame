@@ -94,18 +94,18 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
     switch (action) {
       case 'playing':
         updateGame(game.id, { status: 'playing' as GameStatus });
-        showToast(`${game.name} → Now Playing. Let's go. 🔥`);
+        showToast(`🙌 ${game.name} → Now Playing. You tried it, you liked it, you're in.`);
         break;
       case 'on-deck':
         updateGame(game.id, { status: 'on-deck' as GameStatus });
-        showToast(`${game.name} → Play Next. It made the cut. 📋`);
+        showToast(`🙌 ${game.name} → Play Next. Tried it, shelved it, you know exactly when you'll want it.`);
         break;
       case 'pile':
-        showToast(`${game.name} stays in The Pile. You showed up — that counts. ✊`);
+        showToast(`🙌 ${game.name} stays in The Pile. You tried it. Now you know what it feels like. That's not nothing.`);
         break;
       case 'bail':
         setBailed(game.id);
-        showToast(`${game.name} → Not for you. That's a decision. That's progress. ✊`);
+        showToast(`🙌 ${game.name} → Not for you. 5 minutes saved you hours. That's a win.`);
         break;
     }
     handleClose();
@@ -190,7 +190,7 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
               <p className="text-base font-bold text-text-primary truncate">{game?.name}</p>
               <p className="text-xs text-text-dim mt-0.5">
                 {step === 'suggest' && 'Give it 5 minutes. Then decide where it goes.'}
-                {step === 'triage' && 'Time\'s up. What\'s the verdict?'}
+                {step === 'triage' && 'You tried it. Now you know. Where does it belong?'}
               </p>
             </div>
           </div>
