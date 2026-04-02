@@ -11,6 +11,7 @@ interface EnrichmentResult {
   hltbMain?: number;
   hltbComplete?: number;
   timeTier?: TimeTier;
+  isNonFinishable?: boolean;
   enrichedAt: string;
 }
 
@@ -101,6 +102,25 @@ export async function enrichGame(game: Game): Promise<EnrichmentResult | null> {
       }
     } catch {
       // HLTB failed, continue
+    }
+  }
+
+  // Step 4: Auto-detect non-finishable games
+  if (game.isNonFinishable === undefined) {
+    const nonFinishableGenres = ['massively multiplayer', 'mmo', 'mmorpg', 'battle royale'];
+    const likelyNonFinishable = ['sandbox', 'simulation'];
+    const allGenres = (result.genres || game.genres || []).map(g => g.toLowerCase());
+
+    const hasNonFinishableGenre = allGenres.some(g => nonFinishableGenres.some(nf => g.includes(nf)));
+    const hasSandboxOnly = allGenres.some(g => likelyNonFinishable.some(nf => g.includes(nf)))
+      && !allGenres.some(g => g.includes('adventure') || g.includes('rpg'));
+    const noStoryTime = !result.hltbMain && !game.hltbMain;
+    const isMultiplayerOnly = noStoryTime && allGenres.some(g =>
+      g.includes('shooter') || g.includes('sports') || g.includes('racing') || g.includes('fighting')
+    );
+
+    if (hasNonFinishableGenre || hasSandboxOnly || isMultiplayerOnly) {
+      result.isNonFinishable = true;
     }
   }
 

@@ -141,6 +141,34 @@ Based on deep research into gaming backlog psychology (analysis paralysis, decis
 - **Mini celebrations for milestones** — toast/confetti for 10th decision, 50th game cleared, etc.
 - **Decision tracking stats** — "decisions this week/month" as a visible metric
 
+### Non-Finishable Game Handling (build sooner)
+Many games have no "end" — MMOs, roguelikes, sandbox games, multiplayer-only titles (Rocket League, CS2, Overwatch, Minecraft, etc.). These shouldn't count as "unfinished" in the backlog or shame users for not "clearing" them.
+
+**What we need:**
+- Auto-tag games as "non-finishable" using genre data from RAWG (if genres include "MMO", "Massively Multiplayer", "Battle Royale", or HLTB returns no main story time)
+- Let users manually toggle the tag too
+- Non-finishable games should be sortable/filterable separately in The Pile
+- "Moving out of the pile" (buried → on-deck → playing) should be a win reflected in stats, not just clearing. Many non-finishable games are a win just to be actively playing.
+- Stats bar could track "games in motion" (on-deck + playing) as a positive metric alongside cleared count
+- Exploration % should count non-finishable games as "explored" once they hit playing status, not require cleared
+
+**Why this matters:** Without this, users with lots of multiplayer/endless games see an artificially inflated "to explore" count and feel worse about their progress than they should.
+
+### Multiplayer Matchmaking (build later — social feature)
+**Insight:** Users likely impulse-bought great multiplayer games but stopped playing because they had no one to play with. The games rot in the pile not because they're bad, but because they're lonely.
+
+**What we could build:**
+- Detect multiplayer games in user libraries (genre tags from RAWG)
+- Show users who share the same unplayed multiplayer games
+- "Looking for group" toggle per game — "I'd play this if someone else would"
+- Match users who both own the same multiplayer game and both flagged it
+- Notification: "3 other Inventory Full users own Divinity: Original Sin 2 and want to play it. Start a party?"
+- Moving a multiplayer game to "playing" because you found a group = a pile win
+
+**Why this matters:** This is a genuine differentiator. No backlog tool helps you find co-op partners from shared libraries. It turns the pile from a solo guilt trip into a social opportunity.
+
+**Requires:** User accounts (done), game library visibility between users (new), opt-in matching, likely a simple lobby/interest system. This is a Phase 5 social feature — significant build, but high retention potential.
+
 ### Don't Over-Gamify
 The research is clear: adding points, badges, streaks, and leaderboards to backlog clearing risks the Overjustification Effect. People stop playing for joy and start playing for metrics. We should:
 - Track stats but frame them as self-knowledge, not scoreboards

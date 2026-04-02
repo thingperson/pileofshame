@@ -82,8 +82,15 @@ export default function StatsPanel({ games }: StatsPanelProps) {
     const perfectGames = gamesWithAchievements.filter((g) => g.achievements!.earned === g.achievements!.total).length;
     const totalGamerscore = games.reduce((sum, g) => sum + (g.achievements?.gamerscore || 0), 0);
 
+    // Games in motion = on-deck + playing (progress without clearing)
+    const inMotion = games.filter((g) => g.status === 'on-deck' || g.status === 'playing').length;
+
+    // Non-finishable games that are playing count as "explored"
+    const nonFinishablePlaying = games.filter((g) => g.isNonFinishable && g.status === 'playing').length;
+
     return {
       backlogSize, gamesCleared, bailedCount, nowPlaying, totalHours, streak, oldest,
+      inMotion, nonFinishablePlaying,
       totalAchievementsEarned, totalAchievements, platinumsEarned, perfectGames,
       totalGamerscore, hasAchievementData: gamesWithAchievements.length > 0,
     };
@@ -267,7 +274,8 @@ export default function StatsPanel({ games }: StatsPanelProps) {
     : 0;
 
   const totalGames = games.length;
-  const explorationPct = totalGames > 0 ? Math.round(((stats.gamesCleared + stats.bailedCount) / totalGames) * 100) : 0;
+  // Non-finishable games count as "explored" once actively playing
+  const explorationPct = totalGames > 0 ? Math.round(((stats.gamesCleared + stats.bailedCount + stats.nonFinishablePlaying) / totalGames) * 100) : 0;
 
   return (
     <div className="mb-6">
@@ -313,6 +321,13 @@ export default function StatsPanel({ games }: StatsPanelProps) {
               <span className="text-sm font-bold font-[family-name:var(--font-mono)]" style={{ color: '#22c55e' }}>{stats.gamesCleared}</span>
               <span className="text-xs text-text-dim hidden sm:inline">cleared</span>
             </div>
+            {stats.inMotion > 0 && (
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className="text-sm">🚀</span>
+                <span className="text-sm font-bold font-[family-name:var(--font-mono)]" style={{ color: '#f59e0b' }}>{stats.inMotion}</span>
+                <span className="text-xs text-text-dim hidden sm:inline">in motion</span>
+              </div>
+            )}
             <div className="flex items-center gap-1.5 shrink-0">
               <span className="text-sm">📚</span>
               <span className="text-sm font-bold font-[family-name:var(--font-mono)]" style={{ color: '#64748b' }}>{stats.backlogSize}</span>
@@ -349,7 +364,7 @@ export default function StatsPanel({ games }: StatsPanelProps) {
           {/* Victory Row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
             <StatCard label="Cleared" value={stats.gamesCleared.toString()} icon="✅" color="#22c55e" />
-            <StatCard label="Now Playing" value={stats.nowPlaying.toString()} icon="🔥" color="#f59e0b" />
+            <StatCard label="In Motion" value={stats.inMotion.toString()} icon="🚀" color="#f59e0b" sublabel="on-deck + playing" />
             <StatCard label="Streak" value={stats.streak.toString()} icon="⚡" color="#a78bfa" sublabel="without bailing" />
             <StatCard
               label="Hours Logged"

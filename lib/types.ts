@@ -45,6 +45,7 @@ export interface Game {
   hltbMain?: number;           // Hours to beat (main story) from HLTB
   hltbComplete?: number;       // Hours to 100% from HLTB
   enrichedAt?: string;         // ISO date of last enrichment
+  isNonFinishable?: boolean;   // Auto-detected: MMOs, multiplayer-only, roguelikes, sandboxes
 }
 
 export type PlatformPreference = 'any' | 'pc' | 'mac' | 'console';

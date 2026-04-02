@@ -89,6 +89,45 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
       } else {
         showToast(`${game.name} → ${cfg.label} ${cfg.icon}`);
       }
+
+      // Milestone celebrations (delayed so they don't overlap with status toast)
+      setTimeout(() => {
+        const allGames = useStore.getState().games;
+        const cleared = allGames.filter(g => g.status === 'played').length;
+        const decisions = allGames.filter(g => g.status !== 'buried').length;
+        const milestoneKey = 'pos-milestone-';
+
+        // Cleared milestones
+        const clearMilestones: [number, string][] = [
+          [50, `50 games cleared. You're a machine. 🏆`],
+          [25, `25 games cleared. Quarter century of progress. 🏆`],
+          [10, `10 games cleared. Double digits. This is real. 🏆`],
+          [5, `5 games cleared. Momentum is building. 🎉`],
+          [1, `First game cleared. The pile just got smaller. 🎉`],
+        ];
+        for (const [n, msg] of clearMilestones) {
+          if (cleared === n && !localStorage.getItem(`${milestoneKey}clear-${n}`)) {
+            localStorage.setItem(`${milestoneKey}clear-${n}`, '1');
+            showToast(msg);
+            break;
+          }
+        }
+
+        // Decision milestones (any game moved out of buried)
+        const decisionMilestones: [number, string][] = [
+          [100, `100 decisions made. You've touched every corner of this pile. 🧠`],
+          [50, `50 decisions. Half a hundred games you've taken action on. 🧠`],
+          [25, `25 decisions in. The paralysis is breaking. 🧠`],
+          [10, `10 decisions made. You're actually doing this. 🧠`],
+        ];
+        for (const [n, msg] of decisionMilestones) {
+          if (decisions === n && !localStorage.getItem(`${milestoneKey}decision-${n}`)) {
+            localStorage.setItem(`${milestoneKey}decision-${n}`, '1');
+            showToast(msg);
+            break;
+          }
+        }
+      }, 2000);
     }
   }, [game.id, game.name, game.status, cycleStatus, getNextStatus, showToast, showBadgeHint]);
 
