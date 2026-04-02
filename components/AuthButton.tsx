@@ -134,28 +134,15 @@ export default function AuthButton() {
                   </svg>
                   Google
                 </button>
-                {isPWA && (
-                  <p className="text-[10px] text-accent-purple text-center">
-                    ⬆ Discord or Google recommended for the app.
-                  </p>
-                )}
-
-                <div className="flex items-center gap-2 my-1">
-                  <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
-                  <span className="text-[10px] text-text-faint">or</span>
-                  <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
-                </div>
+                <p className="text-[10px] text-text-faint text-center">
+                  One click. No passwords. Instant sync.
+                </p>
 
                 <button
                   onClick={() => setShowEmailInput(true)}
-                  className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-xl border transition-all hover:scale-[1.01] active:scale-[0.99]"
-                  style={{
-                    borderColor: 'var(--color-border-subtle)',
-                    backgroundColor: 'transparent',
-                    color: 'var(--color-text-secondary)',
-                  }}
+                  className="w-full text-[11px] text-text-faint hover:text-text-muted transition-colors text-center pt-1"
                 >
-                  ✉️&nbsp; Sign in with email
+                  use email instead (opens in default browser)
                 </button>
               </>
             )}
@@ -185,12 +172,15 @@ export default function AuthButton() {
                 >
                   Send magic link
                 </button>
+                <p className="text-[10px] text-text-faint/60 text-center leading-snug">
+                  The link will open in your default browser. Discord or Google is easier.
+                </p>
                 <button
                   type="button"
                   onClick={() => { setShowEmailInput(false); setEmailError(''); }}
                   className="w-full text-xs text-text-faint hover:text-text-muted transition-colors"
                 >
-                  ← Back
+                  ← Back to Discord / Google
                 </button>
               </form>
             )}
@@ -200,13 +190,11 @@ export default function AuthButton() {
                 <p className="text-2xl">✉️</p>
                 <p className="text-sm text-text-primary font-medium">Check your email</p>
                 <p className="text-xs text-text-muted">
-                  We sent a magic link to <span className="text-accent-purple">{email}</span>. Click it to sign in.
+                  We sent a link to <span className="text-accent-purple">{email}</span>.
                 </p>
-                {isPWA && (
-                  <p className="text-[11px] text-amber-400/80 leading-snug px-2">
-                    Heads up: the link may open in your browser instead of the app. If so, come back here and you should be signed in.
-                  </p>
-                )}
+                <p className="text-[11px] text-amber-400/80 leading-snug px-2">
+                  Heads up: the link may open in a different browser. If so, come back here after clicking it.
+                </p>
                 <button
                   onClick={() => { setEmailSent(false); setShowEmailInput(false); setEmail(''); }}
                   className="text-xs text-text-faint hover:text-text-muted transition-colors"

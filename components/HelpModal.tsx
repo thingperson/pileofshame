@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { trackHelpOpen } from '@/lib/analytics';
 
 interface HelpModalProps {
   open: boolean;
@@ -138,6 +139,10 @@ const SECTIONS = [
 
 export default function HelpModal({ open, onClose }: HelpModalProps) {
   const [activeSection, setActiveSection] = useState('basics');
+
+  useEffect(() => {
+    if (open) trackHelpOpen();
+  }, [open]);
 
   if (!open) return null;
 

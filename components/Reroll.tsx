@@ -7,6 +7,7 @@ import { STATUS_CONFIG, REROLL_MESSAGES, TIME_TIER_CONFIG } from '@/lib/constant
 import { getGameDescriptor } from '@/lib/descriptors';
 import { REROLL_MODES, RerollMode, getEligibleGames, pickRandom } from '@/lib/reroll';
 import { useToast } from './Toast';
+import { trackReroll, trackRerollCommit } from '@/lib/analytics';
 
 interface RerollProps {
   open: boolean;
@@ -46,6 +47,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
     }
 
     incrementReroll();
+    trackReroll(rollMode);
     const newCount = reroll.sessionCount + 1;
 
     // Check for reroll messages
@@ -71,6 +73,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
 
   const handleLetsGo = useCallback((game: Game) => {
     updateGame(game.id, { status: 'playing' });
+    trackRerollCommit();
     showToast(`${game.name} → Playing 🔥 Let's go!`);
     resetReroll();
     setCurrentPick(null);

@@ -36,6 +36,12 @@ Use this for small, focused changes where a full review would be overkill.
 3. **Stage, commit, push** — Same git workflow as full deploy.
 4. **Skip** accessibility audit, code efficiency check, and plan update unless the change touches those areas.
 
+## Policy Guardrails
+The pre-push-review skill checks these, but know the hard rules:
+- **No-sell rule**: We NEVER recommend games users don't already own or have wishlisted. If a new feature breaks this, it requires coordinated updates to privacy policy, HelpModal FAQ, DealBadge disclosures, and voice guide. See pre-push-review Section 5 for the full file list.
+- **Affiliate disclosures**: Every deal link needs FTC disclosure near it, not just in privacy policy.
+- **Data collection**: New data collection = privacy policy update before deploy.
+
 ## Common Pitfalls
 - Always use the SSH push command — HTTPS auth doesn't work in this environment
 - Never use `vercel deploy --prod` directly — we deploy via git push to trigger Vercel's GitHub integration

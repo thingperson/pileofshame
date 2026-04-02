@@ -6,6 +6,7 @@ import { Game } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { getCompletionRecommendations, getWishlistRecommendations } from '@/lib/recommendations';
 import DealBadge from './DealBadge';
+import { trackGameCleared } from '@/lib/analytics';
 
 interface CompletionCelebrationProps {
   game: Game | null;
@@ -137,6 +138,7 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
 
   const handleConfirm = useCallback(() => {
     onConfirm();
+    trackGameCleared();
     setStage('celebrate');
   }, [onConfirm]);
 

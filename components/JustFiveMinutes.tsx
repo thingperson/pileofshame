@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { Game, GameStatus } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
+import { trackJust5Min } from '@/lib/analytics';
 
 const TIMER_SECONDS = 300; // 5 minutes
 
@@ -66,6 +67,7 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
     }
     setGame(pick);
     setActive(true);
+    trackJust5Min();
     resetTimer();
   }, [games, showToast, resetTimer]);
 

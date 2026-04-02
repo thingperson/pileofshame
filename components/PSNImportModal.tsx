@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
+import { trackImport } from '@/lib/analytics';
 import { DEFAULT_CATEGORIES } from '@/lib/constants';
 
 interface PSNGameData {
@@ -112,6 +113,7 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
       count++;
     });
 
+    trackImport('playstation', count);
     showToast(`Imported ${count} PlayStation games. Sony would be proud.`);
     handleClose();
   };

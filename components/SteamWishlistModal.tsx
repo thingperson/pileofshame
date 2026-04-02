@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
+import { trackImport } from '@/lib/analytics';
 import { DEFAULT_CATEGORIES } from '@/lib/constants';
 
 interface WishlistGame {
@@ -131,6 +132,7 @@ export default function SteamWishlistModal({ open, onClose }: SteamWishlistModal
       count++;
     });
 
+    trackImport('steam-wishlist', count);
     showToast(`Added ${count} wishlist games. Deals will surface when prices drop.`);
     handleClose();
   };

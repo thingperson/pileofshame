@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
+import { trackImport } from '@/lib/analytics';
 import { GameSource } from '@/lib/types';
 import { DEFAULT_CATEGORIES } from '@/lib/constants';
 
@@ -187,6 +188,7 @@ export default function PlayniteImportModal({ open, onClose }: PlayniteImportMod
         genres: game.genres.length > 0 ? game.genres : undefined,
       });
     }
+    trackImport('playnite', toImport.length);
     showToast(`Imported ${toImport.length} games from Playnite.`);
     handleClose();
   };

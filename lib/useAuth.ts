@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from './supabase';
 import { User, Session } from '@supabase/supabase-js';
+import { trackSignUp, trackLogin, trackLogout } from './analytics';
 
 interface AuthState {
   user: User | null;
@@ -31,12 +32,23 @@ export function useAuth() {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
         setAuthState({
           user: session?.user ?? null,
           session,
           loading: false,
         });
+
+        // Track auth events in GA
+        if (event === 'SIGNED_IN' && session?.user) {
+          const provider = session.user.app_metadata?.provider || 'unknown';
+          const isNew = session.user.created_at === session.user.updated_at
+            || (Date.now() - new Date(session.user.created_at).getTime()) < 60000;
+          if (isNew) trackSignUp(provider); else trackLogin(provider);
+        }
+        if (event === 'SIGNED_OUT') {
+          trackLogout();
+        }
       }
     );
 

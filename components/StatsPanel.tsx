@@ -6,6 +6,7 @@ import { getAllMatchingArchetypes, PlayerArchetype } from '@/lib/archetypes';
 import { useToast } from './Toast';
 import ShareCard from './ShareCard';
 import { generateDynamicShareText } from '@/lib/shareTexts';
+import { trackStatsExpand } from '@/lib/analytics';
 
 interface StatsPanelProps {
   games: Game[];
@@ -482,7 +483,7 @@ export default function StatsPanel({ games }: StatsPanelProps) {
     <div className="mb-6">
       {/* Always-visible stats teaser strip */}
       <button
-        onClick={() => setExpanded(!expanded)}
+        onClick={() => { if (!expanded) trackStatsExpand(); setExpanded(!expanded); }}
         className="w-full rounded-xl border px-4 py-3 transition-all hover:border-accent-purple group cursor-pointer"
         style={{
           backgroundColor: 'var(--color-bg-card)',
@@ -524,12 +525,14 @@ export default function StatsPanel({ games }: StatsPanelProps) {
               <span className="text-xs font-bold font-[family-name:var(--font-mono)]" style={{ color: '#a78bfa' }}>{explorationPct}%</span>
             </div>
           </div>
-          <div className="flex items-center gap-2 shrink-0 ml-2">
-            <span className="text-xs text-text-dim group-hover:text-accent-purple transition-colors font-[family-name:var(--font-mono)]">
+          <div className="flex items-center gap-1.5 shrink-0 ml-2 px-3 py-1.5 rounded-lg transition-all"
+            style={{ backgroundColor: expanded ? 'var(--color-accent-purple)' : 'rgba(167, 139, 250, 0.12)' }}
+          >
+            <span className={`text-xs font-semibold font-[family-name:var(--font-mono)] transition-colors ${expanded ? 'text-bg-primary' : 'text-accent-purple'}`}>
               {expanded ? 'less' : 'more'}
             </span>
             <svg
-              className={`w-3.5 h-3.5 text-text-dim group-hover:text-accent-purple transition-all duration-200 ${expanded ? 'rotate-180' : ''}`}
+              className={`w-3.5 h-3.5 transition-all duration-200 ${expanded ? 'rotate-180 text-bg-primary' : 'text-accent-purple'}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

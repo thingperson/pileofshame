@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
+import { trackImport } from '@/lib/analytics';
 import { DEFAULT_CATEGORIES } from '@/lib/constants';
 
 interface SteamGameData {
@@ -135,6 +136,7 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
       saveSteamId(profile.steamId);
     }
 
+    trackImport('steam', count);
     showToast(`Imported ${count} games from Steam. Now go play one.`);
     handleClose();
   };

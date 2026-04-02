@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
+import { trackImport } from '@/lib/analytics';
 import { DEFAULT_CATEGORIES } from '@/lib/constants';
 
 interface XboxGameData {
@@ -131,6 +132,7 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
         } : undefined,
       });
     }
+    trackImport('xbox', toImport.length);
     showToast(`Imported ${toImport.length} Xbox games.`);
     handleClose();
   };

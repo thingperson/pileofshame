@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { trackDealCheck } from '@/lib/analytics';
 
 interface Deal {
   store: string;
@@ -47,6 +48,7 @@ export default function DealBadge({ gameName, compact = false }: DealBadgeProps)
       const data = await res.json();
       if (data.deals && data.deals.length > 0) {
         setDeal(data);
+        trackDealCheck(gameName);
         dealCache.set(gameName, { data, timestamp: Date.now() });
       } else {
         dealCache.set(gameName, { data: null, timestamp: Date.now() });

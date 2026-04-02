@@ -25,10 +25,10 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-bold text-text-primary mb-3">The short version</h2>
             <p>
-              We collect the minimum data needed to make the app work. We don&apos;t sell your data,
-              we don&apos;t track you across the web, we don&apos;t use cookies, and we don&apos;t run
-              analytics. Your game library data stays in your browser unless you explicitly opt into
-              cloud sync.
+              We collect the minimum data needed to make the app work. We don&apos;t sell your data
+              and we don&apos;t track you across the web. We use Google Analytics to understand general
+              usage patterns, but we don&apos;t use that data to identify you or build ad profiles.
+              Your game library data stays in your browser unless you explicitly opt into cloud sync.
             </p>
           </section>
 
