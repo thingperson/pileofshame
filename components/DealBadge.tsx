@@ -172,6 +172,12 @@ export default function DealBadge({ gameName, compact = false }: DealBadgeProps)
           )}
         </div>
       )}
+
+      {(bestDeal || (expanded && deal && deal.deals.length > 1)) && (
+        <p className="text-[9px] text-text-faint/50 font-[family-name:var(--font-mono)] mt-1">
+          Deal links may earn us a small commission at no cost to you.
+        </p>
+      )}
     </div>
   );
 }

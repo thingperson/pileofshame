@@ -101,13 +101,18 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-bold text-text-primary mb-3">Cookies and tracking</h2>
             <p>
-              We do not use cookies. We do not use analytics or tracking scripts. We do not use
-              pixel trackers, fingerprinting, or any form of cross-site tracking. Your browsing
-              behavior is not monitored, recorded, or sold.
+              We use Google Analytics to understand how people use the app (page views, feature usage,
+              general traffic patterns). Google Analytics may set cookies to distinguish users. We do
+              not use this data to identify individuals or build advertising profiles. We do not use
+              pixel trackers, fingerprinting, or any form of cross-site tracking.
             </p>
             <p className="mt-2">
               We use localStorage (a browser storage mechanism) to save your app state locally.
               This is not a cookie and cannot be used for tracking.
+            </p>
+            <p className="mt-2">
+              When you click deal links to third-party stores, those sites may set their own cookies
+              for affiliate tracking and purchase attribution. We have no control over those cookies.
             </p>
           </section>
 
