@@ -20,35 +20,70 @@ export default function CloudSync() {
   const saveTimer = useRef<NodeJS.Timeout | null>(null);
   const lastSyncedRef = useRef<string>('');
 
-  // Load from cloud on first sign-in
+  // Load from cloud on first sign-in — handle user switching
   useEffect(() => {
     if (!isSignedIn || !user || hasLoaded) return;
 
     const loadCloud = async () => {
+      // Check if localStorage belongs to a different user
+      const lastUserId = localStorage.getItem('getplaying-last-user-id');
+      const isDifferentUser = lastUserId && lastUserId !== user.id;
+      const isFirstTimeUser = !lastUserId;
+
+      // If a different user signed in, clear local data first
+      if (isDifferentUser) {
+        localStorage.removeItem('getplaying-library');
+        // Reset store to empty
+        importState(JSON.stringify({
+          games: [],
+          categories: ['The Pile', 'Brain Off', 'The Shame Wall'],
+          customVibes: [],
+          settings: { showPlayed: false, showBailed: false, viewMode: 'list', theme: 'dark', platformPreference: 'any' },
+          lastSaved: new Date().toISOString(),
+        }));
+      }
+
+      // Save current user ID
+      localStorage.setItem('getplaying-last-user-id', user.id);
+
       const cloudData = await loadFromCloud(user.id);
-      if (cloudData) {
+      if (cloudData && cloudData.games && Array.isArray(cloudData.games)) {
         const localGames = useStore.getState().games;
 
-        // If cloud has data and local is empty (or cloud is newer), use cloud
-        if (cloudData.games && Array.isArray(cloudData.games)) {
-          if (localGames.length === 0) {
-            // Empty local — use cloud data
-            importState(JSON.stringify(cloudData));
+        if (localGames.length === 0 || isDifferentUser) {
+          // Empty local or switched users — use cloud data
+          importState(JSON.stringify(cloudData));
+          if (cloudData.games.length > 0) {
             showToast('Library loaded from cloud.');
-          } else if (cloudData.lastSaved > lastSaved) {
-            // Cloud is newer — ask user? For now, cloud wins if local hasn't changed
-            // In future: show merge dialog
-            importState(JSON.stringify(cloudData));
-            showToast('Synced with cloud (newer data found).');
           }
+        } else if (cloudData.lastSaved > lastSaved) {
+          // Cloud is newer — cloud wins
+          importState(JSON.stringify(cloudData));
+          showToast('Synced with cloud (newer data found).');
         }
+      } else if (isDifferentUser) {
+        // Different user, no cloud data — they start fresh
+        showToast('Welcome! Start by importing your games.');
+      } else if (isFirstTimeUser) {
+        // First sign-in ever on this device — keep local data, it's theirs
+        // (they may have been using the app before auth existed)
       }
+
       setHasLoaded(true);
-      lastSyncedRef.current = lastSaved;
+      lastSyncedRef.current = useStore.getState().lastSaved;
     };
 
     loadCloud();
   }, [isSignedIn, user, hasLoaded, lastSaved, importState, showToast]);
+
+  // Clear local user tracking on sign-out
+  useEffect(() => {
+    if (!isSignedIn && hasLoaded) {
+      // User signed out — don't clear library yet (they might sign back in)
+      // But reset hasLoaded so next sign-in triggers a fresh cloud load
+      setHasLoaded(false);
+    }
+  }, [isSignedIn, hasLoaded]);
 
   // Auto-save to cloud on changes (debounced)
   const saveDebounced = useCallback(() => {
