@@ -1,7 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/useAuth';
+
+/** Detect if running as installed PWA (Add to Home Screen) */
+function useIsPWA() {
+  const [isPWA, setIsPWA] = useState(false);
+  useEffect(() => {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      || (navigator as unknown as { standalone?: boolean }).standalone === true;
+    setIsPWA(isStandalone);
+  }, []);
+  return isPWA;
+}
 
 export default function AuthButton() {
   const { user, loading, isSignedIn, signInWithDiscord, signInWithGoogle, signInWithEmail, signOut } = useAuth();
@@ -11,6 +22,7 @@ export default function AuthButton() {
   const [email, setEmail] = useState('');
   const [emailSent, setEmailSent] = useState(false);
   const [emailError, setEmailError] = useState('');
+  const isPWA = useIsPWA();
 
   if (loading) {
     return (
@@ -122,6 +134,12 @@ export default function AuthButton() {
                   </svg>
                   Google
                 </button>
+                {isPWA && (
+                  <p className="text-[10px] text-accent-purple text-center">
+                    ⬆ Discord or Google recommended for the app.
+                  </p>
+                )}
+
                 <div className="flex items-center gap-2 my-1">
                   <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
                   <span className="text-[10px] text-text-faint">or</span>
@@ -184,6 +202,11 @@ export default function AuthButton() {
                 <p className="text-xs text-text-muted">
                   We sent a magic link to <span className="text-accent-purple">{email}</span>. Click it to sign in.
                 </p>
+                {isPWA && (
+                  <p className="text-[11px] text-amber-400/80 leading-snug px-2">
+                    Heads up: the link may open in your browser instead of the app. If so, come back here and you should be signed in.
+                  </p>
+                )}
                 <button
                   onClick={() => { setEmailSent(false); setShowEmailInput(false); setEmail(''); }}
                   className="text-xs text-text-faint hover:text-text-muted transition-colors"

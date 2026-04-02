@@ -171,48 +171,252 @@ export const MOOD_TAG_CONFIG: Record<MoodTag, { label: string; icon: string; col
 /**
  * Generate a playtime roast for games with excessive hours.
  */
+/**
+ * Game-specific roast config: [name match, hour threshold, roast template].
+ * Templates use {h} for formatted hours. Keep it warm, never mean.
+ */
+const GAME_ROASTS: [string[], number, string[]][] = [
+  // Competitive comfort games
+  [['rocket league'], 200, [
+    '{h}h of car soccer. Your pile called. You didn\'t answer.',
+    '{h}h. Still chasing that ceiling shot. Still ignoring the pile.',
+    '{h}h in Rocket League. Your backlog filed a missing persons report.',
+  ]],
+  [['counter-strike', 'cs:go', 'cs2'], 200, [
+    '{h}h. Rush B, never rush your backlog.',
+    '{h}h of CS. Your rank went up. Your pile didn\'t go down.',
+    '{h}h. You\'ve defused a lot of bombs but your backlog is still ticking.',
+  ]],
+  [['valorant'], 200, [
+    '{h}h. Your agent pool is deep. Your completed games pool is not.',
+    '{h}h of Valorant. Your pile is in the other tab, waiting.',
+  ]],
+  [['apex legends'], 200, [
+    '{h}h. You\'re the champion of not clearing your backlog.',
+    '{h}h dropping hot. Never dropping into your pile though.',
+  ]],
+  [['fortnite'], 200, [
+    '{h}h building walls. Your backlog is building resentment.',
+    '{h}h. Victory royale count: impressive. Games finished: let\'s not talk about it.',
+  ]],
+  [['overwatch'], 200, [
+    '{h}h. The payload has moved more than your backlog progress.',
+    '{h}h of Overwatch. Your pile needs healing.',
+  ]],
+  [['dota', 'league of legends'], 300, [
+    '{h}h. This isn\'t a game, it\'s a citizenship. Your pile can wait. (It\'s been waiting.)',
+    '{h}h. At this point you don\'t play this game. You live in it.',
+  ]],
+  [['dead by daylight'], 200, [
+    '{h}h. The real horror is your backlog.',
+    '{h}h of DbD. Your pile has been on the hook for a while now.',
+  ]],
+
+  // Comfort / sandbox games
+  [['stardew'], 80, [
+    '{h}h. The farm isn\'t going to water itself. Neither is your backlog.',
+    '{h}h of virtual farming. Your real crop is unplayed games.',
+    '{h}h in Stardew. Grandpa would be proud. Your backlog would not.',
+  ]],
+  [['minecraft'], 200, [
+    '{h}h of placing blocks. Your pile is stacking up too.',
+    '{h}h. You\'ve built entire worlds. Your backlog remains unexplored.',
+  ]],
+  [['terraria'], 200, [
+    '{h}h digging holes. Your backlog is one.',
+    '{h}h of Terraria. You\'ve explored every biome except your own library.',
+  ]],
+  [['animal crossing'], 100, [
+    '{h}h. Tom Nook is proud. Your backlog is confused.',
+    '{h}h of island life. Your other games are on a different island. A forgotten one.',
+  ]],
+  [['no man\'s sky'], 150, [
+    '{h}h exploring the universe. Your game library is its own undiscovered galaxy.',
+  ]],
+  [['valheim'], 150, [
+    '{h}h in the tenth world. Your backlog is the eleventh.',
+  ]],
+
+  // Strategy / "one more turn" games
+  [['civilization', 'civ vi', 'civ v', 'civ 6', 'civ 5'], 100, [
+    '{h}h. "Just one more turn" is why you have a pile. But also why you\'re happy.',
+    '{h}h. You\'ve conquered entire civilizations but can\'t conquer your backlog.',
+  ]],
+  [['factorio'], 100, [
+    '{h}h. The factory must grow. Your pile must not. ...The factory wins.',
+    '{h}h. The real throughput problem is your backlog.',
+  ]],
+  [['satisfactory'], 100, [
+    '{h}h. Your factory is satisfactory. Your backlog progress is not.',
+  ]],
+  [['stellaris'], 150, [
+    '{h}h managing a galactic empire. Can\'t manage a game library though.',
+  ]],
+  [['rimworld'], 150, [
+    '{h}h. Your colonists have it harder than your backlog, but not by much.',
+    '{h}h of war crimes and organ harvesting. Your backlog feels neglected by comparison.',
+  ]],
+  [['total war'], 150, [
+    '{h}h of Total War. Total backlog awareness: zero.',
+  ]],
+  [['crusader kings'], 150, [
+    '{h}h scheming for thrones. Your backlog is plotting revenge.',
+  ]],
+  [['europa universalis', 'eu4'], 200, [
+    '{h}h. You colonized the entire map but haven\'t explored your own library.',
+  ]],
+  [['cities: skylines', 'cities skylines'], 150, [
+    '{h}h of urban planning. Your backlog has worse infrastructure.',
+  ]],
+
+  // RPGs
+  [['skyrim'], 150, [
+    '{h}h and you probably still haven\'t finished the main quest.',
+    '{h}h. You took an arrow to the knee and never got up. Your pile noticed.',
+  ]],
+  [['elden ring'], 100, [
+    '{h}h. You are maidenless and backlogless. Wait, no. Just maidenless.',
+    '{h}h. The Lands Between are conquered. The Lands of Your Library are not.',
+  ]],
+  [['baldur\'s gate 3', 'baldur\'s gate III'], 100, [
+    '{h}h. You\'ve rolled more dice than cleared games at this point.',
+    '{h}h and probably three separate playthroughs. Your pile is on playthrough zero.',
+  ]],
+  [['the witcher', 'witcher 3'], 100, [
+    '{h}h. Geralt would have cleared this backlog by now. Geralt is efficient.',
+  ]],
+  [['fallout'], 100, [
+    '{h}h in the wasteland. Your backlog is its own post-apocalyptic landscape.',
+  ]],
+  [['destiny'], 200, [
+    '{h}h. Your light level is high. Your backlog completion rate is not.',
+    '{h}h chasing god rolls. The real god roll is clearing a game.',
+  ]],
+  [['monster hunter'], 150, [
+    '{h}h hunting monsters. The real monster is the size of your pile.',
+  ]],
+  [['path of exile'], 200, [
+    '{h}h. Your passive tree is bigger than your completed games list.',
+  ]],
+  [['warframe'], 200, [
+    '{h}h. Ninjas play free. Ninjas also apparently never clear their backlog.',
+  ]],
+  [['final fantasy xiv', 'ffxiv', 'ff14'], 200, [
+    '{h}h. The critically acclaimed MMORPG with a free trial. And your critically ignored backlog.',
+  ]],
+  [['world of warcraft', 'wow'], 300, [
+    '{h}h. You\'ve been playing since vanilla. Your backlog has been waiting since vanilla.',
+  ]],
+  [['diablo'], 100, [
+    '{h}h grinding for loot. The real treasure was the games you never played along the way.',
+  ]],
+
+  // Survival / crafting
+  [['rust'], 200, [
+    '{h}h. You keep getting raided and you keep coming back. Your pile relates.',
+  ]],
+  [['ark'], 200, [
+    '{h}h taming dinosaurs. Your backlog is untamed.',
+  ]],
+  [['the forest', 'sons of the forest'], 100, [
+    '{h}h lost in the woods. Your backlog is also lost.',
+  ]],
+
+  // Sports / racing
+  [['fifa', 'ea fc', 'eafc'], 200, [
+    '{h}h. Your FUT team is stacked. Your completed games? Less so.',
+  ]],
+  [['nba 2k'], 200, [
+    '{h}h on the court. Your backlog is benched permanently.',
+  ]],
+  [['gran turismo', 'forza'], 150, [
+    '{h}h of laps. Your backlog is still on lap zero.',
+  ]],
+
+  // Other specific games
+  [['gta', 'grand theft auto'], 100, [
+    '{h}h. You\'ve committed every crime except clearing your pile.',
+  ]],
+  [['hades'], 60, [
+    '{h}h. Even Sisyphus thinks you should try something new.',
+    '{h}h of escape attempts. Your backlog is the real underworld.',
+  ]],
+  [['binding of isaac'], 100, [
+    '{h}h. You\'ve unlocked everything. Your pile remains locked.',
+  ]],
+  [['slay the spire'], 80, [
+    '{h}h. Ascension 20 on all characters, zero ascension on your backlog.',
+  ]],
+  [['deep rock galactic'], 100, [
+    '{h}h. Rock and stone. Your pile of games? Rock and moan.',
+  ]],
+  [['among us'], 50, [
+    '{h}h. Your backlog progress is looking pretty sus.',
+  ]],
+  [['celeste'], 40, [
+    '{h}h. You can climb a mountain but you can\'t climb out of your backlog.',
+  ]],
+  [['hollow knight'], 60, [
+    '{h}h in Hallownest. Your backlog is its own forgotten kingdom.',
+  ]],
+];
+
 export function getPlaytimeRoast(gameName: string, hours: number): string | null {
-  if (hours < 50) return null;
+  if (hours < 40) return null;
 
-  // Game-specific — playful ribbing + comfort game acknowledgment
   const nameLower = gameName.toLowerCase();
-  if (nameLower.includes('rocket league') && hours > 500) {
-    return `${hours.toLocaleString()}h of car soccer. Your pile isn't clearing itself while you're doing aerials. But we get it — this one's home.`;
-  }
-  if (nameLower.includes('stardew') && hours > 100) {
-    return `${hours.toLocaleString()}h. The farm isn't going to water itself. Neither is your backlog, but hey — comfort is comfort.`;
-  }
-  if ((nameLower.includes('dota') || nameLower.includes('league of legends')) && hours > 500) {
-    return `${hours.toLocaleString()}h. This isn't a game, it's a lifestyle. Your pile can wait. (It's been waiting.)`;
-  }
-  if (nameLower.includes('civilization') && hours > 200) {
-    return `${hours.toLocaleString()}h. "Just one more turn" is why you have a pile. But also why you're happy.`;
-  }
-  if (nameLower.includes('factorio') && hours > 200) {
-    return `${hours.toLocaleString()}h. The factory must grow. Your pile must not. ...The factory wins.`;
-  }
-  if (nameLower.includes('skyrim') && hours > 200) {
-    return `${hours.toLocaleString()}h and you probably still haven't finished the main quest. Classic comfort game behavior.`;
-  }
-  if (nameLower.includes('counter-strike') && hours > 500) {
-    return `${hours.toLocaleString()}h. Your rank went up. Your pile didn't go down. Worth it though.`;
+
+  // Check game-specific roasts first
+  for (const [names, threshold, roasts] of GAME_ROASTS) {
+    if (hours >= threshold && names.some(n => nameLower.includes(n))) {
+      const roast = roasts[Math.floor(Math.random() * roasts.length)];
+      return roast.replace('{h}', hours.toLocaleString());
+    }
   }
 
-  // Generic — warm ribbing with comfort game nod at high hours
+  // Genre-aware generic roasts would go here if we had genre context
+  // For now, tier-based generic roasts
+
+  if (hours >= 2000) {
+    const roasts = [
+      `${hours.toLocaleString()}h. This isn't a game. This is where you live now.`,
+      `${hours.toLocaleString()}h. At this point the game should be paying you rent.`,
+      `${hours.toLocaleString()}h. Your other games have accepted their fate.`,
+    ];
+    return roasts[Math.floor(Math.random() * roasts.length)];
+  }
   if (hours >= 1000) {
-    return `${hours.toLocaleString()}h in this one game. At this point it's not backlog — it IS the game. Everything else is a side quest.`;
+    const roasts = [
+      `${hours.toLocaleString()}h in this one game. Everything else is a side quest at this point.`,
+      `${hours.toLocaleString()}h. You could have cleared your entire backlog. Twice. But here we are.`,
+      `${hours.toLocaleString()}h. This is a relationship, not a game.`,
+    ];
+    return roasts[Math.floor(Math.random() * roasts.length)];
   }
   if (hours >= 500) {
-    return `${hours.toLocaleString()}h. This is clearly your comfort game. Your pile is jealous, but we understand.`;
+    const roasts = [
+      `${hours.toLocaleString()}h. This is clearly your comfort game. Your pile understands. Mostly.`,
+      `${hours.toLocaleString()}h. That's a part-time job's worth of hours. In one game.`,
+      `${hours.toLocaleString()}h. Your pile is jealous, but honestly? Respect.`,
+    ];
+    return roasts[Math.floor(Math.random() * roasts.length)];
   }
   if (hours >= 200) {
-    return `${hours.toLocaleString()}h. Is this a game or a second job? Either way, it hits different.`;
+    const roasts = [
+      `${hours.toLocaleString()}h. You clearly love this one. Your other games are side-eyeing you.`,
+      `${hours.toLocaleString()}h. That's commitment. Your backlog wishes you were this committed to it.`,
+    ];
+    return roasts[Math.floor(Math.random() * roasts.length)];
   }
   if (hours >= 100) {
-    return `${hours.toLocaleString()}h. You clearly love this one. Your other games are side-eyeing you though.`;
+    const roasts = [
+      `${hours.toLocaleString()}h. Solid investment. Your pile would like a word though.`,
+      `${hours.toLocaleString()}h. Triple digits. This one earned its spot.`,
+    ];
+    return roasts[Math.floor(Math.random() * roasts.length)];
   }
-  if (hours >= 50) {
-    return `${hours.toLocaleString()}h. That's a solid investment. Your pile would like a word.`;
+  if (hours >= 40) {
+    return `${hours.toLocaleString()}h. A real commitment. Most of your pile wishes it got this much attention.`;
   }
 
   return null;

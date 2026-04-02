@@ -15,13 +15,13 @@ export default function FilterBar() {
   return (
     <div>
       {/* Filter Row — stacks on mobile, wraps on desktop */}
-      <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+      <div className="grid grid-cols-1 sm:flex sm:flex-wrap gap-1.5 sm:gap-2">
         {/* Shelf/Category */}
         <select
           value={filters.category}
           onChange={(e) => setFilter('category', e.target.value)}
           aria-label="Filter by shelf"
-          className="text-sm bg-bg-card border border-border-subtle rounded-lg px-3 py-2 text-text-secondary focus:border-accent-purple"
+          className="text-xs sm:text-sm bg-bg-card border border-border-subtle rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-text-secondary focus:border-accent-purple min-w-0"
         >
           <option value="">All Shelves</option>
           {categories.map((cat) => (
@@ -34,9 +34,9 @@ export default function FilterBar() {
           value={filters.mood}
           onChange={(e) => setFilter('mood', e.target.value as '' | MoodTag)}
           aria-label="Filter by mood"
-          className="text-sm bg-bg-card border border-border-subtle rounded-lg px-3 py-2 text-text-secondary focus:border-accent-purple"
+          className="text-xs sm:text-sm bg-bg-card border border-border-subtle rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-text-secondary focus:border-accent-purple min-w-0"
         >
-          <option value="">I&apos;m in the mood for...</option>
+          <option value="">Mood...</option>
           {MOOD_OPTIONS.map((mood) => {
             const config = MOOD_TAG_CONFIG[mood];
             return (
@@ -50,42 +50,44 @@ export default function FilterBar() {
           value={filters.timeTier}
           onChange={(e) => setFilter('timeTier', e.target.value as '' | TimeTier)}
           aria-label="Filter by session length"
-          className="text-sm bg-bg-card border border-border-subtle rounded-lg px-3 py-2 text-text-secondary focus:border-accent-purple"
+          className="text-xs sm:text-sm bg-bg-card border border-border-subtle rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-text-secondary focus:border-accent-purple min-w-0"
         >
-          <option value="">I have time for...</option>
-          <option value="quick-hit">⚡ Quick Hit: under an hour</option>
+          <option value="">Session...</option>
+          <option value="quick-hit">⚡ Quick Hit</option>
           <option value="wind-down">🌙 A couple hours</option>
-          <option value="deep-cut">🔥 Clear the schedule, 2-3 hrs</option>
-          <option value="marathon">🏔️ Marathon: 4+ hours</option>
+          <option value="deep-cut">🔥 Deep Cut (2-3 hrs)</option>
+          <option value="marathon">🏔️ Marathon (4+ hrs)</option>
         </select>
 
-        {/* Status toggles */}
-        <button
-          onClick={() => setFilter('showPlayed', !filters.showPlayed)}
-          aria-pressed={filters.showPlayed}
-          className={`text-sm px-3 py-2 rounded-lg border font-[family-name:var(--font-mono)] transition-opacity ${
-            filters.showPlayed ? 'opacity-100' : 'opacity-50'
-          }`}
-          style={{
-            borderColor: filters.showPlayed ? 'var(--color-status-played)' : 'var(--color-border-subtle)',
-            color: filters.showPlayed ? 'var(--color-status-played)' : 'var(--color-text-dim)',
-          }}
-        >
-          ✅ Played
-        </button>
-        <button
-          onClick={() => setFilter('showBailed', !filters.showBailed)}
-          aria-pressed={filters.showBailed}
-          className={`text-sm px-3 py-2 rounded-lg border font-[family-name:var(--font-mono)] transition-opacity ${
-            filters.showBailed ? 'opacity-100' : 'opacity-50'
-          }`}
-          style={{
-            borderColor: filters.showBailed ? 'var(--color-status-bailed)' : 'var(--color-border-subtle)',
-            color: filters.showBailed ? 'var(--color-status-bailed)' : 'var(--color-text-dim)',
-          }}
-        >
-          🚪 Bailed
-        </button>
+        {/* Status toggles — side by side on mobile */}
+        <div className="flex gap-1.5 sm:contents">
+          <button
+            onClick={() => setFilter('showPlayed', !filters.showPlayed)}
+            aria-pressed={filters.showPlayed}
+            className={`flex-1 sm:flex-none text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg border font-[family-name:var(--font-mono)] transition-opacity ${
+              filters.showPlayed ? 'opacity-100' : 'opacity-50'
+            }`}
+            style={{
+              borderColor: filters.showPlayed ? 'var(--color-status-played)' : 'var(--color-border-subtle)',
+              color: filters.showPlayed ? 'var(--color-status-played)' : 'var(--color-text-dim)',
+            }}
+          >
+            ✅ Played
+          </button>
+          <button
+            onClick={() => setFilter('showBailed', !filters.showBailed)}
+            aria-pressed={filters.showBailed}
+            className={`flex-1 sm:flex-none text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg border font-[family-name:var(--font-mono)] transition-opacity ${
+              filters.showBailed ? 'opacity-100' : 'opacity-50'
+            }`}
+            style={{
+              borderColor: filters.showBailed ? 'var(--color-status-bailed)' : 'var(--color-border-subtle)',
+              color: filters.showBailed ? 'var(--color-status-bailed)' : 'var(--color-text-dim)',
+            }}
+          >
+            🚪 Bailed
+          </button>
+        </div>
       </div>
     </div>
   );

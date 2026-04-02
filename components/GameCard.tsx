@@ -443,34 +443,36 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
           </div>
 
           {/* Row 2: Category, Time Tier, Launch — all inline */}
-          <div className="flex items-center gap-2 mt-3">
-            <div className="flex-1 min-w-0">
-              <label htmlFor={`shelf-${game.id}`} className="block text-[10px] text-text-faint font-[family-name:var(--font-mono)] mb-0.5 ml-1">Shelf</label>
-              <select
-                id={`shelf-${game.id}`}
-                value={game.category}
-                onChange={(e) => updateGame(game.id, { category: e.target.value })}
-                className="w-full text-sm bg-bg-primary border border-border-subtle rounded-lg px-2.5 py-2 text-text-secondary focus:outline-none focus:border-accent-purple"
-              >
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-            </div>
-            <div className="shrink-0">
-              <label htmlFor={`session-${game.id}`} className="block text-[10px] text-text-faint font-[family-name:var(--font-mono)] mb-0.5 ml-1">Session</label>
-              <select
-                id={`session-${game.id}`}
-                value={game.timeTier}
-                onChange={(e) => updateGame(game.id, { timeTier: e.target.value as TimeTier })}
-                className="text-sm bg-bg-primary border border-border-subtle rounded-lg px-2.5 py-2 text-text-secondary font-[family-name:var(--font-mono)] focus:outline-none focus:border-accent-purple"
-              >
-                {(Object.entries(TIME_TIER_CONFIG) as [TimeTier, typeof TIME_TIER_CONFIG[TimeTier]][]).map(
-                  ([tier, config]) => (
-                    <option key={tier} value={tier}>{config.icon} {config.label}</option>
-                  )
-                )}
-              </select>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-3">
+            <div className="flex gap-2 flex-1 min-w-0">
+              <div className="flex-1 min-w-0">
+                <label htmlFor={`shelf-${game.id}`} className="block text-[10px] text-text-faint font-[family-name:var(--font-mono)] mb-0.5 ml-1">Shelf</label>
+                <select
+                  id={`shelf-${game.id}`}
+                  value={game.category}
+                  onChange={(e) => updateGame(game.id, { category: e.target.value })}
+                  className="w-full text-xs sm:text-sm bg-bg-primary border border-border-subtle rounded-lg px-2 sm:px-2.5 py-1.5 sm:py-2 text-text-secondary focus:outline-none focus:border-accent-purple"
+                >
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="shrink-0">
+                <label htmlFor={`session-${game.id}`} className="block text-[10px] text-text-faint font-[family-name:var(--font-mono)] mb-0.5 ml-1">Session</label>
+                <select
+                  id={`session-${game.id}`}
+                  value={game.timeTier}
+                  onChange={(e) => updateGame(game.id, { timeTier: e.target.value as TimeTier })}
+                  className="text-xs sm:text-sm bg-bg-primary border border-border-subtle rounded-lg px-2 sm:px-2.5 py-1.5 sm:py-2 text-text-secondary font-[family-name:var(--font-mono)] focus:outline-none focus:border-accent-purple"
+                >
+                  {(Object.entries(TIME_TIER_CONFIG) as [TimeTier, typeof TIME_TIER_CONFIG[TimeTier]][]).map(
+                    ([tier, config]) => (
+                      <option key={tier} value={tier}>{config.icon} {config.label}</option>
+                    )
+                  )}
+                </select>
+              </div>
             </div>
             {game.steamAppId && (
               <a
@@ -495,7 +497,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
           </div>
 
           {/* Row 5: Status-specific actions + bail + delete */}
-          <div className="flex items-center gap-2 mt-3 pt-2 border-t" style={{ borderColor: 'var(--color-border-subtle)' }}>
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-3 pt-2 border-t" style={{ borderColor: 'var(--color-border-subtle)' }}>
             {game.status === 'played' && (
               <>
                 <button
@@ -600,23 +602,25 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
                 Remove
               </button>
             ) : (
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">Remove forever? You&apos;d need to re-import or re-add this game manually.</span>
-                <button
-                  onClick={() => {
-                    deleteGame(game.id);
-                    showToast(`${game.name} removed. It was never here.`);
-                  }}
-                  className="px-2 py-1 text-xs font-medium rounded-md bg-red-500/15 text-red-400 hover:bg-red-500/25 transition-colors"
-                >
-                  Remove
-                </button>
-                <button
-                  onClick={() => setShowDeleteConfirm(false)}
-                  className="px-2 py-1 text-xs text-text-dim hover:text-text-muted transition-colors"
-                >
-                  Maybe later
-                </button>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1.5 sm:gap-2">
+                <span className="text-[11px] sm:text-xs text-text-muted font-[family-name:var(--font-mono)]">Remove forever?</span>
+                <div className="flex gap-1.5">
+                  <button
+                    onClick={() => {
+                      deleteGame(game.id);
+                      showToast(`${game.name} removed. It was never here.`);
+                    }}
+                    className="px-2 py-1 text-xs font-medium rounded-md bg-red-500/15 text-red-400 hover:bg-red-500/25 transition-colors"
+                  >
+                    Remove
+                  </button>
+                  <button
+                    onClick={() => setShowDeleteConfirm(false)}
+                    className="px-2 py-1 text-xs text-text-dim hover:text-text-muted transition-colors"
+                  >
+                    Keep it
+                  </button>
+                </div>
               </div>
             )}
           </div>

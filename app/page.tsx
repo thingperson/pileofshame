@@ -22,6 +22,7 @@ import { ToastProvider } from '@/components/Toast';
 import EnrichmentIndicator from '@/components/EnrichmentIndicator';
 import JustFiveMinutes from '@/components/JustFiveMinutes';
 import NinetiesMode from '@/components/NinetiesMode';
+import SyncNudge from '@/components/SyncNudge';
 import { useAutoEnrich } from '@/hooks/useAutoEnrich';
 import OnboardingWelcome from '@/components/OnboardingWelcome';
 
@@ -68,7 +69,7 @@ function InlineSearch() {
             onBlur={handleBlur}
             placeholder="Search..."
             aria-label="Search games"
-            className="w-36 sm:w-48 text-sm bg-bg-card border border-border-subtle rounded-lg pl-8 pr-3 py-2 text-text-primary placeholder-text-faint focus:outline-none focus:border-accent-purple transition-all"
+            className="w-24 sm:w-36 md:w-48 text-xs sm:text-sm bg-bg-card border border-border-subtle rounded-lg pl-7 sm:pl-8 pr-2 sm:pr-3 py-1.5 sm:py-2 text-text-primary placeholder-text-faint focus:outline-none focus:border-accent-purple transition-all"
           />
         </div>
       ) : (
@@ -232,23 +233,26 @@ function AppContent() {
             <SettingsMenu />
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <ViewToggle />
           {!isEmpty && <InlineSearch />}
           <button
             onClick={() => setImportHubOpen(true)}
-            className="px-4 py-2.5 text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+            className="px-2.5 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
           >
-            📥&nbsp; Import
+            📥 <span className="hidden sm:inline">&nbsp;Import</span>
           </button>
           <button
             onClick={() => setAddModalOpen(true)}
-            className="px-4 py-2.5 text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+            className="px-2.5 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
           >
-            + Add
+            + <span className="hidden sm:inline">Add</span>
           </button>
         </div>
       </header>
+
+      {/* Sync nudge — shows once for unsigned-in users after first import */}
+      {!isEmpty && <SyncNudge />}
 
       {/* Filters */}
       {!isEmpty && (
@@ -275,10 +279,10 @@ function AppContent() {
               ↑ Tell us your mood. We&apos;ll find your game.
             </p>
           )}
-          <div className="flex gap-2">
+          <div className="flex gap-1.5 sm:gap-2">
             <button
               onClick={() => openReroll('quick-session')}
-              className="flex-1 px-3 py-2.5 text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+              className="flex-1 px-2 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
               style={{ background: 'linear-gradient(135deg, #6366f1, #818cf8)' }}
               title="Pick a game you can finish in one sitting"
             >
@@ -286,7 +290,7 @@ function AppContent() {
             </button>
             <button
               onClick={() => openReroll('deep-cut')}
-              className="flex-1 px-3 py-2.5 text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+              className="flex-1 px-2 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
               style={{ background: 'linear-gradient(135deg, #dc2626, #f87171)' }}
               title="Pick a long game you can really sink into"
             >
@@ -294,7 +298,7 @@ function AppContent() {
             </button>
             <button
               onClick={() => openReroll('continue')}
-              className="flex-1 px-3 py-2.5 text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+              className="flex-1 px-2 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
               style={{ background: 'linear-gradient(135deg, #d97706, #fbbf24)' }}
               title="Pick from games you already started"
             >
