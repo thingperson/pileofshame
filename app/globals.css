@@ -1073,6 +1073,299 @@ input:focus:not(:focus-visible) {
   background: rgba(109, 191, 109, 0.05);
 }
 
+/* ======================================
+   👁️ WEIRD MODE — UNCANNY, LIMINAL, OFF
+   Everything looks almost normal. But isn't.
+   Typography fights itself. Colors shift.
+   Elements breathe. Nothing is quite right.
+   ====================================== */
+
+@keyframes weird-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.003); }
+}
+
+@keyframes weird-drift {
+  0% { filter: hue-rotate(0deg); }
+  25% { filter: hue-rotate(8deg); }
+  50% { filter: hue-rotate(-5deg); }
+  75% { filter: hue-rotate(3deg); }
+  100% { filter: hue-rotate(0deg); }
+}
+
+@keyframes weird-skew {
+  0%, 100% { transform: skewX(0deg); }
+  25% { transform: skewX(-0.3deg); }
+  75% { transform: skewX(0.3deg); }
+}
+
+@keyframes weird-flicker {
+  0%, 92%, 100% { opacity: 1; }
+  93% { opacity: 0.7; }
+  94% { opacity: 1; }
+  95% { opacity: 0.85; }
+}
+
+.theme-weird {
+  --color-bg-primary: #0f0e11;
+  --color-bg-card: #13111a;
+  --color-bg-elevated: #1a1722;
+  --color-border-subtle: #2a2535;
+  --color-border-active: #b8860b;
+  --color-text-primary: #e8e0d0;
+  --color-text-secondary: #c9c0b0;
+  --color-text-muted: #9a9080;
+  --color-text-dim: #706858;
+  --color-text-faint: #504840;
+  --color-accent-purple: #b8860b;
+  --color-accent-pink: #cc5588;
+
+  --color-status-buried: #706858;
+  --color-status-buried-bg: #1a1722;
+  --color-status-on-deck: #5588aa;
+  --color-status-on-deck-bg: #0e1520;
+  --color-status-playing: #b8860b;
+  --color-status-playing-bg: #1a1508;
+  --color-status-played: #558855;
+  --color-status-played-bg: #0e1a0e;
+  --color-status-bailed: #885555;
+  --color-status-bailed-bg: #1a0e0e;
+
+  background: #0f0e11 !important;
+  cursor: crosshair;
+}
+
+.theme-weird::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 800px 600px at 30% 70%, rgba(184, 134, 11, 0.04), transparent),
+    radial-gradient(ellipse 600px 400px at 70% 20%, rgba(85, 136, 170, 0.03), transparent);
+  pointer-events: none;
+  z-index: 0;
+  animation: weird-drift 30s ease-in-out infinite;
+}
+
+/* Everything breathes — subtly */
+.theme-weird .group {
+  animation: weird-breathe 6s ease-in-out infinite;
+  border-color: rgba(184, 134, 11, 0.12) !important;
+  border-left-color: rgba(184, 134, 11, 0.12) !important;
+  border-radius: 2px !important;
+}
+
+/* Cards have slightly different timing — creates unsettling rhythm */
+.theme-weird .group:nth-child(odd) {
+  animation-delay: -2s;
+}
+.theme-weird .group:nth-child(3n) {
+  animation-delay: -4s;
+}
+
+/* Headings lean slightly. Not a lot. Just... enough. */
+.theme-weird h1 {
+  animation: weird-skew 12s ease-in-out infinite;
+  letter-spacing: 3px;
+  font-style: italic;
+  color: #b8860b !important;
+}
+
+.theme-weird h2 {
+  animation: weird-skew 8s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+/* Buttons feel unreliable */
+.theme-weird button {
+  border-color: rgba(184, 134, 11, 0.15) !important;
+  border-radius: 1px !important;
+  animation: weird-flicker 12s linear infinite;
+}
+
+.theme-weird button:hover {
+  animation: none;
+  box-shadow: 0 0 20px rgba(184, 134, 11, 0.1);
+  transform: scale(1.01);
+}
+
+/* Inputs — slightly off */
+.theme-weird input, .theme-weird textarea, .theme-weird select {
+  border-radius: 0 !important;
+  border-color: rgba(184, 134, 11, 0.2) !important;
+  letter-spacing: 0.5px;
+}
+
+/* Scrollbar — amber, thin */
+.theme-weird ::-webkit-scrollbar-thumb {
+  background: rgba(184, 134, 11, 0.2);
+  border-radius: 0;
+}
+.theme-weird ::-webkit-scrollbar-track {
+  background: rgba(184, 134, 11, 0.03);
+}
+
+/* Images desaturate slightly — like faded photographs */
+.theme-weird img {
+  filter: saturate(0.7) contrast(1.1) sepia(0.1);
+  transition: filter 0.5s;
+}
+.theme-weird img:hover {
+  filter: saturate(1) contrast(1);
+}
+
+
+/* ======================================
+   ⚡ ULTRA MODE — MAXIMUM EVERYTHING
+   No subtlety. No restraint. Pure energy.
+   White-hot text. Deep black. Sharp edges.
+   Every element demands attention.
+   ====================================== */
+
+@keyframes ultra-pulse {
+  0%, 100% { text-shadow: 0 0 4px currentColor; }
+  50% { text-shadow: 0 0 12px currentColor, 0 0 24px currentColor; }
+}
+
+@keyframes ultra-border-run {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes ultra-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-1px); }
+  75% { transform: translateX(1px); }
+}
+
+.theme-ultra {
+  --color-bg-primary: #000000;
+  --color-bg-card: #0a0a0a;
+  --color-bg-elevated: #111111;
+  --color-border-subtle: #222222;
+  --color-border-active: #ffffff;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #e0e0e0;
+  --color-text-muted: #aaaaaa;
+  --color-text-dim: #777777;
+  --color-text-faint: #444444;
+  --color-accent-purple: #ffffff;
+  --color-accent-pink: #ff0040;
+
+  --color-status-buried: #555555;
+  --color-status-buried-bg: #111111;
+  --color-status-on-deck: #00aaff;
+  --color-status-on-deck-bg: #001122;
+  --color-status-playing: #ff0040;
+  --color-status-playing-bg: #220008;
+  --color-status-played: #00ff55;
+  --color-status-played-bg: #002211;
+  --color-status-bailed: #ff3333;
+  --color-status-bailed-bg: #220000;
+
+  background: #000000 !important;
+}
+
+.theme-ultra::before {
+  display: none !important;
+}
+
+/* ULTRA titles — white hot, glow, uppercase */
+.theme-ultra h1 {
+  color: #ffffff !important;
+  text-transform: uppercase !important;
+  letter-spacing: 8px !important;
+  font-weight: 900 !important;
+  animation: ultra-pulse 2s ease-in-out infinite;
+  -webkit-text-fill-color: #ffffff !important;
+  background: none !important;
+}
+
+.theme-ultra h2 {
+  text-transform: uppercase !important;
+  letter-spacing: 4px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+}
+
+/* Cards — knife-edge sharp, animated border */
+.theme-ultra .group {
+  border-radius: 0 !important;
+  border: 1px solid #333333 !important;
+  border-left: 3px solid #ff0040 !important;
+  position: relative;
+}
+
+.theme-ultra .group:hover {
+  border-color: #ffffff !important;
+  border-left-color: #ff0040 !important;
+  box-shadow: 0 0 30px rgba(255, 0, 64, 0.15), 0 0 60px rgba(255, 0, 64, 0.05);
+}
+
+/* Buttons — stark, aggressive hover */
+.theme-ultra button {
+  border-radius: 0 !important;
+  border-color: #333333 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  font-weight: 700 !important;
+}
+
+.theme-ultra button:hover {
+  background-color: #ff0040 !important;
+  border-color: #ff0040 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 20px rgba(255, 0, 64, 0.3);
+  animation: ultra-shake 0.15s linear;
+}
+
+/* Gradient override buttons keep their color but get sharp edges */
+.theme-ultra button[style*="linear-gradient"] {
+  background: #ff0040 !important;
+  color: #ffffff !important;
+}
+
+/* Inputs — industrial, monospace */
+.theme-ultra input, .theme-ultra textarea, .theme-ultra select {
+  border-radius: 0 !important;
+  border-color: #333333 !important;
+  background-color: #0a0a0a !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px;
+}
+
+/* Now Playing glow override — red in ULTRA */
+.theme-ultra .now-playing-glow {
+  box-shadow: 0 0 20px rgba(255, 0, 64, 0.3), 0 0 4px rgba(255, 0, 64, 0.2) !important;
+  border-color: #ff0040 !important;
+}
+
+/* Status badges — stark contrast */
+.theme-ultra [class*="rounded-md"] {
+  border-radius: 0 !important;
+}
+
+/* Scrollbar — red accent */
+.theme-ultra ::-webkit-scrollbar-thumb {
+  background: #ff0040;
+  border-radius: 0;
+}
+.theme-ultra ::-webkit-scrollbar-track {
+  background: #111111;
+}
+
+/* Images — high contrast, sharp */
+.theme-ultra img {
+  filter: contrast(1.2) saturate(1.1);
+}
+
+/* Progress bars — red accent */
+.theme-ultra [role="progressbar"] div {
+  background-color: #ff0040 !important;
+}
+
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

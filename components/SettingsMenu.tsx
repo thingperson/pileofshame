@@ -252,6 +252,8 @@ export default function SettingsMenu() {
                       { value: '90s', label: '🚧 90s' },
                       { value: 'future', label: '🔮 Future' },
                       { value: 'dino', label: '🦕 Dino' },
+                      { value: 'weird', label: '👁️ Weird' },
+                      { value: 'ultra', label: '⚡ ULTRA' },
                     ].map((opt) => (
                       <button
                         key={opt.value}

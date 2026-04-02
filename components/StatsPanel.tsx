@@ -475,27 +475,71 @@ export default function StatsPanel({ games }: StatsPanelProps) {
 
   const shareData = { ...stats, unplayedValue, playedValue, backlogHours, confidence: confidencePct };
 
+  // Quick stats for the always-visible teaser
+  const totalGames = games.length;
+  const explorationPct = totalGames > 0 ? Math.round(((stats.gamesCleared + stats.bailedCount) / totalGames) * 100) : 0;
+
   return (
     <div className="mb-6">
+      {/* Always-visible stats teaser strip */}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border transition-all hover:border-accent-purple hover:text-text-primary font-[family-name:var(--font-mono)]"
+        className="w-full rounded-xl border px-4 py-3 transition-all hover:border-accent-purple group cursor-pointer"
         style={{
-          backgroundColor: expanded ? 'var(--color-bg-card)' : 'transparent',
+          backgroundColor: 'var(--color-bg-card)',
           borderColor: expanded ? 'var(--color-border-active)' : 'var(--color-border-subtle)',
-          color: expanded ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
         }}
       >
-        📊 {expanded ? 'Your Stats' : 'View Your Stats'}
-        <svg
-          className={`w-3.5 h-3.5 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4 sm:gap-6 overflow-x-auto">
+            {/* Key stats always visible */}
+            <div className="flex items-center gap-1.5 shrink-0">
+              <span className="text-sm">🎮</span>
+              <span className="text-sm font-bold text-text-primary font-[family-name:var(--font-mono)]">{totalGames}</span>
+              <span className="text-xs text-text-dim hidden sm:inline">tracked</span>
+            </div>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <span className="text-sm">✅</span>
+              <span className="text-sm font-bold font-[family-name:var(--font-mono)]" style={{ color: '#22c55e' }}>{stats.gamesCleared}</span>
+              <span className="text-xs text-text-dim hidden sm:inline">cleared</span>
+            </div>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <span className="text-sm">📚</span>
+              <span className="text-sm font-bold font-[family-name:var(--font-mono)]" style={{ color: '#64748b' }}>{stats.backlogSize}</span>
+              <span className="text-xs text-text-dim hidden sm:inline">to explore</span>
+            </div>
+            {stats.totalHours > 0 && (
+              <div className="flex items-center gap-1.5 shrink-0 hidden sm:flex">
+                <span className="text-sm">⏱️</span>
+                <span className="text-sm font-bold font-[family-name:var(--font-mono)]" style={{ color: '#38bdf8' }}>{stats.totalHours.toLocaleString(undefined, { maximumFractionDigits: 0 })}h</span>
+              </div>
+            )}
+            {/* Exploration progress — the teaser for the calculator */}
+            <div className="flex items-center gap-2 shrink-0">
+              <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
+                <div
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{ width: `${explorationPct}%`, backgroundColor: '#a78bfa' }}
+                />
+              </div>
+              <span className="text-xs font-bold font-[family-name:var(--font-mono)]" style={{ color: '#a78bfa' }}>{explorationPct}%</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0 ml-2">
+            <span className="text-xs text-text-dim group-hover:text-accent-purple transition-colors font-[family-name:var(--font-mono)]">
+              {expanded ? 'less' : 'more'}
+            </span>
+            <svg
+              className={`w-3.5 h-3.5 text-text-dim group-hover:text-accent-purple transition-all duration-200 ${expanded ? 'rotate-180' : ''}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
       </button>
 
       {expanded && (
