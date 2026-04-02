@@ -65,14 +65,15 @@ export default function OnboardingWelcome({ onImport, onAddManual }: OnboardingW
             <div className="card-enter space-y-4">
               <div className="text-4xl">🎮</div>
               <h2 className="text-xl font-bold text-text-primary">
-                You have games. Too many games.
+                You&apos;re not lazy. You&apos;re overloaded.
               </h2>
               <p className="text-sm text-text-muted leading-relaxed">
-                You bought them because something in each one excited you. That excitement
-                is still in there. You just need a nudge past the scroll-and-freeze loop.
+                You bought those games because something in each one genuinely excited you.
+                That excitement is still in there — buried under 200 tiles and the
+                world&apos;s worst multiple-choice question.
               </p>
               <p className="text-sm text-text-secondary leading-relaxed font-medium">
-                30 seconds to import. Tell us your mood. Play something great tonight.
+                Import your library. Tell us your mood. We&apos;ll find your game tonight.
               </p>
               <button
                 onClick={handleImport}
@@ -112,36 +113,36 @@ export default function OnboardingWelcome({ onImport, onAddManual }: OnboardingW
             <div className="card-enter space-y-4">
               <div className="text-4xl">🎲</div>
               <h2 className="text-xl font-bold text-text-primary">
-                Here&apos;s how this works
+                We do the work. You just play.
               </h2>
 
               <div className="space-y-3">
                 <div className="flex gap-3 items-start">
                   <span className="text-lg shrink-0">📚</span>
                   <div>
-                    <p className="text-sm font-semibold text-text-primary">Your games land in The Pile</p>
-                    <p className="text-xs text-text-dim">Every imported game starts here. We enrich it with descriptions, mood tags, and completion times automatically.</p>
+                    <p className="text-sm font-semibold text-text-primary">We auto-fill everything</p>
+                    <p className="text-xs text-text-dim">Descriptions, mood tags, completion times — we pull it all in so you never have to tag or organize anything.</p>
                   </div>
                 </div>
                 <div className="flex gap-3 items-start">
                   <span className="text-lg shrink-0">🔥</span>
                   <div>
-                    <p className="text-sm font-semibold text-text-primary">Tap status badges to advance</p>
-                    <p className="text-xs text-text-dim">Backlog → Play Next → Now Playing → Cleared. One tap moves a game forward.</p>
+                    <p className="text-sm font-semibold text-text-primary">One tap to commit</p>
+                    <p className="text-xs text-text-dim">Tap a status badge: Backlog → Play Next → Now Playing → Cleared. No menus, no friction.</p>
                   </div>
                 </div>
                 <div className="flex gap-3 items-start">
                   <span className="text-lg shrink-0">🎲</span>
                   <div>
-                    <p className="text-sm font-semibold text-text-primary">Hit &ldquo;What Should I Play?&rdquo;</p>
-                    <p className="text-xs text-text-dim">Can&apos;t decide? We pick for you. Filter by mood and time, or go full random.</p>
+                    <p className="text-sm font-semibold text-text-primary">Can&apos;t decide? We decide for you.</p>
+                    <p className="text-xs text-text-dim">Tell us your mood and how much time you have. We&apos;ll match you with the right game from your own library.</p>
                   </div>
                 </div>
                 <div className="flex gap-3 items-start">
                   <span className="text-lg shrink-0">🎉</span>
                   <div>
-                    <p className="text-sm font-semibold text-text-primary">Beat a game? We celebrate</p>
-                    <p className="text-xs text-text-dim">Confetti, stats, and the satisfaction of watching your pile shrink.</p>
+                    <p className="text-sm font-semibold text-text-primary">Finish a game? Confetti.</p>
+                    <p className="text-xs text-text-dim">Real celebration. Stats. The satisfaction of watching your pile actually shrink. You earned it.</p>
                   </div>
                 </div>
               </div>
@@ -154,7 +155,7 @@ export default function OnboardingWelcome({ onImport, onAddManual }: OnboardingW
                   color: '#ffffff',
                 }}
               >
-                Got it. Let me at my pile.
+                Let&apos;s go. Show me my pile.
               </button>
               <button
                 onClick={() => setStep(0)}

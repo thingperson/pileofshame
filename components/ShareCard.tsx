@@ -19,6 +19,16 @@ interface ShareCardProps {
   rank?: string;
 }
 
+const CARD_THEMES = [
+  { value: 'dark', label: 'Default', icon: '🌑' },
+  { value: '80s', label: '80s Neon', icon: '📼' },
+  { value: '90s', label: '90s Web', icon: '📸' },
+  { value: 'dino', label: 'Pixel', icon: '🦕' },
+  { value: 'ultra', label: 'Ultra', icon: '⚡' },
+] as const;
+
+type CardTheme = typeof CARD_THEMES[number]['value'];
+
 /**
  * Generates a shareable stats card image and offers download/share options.
  * Uses the /api/share-card endpoint which renders themed PNG images via next/og.
@@ -26,10 +36,20 @@ interface ShareCardProps {
 export default function ShareCard({ stats, rank }: ShareCardProps) {
   const [loading, setLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const theme = useStore((s) => s.settings.theme);
+  const pageTheme = useStore((s) => s.settings.theme);
+  const [cardTheme, setCardTheme] = useState<CardTheme | null>(null);
   const { showToast } = useToast();
 
-  const buildCardUrl = useCallback(() => {
+  // Use selected card theme, or map page theme to closest card theme
+  const activeCardTheme: CardTheme = cardTheme ?? (() => {
+    if (pageTheme === '80s') return '80s';
+    if (pageTheme === '90s') return '90s';
+    if (pageTheme === 'dino') return 'dino';
+    if (pageTheme === 'ultra' || pageTheme === 'weird') return 'ultra';
+    return 'dark';
+  })();
+
+  const buildCardUrl = useCallback((overrideTheme?: CardTheme) => {
     const params = new URLSearchParams();
     params.set('backlog', stats.backlogSize.toString());
     params.set('cleared', stats.gamesCleared.toString());
@@ -41,9 +61,9 @@ export default function ShareCard({ stats, rank }: ShareCardProps) {
     if (stats.oldest) params.set('oldest', stats.oldest.name);
     params.set('streak', stats.streak.toString());
     if (rank) params.set('rank', rank);
-    params.set('theme', theme);
+    params.set('theme', overrideTheme ?? activeCardTheme);
     return `/api/share-card?${params.toString()}`;
-  }, [stats, rank, theme]);
+  }, [stats, rank, activeCardTheme]);
 
   const handlePreview = useCallback(async () => {
     setLoading(true);
@@ -79,8 +99,38 @@ export default function ShareCard({ stats, rank }: ShareCardProps) {
     showToast('Card link copied to clipboard.');
   }, [buildCardUrl, showToast]);
 
+  const selectCardTheme = (t: CardTheme) => {
+    setCardTheme(t);
+    // Auto-refresh preview if one is already showing
+    if (previewUrl) {
+      const url = buildCardUrl(t);
+      setPreviewUrl(url);
+    }
+  };
+
   return (
     <div className="space-y-3">
+      {/* Card theme selector */}
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <span className="text-[11px] text-text-dim font-[family-name:var(--font-mono)] mr-1">Card style:</span>
+        {CARD_THEMES.map((t) => (
+          <button
+            key={t.value}
+            onClick={() => selectCardTheme(t.value)}
+            className="px-2 py-1 text-[11px] rounded-md transition-all hover:scale-[1.03] active:scale-[0.97]"
+            style={{
+              backgroundColor: activeCardTheme === t.value ? 'rgba(167, 139, 250, 0.15)' : 'transparent',
+              color: activeCardTheme === t.value ? '#a78bfa' : 'var(--color-text-dim)',
+              border: activeCardTheme === t.value
+                ? '1px solid rgba(167, 139, 250, 0.3)'
+                : '1px solid var(--color-border-subtle)',
+            }}
+          >
+            {t.icon} {t.label}
+          </button>
+        ))}
+      </div>
+
       <div className="flex items-center gap-2 flex-wrap">
         <button
           onClick={handlePreview}
@@ -130,13 +180,14 @@ export default function ShareCard({ stats, rank }: ShareCardProps) {
           />
           <div className="px-3 py-2 flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-elevated)' }}>
             <span className="text-[11px] text-text-dim font-[family-name:var(--font-mono)]">
-              Themed to your current theme ({theme})
+              {cardTheme ? `${CARD_THEMES.find(t => t.value === cardTheme)?.label} style` : `Matched to your theme (${pageTheme})`}
+              {' · '}Try the other styles above
             </span>
             <button
               onClick={() => setPreviewUrl(null)}
               className="text-[11px] text-text-faint hover:text-text-muted transition-colors"
             >
-              Close preview
+              Close
             </button>
           </div>
         </div>
