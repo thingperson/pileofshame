@@ -151,11 +151,11 @@ export function generateDynamicShareText(
 function getShareCTA(platform: 'twitter' | 'reddit' | 'discord'): string {
   switch (platform) {
     case 'twitter':
-      return '\npileofsha.me';
+      return '\ninventoryfull.gg';
     case 'reddit':
-      return '\n\n[pileofsha.me](https://pileofsha.me)';
+      return '\n\n[inventoryfull.gg](https://inventoryfull.gg)';
     case 'discord':
-      return '\n\n<https://pileofsha.me>';
+      return '\n\n<https://inventoryfull.gg>';
   }
 }
 
@@ -174,7 +174,7 @@ export function generateCardCaption(
     `${stats.cleared} games I actually finished instead of just owning.`,
     `The backlog effect is real. ${stats.cleared} down, ${stats.backlog} to go.`,
     `Turns out the hard part was deciding. Once you pick, you play.`,
-    `My pile of shame, quantified. Working on it.`,
+    `My backlog, quantified. Working on it.`,
     `${stats.backlog} games, $${stats.unplayedValue.toLocaleString()} in value, and I'm ${stats.pct}% through.`,
   ];
 

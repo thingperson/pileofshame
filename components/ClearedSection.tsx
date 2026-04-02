@@ -106,9 +106,9 @@ function generateClearedShareText(stats: {
 
   // Opening line
   if (stats.clearedThisMonth > 0) {
-    lines.push(`I cleared ${plural(stats.clearedThisMonth, 'game')} from my Pile Of Shame this month. That's probably more progress than I've made in years.`);
+    lines.push(`I cleared ${plural(stats.clearedThisMonth, 'game')} from my backlog this month. That's probably more progress than I've made in years.`);
   } else {
-    lines.push(`I've cleared ${plural(stats.totalCleared, 'game')} from my Pile Of Shame.`);
+    lines.push(`I've cleared ${plural(stats.totalCleared, 'game')} from my backlog.`);
   }
 
   // Value reclaimed
@@ -140,11 +140,11 @@ function generateClearedShareText(stats: {
 function getShareCTA(platform: 'twitter' | 'reddit' | 'discord'): string {
   switch (platform) {
     case 'twitter':
-      return '\n\nGame to tame your shame? → https://pileofsha.me';
+      return '\n\nClear some space → https://inventoryfull.gg';
     case 'reddit':
-      return '\n\nGame to tame your shame? → [Pile Of Shame](https://pileofsha.me)';
+      return '\n\nClear some space → [Inventory Full](https://inventoryfull.gg)';
     case 'discord':
-      return '\n\nGame to tame your shame? → <https://pileofsha.me>';
+      return '\n\nClear some space → <https://inventoryfull.gg>';
   }
 }
 
@@ -203,7 +203,7 @@ export default function ClearedSection({ games }: ClearedSectionProps) {
     if (platform === 'twitter') {
       window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(fullText)}`, '_blank', 'width=550,height=420');
     } else if (platform === 'reddit') {
-      window.open(`https://reddit.com/submit?selftext=true&title=${encodeURIComponent(`Cleared ${clearedCount} games from my Pile Of Shame`)}&text=${encodeURIComponent(fullText)}`, '_blank');
+      window.open(`https://reddit.com/submit?selftext=true&title=${encodeURIComponent(`Cleared ${clearedCount} games from my backlog`)}&text=${encodeURIComponent(fullText)}`, '_blank');
     } else {
       navigator.clipboard.writeText(fullText);
       showToast('Copied to clipboard. Go flex that cleared list.');

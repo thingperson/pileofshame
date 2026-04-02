@@ -83,7 +83,7 @@ function renderDefaultCard(d: CardData) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '8px' }}>
           <div style={{ fontSize: '42px', display: 'flex' }}>🎮</div>
           <div style={{ fontSize: '36px', fontWeight: 800, color: '#f8fafc', letterSpacing: '-1px', display: 'flex' }}>
-            My Pile Of Shame
+            Inventory Full
           </div>
         </div>
 
@@ -145,7 +145,7 @@ function renderDefaultCard(d: CardData) {
 
         {/* Footer */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
-          <div style={{ fontSize: '16px', color: '#475569', display: 'flex' }}>pileofsha.me</div>
+          <div style={{ fontSize: '16px', color: '#475569', display: 'flex' }}>inventoryfull.gg</div>
           {d.streak >= 3 && (
             <div style={{ fontSize: '16px', color: '#a78bfa', display: 'flex' }}>
               🔥 {d.streak} game streak
@@ -184,7 +184,7 @@ function renderReceiptCard(d: CardData) {
     '',
     '================================',
     '  THANK YOU FOR YOUR PATRONAGE',
-    '       pileofsha.me',
+    '       inventoryfull.gg',
     '================================',
   ];
 
@@ -272,7 +272,7 @@ function renderPolaroidCard(d: CardData) {
           >
             <div style={{ fontSize: '48px', display: 'flex' }}>🎮</div>
             <div style={{ fontSize: '28px', fontWeight: 800, color: '#f8fafc', display: 'flex' }}>
-              My Pile Of Shame
+              Inventory Full
             </div>
             {d.rank && (
               <div style={{ fontSize: '16px', color: '#c4b5fd', fontWeight: 600, display: 'flex' }}>
@@ -312,7 +312,7 @@ function renderPolaroidCard(d: CardData) {
               {d.cleared > 0 ? `${d.cleared} down, ${d.backlog} to go` : `${d.backlog} games to play`}
             </div>
             <div style={{ fontSize: '14px', color: '#9ca3af', display: 'flex' }}>
-              pileofsha.me
+              inventoryfull.gg
             </div>
           </div>
         </div>
@@ -389,7 +389,7 @@ function renderPixelCard(d: CardData) {
           )}
 
           <div style={{ fontSize: '14px', color: '#558855', marginTop: '12px', display: 'flex' }}>
-            pileofsha.me
+            inventoryfull.gg
           </div>
         </div>
       </div>

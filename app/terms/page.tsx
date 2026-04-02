@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Terms of Service — Pile Of Shame',
+  title: 'Terms of Service — Inventory Full',
   description: 'The rules. They are short and reasonable.',
 };
 
@@ -25,7 +25,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-bold text-text-primary mb-3">The short version</h2>
             <p>
-              Pile Of Shame is a free gaming backlog tool. Use it to track your games, figure out
+              Inventory Full is a free gaming backlog tool. Use it to track your games, figure out
               what to play, and feel good about actually playing them. Don&apos;t abuse it, and
               we&apos;ll keep making it better.
             </p>
@@ -34,7 +34,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-bold text-text-primary mb-3">1. What the app does</h2>
             <p>
-              Pile Of Shame helps you manage your gaming backlog. You can import games from Steam,
+              Inventory Full helps you manage your gaming backlog. You can import games from Steam,
               PlayStation, and Xbox, track your progress, get mood-based game recommendations, and
               see stats about your library. The app is provided &ldquo;as is&rdquo; and is free
               to use.
@@ -112,7 +112,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-bold text-text-primary mb-3">8. Limitation of liability</h2>
             <p>
-              Pile Of Shame is provided &ldquo;as is&rdquo; without warranties of any kind. We&apos;re
+              Inventory Full is provided &ldquo;as is&rdquo; without warranties of any kind. We&apos;re
               not liable for any data loss (always use the Export Backup feature), inaccurate game
               data from third parties, or any decisions you make based on the app&apos;s recommendations.
             </p>
@@ -125,7 +125,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-bold text-text-primary mb-3">9. Intellectual property</h2>
             <p>
-              The Pile Of Shame app, its design, code, and original content are our intellectual
+              The Inventory Full app, its design, code, and original content are our intellectual
               property. The themes, UI patterns, and brand identity are part of what makes this
               app unique. Please don&apos;t clone it wholesale.
             </p>
@@ -143,8 +143,8 @@ export default function TermsPage() {
             <h2 className="text-lg font-bold text-text-primary mb-3">Contact</h2>
             <p>
               Questions?{' '}
-              <a href="mailto:hello@pileofsha.me" className="text-accent-purple hover:underline">
-                hello@pileofsha.me
+              <a href="mailto:hello@inventoryfull.gg" className="text-accent-purple hover:underline">
+                hello@inventoryfull.gg
               </a>
             </p>
           </section>

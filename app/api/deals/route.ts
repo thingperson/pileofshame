@@ -8,7 +8,7 @@ const ITAD_KEY = process.env.ITAD_API_KEY || '';
 
 const FETCH_OPTS: RequestInit = {
   headers: {
-    'User-Agent': 'PileOfShame/1.0 (https://pileofsha.me)',
+    'User-Agent': 'InventoryFull/1.0 (https://inventoryfull.gg)',
     'Accept': 'application/json',
   },
 };
@@ -56,7 +56,7 @@ async function getPrices(gameIds: string[]): Promise<Record<string, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'User-Agent': 'PileOfShame/1.0 (https://pileofsha.me)',
+          'User-Agent': 'InventoryFull/1.0 (https://inventoryfull.gg)',
           'Accept': 'application/json',
         },
         body: JSON.stringify(gameIds),

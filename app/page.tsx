@@ -198,10 +198,10 @@ function AppContent() {
               className="text-2xl font-extrabold tracking-tight text-text-primary cursor-pointer hover:text-accent-purple transition-colors"
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
-              Pile Of Shame
+              Inventory Full
             </h1>
             <p className="text-sm text-text-dim mt-0.5 italic">
-              We all have a backlog of games. Time to do something about it.
+              Your backlog is full. Your time doesn&apos;t have to be.
             </p>
             {!isEmpty && (
               <div className="flex gap-3 text-xs font-[family-name:var(--font-mono)] mt-1.5">

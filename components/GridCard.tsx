@@ -74,8 +74,8 @@ export default function GridCard({ game }: GridCardProps) {
           }
         }}
       >
-        {/* Cover Art — 3:4 portrait aspect ratio */}
-        <div className="aspect-[3/4] relative bg-bg-primary overflow-hidden">
+        {/* Cover Art — 16:9 landscape to match Steam header images (460x215 ≈ 2.14:1) */}
+        <div className="aspect-video relative bg-bg-primary overflow-hidden">
           {game.coverUrl ? (
             <img
               src={game.coverUrl}

@@ -14,8 +14,8 @@ const SECTIONS = [
     icon: '🎮',
     items: [
       {
-        q: 'What is Pile Of Shame?',
-        a: 'Your gaming backlog, organized. Add your games, tag them however you want, then hit "What Should I Play?" and we\'ll pick one for you. No more staring at your library wondering what to play.',
+        q: 'What is Inventory Full?',
+        a: 'Your backlog is full. Your time doesn\'t have to be. Add your games, tell us your mood, and we\'ll find your game tonight. No more staring at your library wondering what to play.',
       },
       {
         q: 'How do I add games?',

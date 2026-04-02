@@ -7,7 +7,7 @@ description: Build, verify, and deploy to Vercel production. Supports two modes 
 
 ## Project Info
 - **Local codebase:** `/Users/bradywhitteker/Desktop/getplaying`
-- **Live URL:** https://pileofsha.me (Vercel)
+- **Live URL:** https://inventoryfull.gg (Vercel) — also accessible at pileofsha.me (legacy redirect)
 - **Git remote:** `origin` → `github.com:thingperson/pileofshame.git` (main branch)
 - **Deploy method:** Push to `main` triggers Vercel auto-deploy. No manual `vercel deploy` needed.
 - **Git push command:** `GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519" git -c credential.helper= push origin main`
@@ -50,5 +50,5 @@ Use this for small, focused changes where a full review would be overkill.
 
 ## After Deploy
 - Vercel build logs visible at https://vercel.com (if needed)
-- Live site at https://pileofsha.me
+- Live site at https://inventoryfull.gg
 - If deploy fails on Vercel side, check build logs — most common issue is TypeScript errors that `next build` would catch locally

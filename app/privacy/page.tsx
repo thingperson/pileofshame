@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Privacy Policy — Pile Of Shame',
+  title: 'Privacy Policy — Inventory Full',
   description: 'How we handle your data. Short version: we keep it minimal.',
 };
 
@@ -164,8 +164,8 @@ export default function PrivacyPage() {
             <h2 className="text-lg font-bold text-text-primary mb-3">Contact</h2>
             <p>
               Questions about your data? Reach out at{' '}
-              <a href="mailto:privacy@pileofsha.me" className="text-accent-purple hover:underline">
-                privacy@pileofsha.me
+              <a href="mailto:privacy@inventoryfull.gg" className="text-accent-purple hover:underline">
+                privacy@inventoryfull.gg
               </a>
             </p>
           </section>

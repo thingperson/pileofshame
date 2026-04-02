@@ -273,10 +273,10 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
                 {game.name}: Cleared!
               </h2>
               <p className="text-base text-text-muted mb-1">
-                You cleared <span className="text-green-400 font-semibold">{game.name}</span> off your Pile of Shame.
+                You cleared <span className="text-green-400 font-semibold">{game.name}</span> from your backlog.
               </p>
               <p className="text-sm text-text-dim italic mb-5">
-                That&apos;s definitely... slightly less shame. Great work.
+                One more slot opened up. Space cleared. Great work.
               </p>
 
               {/* Stats impact */}

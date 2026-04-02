@@ -81,7 +81,7 @@ export default function ShareCard({ stats, rank }: ShareCardProps) {
       const blobUrl = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = blobUrl;
-      a.download = `pile-of-shame-stats.png`;
+      a.download = `inventory-full-stats.png`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

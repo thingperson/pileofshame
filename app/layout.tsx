@@ -15,16 +15,16 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pile Of Shame — Gaming Backlog Manager",
-  description: "Stop organizing your backlog and start playing. Add your games, hit Reroll, and go. Import from Steam, Xbox, and more.",
-  metadataBase: new URL('https://pileofsha.me'),
-  keywords: ['gaming backlog', 'backlog manager', 'game tracker', 'pile of shame', 'steam backlog', 'xbox backlog', 'gaming queue', 'what to play next', 'game randomizer', 'backlog tracker'],
-  authors: [{ name: 'Pile Of Shame' }],
+  title: "Inventory Full — Gaming Backlog Manager",
+  description: "Your backlog is full. Your time doesn't have to be. Import your games, tell us your mood, and we'll find your game tonight.",
+  metadataBase: new URL('https://inventoryfull.gg'),
+  keywords: ['gaming backlog', 'backlog manager', 'game tracker', 'inventory full', 'steam backlog', 'xbox backlog', 'gaming queue', 'what to play next', 'game randomizer', 'backlog tracker', 'backlog payback'],
+  authors: [{ name: 'Inventory Full' }],
   openGraph: {
-    title: 'Pile Of Shame',
-    description: 'Your backlog isn\'t going to play itself. Add your games, hit Reroll, go play.',
-    url: 'https://pileofsha.me',
-    siteName: 'Pile Of Shame',
+    title: 'Inventory Full',
+    description: 'Your backlog is full. Your time doesn\'t have to be. Clear space. Recover fun.',
+    url: 'https://inventoryfull.gg',
+    siteName: 'Inventory Full',
     type: 'website',
     locale: 'en_US',
     images: [
@@ -32,14 +32,14 @@ export const metadata: Metadata = {
         url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'Pile Of Shame — Gaming Backlog Manager',
+        alt: 'Inventory Full — Gaming Backlog Manager',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Pile Of Shame — Gaming Backlog Manager',
-    description: 'Stop organizing your backlog and start playing. Import from Steam & Xbox, hit Reroll, go.',
+    title: 'Inventory Full — Gaming Backlog Manager',
+    description: 'Your backlog is full. Your time doesn\'t have to be. Import from Steam & Xbox, clear space, recover fun.',
     images: ['/opengraph-image'],
   },
   other: {
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: 'https://pileofsha.me',
+    canonical: 'https://inventoryfull.gg',
   },
 };
 
@@ -73,9 +73,9 @@ export default function RootLayout({
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'WebApplication',
-              name: 'Pile Of Shame',
-              url: 'https://pileofsha.me',
-              description: 'Gaming backlog manager with randomizer. Import from Steam, Xbox, Playnite. Stop organizing, start playing.',
+              name: 'Inventory Full',
+              url: 'https://inventoryfull.gg',
+              description: 'Gaming backlog manager. Your backlog is full. Your time doesn\'t have to be. Import from Steam, Xbox, Playnite. Clear space, recover fun.',
               applicationCategory: 'GameApplication',
               operatingSystem: 'Web',
               offers: {
@@ -90,10 +90,11 @@ export default function RootLayout({
                 'Playnite CSV import',
                 'Game randomizer (What Should I Play?)',
                 'Backlog tracking with 5-status pipeline',
+                'Backlog Payback — value recovered tracking',
                 'Deal checking via CheapShark',
                 'Cover art and Metacritic scores via RAWG',
                 'Cloud sync with Discord and Google sign-in',
-                'Dark theme and 90s Geocities mode',
+                'Multiple themes including retro modes',
                 'PWA — Add to Home Screen',
                 'Mobile-first responsive design',
               ],

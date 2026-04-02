@@ -180,14 +180,11 @@ function generateShareText(stats: {
 function getShareCTA(platform: 'twitter' | 'reddit' | 'discord'): string {
   switch (platform) {
     case 'twitter':
-      // Twitter auto-links URLs
-      return '\nCheck your own Pile Of Shame → https://pileofsha.me';
+      return '\nClear some space → https://inventoryfull.gg';
     case 'reddit':
-      // Reddit markdown
-      return '\n\nCheck your own **Pile Of Shame** → [pileofsha.me](https://pileofsha.me)';
+      return '\n\nClear some space → [inventoryfull.gg](https://inventoryfull.gg)';
     case 'discord':
-      // Discord markdown
-      return '\n\nCheck your own **Pile Of Shame** → <https://pileofsha.me>';
+      return '\n\nClear some space → <https://inventoryfull.gg>';
   }
 }
 
