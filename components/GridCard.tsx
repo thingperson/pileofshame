@@ -58,7 +58,7 @@ export default function GridCard({ game }: GridCardProps) {
   return (
     <>
       <div
-        className={`relative group rounded-xl border overflow-hidden transition-all duration-150 hover:-translate-y-[1px] cursor-pointer ${game.status === 'playing' ? 'now-playing-glow' : ''}`}
+        className={`relative group rounded-xl border overflow-hidden transition-all duration-150 hover:-translate-y-[2px] hover:shadow-lg hover:shadow-black/20 cursor-pointer ${game.status === 'playing' ? 'now-playing-glow' : ''}`}
         style={{
           backgroundColor: 'var(--color-bg-card)',
           borderColor: 'var(--color-border-subtle)',

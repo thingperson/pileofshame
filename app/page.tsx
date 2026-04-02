@@ -23,6 +23,7 @@ import EnrichmentIndicator from '@/components/EnrichmentIndicator';
 import JustFiveMinutes from '@/components/JustFiveMinutes';
 import NinetiesMode from '@/components/NinetiesMode';
 import { useAutoEnrich } from '@/hooks/useAutoEnrich';
+import OnboardingWelcome from '@/components/OnboardingWelcome';
 
 function InlineSearch() {
   const [expanded, setExpanded] = useState(false);
@@ -138,11 +139,12 @@ function AppContent() {
     });
   }, [games, filters]);
 
-  // Group by category
+  // Group by category (exclude playing/on-deck — they're in the Up Next section)
   const gamesByCategory = useMemo(() => {
     const map = new Map<string, Game[]>();
     categories.forEach((cat) => map.set(cat, []));
     filteredGames.forEach((game) => {
+      if (game.status === 'playing' || game.status === 'on-deck') return;
       const list = map.get(game.category);
       if (list) {
         list.push(game);
@@ -308,31 +310,10 @@ function AppContent() {
 
       {/* Empty State */}
       {isEmpty && (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <p className="text-5xl mb-4">🎮</p>
-          <h2 className="text-lg font-bold text-text-primary mb-2">
-            Nothing here yet.
-          </h2>
-          <p className="text-sm text-text-muted mb-6 max-w-xs">
-            We both know that&apos;s not true. You&apos;ve got games. Add them.
-          </p>
-          <button
-            onClick={() => setAddModalOpen(true)}
-            className="px-5 py-2.5 text-sm font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
-            style={{
-              backgroundColor: 'var(--color-accent-purple)',
-              color: '#0a0a0f',
-            }}
-          >
-            + Add Your First Game
-          </button>
-          <button
-            onClick={() => setImportHubOpen(true)}
-            className="mt-3 px-4 py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-muted hover:border-accent-purple hover:text-text-secondary transition-all"
-          >
-            📥 Or import your library
-          </button>
-        </div>
+        <OnboardingWelcome
+          onImport={() => setImportHubOpen(true)}
+          onAddManual={() => setAddModalOpen(true)}
+        />
       )}
 
       {/* No Filter Results */}

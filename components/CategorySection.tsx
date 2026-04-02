@@ -80,7 +80,9 @@ export default function CategorySection({ name, games }: CategorySectionProps) {
               upNextIndex = allOnDeck.indexOf(game) + 1;
             }
             return (
-              <GameCard key={game.id} game={game} upNextIndex={upNextIndex} />
+              <div key={game.id} className="card-enter" style={{ animationDelay: `${Math.min(i * 40, 300)}ms` }}>
+                <GameCard game={game} upNextIndex={upNextIndex} />
+              </div>
             );
           })}
         </div>
@@ -88,8 +90,10 @@ export default function CategorySection({ name, games }: CategorySectionProps) {
 
       {!collapsed && viewMode === 'grid' && (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 pl-0.5">
-          {paginatedGames.map((game) => (
-            <GridCard key={game.id} game={game} />
+          {paginatedGames.map((game, i) => (
+            <div key={game.id} className="card-enter" style={{ animationDelay: `${Math.min(i * 50, 400)}ms` }}>
+              <GridCard game={game} />
+            </div>
           ))}
         </div>
       )}

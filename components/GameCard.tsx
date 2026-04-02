@@ -124,7 +124,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
 
   return (
     <div
-      className={`group relative rounded-xl border transition-all duration-150 hover:-translate-y-[1px] ${game.status === 'playing' ? 'now-playing-glow' : ''}`}
+      className={`group relative rounded-xl border transition-all duration-150 hover:-translate-y-[2px] hover:shadow-lg hover:shadow-black/20 ${game.status === 'playing' ? 'now-playing-glow' : ''}`}
       style={{
         backgroundColor: 'var(--color-bg-card)',
         borderColor: expanded ? 'var(--color-border-active)' : 'var(--color-border-subtle)',

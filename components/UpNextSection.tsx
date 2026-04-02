@@ -106,8 +106,10 @@ export default function UpNextSection({ games }: UpNextSectionProps) {
             </span>
           </h2>
           <div className="space-y-1.5">
-            {nowPlayingGames.map((game) => (
-              <GameCard key={game.id} game={game} />
+            {nowPlayingGames.map((game, i) => (
+              <div key={game.id} className="card-enter" style={{ animationDelay: `${i * 40}ms` }}>
+                <GameCard game={game} />
+              </div>
             ))}
           </div>
         </div>
@@ -127,7 +129,9 @@ export default function UpNextSection({ games }: UpNextSectionProps) {
         {upNextGames.length > 0 ? (
           <div className="space-y-1.5">
             {upNextGames.map((game, i) => (
-              <GameCard key={game.id} game={game} upNextIndex={i + 1} />
+              <div key={game.id} className="card-enter" style={{ animationDelay: `${i * 40}ms` }}>
+                <GameCard game={game} upNextIndex={i + 1} />
+              </div>
             ))}
           </div>
         ) : suggestion ? (

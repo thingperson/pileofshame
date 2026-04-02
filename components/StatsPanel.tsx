@@ -4,6 +4,8 @@ import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { Game } from '@/lib/types';
 import { getAllMatchingArchetypes, PlayerArchetype } from '@/lib/archetypes';
 import { useToast } from './Toast';
+import ShareCard from './ShareCard';
+import { generateDynamicShareText } from '@/lib/shareTexts';
 
 interface StatsPanelProps {
   games: Game[];
@@ -816,7 +818,10 @@ export default function StatsPanel({ games }: StatsPanelProps) {
           {calculated && (
             <div className="mt-3 flex flex-col sm:flex-row gap-2">
               <button
-                onClick={() => shareToTwitter(generateShareText(shareData))}
+                onClick={() => {
+                  const dynStats = { backlog: stats.backlogSize, cleared: stats.gamesCleared, bailed: stats.bailedCount, hours: stats.totalHours, unplayedValue: countedUnplayed, playedValue: countedPlayed, backlogHours: backlogHours || 0, streak: stats.streak, oldest: stats.oldest?.name || '', pct: explorationPct };
+                  shareToTwitter(generateDynamicShareText(dynStats, 'twitter'));
+                }}
                 className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{
                   backgroundColor: 'rgba(29, 161, 242, 0.1)',
@@ -827,7 +832,10 @@ export default function StatsPanel({ games }: StatsPanelProps) {
                 𝕏 Share your stats
               </button>
               <button
-                onClick={() => shareToReddit(generateShareText(shareData))}
+                onClick={() => {
+                  const dynStats = { backlog: stats.backlogSize, cleared: stats.gamesCleared, bailed: stats.bailedCount, hours: stats.totalHours, unplayedValue: countedUnplayed, playedValue: countedPlayed, backlogHours: backlogHours || 0, streak: stats.streak, oldest: stats.oldest?.name || '', pct: explorationPct };
+                  shareToReddit(generateDynamicShareText(dynStats, 'reddit'));
+                }}
                 className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{
                   backgroundColor: 'rgba(255, 69, 0, 0.1)',
@@ -839,7 +847,8 @@ export default function StatsPanel({ games }: StatsPanelProps) {
               </button>
               <button
                 onClick={() => {
-                  navigator.clipboard.writeText(getDiscordText(generateShareText(shareData)));
+                  const dynStats = { backlog: stats.backlogSize, cleared: stats.gamesCleared, bailed: stats.bailedCount, hours: stats.totalHours, unplayedValue: countedUnplayed, playedValue: countedPlayed, backlogHours: backlogHours || 0, streak: stats.streak, oldest: stats.oldest?.name || '', pct: explorationPct };
+                  navigator.clipboard.writeText(generateDynamicShareText(dynStats, 'discord'));
                   showToast('Copied to clipboard — go share it!');
                 }}
                 className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
@@ -851,6 +860,29 @@ export default function StatsPanel({ games }: StatsPanelProps) {
               >
                 📋 Copy for Discord
               </button>
+            </div>
+          )}
+
+          {/* Visual Share Card */}
+          {calculated && (
+            <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+              <div className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-2">
+                🖼️ Or share as an image
+              </div>
+              <ShareCard
+                stats={{
+                  backlogSize: stats.backlogSize,
+                  gamesCleared: stats.gamesCleared,
+                  bailedCount: stats.bailedCount,
+                  totalHours: stats.totalHours,
+                  unplayedValue: countedUnplayed,
+                  playedValue: countedPlayed,
+                  backlogHours: backlogHours,
+                  oldest: stats.oldest,
+                  streak: stats.streak,
+                }}
+                rank={currentArchetype?.title}
+              />
             </div>
           )}
         </div>
@@ -884,7 +916,7 @@ function StatCard({
         {icon} {label}
       </div>
       <div
-        className="text-xl font-bold font-[family-name:var(--font-mono)]"
+        className="text-xl font-bold font-[family-name:var(--font-mono)] stat-number"
         style={{ color }}
       >
         {value}
