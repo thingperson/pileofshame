@@ -128,6 +128,10 @@ const SECTIONS = [
         q: 'Are the deal links affiliate links?',
         a: 'Some deal links include affiliate parameters from IsThereAnyDeal. If you buy through them, it helps keep the app free. We never inflate prices.',
       },
+      {
+        q: 'Will you try to sell me games?',
+        a: 'No. We never recommend games to buy. We only show deals on games you already own or have wishlisted yourself. Our job is to help you play what you have, not add to the pile.',
+      },
     ],
   },
 ];

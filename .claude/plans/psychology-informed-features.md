@@ -75,9 +75,10 @@ Based on deep research into gaming backlog psychology (analysis paralysis, decis
 
 **What shipped** (in `lib/enrichment.ts` `getPlaytimeRoast()`):
 - All playtime "roasts" reframed as warm, affectionate ribbing -- not shaming
-- 500h+ games get explicit comfort game acknowledgment ("This is clearly your comfort game. Your pile is jealous, but we understand.")
-- Game-specific lines for Stardew Valley, Rocket League, Dota/LoL, Skyrim, Counter-Strike -- playful and affectionate
-- Generic tiers scale from light teasing (50h) to full comfort-game recognition (500h+)
+- 40+ game-specific roast sets with multiple randomized variants per game
+- Covers: competitive (Rocket League, CS2, Valorant, Apex, LoL, Dota), comfort (Stardew, Minecraft, Animal Crossing), strategy (Civ, Factorio, RimWorld, CK3), RPGs (Skyrim, Elden Ring, BG3, Destiny, WoW), survival (Rust, Ark), sports (FIFA, NBA 2K), and more
+- Generic tiers scale from light teasing (40h+) to full comfort-game recognition (500h+) to "this is where you live now" (2000h+)
+- Multiple variants per tier so repeat visits don't feel stale
 - Tone is warm throughout -- "comfort is comfort", "we understand", not "you're wasting time"
 
 **What's NOT shipped yet** (from original plan):

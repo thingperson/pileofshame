@@ -96,6 +96,10 @@ export default function PrivacyPage() {
               If you purchase a game through one of these links, we may receive a small commission at
               no extra cost to you. This is how we keep the app free.
             </p>
+            <p className="mt-2">
+              We never recommend games to buy. We only show deals on games you already own or have
+              wishlisted yourself. Our goal is to help you play what you have, not sell you more.
+            </p>
           </section>
 
           <section>

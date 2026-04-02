@@ -63,7 +63,7 @@ BANNED patterns:
 | Genre labels | Tags / Genres | Categories, Labels |
 | Mood descriptors | Moods | Vibes, Tags |
 | Time commitment | Session length | Time tier, Time commitment |
-| The randomizer/picker | What Should I Play? | Get Playing, Reroll (internal only) |
+| The randomizer/picker | What Should I Play? | Reroll (internal code only) |
 | Game list/collection | Shelf | Playlist, List |
 
 ## Personality Copy Examples

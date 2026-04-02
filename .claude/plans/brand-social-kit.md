@@ -66,14 +66,14 @@ These lines were reviewed against our voice-and-tone.md guide. Key principles ap
 
 ## Social Handles
 
-**Secure these:**
-- X/Twitter: `@inventoryfull` (primary) or `@inventoryfullgg` (fallback)
-- Bluesky: `@inventoryfull.gg` (custom domain handle — Bluesky supports this natively)
-- TikTok: `@inventoryfull`
-- Instagram: `@inventoryfull`
-- YouTube: `@inventoryfull`
-- Discord: Server name "Inventory Full"
-- Reddit: r/inventoryfull (when ready)
+**Registered as `@inventoryfullgg` across all platforms:**
+- X/Twitter: `@inventoryfullgg` ✅
+- Instagram: `@inventoryfullgg` ✅
+- YouTube: `@inventoryfullgg` ✅
+- TikTok: `@inventoryfullgg` (pending 24hr cooldown)
+- Bluesky: `@inventoryfull.gg` (custom domain handle — TODO)
+- Discord: Server name "Inventory Full" (TODO when ready)
+- Reddit: r/inventoryfull (TODO when ready)
 
 ## Bio Options (by platform)
 
