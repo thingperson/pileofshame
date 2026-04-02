@@ -94,6 +94,6 @@ BANNED patterns:
 
 ## Archetype Voice
 Archetypes can be esoteric, Jungian, tarot-flavored. They should feel like a personality reading, not a data dump. Think: horoscope for gamers, but self-aware about it.
-- Use second person ("You don't play games, you manage a portfolio")
+- Use second person ("At this point it's a portfolio, not a playlist")
 - Be specific enough to feel personal
 - Leave room for the user to laugh at themselves

@@ -137,21 +137,14 @@ function composeClearText(
   hoursOnGame: number,
   platform: 'twitter' | 'reddit' | 'copy',
 ): string {
-  const flavor = CLEAR_FLAVORS[Math.floor(Math.random() * CLEAR_FLAVORS.length)];
-  const lines: string[] = [flavor(game.name)];
+  // First line: flavor + stars + hours (short, reads as one thought)
+  const parts: string[] = [CLEAR_FLAVORS[Math.floor(Math.random() * CLEAR_FLAVORS.length)](game.name)];
+  if (rating > 0) parts.push('⭐'.repeat(rating));
+  if (hoursOnGame > 0) parts.push(`${hoursOnGame}h invested.`);
+  const mainLine = parts.join(' ');
 
-  if (rating > 0) {
-    const stars = '⭐'.repeat(rating);
-    lines.push(stars);
-  }
-
-  if (hoursOnGame > 0) {
-    lines.push(`${hoursOnGame}h invested.`);
-  }
-
-  if (gamesCleared > 1) {
-    lines.push(`That's ${gamesCleared} cleared total.`);
-  }
+  const lines: string[] = [mainLine];
+  if (gamesCleared > 1) lines.push(`That's ${gamesCleared} cleared total.`);
 
   switch (platform) {
     case 'twitter':
@@ -165,7 +158,7 @@ function composeClearText(
       break;
   }
 
-  return lines.join(' ');
+  return lines.join('\n');
 }
 
 function GameClearShare({

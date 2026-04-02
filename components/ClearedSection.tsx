@@ -219,14 +219,14 @@ function ClearedShareComposer({
       if (selected.has(line.id)) lines.push(line.text(stats));
     }
     if (lines.length === 0) lines.push(`${stats.totalCleared} games cleared from my backlog.`);
-    if (includeCloser) lines.push(funCloser);
+    if (includeCloser) lines.push('\n' + funCloser);
 
     switch (platform) {
       case 'twitter': lines.push('\ninventoryfull.gg'); break;
       case 'reddit': lines.push('\n[inventoryfull.gg](https://inventoryfull.gg)'); break;
       case 'copy': lines.push('\nhttps://inventoryfull.gg'); break;
     }
-    return lines.join(' ');
+    return lines.join('\n');
   };
 
   const previewText = compose('copy').replace('\nhttps://inventoryfull.gg', '').trim();
@@ -284,7 +284,7 @@ function ClearedShareComposer({
       </div>
 
       <div
-        className="rounded-lg p-2.5 text-xs text-text-muted leading-relaxed font-[family-name:var(--font-mono)]"
+        className="rounded-lg p-2.5 text-xs text-text-muted leading-relaxed font-[family-name:var(--font-mono)] whitespace-pre-line"
         style={{ backgroundColor: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)' }}
       >
         <div className="text-[10px] text-text-faint mb-1">Preview:</div>

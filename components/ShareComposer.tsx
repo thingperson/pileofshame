@@ -170,7 +170,7 @@ export default function ShareComposer({ stats, showToast, onSelectionChange }: S
       lines.push(`My gaming backlog is ${stats.backlog} games deep. Working on it.`);
     }
 
-    if (includeFunCta) lines.push(funCta);
+    if (includeFunCta) lines.push('\n' + funCta);
 
     // CTA
     switch (platform) {
@@ -185,7 +185,7 @@ export default function ShareComposer({ stats, showToast, onSelectionChange }: S
         break;
     }
 
-    return lines.join(' ');
+    return lines.join('\n');
   };
 
   // Live preview
@@ -246,7 +246,7 @@ export default function ShareComposer({ stats, showToast, onSelectionChange }: S
 
       {/* Live preview */}
       <div
-        className="rounded-lg p-3 text-xs text-text-muted leading-relaxed font-[family-name:var(--font-mono)]"
+        className="rounded-lg p-3 text-xs text-text-muted leading-relaxed font-[family-name:var(--font-mono)] whitespace-pre-line"
         style={{ backgroundColor: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)' }}
       >
         <div className="text-[10px] text-text-faint mb-1.5">Preview:</div>

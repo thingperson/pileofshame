@@ -190,7 +190,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.nowPlayingCount >= 4) return {
       title: 'The Juggler',
       icon: '🤹',
-      description: `${s.nowPlayingCount} games "in progress" simultaneously. You're not playing games, you're managing a portfolio. None of them will be finished.`,
+      description: `${s.nowPlayingCount} games "in progress" simultaneously. At this point it's a portfolio, not a playlist. None of them will be finished.`,
       tone: 'roast',
     };
     return null;
@@ -293,7 +293,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.avgHoursPerGame > 50) return {
       title: 'The Deep Diver',
       icon: '🫧',
-      description: `${Math.round(s.avgHoursPerGame)} hours average per game. When you commit, you COMMIT. You don't play games. You move into them. Rent-free.`,
+      description: `${Math.round(s.avgHoursPerGame)} hours average per game. When you commit, you COMMIT. You practically move into these games. Rent-free.`,
       tone: 'neutral',
     };
     return null;
