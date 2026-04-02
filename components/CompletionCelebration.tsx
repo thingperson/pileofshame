@@ -4,6 +4,8 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Game } from '@/lib/types';
 import { useStore } from '@/lib/store';
+import { getCompletionRecommendations, getWishlistRecommendations } from '@/lib/recommendations';
+import DealBadge from './DealBadge';
 
 interface CompletionCelebrationProps {
   game: Game | null;
@@ -340,10 +342,69 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
                 )}
               </div>
 
-              {/* DLC nudge */}
-              <p className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-5">
-                Got DLC or want to New Game+? Queue it up from your Cleared list anytime.
-              </p>
+              {/* What's Next — recommendations from their own library + wishlist */}
+              {(() => {
+                const backlogRecs = getCompletionRecommendations(game, games, 3);
+                const wishlistRecs = getWishlistRecommendations(game, games, 2);
+                const hasRecs = backlogRecs.length > 0 || wishlistRecs.length > 0;
+
+                return hasRecs ? (
+                  <div
+                    className="rounded-xl p-4 mb-5 text-left"
+                    style={{
+                      backgroundColor: 'var(--color-bg-elevated)',
+                      border: '1px solid var(--color-border-subtle)',
+                    }}
+                  >
+                    <p className="text-xs text-text-faint font-[family-name:var(--font-mono)] mb-2.5">
+                      You cleared a slot. What goes in it?
+                    </p>
+
+                    {/* Backlog recommendations */}
+                    {backlogRecs.length > 0 && (
+                      <div className="space-y-1.5 mb-2">
+                        {backlogRecs.map((rec) => (
+                          <div
+                            key={rec.game.id}
+                            className="flex items-center gap-2 text-sm"
+                          >
+                            <span className="text-text-primary font-medium truncate flex-1">
+                              {rec.game.name}
+                            </span>
+                            <span className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] shrink-0">
+                              {rec.reason}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Wishlist recommendations with deal check */}
+                    {wishlistRecs.length > 0 && (
+                      <div className="pt-2 mt-2 space-y-1.5" style={{ borderTop: '1px solid var(--color-border-subtle)' }}>
+                        <p className="text-[10px] text-text-faint font-[family-name:var(--font-mono)]">
+                          On your wishlist:
+                        </p>
+                        {wishlistRecs.map((rec) => (
+                          <div key={rec.game.id} className="space-y-1">
+                            <div className="flex items-center gap-2 text-sm">
+                              <span className="text-yellow-400">⭐</span>
+                              <span className="text-text-primary font-medium truncate flex-1">
+                                {rec.game.name}
+                              </span>
+                            </div>
+                            <DealBadge gameName={rec.game.name} compact />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-5">
+                    Got DLC or want to New Game+? Queue it up from your Cleared list anytime.
+                  </p>
+                );
+              })()}
 
               {/* CTAs */}
               <div className="flex flex-col gap-2.5">
