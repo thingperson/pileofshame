@@ -344,7 +344,7 @@ export default function ClearedSection({ games }: ClearedSectionProps) {
               </div>
               <div className="text-[11px] text-text-faint font-[family-name:var(--font-mono)] mt-1 italic">
                 {pileProgress === 0
-                  ? 'The journey of a thousand games begins with a single clear.'
+                  ? 'A thousand games. One clear. This is how it starts.'
                   : pileProgress < 10
                   ? 'Every mountain was once a backlog. You\'ve started climbing.'
                   : pileProgress < 25

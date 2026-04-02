@@ -134,7 +134,7 @@ function generateShareText(stats: {
   const lines: string[] = [];
 
   if (stats.backlogSize > 250) {
-    lines.push(`${stats.backlogSize} games in my pile. That's not a backlog, that's a lifestyle.`);
+    lines.push(`${stats.backlogSize} games in my pile. At this point it's a lifestyle.`);
   } else if (stats.backlogSize > 100) {
     lines.push(`${stats.backlogSize} games in my pile and I keep buying more. At least I'm self-aware now.`);
   } else if (stats.backlogSize > 50) {

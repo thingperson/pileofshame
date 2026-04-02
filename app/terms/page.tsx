@@ -54,7 +54,7 @@ export default function TermsPage() {
             <h2 className="text-lg font-bold text-text-primary mb-3">3. Your data</h2>
             <p>
               Your game library data belongs to you. We don&apos;t claim ownership of any content
-              you add (notes, ratings, categories). You can export your data at any time using the
+              you add (notes, ratings, shelves). You can export your data at any time using the
               Export Backup feature. See our{' '}
               <Link href="/privacy" className="text-accent-purple hover:underline">
                 Privacy Policy
