@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     images: [
       {
-        url: '/opengraph-image',
+        url: 'https://inventoryfull.gg/opengraph-image',
         width: 1200,
         height: 630,
         alt: 'Inventory Full: Gaming Backlog Manager',
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Inventory Full: Gaming Backlog Manager',
     description: 'Because your backlog should feel exciting, not a warehouse of good intentions.',
-    images: ['/opengraph-image'],
+    images: ['https://inventoryfull.gg/opengraph-image'],
   },
   other: {
     'theme-color': '#7c3aed',

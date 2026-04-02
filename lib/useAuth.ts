@@ -11,6 +11,8 @@ interface AuthState {
   loading: boolean;
 }
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://inventoryfull.gg';
+
 export function useAuth() {
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
@@ -60,7 +62,7 @@ export function useAuth() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'discord',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${APP_URL}/auth/callback`,
       },
     });
     if (error) console.error('Discord sign-in error:', error);
@@ -71,7 +73,7 @@ export function useAuth() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${APP_URL}/auth/callback`,
       },
     });
     if (error) console.error('Google sign-in error:', error);
@@ -82,7 +84,7 @@ export function useAuth() {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${APP_URL}/auth/callback`,
       },
     });
     if (error) console.error('Email sign-in error:', error);

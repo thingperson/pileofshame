@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { shareToTwitter, shareToReddit } from '@/lib/statsHelpers';
 import { trackShareStats } from '@/lib/analytics';
 
@@ -20,6 +20,7 @@ interface ShareStats {
 interface ShareComposerProps {
   stats: ShareStats;
   showToast: (msg: string) => void;
+  onSelectionChange?: (selected: Set<string>) => void;
 }
 
 // --- Composable stat lines ---
@@ -113,7 +114,7 @@ const FUN_CTAS = [
   'The backlog effect is real.',
 ];
 
-export default function ShareComposer({ stats, showToast }: ShareComposerProps) {
+export default function ShareComposer({ stats, showToast, onSelectionChange }: ShareComposerProps) {
   const availableLines = useMemo(() => STAT_LINES.filter(l => l.available(stats)), [stats]);
 
   // Default: first 3 available lines
@@ -133,18 +134,27 @@ export default function ShareComposer({ stats, showToast }: ShareComposerProps) 
     return defaults;
   });
 
+  // Notify parent of initial selection
+  useEffect(() => { onSelectionChange?.(selected); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const [includeFunCta, setIncludeFunCta] = useState(true);
+  const [closerIndex, setCloserIndex] = useState(() => Math.floor(Math.random() * FUN_CTAS.length));
 
   const toggle = (id: string) => {
     setSelected(prev => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
+      onSelectionChange?.(next);
       return next;
     });
   };
 
-  const funCta = useMemo(() => FUN_CTAS[Math.floor(Math.random() * FUN_CTAS.length)], []);
+  const rerollCloser = () => {
+    setCloserIndex(prev => (prev + 1) % FUN_CTAS.length);
+  };
+
+  const funCta = FUN_CTAS[closerIndex];
 
   const compose = (platform: 'twitter' | 'reddit' | 'discord'): string => {
     const lines: string[] = [];
@@ -211,18 +221,28 @@ export default function ShareComposer({ stats, showToast }: ShareComposerProps) 
         ))}
       </div>
 
-      {/* Fun CTA toggle */}
-      <button
-        onClick={() => setIncludeFunCta(!includeFunCta)}
-        className={`w-full text-left px-2.5 py-1.5 rounded-lg text-[11px] font-[family-name:var(--font-mono)] transition-all ${
-          includeFunCta
-            ? 'bg-accent-purple/15 text-accent-purple border border-accent-purple/30'
-            : 'bg-bg-card text-text-faint border border-transparent hover:text-text-dim'
-        }`}
-      >
-        <span className="mr-1">{includeFunCta ? '✓' : '○'}</span>
-        Fun closer: &quot;{funCta}&quot;
-      </button>
+      {/* Fun CTA toggle with re-roll */}
+      <div className="flex gap-1.5">
+        <button
+          onClick={() => setIncludeFunCta(!includeFunCta)}
+          className={`flex-1 text-left px-2.5 py-1.5 rounded-lg text-[11px] font-[family-name:var(--font-mono)] transition-all ${
+            includeFunCta
+              ? 'bg-accent-purple/15 text-accent-purple border border-accent-purple/30'
+              : 'bg-bg-card text-text-faint border border-transparent hover:text-text-dim'
+          }`}
+        >
+          <span className="mr-1">{includeFunCta ? '✓' : '○'}</span>
+          &quot;{funCta}&quot;
+        </button>
+        <button
+          onClick={rerollCloser}
+          className="px-2 py-1.5 rounded-lg text-[11px] font-[family-name:var(--font-mono)] text-text-dim hover:text-text-muted transition-all"
+          style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border-subtle)' }}
+          title="Try a different closer"
+        >
+          🔄
+        </button>
+      </div>
 
       {/* Live preview */}
       <div

@@ -17,6 +17,8 @@ interface ShareCardProps {
     streak: number;
   };
   rank?: string;
+  /** When provided, only stats matching these ShareComposer line IDs appear on the card */
+  selectedStats?: Set<string>;
 }
 
 const CARD_THEMES = [
@@ -33,7 +35,7 @@ type CardTheme = typeof CARD_THEMES[number]['value'];
  * Generates a shareable stats card image and offers download/share options.
  * Uses the /api/share-card endpoint which renders themed PNG images via next/og.
  */
-export default function ShareCard({ stats, rank }: ShareCardProps) {
+export default function ShareCard({ stats, rank, selectedStats }: ShareCardProps) {
   const [loading, setLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const pageTheme = useStore((s) => s.settings.theme);
@@ -49,21 +51,28 @@ export default function ShareCard({ stats, rank }: ShareCardProps) {
     return 'dark';
   })();
 
+  // Map ShareComposer stat line IDs to card params
+  const shouldInclude = useCallback((statId: string) => {
+    if (!selectedStats) return true; // no filter = include all
+    return selectedStats.has(statId);
+  }, [selectedStats]);
+
   const buildCardUrl = useCallback((overrideTheme?: CardTheme) => {
     const params = new URLSearchParams();
+    // Backlog and cleared are always included (core identity of the card)
     params.set('backlog', stats.backlogSize.toString());
     params.set('cleared', stats.gamesCleared.toString());
-    params.set('bailed', stats.bailedCount.toString());
-    params.set('hours', stats.totalHours.toString());
-    if (stats.unplayedValue) params.set('value', stats.unplayedValue.toString());
-    if (stats.playedValue) params.set('playedValue', stats.playedValue.toString());
-    if (stats.backlogHours) params.set('backlogHours', stats.backlogHours.toString());
-    if (stats.oldest) params.set('oldest', stats.oldest.name);
-    params.set('streak', stats.streak.toString());
+    if (shouldInclude('bailed') && stats.bailedCount) params.set('bailed', stats.bailedCount.toString());
+    if (shouldInclude('hours-logged') && stats.totalHours) params.set('hours', stats.totalHours.toString());
+    if (shouldInclude('untapped-value') && stats.unplayedValue) params.set('value', stats.unplayedValue.toString());
+    if (shouldInclude('value-reclaimed') && stats.playedValue) params.set('playedValue', stats.playedValue.toString());
+    if (shouldInclude('backlog-hours') && stats.backlogHours) params.set('backlogHours', stats.backlogHours.toString());
+    if (shouldInclude('oldest') && stats.oldest) params.set('oldest', stats.oldest.name);
+    if (shouldInclude('streak') && stats.streak) params.set('streak', stats.streak.toString());
     if (rank) params.set('rank', rank);
     params.set('theme', overrideTheme ?? activeCardTheme);
     return `/api/share-card?${params.toString()}`;
-  }, [stats, rank, activeCardTheme]);
+  }, [stats, rank, activeCardTheme, shouldInclude]);
 
   const handlePreview = useCallback(async () => {
     setLoading(true);

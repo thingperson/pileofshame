@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import { Game } from '@/lib/types';
 import { useToast } from './Toast';
+import { trackShareStats } from '@/lib/analytics';
 import GameCard from './GameCard';
 
 interface ClearedSectionProps {
@@ -92,8 +93,17 @@ function getClearedValue(games: Game[], priceCache: Map<string, number>): number
   return Math.round(total);
 }
 
-// --- Share text ---
-function generateClearedShareText(stats: {
+// --- Cleared share composer ---
+
+interface ClearedStatLine {
+  id: string;
+  label: string;
+  available: (s: ClearedShareData) => boolean;
+  text: (s: ClearedShareData) => string;
+  defaultOn?: boolean;
+}
+
+interface ClearedShareData {
   totalCleared: number;
   clearedThisMonth: number;
   valueReclaimed: number;
@@ -101,51 +111,235 @@ function generateClearedShareText(stats: {
   pileProgress: number;
   avgRating: number;
   topGame?: string;
-}): string {
-  const lines: string[] = [];
-
-  // Opening line
-  if (stats.clearedThisMonth > 0) {
-    lines.push(`I cleared ${plural(stats.clearedThisMonth, 'game')} from my backlog this month. That's probably more progress than I've made in years.`);
-  } else {
-    lines.push(`I've cleared ${plural(stats.totalCleared, 'game')} from my backlog.`);
-  }
-
-  // Value reclaimed
-  if (stats.valueReclaimed > 0) {
-    lines.push(`That's ~$${stats.valueReclaimed.toLocaleString()} worth of games that were simply staring at me, wondering why they exist at all.`);
-  }
-
-  // Progress
-  if (stats.pileProgress > 0) {
-    lines.push(`${Math.round(stats.pileProgress)}% of my pile, conquered.`);
-  }
-
-  // Rank
-  lines.push(`Current rank: ${stats.rank.icon} ${stats.rank.title}`);
-
-  // Rating
-  if (stats.avgRating > 0) {
-    lines.push(`Average rating: ${'⭐'.repeat(Math.round(stats.avgRating))} (${stats.avgRating.toFixed(1)}/5)`);
-  }
-
-  // Top game
-  if (stats.topGame) {
-    lines.push(`Best game cleared: ${stats.topGame}`);
-  }
-
-  return lines.join('\n');
 }
 
-function getShareCTA(platform: 'twitter' | 'reddit' | 'discord'): string {
-  switch (platform) {
-    case 'twitter':
-      return '\n\nClear some space → https://inventoryfull.gg';
-    case 'reddit':
-      return '\n\nClear some space → [Inventory Full](https://inventoryfull.gg)';
-    case 'discord':
-      return '\n\nClear some space → <https://inventoryfull.gg>';
-  }
+const CLEARED_STAT_LINES: ClearedStatLine[] = [
+  {
+    id: 'cleared-count',
+    label: 'Games cleared',
+    available: (s) => s.totalCleared > 0,
+    text: (s) => s.totalCleared >= 10
+      ? `${s.totalCleared} games cleared from my backlog. Actually finishing games hits different.`
+      : `${s.totalCleared} cleared and counting. The pile is shrinking.`,
+    defaultOn: true,
+  },
+  {
+    id: 'this-month',
+    label: 'Cleared this month',
+    available: (s) => s.clearedThisMonth > 0,
+    text: (s) => `${plural(s.clearedThisMonth, 'game')} cleared this month alone.`,
+    defaultOn: true,
+  },
+  {
+    id: 'value-reclaimed',
+    label: 'Value reclaimed',
+    available: (s) => s.valueReclaimed > 0,
+    text: (s) => `~$${s.valueReclaimed.toLocaleString()} worth of games I actually played instead of letting them collect dust.`,
+    defaultOn: true,
+  },
+  {
+    id: 'progress',
+    label: 'Pile progress',
+    available: (s) => s.pileProgress > 0,
+    text: (s) => `${Math.round(s.pileProgress)}% of the pile, conquered.`,
+  },
+  {
+    id: 'rank',
+    label: 'Current rank',
+    available: () => true,
+    text: (s) => `Rank: ${s.rank.icon} ${s.rank.title}`,
+  },
+  {
+    id: 'avg-rating',
+    label: 'Average rating',
+    available: (s) => s.avgRating > 0,
+    text: (s) => `Average rating: ${'⭐'.repeat(Math.round(s.avgRating))} (${s.avgRating.toFixed(1)}/5)`,
+  },
+  {
+    id: 'top-game',
+    label: 'Best game cleared',
+    available: (s) => !!s.topGame,
+    text: (s) => `Best game cleared: ${s.topGame}`,
+  },
+];
+
+const CLEARED_FUN_CLOSERS = [
+  'The pile is real.',
+  'Mood-based matching is weirdly effective.',
+  'Check what your library is worth.',
+  'Turns out finishing games feels good. Who knew.',
+  'The backlog fears me now.',
+];
+
+function ClearedShareComposer({
+  stats,
+  showToast,
+}: {
+  stats: ClearedShareData;
+  showToast: (msg: string) => void;
+}) {
+  const availableLines = useMemo(() => CLEARED_STAT_LINES.filter(l => l.available(stats)), [stats]);
+
+  const [selected, setSelected] = useState<Set<string>>(() => {
+    const defaults = new Set<string>();
+    for (const line of availableLines) {
+      if (defaults.size >= 3) break;
+      if (line.defaultOn) defaults.add(line.id);
+    }
+    if (defaults.size < 2) {
+      for (const line of availableLines) {
+        if (defaults.size >= 2) break;
+        defaults.add(line.id);
+      }
+    }
+    return defaults;
+  });
+
+  const [closerIndex, setCloserIndex] = useState(() => Math.floor(Math.random() * CLEARED_FUN_CLOSERS.length));
+  const [includeCloser, setIncludeCloser] = useState(true);
+
+  const toggle = (id: string) => {
+    setSelected(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const rerollCloser = () => {
+    setCloserIndex(prev => (prev + 1) % CLEARED_FUN_CLOSERS.length);
+  };
+
+  const funCloser = CLEARED_FUN_CLOSERS[closerIndex];
+
+  const compose = (platform: 'twitter' | 'reddit' | 'copy'): string => {
+    const lines: string[] = [];
+    for (const line of availableLines) {
+      if (selected.has(line.id)) lines.push(line.text(stats));
+    }
+    if (lines.length === 0) lines.push(`${stats.totalCleared} games cleared from my backlog.`);
+    if (includeCloser) lines.push(funCloser);
+
+    switch (platform) {
+      case 'twitter': lines.push('\ninventoryfull.gg'); break;
+      case 'reddit': lines.push('\n[inventoryfull.gg](https://inventoryfull.gg)'); break;
+      case 'copy': lines.push('\nhttps://inventoryfull.gg'); break;
+    }
+    return lines.join(' ');
+  };
+
+  const previewText = compose('copy').replace('\nhttps://inventoryfull.gg', '').trim();
+
+  return (
+    <div
+      className="rounded-lg p-3.5 space-y-2.5"
+      style={{
+        backgroundColor: 'var(--color-bg-elevated)',
+        border: '1px solid rgba(34, 197, 94, 0.15)',
+      }}
+    >
+      <div className="text-xs font-semibold text-text-primary font-[family-name:var(--font-mono)]">
+        📣 Share your cleared list
+      </div>
+
+      <div className="grid grid-cols-2 gap-1.5">
+        {availableLines.map((line) => (
+          <button
+            key={line.id}
+            onClick={() => toggle(line.id)}
+            className={`text-left px-2.5 py-1.5 rounded-lg text-[11px] font-[family-name:var(--font-mono)] transition-all ${
+              selected.has(line.id)
+                ? 'bg-green-500/15 text-green-400 border border-green-500/30'
+                : 'bg-bg-card text-text-faint border border-transparent hover:text-text-dim'
+            }`}
+          >
+            <span className="mr-1">{selected.has(line.id) ? '✓' : '○'}</span>
+            {line.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Fun closer with re-roll */}
+      <div className="flex gap-1.5">
+        <button
+          onClick={() => setIncludeCloser(!includeCloser)}
+          className={`flex-1 text-left px-2.5 py-1.5 rounded-lg text-[11px] font-[family-name:var(--font-mono)] transition-all ${
+            includeCloser
+              ? 'bg-green-500/15 text-green-400 border border-green-500/30'
+              : 'bg-bg-card text-text-faint border border-transparent hover:text-text-dim'
+          }`}
+        >
+          <span className="mr-1">{includeCloser ? '✓' : '○'}</span>
+          &quot;{funCloser}&quot;
+        </button>
+        <button
+          onClick={rerollCloser}
+          className="px-2 py-1.5 rounded-lg text-[11px] font-[family-name:var(--font-mono)] text-text-dim hover:text-text-muted transition-all"
+          style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border-subtle)' }}
+          title="Try a different closer"
+        >
+          🔄
+        </button>
+      </div>
+
+      <div
+        className="rounded-lg p-2.5 text-xs text-text-muted leading-relaxed font-[family-name:var(--font-mono)]"
+        style={{ backgroundColor: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)' }}
+      >
+        <div className="text-[10px] text-text-faint mb-1">Preview:</div>
+        {previewText || <span className="text-text-faint italic">Pick some stats above</span>}
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-2">
+        <button
+          onClick={() => {
+            trackShareStats('twitter');
+            const text = compose('twitter');
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank', 'width=550,height=420');
+          }}
+          className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+          style={{
+            backgroundColor: 'rgba(29, 161, 242, 0.1)',
+            border: '1px solid rgba(29, 161, 242, 0.2)',
+            color: '#1da1f2',
+          }}
+        >
+          𝕏 Post
+        </button>
+        <button
+          onClick={() => {
+            trackShareStats('reddit');
+            const text = compose('reddit');
+            window.open(`https://reddit.com/submit?selftext=true&title=${encodeURIComponent(`Cleared ${stats.totalCleared} games from my backlog`)}&text=${encodeURIComponent(text)}`, '_blank');
+          }}
+          className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+          style={{
+            backgroundColor: 'rgba(255, 69, 0, 0.1)',
+            border: '1px solid rgba(255, 69, 0, 0.2)',
+            color: '#ff4500',
+          }}
+        >
+          📮 Reddit
+        </button>
+        <button
+          onClick={() => {
+            trackShareStats('copy');
+            navigator.clipboard.writeText(compose('copy'));
+            showToast('Copied! Go flex that cleared list.');
+          }}
+          className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+          style={{
+            backgroundColor: 'rgba(88, 101, 242, 0.1)',
+            border: '1px solid rgba(88, 101, 242, 0.2)',
+            color: '#5865f2',
+          }}
+        >
+          📋 Copy
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export default function ClearedSection({ games }: ClearedSectionProps) {
@@ -187,28 +381,15 @@ export default function ClearedSection({ games }: ClearedSectionProps) {
     }
   }, [clearedGames]);
 
-  const handleShare = useCallback((platform: 'twitter' | 'reddit' | 'discord') => {
-    const text = generateClearedShareText({
-      totalCleared: clearedCount,
-      clearedThisMonth: clearedThisMonth.length,
-      valueReclaimed,
-      rank,
-      pileProgress,
-      avgRating,
-      topGame,
-    });
-
-    const fullText = text + getShareCTA(platform);
-
-    if (platform === 'twitter') {
-      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(fullText)}`, '_blank', 'width=550,height=420');
-    } else if (platform === 'reddit') {
-      window.open(`https://reddit.com/submit?selftext=true&title=${encodeURIComponent(`Cleared ${clearedCount} games from my backlog`)}&text=${encodeURIComponent(fullText)}`, '_blank');
-    } else {
-      navigator.clipboard.writeText(fullText);
-      showToast('Copied to clipboard. Go flex that cleared list.');
-    }
-  }, [clearedCount, clearedThisMonth.length, valueReclaimed, rank, pileProgress, avgRating, topGame, showToast]);
+  const clearedShareStats = useMemo(() => ({
+    totalCleared: clearedCount,
+    clearedThisMonth: clearedThisMonth.length,
+    valueReclaimed,
+    rank,
+    pileProgress,
+    avgRating,
+    topGame,
+  }), [clearedCount, clearedThisMonth.length, valueReclaimed, rank, pileProgress, avgRating, topGame]);
 
   if (clearedGames.length === 0) return null;
 
@@ -360,42 +541,8 @@ export default function ClearedSection({ games }: ClearedSectionProps) {
               </div>
             </div>
 
-            {/* Share Buttons */}
-            <div className="flex flex-col sm:flex-row gap-2">
-              <button
-                onClick={() => handleShare('twitter')}
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{
-                  backgroundColor: 'rgba(29, 161, 242, 0.1)',
-                  border: '1px solid rgba(29, 161, 242, 0.2)',
-                  color: '#1da1f2',
-                }}
-              >
-                𝕏 Share cleared list
-              </button>
-              <button
-                onClick={() => handleShare('reddit')}
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{
-                  backgroundColor: 'rgba(255, 69, 0, 0.1)',
-                  border: '1px solid rgba(255, 69, 0, 0.2)',
-                  color: '#ff4500',
-                }}
-              >
-                📮 Post to Reddit
-              </button>
-              <button
-                onClick={() => handleShare('discord')}
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{
-                  backgroundColor: 'rgba(88, 101, 242, 0.1)',
-                  border: '1px solid rgba(88, 101, 242, 0.2)',
-                  color: '#5865f2',
-                }}
-              >
-                📋 Copy for Discord
-              </button>
-            </div>
+            {/* Share Composer */}
+            <ClearedShareComposer stats={clearedShareStats} showToast={showToast} />
           </div>
 
           {/* Game List */}

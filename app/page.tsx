@@ -25,6 +25,7 @@ import NinetiesMode from '@/components/NinetiesMode';
 import SyncNudge from '@/components/SyncNudge';
 import { useAutoEnrich } from '@/hooks/useAutoEnrich';
 import OnboardingWelcome from '@/components/OnboardingWelcome';
+import { trackThemeSession } from '@/lib/archetypes';
 
 function InlineSearch() {
   const [expanded, setExpanded] = useState(false);
@@ -103,6 +104,16 @@ function AppContent() {
   const games = useStore((s) => s.games);
   const categories = useStore((s) => s.categories);
   const filters = useStore((s) => s.filters);
+  const currentTheme = useStore((s) => s.settings.theme);
+
+  // Track theme usage once per session
+  useEffect(() => {
+    const sessionKey = 'pos-theme-tracked';
+    if (!sessionStorage.getItem(sessionKey)) {
+      trackThemeSession(currentTheme);
+      sessionStorage.setItem(sessionKey, '1');
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const celebrationGame = useStore((s) => s.celebrationGame);
   const closeCelebration = useStore((s) => s.closeCelebration);
   const cycleStatus = useStore((s) => s.cycleStatus);

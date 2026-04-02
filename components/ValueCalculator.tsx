@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { PlayerArchetype } from '@/lib/archetypes';
 import { plural } from '@/lib/statsHelpers';
 import ShareComposer from './ShareComposer';
@@ -58,6 +59,8 @@ export default function ValueCalculator({
   currentArchetype,
   showToast,
 }: ValueCalculatorProps) {
+  const [selectedShareStats, setSelectedShareStats] = useState<Set<string> | undefined>(undefined);
+
   const shareStats = {
     backlog: stats.backlogSize,
     cleared: stats.gamesCleared,
@@ -225,7 +228,7 @@ export default function ValueCalculator({
 
       {/* Share Composer */}
       {calculated && (
-        <ShareComposer stats={shareStats} showToast={showToast} />
+        <ShareComposer stats={shareStats} showToast={showToast} onSelectionChange={setSelectedShareStats} />
       )}
 
       {/* Visual Share Card */}
@@ -247,6 +250,7 @@ export default function ValueCalculator({
               streak: stats.streak,
             }}
             rank={currentArchetype?.title}
+            selectedStats={selectedShareStats}
           />
         </div>
       )}

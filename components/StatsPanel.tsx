@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { Game } from '@/lib/types';
-import { getAllMatchingArchetypes } from '@/lib/archetypes';
+import { getAllMatchingArchetypes, getThemeUsage } from '@/lib/archetypes';
 import { useToast } from './Toast';
 import { trackStatsExpand } from '@/lib/analytics';
 import {
@@ -255,7 +255,8 @@ export default function StatsPanel({ games }: StatsPanelProps) {
   }, [handleCalculate]);
 
   // Player archetype
-  const archetypes = useMemo(() => getAllMatchingArchetypes(games), [games]);
+  const themeUsage = useMemo(() => getThemeUsage(), []);
+  const archetypes = useMemo(() => getAllMatchingArchetypes(games, themeUsage), [games, themeUsage]);
   const currentArchetype = archetypes[archetypeIndex % archetypes.length];
 
   const handleRerollArchetype = useCallback(() => {

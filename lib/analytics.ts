@@ -32,6 +32,7 @@ export const trackRerollCommit = () => gtag('reroll_commit');
 export const trackJust5Min = () => gtag('just_5_min');
 export const trackDealCheck = (game: string) => gtag('deal_check', { game_name: game });
 export const trackShareStats = (platform: string) => gtag('share_stats', { platform });
+export const trackShareClear = (platform: string, game: string) => gtag('share_clear', { platform, game_name: game });
 
 // Discovery
 export const trackStatsExpand = () => gtag('stats_expand');

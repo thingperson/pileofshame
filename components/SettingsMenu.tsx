@@ -5,6 +5,7 @@ import { useStore } from '@/lib/store';
 import { LibrarySettings } from '@/lib/types';
 import { downloadBackup, readBackupFile } from '@/lib/backup';
 import { enrichBatch } from '@/lib/enrichGame';
+import { trackThemeSession } from '@/lib/archetypes';
 import { useToast } from './Toast';
 
 export default function SettingsMenu() {
@@ -262,6 +263,7 @@ export default function SettingsMenu() {
                           useStore.setState((s) => ({
                             settings: { ...s.settings, theme: opt.value as LibrarySettings['theme'] },
                           }));
+                          trackThemeSession(opt.value);
                         }}
                         className={`px-2 py-1 text-[11px] rounded-md font-medium transition-all ${
                           settings.theme === opt.value

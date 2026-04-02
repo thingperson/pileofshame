@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { Game } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { getCompletionRecommendations, getWishlistRecommendations } from '@/lib/recommendations';
 import DealBadge from './DealBadge';
-import { trackGameCleared } from '@/lib/analytics';
+import { useToast } from './Toast';
+import { trackGameCleared, trackShareClear } from '@/lib/analytics';
 
 interface CompletionCelebrationProps {
   game: Game | null;
@@ -119,6 +120,168 @@ function ConfettiCanvas() {
   );
 }
 
+// --- Share a specific clear ---
+
+const CLEAR_FLAVORS = [
+  (name: string) => `Just cleared ${name} off my backlog.`,
+  (name: string) => `${name}: done. One less game haunting the pile.`,
+  (name: string) => `Finished ${name}. Actually played something I own.`,
+  (name: string) => `${name}: cleared. The pile gets smaller.`,
+  (name: string) => `Knocked out ${name}. Feels good.`,
+];
+
+function composeClearText(
+  game: Game,
+  rating: number,
+  gamesCleared: number,
+  hoursOnGame: number,
+  platform: 'twitter' | 'reddit' | 'copy',
+): string {
+  const flavor = CLEAR_FLAVORS[Math.floor(Math.random() * CLEAR_FLAVORS.length)];
+  const lines: string[] = [flavor(game.name)];
+
+  if (rating > 0) {
+    const stars = '⭐'.repeat(rating);
+    lines.push(stars);
+  }
+
+  if (hoursOnGame > 0) {
+    lines.push(`${hoursOnGame}h invested.`);
+  }
+
+  if (gamesCleared > 1) {
+    lines.push(`That's ${gamesCleared} cleared total.`);
+  }
+
+  switch (platform) {
+    case 'twitter':
+      lines.push('\ninventoryfull.gg');
+      break;
+    case 'reddit':
+      lines.push('\n[inventoryfull.gg](https://inventoryfull.gg)');
+      break;
+    case 'copy':
+      lines.push('\nhttps://inventoryfull.gg');
+      break;
+  }
+
+  return lines.join(' ');
+}
+
+function GameClearShare({
+  game,
+  rating,
+  gamesCleared,
+  hoursOnGame,
+  showToast,
+}: {
+  game: Game;
+  rating: number;
+  gamesCleared: number;
+  hoursOnGame: number;
+  showToast: (msg: string) => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  // Stable flavor — pick once per render cycle
+  const preview = useMemo(
+    () => composeClearText(game, rating, gamesCleared, hoursOnGame, 'copy')
+      .replace('\nhttps://inventoryfull.gg', '').trim(),
+    [game, rating, gamesCleared, hoursOnGame],
+  );
+
+  if (!expanded) {
+    return (
+      <button
+        onClick={() => setExpanded(true)}
+        className="w-full mb-4 px-4 py-2.5 rounded-xl text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.98]"
+        style={{
+          backgroundColor: 'rgba(167, 139, 250, 0.1)',
+          border: '1px solid rgba(167, 139, 250, 0.25)',
+          color: '#a78bfa',
+        }}
+      >
+        📣 Share this clear
+      </button>
+    );
+  }
+
+  return (
+    <div
+      className="mb-4 rounded-xl p-3.5 space-y-2.5"
+      style={{
+        backgroundColor: 'var(--color-bg-elevated)',
+        border: '1px solid rgba(167, 139, 250, 0.2)',
+      }}
+    >
+      {/* Preview */}
+      <div
+        className="rounded-lg p-2.5 text-xs text-text-muted leading-relaxed font-[family-name:var(--font-mono)]"
+        style={{ backgroundColor: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)' }}
+      >
+        {preview}
+      </div>
+
+      {/* Share buttons */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => {
+            trackShareClear('twitter', game.name);
+            const text = composeClearText(game, rating, gamesCleared, hoursOnGame, 'twitter');
+            window.open(
+              `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
+              '_blank',
+              'width=550,height=420',
+            );
+          }}
+          className="flex-1 flex items-center justify-center gap-1 px-2 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+          style={{
+            backgroundColor: 'rgba(29, 161, 242, 0.1)',
+            border: '1px solid rgba(29, 161, 242, 0.2)',
+            color: '#1da1f2',
+          }}
+        >
+          𝕏 Post
+        </button>
+        <button
+          onClick={() => {
+            trackShareClear('reddit', game.name);
+            const text = composeClearText(game, rating, gamesCleared, hoursOnGame, 'reddit');
+            window.open(
+              `https://reddit.com/submit?selftext=true&title=${encodeURIComponent(`Just cleared ${game.name} off my backlog`)}&text=${encodeURIComponent(text)}`,
+              '_blank',
+            );
+          }}
+          className="flex-1 flex items-center justify-center gap-1 px-2 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+          style={{
+            backgroundColor: 'rgba(255, 69, 0, 0.1)',
+            border: '1px solid rgba(255, 69, 0, 0.2)',
+            color: '#ff4500',
+          }}
+        >
+          📮 Reddit
+        </button>
+        <button
+          onClick={() => {
+            trackShareClear('copy', game.name);
+            const text = composeClearText(game, rating, gamesCleared, hoursOnGame, 'copy');
+            navigator.clipboard.writeText(text);
+            showToast('Copied! Show off that clear.');
+          }}
+          className="flex-1 flex items-center justify-center gap-1 px-2 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+          style={{
+            backgroundColor: 'rgba(88, 101, 242, 0.1)',
+            border: '1px solid rgba(88, 101, 242, 0.2)',
+            color: '#5865f2',
+          }}
+        >
+          📋 Copy
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function CompletionCelebration({ game, onClose, onConfirm }: CompletionCelebrationProps) {
   const [stage, setStage] = useState<'confirm' | 'celebrate'>('confirm');
   const [rating, setRating] = useState<number>(0);
@@ -126,6 +289,7 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
   const [mounted, setMounted] = useState(false);
   const games = useStore((s) => s.games);
   const updateGame = useStore((s) => s.updateGame);
+  const { showToast } = useToast();
 
   useEffect(() => {
     setMounted(true);
@@ -344,6 +508,15 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
                   </p>
                 )}
               </div>
+
+              {/* Share this clear */}
+              <GameClearShare
+                game={game}
+                rating={rating}
+                gamesCleared={gamesCleared + 1}
+                hoursOnGame={hoursOnGame}
+                showToast={showToast}
+              />
 
               {/* What's Next — recommendations from their own library + wishlist */}
               {(() => {
