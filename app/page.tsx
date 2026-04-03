@@ -295,7 +295,7 @@ function AppContent() {
   return (
     <div className="relative z-10 w-full max-w-[960px] mx-auto px-4 py-6 pb-24">
       {/* Header */}
-      <header className="mb-6 space-y-3">
+      <header className="mb-4 space-y-2">
         <div className="flex items-center justify-between">
           <div>
             <h1
@@ -304,24 +304,9 @@ function AppContent() {
             >
               Inventory Full
             </h1>
-            <p className="text-sm text-text-dim mt-0.5 italic">
-              Your backlog should feel exciting, not a warehouse of good intentions.
+            <p className="text-xs text-text-faint mt-0.5 font-[family-name:var(--font-mono)]">
+              Stop scrolling. Get playing.
             </p>
-            {!isEmpty && (
-              <div className="flex gap-3 text-xs font-[family-name:var(--font-mono)] mt-1.5">
-                <span><span style={{ color: '#f59e0b' }}>{stats.playing}</span> <span className="text-text-faint">playing</span></span>
-                <span><span className="text-text-muted">{stats.buried}</span> <span className="text-text-faint">backlog</span></span>
-                <span
-                  className="cursor-pointer hover:underline"
-                  onClick={() => document.getElementById('cleared-section')?.scrollIntoView({ behavior: 'smooth' })}
-                  title="Jump to Cleared"
-                ><span style={{ color: '#22c55e' }}>{stats.played}</span> <span className="text-text-faint">cleared 🏆</span></span>
-                <span className="hidden sm:inline"><span className="text-accent-purple">{stats.total}</span> <span className="text-text-faint">total</span></span>
-                {stats.totalHrs > 0 && (
-                  <span className="hidden sm:inline"><span className="text-accent-pink">{stats.totalHrs.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span> <span className="text-text-faint">hrs</span></span>
-                )}
-              </div>
-            )}
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -356,10 +341,10 @@ function AppContent() {
 
       {/* Get Playing — Hero Action (gravitational center) */}
       {!isEmpty && (
-        <div className="mb-5 space-y-2">
+        <div className="mb-4 space-y-2">
           <button
             onClick={() => handleOpenReroll('anything')}
-            className={`w-full px-6 py-5 text-lg font-bold rounded-xl text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98] ${mounted && !hasUsedReroll ? 'animate-[pulse_2s_ease-in-out_infinite]' : ''}`}
+            className={`w-full px-6 py-4 text-lg font-bold rounded-xl text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98] ${mounted && !hasUsedReroll ? 'animate-[pulse_2s_ease-in-out_infinite]' : ''}`}
             style={{ background: 'linear-gradient(135deg, #7c3aed, #a78bfa)' }}
           >
             🎲&nbsp; What Should I Play?
@@ -398,9 +383,6 @@ function AppContent() {
           </div>
         </div>
       )}
-
-      {/* Sync nudge — shows once for unsigned-in users after first import */}
-      {!isEmpty && <SyncNudge />}
 
       {/* Auto-enrichment progress */}
       <EnrichmentIndicator />
@@ -448,6 +430,9 @@ function AppContent() {
 
       {/* Play Next Queue — always visible regardless of filters */}
       {!isEmpty && <UpNextSection games={games} />}
+
+      {/* Sync nudge — below games, not above */}
+      {!isEmpty && <SyncNudge />}
 
       {/* Category Sections */}
       {!isEmpty && !noResults && (

@@ -32,24 +32,19 @@ export default function SyncNudge() {
 
   return (
     <div
-      className="flex items-center gap-3 px-4 py-3 rounded-xl border mb-4 animate-[fadeIn_300ms_ease-out]"
+      className="flex items-center gap-2 px-3 py-2 rounded-lg border mb-3 animate-[fadeIn_300ms_ease-out]"
       style={{
-        backgroundColor: 'rgba(124, 58, 237, 0.06)',
-        borderColor: 'rgba(124, 58, 237, 0.2)',
+        backgroundColor: 'rgba(124, 58, 237, 0.04)',
+        borderColor: 'rgba(124, 58, 237, 0.15)',
       }}
     >
-      <span className="text-lg shrink-0">☁️</span>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm text-text-primary font-medium">
-          Your library lives in this browser right now.
-        </p>
-        <p className="text-xs text-text-muted mt-0.5">
-          Sign in to sync across devices and keep it safe.
-        </p>
-      </div>
+      <span className="text-xs shrink-0">☁️</span>
+      <p className="flex-1 text-[11px] text-text-muted font-[family-name:var(--font-mono)]">
+        Local only. <span className="text-text-dim">Sign in to sync across devices.</span>
+      </p>
       <button
         onClick={handleDismiss}
-        className="text-xs text-text-faint hover:text-text-muted transition-colors shrink-0"
+        className="text-[10px] text-text-faint hover:text-text-muted transition-colors shrink-0 px-1"
         aria-label="Dismiss sync reminder"
       >
         ✕
