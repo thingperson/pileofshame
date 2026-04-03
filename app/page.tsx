@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useStore } from '@/lib/store';
 import { Game } from '@/lib/types';
 import { RerollMode } from '@/lib/reroll';
@@ -105,6 +105,18 @@ function AppContent() {
   const categories = useStore((s) => s.categories);
   const filters = useStore((s) => s.filters);
   const currentTheme = useStore((s) => s.settings.theme);
+
+  // Auto-pick after first import: detect 0 → N games transition
+  const prevGameCount = useRef(games.length);
+  useEffect(() => {
+    if (prevGameCount.current === 0 && games.length > 0) {
+      // First games just arrived — auto-open the picker after a brief pause
+      setTimeout(() => {
+        openReroll('anything');
+      }, 800);
+    }
+    prevGameCount.current = games.length;
+  }, [games.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Track theme usage once per session
   useEffect(() => {
@@ -331,13 +343,13 @@ function AppContent() {
             onClick={() => setImportHubOpen(true)}
             className="px-2.5 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
           >
-            📥 <span className="hidden sm:inline">&nbsp;Import</span>
+            📥&nbsp;Import
           </button>
           <button
             onClick={() => setAddModalOpen(true)}
             className="px-2.5 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
           >
-            + <span className="hidden sm:inline">Add</span>
+            + Add
           </button>
         </div>
       </header>
@@ -364,7 +376,7 @@ function AppContent() {
               style={{ background: 'linear-gradient(135deg, #6366f1, #818cf8)' }}
               title="Pick a game you can finish in one sitting"
             >
-              🌙&nbsp; <span className="hidden sm:inline">Quick </span>Session
+              🌙&nbsp; Quick Session
             </button>
             <button
               onClick={() => openReroll('deep-cut')}
@@ -380,7 +392,7 @@ function AppContent() {
               style={{ background: 'linear-gradient(135deg, #d97706, #fbbf24)' }}
               title="Pick from games you already started"
             >
-              ▶&nbsp; <span className="hidden sm:inline">Keep </span>Playing
+              ▶&nbsp; Keep Playing
             </button>
             <JustFiveMinutes games={games} />
           </div>

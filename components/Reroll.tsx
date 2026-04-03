@@ -258,18 +258,19 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
         {currentPick && !showForced && (
           <div className={`px-5 pb-5 transition-all duration-500 ${revealed ? 'opacity-100' : 'opacity-0'}`}>
             {/* Mode switcher pills */}
-            <div className="flex justify-center gap-1.5 mb-4">
-              {REROLL_MODES.map(({ mode: m, icon }) => (
+            <div className="flex flex-wrap justify-center gap-1.5 mb-4">
+              {REROLL_MODES.map(({ mode: m, icon, label }) => (
                 <button
                   key={m}
                   onClick={() => { setMode(m); doRoll(m); }}
-                  className={`px-2.5 py-1 rounded-full text-[11px] font-medium font-[family-name:var(--font-mono)] transition-all ${
+                  className={`px-3 py-2 rounded-full text-xs font-medium font-[family-name:var(--font-mono)] transition-all ${
                     mode === m
                       ? 'bg-white/10 text-text-primary'
                       : 'text-text-dim hover:text-text-muted hover:bg-white/5'
                   }`}
+                  title={label}
                 >
-                  {icon}
+                  {icon} {label}
                 </button>
               ))}
             </div>
