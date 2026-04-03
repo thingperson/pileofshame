@@ -1,13 +1,16 @@
 'use client';
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { Game } from '@/lib/types';
+import { Game, MoodTag } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { STATUS_CONFIG, REROLL_MESSAGES, TIME_TIER_CONFIG } from '@/lib/constants';
+import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
 import { getGameDescriptor } from '@/lib/descriptors';
-import { REROLL_MODES, RerollMode, getEligibleGames, pickRandom } from '@/lib/reroll';
+import { REROLL_MODES, RerollMode, getEligibleGames, pickWeighted } from '@/lib/reroll';
 import { useToast } from './Toast';
 import { trackReroll, trackRerollCommit } from '@/lib/analytics';
+
+const ALL_MOODS: MoodTag[] = ['chill', 'intense', 'story-rich', 'brainless', 'atmospheric', 'competitive', 'spooky', 'creative', 'strategic', 'emotional'];
 
 interface RerollProps {
   open: boolean;
@@ -17,11 +20,13 @@ interface RerollProps {
 
 export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   const [mode, setMode] = useState<RerollMode>('anything');
+  const [moodFilters, setMoodFilters] = useState<MoodTag[]>([]);
   const [currentPick, setCurrentPick] = useState<Game | null>(null);
   const [rolling, setRolling] = useState(false);
   const [showForced, setShowForced] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [skipModePicker, setSkipModePicker] = useState(false);
+  const [skippedIds, setSkippedIds] = useState<Set<string>>(new Set());
 
   const games = useStore((s) => s.games);
   const platformPreference = useStore((s) => s.settings.platformPreference) || 'any';
@@ -32,18 +37,27 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   const updateGame = useStore((s) => s.updateGame);
   const { showToast } = useToast();
 
+  const toggleMood = useCallback((mood: MoodTag) => {
+    setMoodFilters((prev) =>
+      prev.includes(mood) ? prev.filter((m) => m !== mood) : [...prev, mood]
+    );
+  }, []);
+
   const doRoll = useCallback((overrideMode?: RerollMode) => {
     const rollMode = overrideMode || mode;
-    const eligible = getEligibleGames(games, rollMode, platformPreference);
-    const pick = pickRandom(eligible);
+    const eligible = getEligibleGames(games, rollMode, platformPreference, moodFilters);
+    const pick = pickWeighted(eligible, skippedIds);
     if (!pick) {
-      showToast('No games match this mode. Add some games first.');
+      showToast(moodFilters.length > 0
+        ? 'No games match that mood. Try removing a filter.'
+        : 'No games match this mode. Add some games first.');
       return;
     }
 
-    // Push current pick to last three before rolling new one
+    // Track skipped game
     if (currentPick) {
       pushLastPick(currentPick);
+      setSkippedIds((prev) => new Set(prev).add(currentPick.id));
     }
 
     incrementReroll();
@@ -69,7 +83,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
         setTimeout(() => setShowForced(true), 600);
       }
     }, 500);
-  }, [games, mode, currentPick, reroll.sessionCount, incrementReroll, pushLastPick, showToast]);
+  }, [games, mode, moodFilters, currentPick, reroll.sessionCount, incrementReroll, pushLastPick, showToast, skippedIds, platformPreference]);
 
   const handleLetsGo = useCallback((game: Game) => {
     updateGame(game.id, { status: 'playing' });
@@ -91,13 +105,15 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   }, [resetReroll, onClose]);
 
   const handleFirstRoll = useCallback(() => {
-    const eligible = getEligibleGames(games, mode, platformPreference);
+    const eligible = getEligibleGames(games, mode, platformPreference, moodFilters);
     if (eligible.length === 0) {
-      showToast('No games match this mode.');
+      showToast(moodFilters.length > 0
+        ? 'No games match that mood. Try removing a filter.'
+        : 'No games match this mode.');
       return;
     }
     doRoll();
-  }, [games, mode, doRoll, showToast]);
+  }, [games, mode, moodFilters, doRoll, showToast, platformPreference]);
 
   // Reset state when modal opens — if initialMode provided, auto-roll
   useEffect(() => {
@@ -105,6 +121,8 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
       setCurrentPick(null);
       setShowForced(false);
       setRevealed(false);
+      setSkippedIds(new Set());
+      setMoodFilters([]);
       if (initialMode) {
         setMode(initialMode);
         setSkipModePicker(true);
@@ -118,7 +136,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   // Auto-roll on open when mode is pre-selected
   useEffect(() => {
     if (open && skipModePicker && !currentPick && !rolling) {
-      const eligible = getEligibleGames(games, mode, platformPreference);
+      const eligible = getEligibleGames(games, mode, platformPreference, moodFilters);
       if (eligible.length > 0) {
         doRoll();
       } else {
@@ -241,6 +259,35 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                 </button>
               ))}
             </div>
+            {/* Mood filter pills */}
+            <div className="mt-3">
+              <p className="text-[10px] text-text-dim font-[family-name:var(--font-mono)] uppercase tracking-wider mb-1.5">Mood</p>
+              <div className="flex flex-wrap gap-1.5">
+                {ALL_MOODS.map((mood) => {
+                  const config = MOOD_TAG_CONFIG[mood];
+                  const active = moodFilters.includes(mood);
+                  return (
+                    <button
+                      key={mood}
+                      onClick={() => toggleMood(mood)}
+                      className={`px-2.5 py-1.5 rounded-full text-xs font-medium transition-all ${
+                        active
+                          ? 'scale-[1.02]'
+                          : 'opacity-60 hover:opacity-90'
+                      }`}
+                      style={{
+                        backgroundColor: active ? `${config.color}25` : 'rgba(255,255,255,0.05)',
+                        color: active ? config.color : 'var(--color-text-dim)',
+                        border: active ? `1px solid ${config.color}50` : '1px solid transparent',
+                      }}
+                    >
+                      {config.icon} {config.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             <button
               onClick={handleFirstRoll}
               className="w-full mt-3 px-4 py-3 text-base font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
@@ -258,7 +305,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
         {currentPick && !showForced && (
           <div className={`px-5 pb-5 transition-all duration-500 ${revealed ? 'opacity-100' : 'opacity-0'}`}>
             {/* Mode switcher pills */}
-            <div className="flex flex-wrap justify-center gap-1.5 mb-4">
+            <div className="flex flex-wrap justify-center gap-1.5 mb-2">
               {REROLL_MODES.map(({ mode: m, icon, label }) => (
                 <button
                   key={m}
@@ -273,6 +320,29 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                   {icon} {label}
                 </button>
               ))}
+            </div>
+
+            {/* Mood filter pills (compact, inline) */}
+            <div className="flex flex-wrap justify-center gap-1 mb-4">
+              {ALL_MOODS.map((mood) => {
+                const config = MOOD_TAG_CONFIG[mood];
+                const active = moodFilters.includes(mood);
+                return (
+                  <button
+                    key={mood}
+                    onClick={() => { toggleMood(mood); }}
+                    className={`px-2 py-1 rounded-full text-[10px] font-medium transition-all ${
+                      active ? 'scale-[1.02]' : 'opacity-50 hover:opacity-80'
+                    }`}
+                    style={{
+                      backgroundColor: active ? `${config.color}25` : 'transparent',
+                      color: active ? config.color : 'var(--color-text-dim)',
+                    }}
+                  >
+                    {config.icon} {config.label}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Game reveal */}

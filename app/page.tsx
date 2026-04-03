@@ -106,17 +106,11 @@ function AppContent() {
   const filters = useStore((s) => s.filters);
   const currentTheme = useStore((s) => s.settings.theme);
 
-  // Auto-pick after first import: detect 0 → N games transition
+  // Track game count transitions (kept for future use, no longer auto-opens modal)
   const prevGameCount = useRef(games.length);
   useEffect(() => {
-    if (prevGameCount.current === 0 && games.length > 0) {
-      // First games just arrived — auto-open the picker after a brief pause
-      setTimeout(() => {
-        openReroll('anything');
-      }, 800);
-    }
     prevGameCount.current = games.length;
-  }, [games.length]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [games.length]);
 
   // Track theme usage once per session
   useEffect(() => {

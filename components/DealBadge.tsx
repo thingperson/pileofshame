@@ -47,9 +47,16 @@ export default function DealBadge({ gameName, compact = false }: DealBadgeProps)
       if (!res.ok) return;
       const data = await res.json();
       if (data.deals && data.deals.length > 0) {
-        setDeal(data);
-        trackDealCheck(gameName);
-        dealCache.set(gameName, { data, timestamp: Date.now() });
+        // Filter out 0% discount "deals" — those are just full-price listings
+        const realDeals = data.deals.filter((d: Deal) => d.savings > 0);
+        if (realDeals.length > 0) {
+          const filtered = { ...data, deals: realDeals };
+          setDeal(filtered);
+          trackDealCheck(gameName);
+          dealCache.set(gameName, { data: filtered, timestamp: Date.now() });
+        } else {
+          dealCache.set(gameName, { data: null, timestamp: Date.now() });
+        }
       } else {
         dealCache.set(gameName, { data: null, timestamp: Date.now() });
       }
