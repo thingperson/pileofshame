@@ -1597,6 +1597,353 @@ button:active:not(:disabled) {
   border-color: #333333 !important;
 }
 
+/* ========================
+   DEFAULT BANNER (dark, light, weird, ultra)
+   ======================== */
+
+.default-banner {
+  text-align: center;
+  padding: 14px 16px 10px;
+  letter-spacing: 4px;
+  font-family: var(--font-mono);
+}
+
+.default-banner-text {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+  opacity: 0.6;
+}
+
+/* Ultra override — chartreuse glow */
+.theme-ultra .default-banner-text {
+  color: #BFFF00 !important;
+  opacity: 1;
+  text-shadow: 0 0 10px rgba(191, 255, 0, 0.3);
+  letter-spacing: 8px;
+  font-size: 13px;
+}
+
+/* Light override */
+.theme-light .default-banner-text {
+  color: #6b7280 !important;
+  opacity: 0.5;
+}
+
+/* Weird override — subtle distortion */
+.theme-weird .default-banner {
+  transform: rotate(-0.3deg);
+}
+.theme-weird .default-banner-text {
+  animation: weird-flicker 4s ease-in-out infinite;
+}
+
+/* ========================
+   COZY THEME
+   ======================== */
+
+.cozy-banner {
+  text-align: center;
+  padding: 20px 16px 14px;
+}
+
+.cozy-banner-text {
+  display: block;
+  font-family: var(--font-cozy), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: #8B7355;
+  opacity: 0.7;
+}
+
+.cozy-banner-sub {
+  display: block;
+  font-family: var(--font-cozy), sans-serif;
+  font-size: 11px;
+  color: #A89078;
+  opacity: 0.5;
+  margin-top: 4px;
+}
+
+.theme-cozy {
+  --color-bg-primary: #F5F0EB !important;
+  --color-bg-card: #FFFFFF !important;
+  --color-bg-elevated: #EDE8E2 !important;
+  --color-border-subtle: rgba(139, 115, 85, 0.12) !important;
+  --color-border-active: rgba(139, 115, 85, 0.25) !important;
+  --color-text-primary: #3D3837 !important;
+  --color-text-secondary: #554E4A !important;
+  --color-text-muted: #7A706A !important;
+  --color-text-dim: #9E918A !important;
+  --color-text-faint: #B8ADA6 !important;
+  --color-accent-purple: #B8A9C9 !important;
+  --color-accent-pink: #E8A598 !important;
+}
+
+.theme-cozy body,
+body.theme-cozy {
+  background-color: #F5F0EB !important;
+}
+
+/* Cozy: swap all fonts to Nunito, kill monospace */
+.theme-cozy * {
+  font-family: var(--font-cozy), sans-serif !important;
+}
+
+/* Cozy: larger text, more breathing room */
+.theme-cozy h1 {
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+  color: #3D3837 !important;
+}
+
+.theme-cozy h2, .theme-cozy h3 {
+  color: #554E4A !important;
+}
+
+/* Cozy: softer cards */
+.theme-cozy [class*="rounded-"] {
+  border-radius: 16px !important;
+}
+
+.theme-cozy button[class*="rounded-"] {
+  border-radius: 20px !important;
+}
+
+.theme-cozy [class*="bg-bg-card"],
+.theme-cozy [style*="background-color: var(--color-bg-card)"] {
+  background-color: #FFFFFF !important;
+  box-shadow: 0 2px 12px rgba(139, 115, 85, 0.06) !important;
+  border-color: rgba(139, 115, 85, 0.08) !important;
+}
+
+/* Cozy: status colors softened */
+.theme-cozy {
+  --color-status-buried: #9E918A !important;
+  --color-status-buried-bg: #EDE8E2 !important;
+  --color-status-on-deck: #7BBEDB !important;
+  --color-status-on-deck-bg: #E8F4FA !important;
+  --color-status-playing: #D4A855 !important;
+  --color-status-playing-bg: #FAF0DC !important;
+  --color-status-played: #A8C5A0 !important;
+  --color-status-played-bg: #ECF5EA !important;
+  --color-status-bailed: #B8ADA6 !important;
+  --color-status-bailed-bg: #EDE8E2 !important;
+}
+
+/* Cozy: hero CTA softened */
+.theme-cozy button[style*="linear-gradient"] {
+  background: linear-gradient(135deg, #B8A9C9, #D4BFD8) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 4px 16px rgba(184, 169, 201, 0.2) !important;
+}
+
+.theme-cozy button[style*="linear-gradient"]:hover {
+  box-shadow: 0 6px 20px rgba(184, 169, 201, 0.3) !important;
+}
+
+/* Cozy: mood shortcut buttons softened */
+.theme-cozy .shrink-0[style*="linear-gradient"] {
+  border-radius: 16px !important;
+  opacity: 0.85;
+}
+
+/* Cozy: tab nav */
+.theme-cozy [class*="tab-"] button,
+.theme-cozy nav button {
+  border-radius: 14px !important;
+}
+
+/* Cozy: inputs */
+.theme-cozy input,
+.theme-cozy select,
+.theme-cozy textarea {
+  background-color: #FAF7F2 !important;
+  border-color: rgba(139, 115, 85, 0.15) !important;
+  color: #3D3837 !important;
+  border-radius: 12px !important;
+}
+
+.theme-cozy input::placeholder {
+  color: #B8ADA6 !important;
+}
+
+/* Cozy: grid cards */
+.theme-cozy .grid > div {
+  border-radius: 16px !important;
+  overflow: hidden;
+}
+
+/* Cozy: scrollbar */
+.theme-cozy ::-webkit-scrollbar-thumb {
+  background-color: rgba(184, 169, 201, 0.3) !important;
+  border-radius: 10px !important;
+}
+
+.theme-cozy ::-webkit-scrollbar-track {
+  background-color: #F5F0EB !important;
+}
+
+/* ========================
+   MINIMAL THEME
+   ======================== */
+
+.theme-minimal {
+  --color-bg-primary: #0C0C0E !important;
+  --color-bg-card: #0C0C0E !important;
+  --color-bg-elevated: #111113 !important;
+  --color-border-subtle: rgba(255, 255, 255, 0.06) !important;
+  --color-border-active: rgba(255, 255, 255, 0.12) !important;
+  --color-text-primary: #E0E0E0 !important;
+  --color-text-secondary: rgba(255, 255, 255, 0.7) !important;
+  --color-text-muted: rgba(255, 255, 255, 0.45) !important;
+  --color-text-dim: rgba(255, 255, 255, 0.3) !important;
+  --color-text-faint: rgba(255, 255, 255, 0.2) !important;
+  --color-accent-purple: rgba(255, 255, 255, 0.8) !important;
+  --color-accent-pink: rgba(255, 255, 255, 0.5) !important;
+}
+
+.theme-minimal body,
+body.theme-minimal {
+  background-color: #0C0C0E !important;
+}
+
+/* Minimal: one font, one weight */
+.theme-minimal * {
+  font-family: var(--font-display), sans-serif !important;
+}
+
+/* Minimal: strip visual noise */
+.theme-minimal h1 {
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.5px !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  text-transform: lowercase !important;
+}
+
+/* Minimal: no card backgrounds, just dividers */
+.theme-minimal [class*="bg-bg-card"],
+.theme-minimal [style*="background-color: var(--color-bg-card)"] {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 0 !important;
+}
+
+/* Minimal: no card radius anywhere */
+.theme-minimal [class*="rounded-"] {
+  border-radius: 0 !important;
+}
+
+/* Minimal: strip gradient buttons */
+.theme-minimal button[style*="linear-gradient"] {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  border-radius: 0 !important;
+}
+
+.theme-minimal button[style*="linear-gradient"]:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Minimal: mood shortcut buttons stripped */
+.theme-minimal .shrink-0[style*="linear-gradient"] {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  font-size: 12px !important;
+}
+
+.theme-minimal .shrink-0[style*="linear-gradient"]:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Minimal: tab bar is plain text */
+.theme-minimal nav button,
+.theme-minimal [class*="tab-"] button {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 8px 4px !important;
+  border-bottom: 1px solid transparent !important;
+}
+
+.theme-minimal nav button[class*="accent"],
+.theme-minimal nav button[aria-selected="true"] {
+  border-bottom-color: rgba(255, 255, 255, 0.5) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Minimal: status colors muted */
+.theme-minimal {
+  --color-status-buried: rgba(255, 255, 255, 0.25) !important;
+  --color-status-buried-bg: transparent !important;
+  --color-status-on-deck: rgba(255, 255, 255, 0.5) !important;
+  --color-status-on-deck-bg: transparent !important;
+  --color-status-playing: rgba(255, 255, 255, 0.7) !important;
+  --color-status-playing-bg: transparent !important;
+  --color-status-played: rgba(255, 255, 255, 0.4) !important;
+  --color-status-played-bg: transparent !important;
+  --color-status-bailed: rgba(255, 255, 255, 0.2) !important;
+  --color-status-bailed-bg: transparent !important;
+}
+
+/* Minimal: inputs */
+.theme-minimal input,
+.theme-minimal select,
+.theme-minimal textarea {
+  background-color: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0 !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.theme-minimal input::placeholder {
+  color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Minimal: grid cards — just images, no decoration */
+.theme-minimal .grid > div {
+  border-radius: 0 !important;
+  border: none !important;
+}
+
+/* Minimal: no shadows anywhere */
+.theme-minimal * {
+  text-shadow: none !important;
+}
+
+/* Minimal: scrollbar invisible */
+.theme-minimal ::-webkit-scrollbar {
+  width: 4px;
+}
+.theme-minimal ::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+.theme-minimal ::-webkit-scrollbar-track {
+  background-color: transparent !important;
+}
+
+/* Minimal: footer */
+.theme-minimal footer a {
+  text-decoration: none !important;
+}
+.theme-minimal footer a:hover {
+  text-decoration: underline !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

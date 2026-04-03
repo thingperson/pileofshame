@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, JetBrains_Mono } from "next/font/google";
+import { Outfit, JetBrains_Mono, Nunito } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -9,6 +9,12 @@ const outfit = Outfit({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+});
+
+const nunito = Nunito({
+  variable: "--font-cozy",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -67,7 +73,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${outfit.variable} ${jetbrainsMono.variable} ${nunito.variable} h-full antialiased`}
     >
       <head>
           <Script

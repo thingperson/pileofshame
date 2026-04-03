@@ -491,10 +491,31 @@ function DinoFact() {
 }
 
 // ============================
+// DEFAULT / UNIVERSAL BANNER
+// ============================
+
+function DefaultBanner() {
+  return (
+    <div className="default-banner">
+      <span className="default-banner-text">INVENTORY FULL</span>
+    </div>
+  );
+}
+
+function CozyBanner() {
+  return (
+    <div className="cozy-banner">
+      <span className="cozy-banner-text">inventory full</span>
+      <span className="cozy-banner-sub">take your time. pick something nice.</span>
+    </div>
+  );
+}
+
+// ============================
 // MAIN THEME WRAPPER
 // ============================
 
-const THEME_CLASSES = ['theme-90s', 'theme-80s', 'theme-future', 'theme-light', 'theme-dino', 'theme-weird', 'theme-ultra', 'theme-void'];
+const THEME_CLASSES = ['theme-90s', 'theme-80s', 'theme-future', 'theme-light', 'theme-dino', 'theme-weird', 'theme-ultra', 'theme-void', 'theme-cozy', 'theme-minimal'];
 
 export default function NinetiesMode({ children }: { children: React.ReactNode }) {
   const theme = useStore((s) => s.settings.theme);
@@ -566,6 +587,30 @@ export default function NinetiesMode({ children }: { children: React.ReactNode }
     );
   }
 
-  // dark and light — no chrome, just CSS variables
+  if (theme === 'cozy') {
+    return (
+      <>
+        <CozyBanner />
+        {children}
+      </>
+    );
+  }
+
+  if (theme === 'minimal') {
+    // Minimal: zero chrome, pure function
+    return <>{children}</>;
+  }
+
+  // dark, light, weird, ultra — subtle branded header
+  if (theme !== 'void') {
+    return (
+      <>
+        <DefaultBanner />
+        {children}
+      </>
+    );
+  }
+
+  // void — nothing
   return <>{children}</>;
 }

@@ -257,6 +257,8 @@ export default function SettingsMenu() {
                       { value: 'weird', label: '👁️ Weird' },
                       { value: 'ultra', label: '⚡ ULTRA' },
                       { value: 'void', label: '🫥 Void' },
+                      { value: 'cozy', label: '☕ Cozy' },
+                      { value: 'minimal', label: '— Minimal' },
                     ].map((opt) => (
                       <button
                         key={opt.value}
