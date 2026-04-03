@@ -61,7 +61,7 @@ export interface LibrarySettings {
   showPlayed: boolean;
   showBailed: boolean;
   viewMode: ViewMode;
-  theme: 'dark' | 'light' | '90s' | '80s' | 'future' | 'dino' | 'weird' | 'ultra';
+  theme: 'dark' | 'light' | '90s' | '80s' | 'future' | 'dino' | 'weird' | 'ultra' | 'void';
   platformPreference: PlatformPreference;
 }
 

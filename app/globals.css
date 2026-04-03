@@ -1490,6 +1490,60 @@ button:active:not(:disabled) {
 }
 
 
+/* ===== VOID THEME ===== */
+/* Pure nothing. Just the decision. */
+.theme-void {
+  --color-bg-primary: #000000;
+  --color-bg-card: #000000;
+  --color-bg-elevated: #050505;
+  --color-border-subtle: #111111;
+  --color-border-active: #333333;
+  --color-text-primary: #888888;
+  --color-text-secondary: #666666;
+  --color-text-muted: #444444;
+  --color-text-dim: #333333;
+  --color-text-faint: #222222;
+  --color-accent-purple: #555555;
+  --color-accent-pink: #444444;
+
+  --color-status-buried: #333333;
+  --color-status-buried-bg: #0a0a0a;
+  --color-status-on-deck: #444444;
+  --color-status-on-deck-bg: #0a0a0a;
+  --color-status-playing: #555555;
+  --color-status-playing-bg: #0a0a0a;
+  --color-status-played: #444444;
+  --color-status-played-bg: #0a0a0a;
+  --color-status-bailed: #333333;
+  --color-status-bailed-bg: #0a0a0a;
+
+  background: #000000 !important;
+}
+
+.theme-void::before {
+  display: none !important;
+}
+
+/* Void: everything fades except the action */
+.theme-void h1 {
+  color: #666666 !important;
+  font-weight: 400 !important;
+  letter-spacing: 4px !important;
+  text-transform: lowercase !important;
+}
+
+.theme-void button[style*="linear-gradient"] {
+  background: #111111 !important;
+  color: #888888 !important;
+  border: 1px solid #222222 !important;
+}
+
+.theme-void button[style*="linear-gradient"]:hover {
+  background: #1a1a1a !important;
+  color: #aaaaaa !important;
+  border-color: #333333 !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

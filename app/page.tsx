@@ -199,6 +199,86 @@ function AppContent() {
 
   const isEmpty = games.length === 0;
   const noResults = games.length > 0 && filteredGames.length === 0;
+  const isVoid = currentTheme === 'void' && !isEmpty;
+
+  // === THE VOID ===
+  // Strip everything. Just the decision. Then go play.
+  if (isVoid) {
+    return (
+      <div className="relative z-10 w-full max-w-[960px] mx-auto px-4 flex flex-col items-center justify-center" style={{ minHeight: '100vh' }}>
+        {/* Tiny settings access — top right */}
+        <div className="fixed top-4 right-4 z-50 flex gap-2">
+          <SettingsMenu />
+        </div>
+
+        <div className="flex flex-col items-center gap-8 w-full max-w-md">
+          {/* Quiet title */}
+          <div className="text-center">
+            <h1 className="text-lg font-light tracking-[6px] text-[#444] lowercase">
+              inventory full
+            </h1>
+            <p className="text-xs text-[#333] mt-2 font-[family-name:var(--font-mono)]">
+              {games.length} games. Pick one.
+            </p>
+          </div>
+
+          {/* The only thing that matters */}
+          <button
+            onClick={() => handleOpenReroll('anything')}
+            className="w-full px-8 py-6 text-lg font-medium rounded-xl transition-all hover:bg-[#111] active:scale-[0.98]"
+            style={{
+              background: '#0a0a0a',
+              border: '1px solid #1a1a1a',
+              color: '#888',
+            }}
+          >
+            Pick for me
+          </button>
+
+          {/* Mood shortcuts — minimal */}
+          <div className="flex gap-2 w-full">
+            <button
+              onClick={() => openReroll('quick-session')}
+              className="flex-1 px-3 py-3 text-xs font-[family-name:var(--font-mono)] rounded-lg transition-all hover:bg-[#111]"
+              style={{ background: '#050505', border: '1px solid #111', color: '#555' }}
+            >
+              quick session
+            </button>
+            <button
+              onClick={() => openReroll('deep-cut')}
+              className="flex-1 px-3 py-3 text-xs font-[family-name:var(--font-mono)] rounded-lg transition-all hover:bg-[#111]"
+              style={{ background: '#050505', border: '1px solid #111', color: '#555' }}
+            >
+              deep cut
+            </button>
+            <button
+              onClick={() => openReroll('continue')}
+              className="flex-1 px-3 py-3 text-xs font-[family-name:var(--font-mono)] rounded-lg transition-all hover:bg-[#111]"
+              style={{ background: '#050505', border: '1px solid #111', color: '#555' }}
+            >
+              keep playing
+            </button>
+          </div>
+
+          {/* Breathing room */}
+          <p className="text-[10px] text-[#222] font-[family-name:var(--font-mono)] mt-4">
+            less deciding. more playing.
+          </p>
+        </div>
+
+        {/* Modals still work */}
+        <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} />
+        <CompletionCelebration
+          game={celebrationGame}
+          onClose={closeCelebration}
+          onConfirm={() => {
+            if (celebrationGame) cycleStatus(celebrationGame.id);
+          }}
+        />
+        <CloudSync />
+      </div>
+    );
+  }
 
   return (
     <div className="relative z-10 w-full max-w-[960px] mx-auto px-4 py-6 pb-24">

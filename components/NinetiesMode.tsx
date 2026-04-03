@@ -494,7 +494,7 @@ function DinoFact() {
 // MAIN THEME WRAPPER
 // ============================
 
-const THEME_CLASSES = ['theme-90s', 'theme-80s', 'theme-future', 'theme-light', 'theme-dino', 'theme-weird', 'theme-ultra'];
+const THEME_CLASSES = ['theme-90s', 'theme-80s', 'theme-future', 'theme-light', 'theme-dino', 'theme-weird', 'theme-ultra', 'theme-void'];
 
 export default function NinetiesMode({ children }: { children: React.ReactNode }) {
   const theme = useStore((s) => s.settings.theme);

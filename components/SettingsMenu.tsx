@@ -256,6 +256,7 @@ export default function SettingsMenu() {
                       { value: 'dino', label: '🦕 Dino' },
                       { value: 'weird', label: '👁️ Weird' },
                       { value: 'ultra', label: '⚡ ULTRA' },
+                      { value: 'void', label: '🫥 Void' },
                     ].map((opt) => (
                       <button
                         key={opt.value}

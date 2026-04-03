@@ -527,6 +527,17 @@ const THEME_ARCHETYPES: ThemeArchetypeDef[] = [
       tone: 'roast',
     },
   },
+  {
+    theme: 'void',
+    minSessions: 8,
+    minPct: 0.4,
+    archetype: {
+      title: 'The Minimalist',
+      icon: '🫥',
+      description: `You use Void mode. No library. No stats. No distractions. Just "pick for me" and go. You understood the assignment better than anyone.`,
+      tone: 'respect',
+    },
+  },
 ];
 
 // Ultimate fallback

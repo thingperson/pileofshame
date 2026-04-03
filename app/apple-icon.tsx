@@ -24,22 +24,22 @@ export default function AppleIcon() {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Skull */}
-          <ellipse cx="60" cy="50" rx="55" ry="50" fill="#f8fafc" />
-          <rect x="25" y="80" width="70" height="30" rx="5" fill="#f8fafc" />
-          {/* Eyes */}
-          <ellipse cx="39" cy="42" rx="14" ry="15" fill="#0a0a0f" />
-          <ellipse cx="81" cy="42" rx="14" ry="15" fill="#0a0a0f" />
-          {/* Eye glints */}
-          <circle cx="44" cy="36" r="5" fill="#a78bfa" opacity="0.8" />
-          <circle cx="86" cy="36" r="5" fill="#a78bfa" opacity="0.8" />
-          {/* Nose */}
-          <path d="M54,65 L60,75 L66,65 Z" fill="#0a0a0f" opacity="0.5" />
-          {/* Teeth */}
-          <line x1="42" y1="87" x2="42" y2="105" stroke="#0a0a0f" strokeWidth="3" strokeLinecap="round" />
-          <line x1="54" y1="87" x2="54" y2="105" stroke="#0a0a0f" strokeWidth="3" strokeLinecap="round" />
-          <line x1="66" y1="87" x2="66" y2="105" stroke="#0a0a0f" strokeWidth="3" strokeLinecap="round" />
-          <line x1="78" y1="87" x2="78" y2="105" stroke="#0a0a0f" strokeWidth="3" strokeLinecap="round" />
+          {/* Backpack body */}
+          <rect x="20" y="45" width="80" height="75" rx="12" fill="#f8fafc" />
+          {/* Top flap */}
+          <rect x="28" y="32" width="64" height="22" rx="8" fill="#e2e8f0" />
+          {/* Straps */}
+          <rect x="10" y="52" width="14" height="50" rx="7" fill="#e2e8f0" />
+          <rect x="96" y="52" width="14" height="50" rx="7" fill="#e2e8f0" />
+          {/* Front pocket */}
+          <rect x="34" y="75" width="52" height="30" rx="6" fill="#a78bfa" opacity="0.3" />
+          {/* Pocket clasp */}
+          <circle cx="60" cy="78" r="4" fill="#a78bfa" opacity="0.6" />
+          {/* Items overflowing out the top */}
+          <rect x="35" y="14" width="12" height="28" rx="3" fill="#fbbf24" transform="rotate(-12, 41, 28)" />
+          <rect x="68" y="10" width="12" height="32" rx="3" fill="#22c55e" transform="rotate(10, 74, 26)" />
+          <circle cx="55" cy="22" r="8" fill="#f472b6" />
+          <rect x="50" y="18" width="10" height="20" rx="3" fill="#38bdf8" transform="rotate(-5, 55, 28)" />
         </svg>
       </div>
     ),
