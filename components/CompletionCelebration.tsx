@@ -5,7 +5,6 @@ import { createPortal } from 'react-dom';
 import { Game } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { getCompletionRecommendations, getWishlistRecommendations } from '@/lib/recommendations';
-import DealBadge from './DealBadge';
 import { useToast } from './Toast';
 import { trackGameCleared, trackShareClear } from '@/lib/analytics';
 
@@ -573,7 +572,6 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
                                 {rec.game.name}
                               </span>
                             </div>
-                            <DealBadge gameName={rec.game.name} compact />
                           </div>
                         ))}
                       </div>

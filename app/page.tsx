@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useStore } from '@/lib/store';
 import { Game } from '@/lib/types';
 import { RerollMode } from '@/lib/reroll';
@@ -26,6 +26,7 @@ import NinetiesMode from '@/components/NinetiesMode';
 import SyncNudge from '@/components/SyncNudge';
 import { useAutoEnrich } from '@/hooks/useAutoEnrich';
 import OnboardingWelcome from '@/components/OnboardingWelcome';
+import PostImportSummary from '@/components/PostImportSummary';
 import { trackThemeSession } from '@/lib/archetypes';
 
 // ── Inline Search ──────────────────────────────────────────────────
@@ -87,6 +88,7 @@ const UP_NEXT_CAP = 5;
 
 function AppContent() {
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [addModalInitialName, setAddModalInitialName] = useState('');
   const [rerollOpen, setRerollOpen] = useState(false);
   const [rerollMode, setRerollMode] = useState<RerollMode | undefined>();
   const [importHubOpen, setImportHubOpen] = useState(false);
@@ -99,6 +101,12 @@ function AppContent() {
     setRerollMode(mode);
     setRerollOpen(true);
   };
+
+  // ── Post-import summary ──
+  const [importBreakdown, setImportBreakdown] = useState<{
+    total: number; backlog: number; started: number; upNext: number; completed: number;
+  } | null>(null);
+  const prevGameCount = useRef(0);
 
   const games = useStore((s) => s.games);
   const filters = useStore((s) => s.filters);
@@ -244,6 +252,21 @@ function AppContent() {
   // Auto-enrich games in background after import
   useAutoEnrich();
 
+  // Detect post-import transition (0 → N games) and compute breakdown
+  useEffect(() => {
+    if (prevGameCount.current === 0 && games.length > 0) {
+      const breakdown = {
+        total: games.length,
+        backlog: games.filter((g) => g.status === 'buried' && g.hoursPlayed === 0).length,
+        started: games.filter((g) => g.status === 'buried' && g.hoursPlayed > 0).length,
+        upNext: games.filter((g) => g.status === 'on-deck').length,
+        completed: games.filter((g) => g.status === 'played').length,
+      };
+      setImportBreakdown(breakdown);
+    }
+    prevGameCount.current = games.length;
+  }, [games]);
+
   // First-time experience: track if user has ever used the reroll
   const [mounted, setMounted] = useState(false);
   const [hasUsedReroll, setHasUsedReroll] = useState(true);
@@ -355,7 +378,7 @@ function AppContent() {
               📥 Import
             </button>
             <button
-              onClick={() => setAddModalOpen(true)}
+              onClick={() => { setAddModalInitialName(''); setAddModalOpen(true); }}
               className="px-2.5 py-2 text-[11px] sm:text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
             >
               + Add
@@ -415,7 +438,7 @@ function AppContent() {
       {isEmpty && (
         <OnboardingWelcome
           onImport={() => setImportHubOpen(true)}
-          onAddManual={() => setAddModalOpen(true)}
+          onAddManual={() => { setAddModalInitialName(''); setAddModalOpen(true); }}
         />
       )}
 
@@ -429,22 +452,66 @@ function AppContent() {
       {/* ── Sync Nudge (below tabs, above games) ── */}
       {!isEmpty && <SyncNudge />}
 
+      {/* ── Post-Import Summary ── */}
+      {importBreakdown && (
+        <PostImportSummary
+          breakdown={importBreakdown}
+          onDismiss={() => setImportBreakdown(null)}
+        />
+      )}
+
       {/* ── Tab Content ── */}
       {!isEmpty && (
         <div className="min-h-[200px]">
           {/* Search active indicator */}
           {filters.search && (
-            <div className="flex items-center gap-2 mb-3 px-2 py-1.5 rounded-lg bg-white/5">
-              <span className="text-xs text-text-dim">Searching: &ldquo;{filters.search}&rdquo;</span>
-              <button
-                onClick={() => setFilter('search', '')}
-                className="text-[10px] text-text-faint hover:text-text-muted transition-colors"
-              >
-                Clear
-              </button>
-              <span className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] ml-auto">
-                {tabGames.length} result{tabGames.length !== 1 ? 's' : ''} in {activeTabDef.label}
-              </span>
+            <div className="mb-3">
+              <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-white/5">
+                <span className="text-xs text-text-dim">Searching: &ldquo;{filters.search}&rdquo;</span>
+                <button
+                  onClick={() => setFilter('search', '')}
+                  className="text-[10px] text-text-faint hover:text-text-muted transition-colors"
+                >
+                  Clear
+                </button>
+                <span className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] ml-auto">
+                  {tabGames.length} result{tabGames.length !== 1 ? 's' : ''} in {activeTabDef.label}
+                </span>
+              </div>
+              {/* Search-to-add: no results anywhere in library */}
+              {tabGames.length === 0 && (() => {
+                const q = filters.search.toLowerCase();
+                const anywhereCount = games.filter((g) => g.name.toLowerCase().includes(q) || g.notes.toLowerCase().includes(q)).length;
+                if (anywhereCount > 0) {
+                  // Results exist in other tabs
+                  const otherTabs = TABS.filter((t) => t.id !== activeTab && games.some((g) => t.statuses.includes(g.status) && (g.name.toLowerCase().includes(q) || g.notes.toLowerCase().includes(q))));
+                  return (
+                    <div className="mt-2 px-3 py-2 rounded-lg text-xs text-text-muted" style={{ backgroundColor: 'rgba(167, 139, 250, 0.06)' }}>
+                      Not in {activeTabDef.label}, but found in: {otherTabs.map((t) => (
+                        <button key={t.id} onClick={() => setActiveTab(t.id)} className="text-accent-purple hover:underline mx-1">{t.label}</button>
+                      ))}
+                    </div>
+                  );
+                }
+                // Not in library at all — offer to add
+                return (
+                  <div className="mt-2 px-3 py-3 rounded-lg text-center" style={{ backgroundColor: 'rgba(167, 139, 250, 0.06)' }}>
+                    <p className="text-sm text-text-muted mb-2">
+                      &ldquo;{filters.search}&rdquo; isn&apos;t in your library yet.
+                    </p>
+                    <button
+                      onClick={() => {
+                        setAddModalInitialName(filters.search);
+                        setAddModalOpen(true);
+                      }}
+                      className="px-4 py-2 text-xs font-semibold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
+                      style={{ backgroundColor: 'rgba(167, 139, 250, 0.15)', color: '#a78bfa', border: '1px solid rgba(167, 139, 250, 0.25)' }}
+                    >
+                      + Add &ldquo;{filters.search}&rdquo; to your pile
+                    </button>
+                  </div>
+                );
+              })()}
             </div>
           )}
 
@@ -511,6 +578,10 @@ function AppContent() {
                         label: `← ${prevTabLabel}`,
                         onClick: () => moveGameBack(game),
                       } : undefined}
+                      onStatusChange={(newStatus) => {
+                        const targetTab = TABS.find((t) => t.statuses.includes(newStatus));
+                        if (targetTab) setActiveTab(targetTab.id);
+                      }}
                     />
                   </div>
                 ))}
@@ -553,7 +624,7 @@ function AppContent() {
       )}
 
       {/* ── Modals ── */}
-      <AddGameModal open={addModalOpen} onClose={() => setAddModalOpen(false)} />
+      <AddGameModal open={addModalOpen} onClose={() => { setAddModalOpen(false); setAddModalInitialName(''); }} initialName={addModalInitialName} />
       <ImportHub open={importHubOpen} onClose={() => setImportHubOpen(false)} />
       <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} />
       <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />

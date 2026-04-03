@@ -1,8 +1,5 @@
-import { useState } from 'react';
 import { PlayerArchetype } from '@/lib/archetypes';
 import { plural } from '@/lib/statsHelpers';
-import ShareComposer from './ShareComposer';
-import ShareCard from './ShareCard';
 
 interface ValueCalculatorProps {
   calculating: boolean;
@@ -59,21 +56,6 @@ export default function ValueCalculator({
   currentArchetype,
   showToast,
 }: ValueCalculatorProps) {
-  const [selectedShareStats, setSelectedShareStats] = useState<Set<string> | undefined>(undefined);
-
-  const shareStats = {
-    backlog: stats.backlogSize,
-    cleared: stats.gamesCleared,
-    bailed: stats.bailedCount,
-    hours: stats.totalHours,
-    unplayedValue: countedUnplayed,
-    playedValue: countedPlayed,
-    backlogHours: backlogHours || 0,
-    streak: stats.streak,
-    oldest: stats.oldest?.name || '',
-    pct: explorationPct,
-  };
-
   return (
     <>
       {/* The Big One — Backlog Value Calculator */}
@@ -226,34 +208,6 @@ export default function ValueCalculator({
         </button>
       )}
 
-      {/* Share Composer */}
-      {calculated && (
-        <ShareComposer stats={shareStats} showToast={showToast} onSelectionChange={setSelectedShareStats} />
-      )}
-
-      {/* Visual Share Card */}
-      {calculated && (
-        <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-          <div className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-2">
-            🖼️ Or share as an image
-          </div>
-          <ShareCard
-            stats={{
-              backlogSize: stats.backlogSize,
-              gamesCleared: stats.gamesCleared,
-              bailedCount: stats.bailedCount,
-              totalHours: stats.totalHours,
-              unplayedValue: countedUnplayed,
-              playedValue: countedPlayed,
-              backlogHours: backlogHours,
-              oldest: stats.oldest,
-              streak: stats.streak,
-            }}
-            rank={currentArchetype?.title}
-            selectedStats={selectedShareStats}
-          />
-        </div>
-      )}
     </>
   );
 }

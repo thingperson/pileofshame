@@ -5,7 +5,6 @@ import { Game, GameStatus, TimeTier } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { STATUS_CONFIG, TIME_TIER_CONFIG, SOURCE_LABELS, SOURCE_SHORT, SOURCE_COLORS } from '@/lib/constants';
 import { useToast } from './Toast';
-import DealBadge from './DealBadge';
 import { getGameDescriptor } from '@/lib/descriptors';
 import { MOOD_TAG_CONFIG, getPlaytimeRoast } from '@/lib/enrichment';
 import { trackStatusChange } from '@/lib/analytics';
@@ -21,9 +20,10 @@ interface GameCardProps {
   forceExpanded?: boolean; // Used by GameDetailModal to render expanded without click
   progressAction?: ProgressAction; // "→ Up Next" etc.
   regressAction?: ProgressAction;  // "← Backlog" etc.
+  onStatusChange?: (newStatus: GameStatus) => void; // Notify parent of status changes (e.g., Replay, Un-bail)
 }
 
-export default function GameCard({ game, upNextIndex, forceExpanded, progressAction, regressAction }: GameCardProps) {
+export default function GameCard({ game, upNextIndex, forceExpanded, progressAction, regressAction, onStatusChange }: GameCardProps) {
   const [expanded, setExpanded] = useState(forceExpanded ?? false);
   const [ghostStatus, setGhostStatus] = useState<GameStatus | null>(null);
   const [showBailConfirm, setShowBailConfirm] = useState(false);
@@ -179,22 +179,26 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
   const handlePlayAgain = useCallback(() => {
     playAgain(game.id);
     showToast(`Back for more? Let's go.`);
-  }, [game.id, playAgain, showToast]);
+    onStatusChange?.('playing');
+  }, [game.id, playAgain, showToast, onStatusChange]);
 
   const handleNewGamePlus = useCallback(() => {
     newGamePlus(game.id);
     showToast(`${game.name} → New Game+ 🎯`);
-  }, [game.id, game.name, newGamePlus, showToast]);
+    onStatusChange?.('on-deck');
+  }, [game.id, game.name, newGamePlus, showToast, onStatusChange]);
 
   const handleUnBail = useCallback(() => {
     unBail(game.id);
     showToast(`${game.name} → back in the backlog 📚`);
-  }, [game.id, game.name, unBail, showToast]);
+    onStatusChange?.('buried');
+  }, [game.id, game.name, unBail, showToast, onStatusChange]);
 
   const handleShelve = useCallback(() => {
     shelveGame(game.id);
     showToast(`${game.name} → returned to The Pile 📚`);
-  }, [game.id, game.name, shelveGame, showToast]);
+    onStatusChange?.('buried');
+  }, [game.id, game.name, shelveGame, showToast, onStatusChange]);
 
   return (
     <div
@@ -588,12 +592,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
             )}
           </div>
 
-          {/* Row 4: Deals */}
-          <div className="mt-2">
-            <DealBadge gameName={game.name} />
-          </div>
-
-          {/* Row 5: Status-specific actions + bail + delete */}
+          {/* Row 4: Status-specific actions + bail + delete */}
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-3 pt-2 border-t" style={{ borderColor: 'var(--color-border-subtle)' }}>
             {game.status === 'played' && (
               <>

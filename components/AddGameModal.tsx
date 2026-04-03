@@ -10,10 +10,11 @@ import GameSearch from './GameSearch';
 interface AddGameModalProps {
   open: boolean;
   onClose: () => void;
+  initialName?: string;
 }
 
-export default function AddGameModal({ open, onClose }: AddGameModalProps) {
-  const [name, setName] = useState('');
+export default function AddGameModal({ open, onClose, initialName }: AddGameModalProps) {
+  const [name, setName] = useState(initialName || '');
   const [source, setSource] = useState<GameSource>('steam');
   const [category, setCategory] = useState('');
   const [vibes, setVibes] = useState<string[]>([]);
@@ -65,6 +66,13 @@ export default function AddGameModal({ open, onClose }: AddGameModalProps) {
   };
 
   const modalRef = useRef<HTMLDivElement>(null);
+
+  // Sync initialName when modal opens with a pre-filled name
+  useEffect(() => {
+    if (open && initialName) {
+      setName(initialName);
+    }
+  }, [open, initialName]);
 
   // Escape to close + focus trapping
   useEffect(() => {
