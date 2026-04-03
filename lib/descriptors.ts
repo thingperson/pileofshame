@@ -164,7 +164,7 @@ const CURATED: Record<string, string> = {
   'uncharted 4: a thief\'s end': 'Nathan Drake\'s farewell tour. Gorgeous, emotional, and the best set pieces in gaming.',
   'spider-man remastered': 'The best Spider-Man game ever made. Swinging never gets old.',
   'marvel\'s spider-man remastered': 'The best Spider-Man game ever made. Swinging never gets old.',
-  'gran turismo 7': 'The driving simulator for people who care about cars. Beautiful and meticulous.',
+  'gran turismo 7': 'The driving simulator for people who care about cars. Beautiful and obsessively detailed.',
   'alan wake': 'Stephen King meets video games. Atmospheric and genuinely creepy.',
   'prey': 'An immersive sim hiding in plain sight. Criminally underplayed.',
   'dishonored': 'Play it stealthy. Play it loud. Play it twice. Every approach works.',

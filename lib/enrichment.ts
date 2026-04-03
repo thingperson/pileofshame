@@ -286,7 +286,7 @@ const GAME_ROASTS: [string[], number, string[]][] = [
     '{h}h. Geralt would have cleared this backlog by now. Geralt is efficient.',
   ]],
   [['fallout'], 100, [
-    '{h}h in the wasteland. Your backlog is its own post-apocalyptic landscape.',
+    '{h}h in the wasteland. Your backlog has its own post-apocalyptic vibe at this point.',
   ]],
   [['destiny'], 200, [
     '{h}h. Your light level is high. Your backlog completion rate is not.',

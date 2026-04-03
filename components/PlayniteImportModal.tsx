@@ -241,7 +241,7 @@ export default function PlayniteImportModal({ open, onClose }: PlayniteImportMod
         {step === 'upload' && (
           <div className="space-y-4">
             <div className="space-y-3 text-sm text-text-secondary">
-              <p>Playnite can export your entire library — including games from Steam, GOG, Epic, PlayStation, Xbox, and more.</p>
+              <p>Playnite can export your entire library, including games from Steam, GOG, Epic, PlayStation, Xbox, and more.</p>
               <div className="space-y-2 text-xs text-text-muted">
                 <p className="font-medium text-text-secondary">How to export:</p>
                 <ol className="list-decimal list-inside space-y-1">

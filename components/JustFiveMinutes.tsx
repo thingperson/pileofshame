@@ -294,7 +294,7 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
           {/* Game name */}
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-text-primary truncate">{game?.name}</p>
-            <p className="text-[10px] text-text-dim font-[family-name:var(--font-mono)]">go play — we&apos;ll wait</p>
+            <p className="text-[10px] text-text-dim font-[family-name:var(--font-mono)]">go play. we&apos;ll wait</p>
           </div>
 
           {/* Quick actions */}

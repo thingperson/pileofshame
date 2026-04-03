@@ -170,7 +170,7 @@ export default function GridCard({ game }: GridCardProps) {
             <div
               className="w-full h-[3px] rounded-full overflow-hidden"
               style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
-              title={`${game.achievements!.earned}/${game.achievements!.total} achievements (${achievementPct}%)${game.achievements!.earnedPlatinum ? ' — Platinum!' : ''}`}
+              title={`${game.achievements!.earned}/${game.achievements!.total} achievements (${achievementPct}%)${game.achievements!.earnedPlatinum ? ' - Platinum!' : ''}`}
             >
               <div
                 className="h-full rounded-full transition-all duration-500"

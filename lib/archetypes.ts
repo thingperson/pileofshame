@@ -146,7 +146,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.totalGames > 200 && s.completionRate < 0.05) return {
       title: 'Pure Collector',
       icon: '🏛️',
-      description: `You've assembled ${s.totalGames} games. That's not a backlog, that's an empire. The collection is immaculate — now pick one and give it the attention it deserves.`,
+      description: `You've assembled ${s.totalGames} games. You don't have a backlog. You have an empire. The collection is immaculate. Now pick one and give it the attention it deserves.`,
       tone: 'roast',
     };
     return null;
@@ -157,7 +157,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.totalGames > 100 && s.completionRate < 0.1) return {
       title: 'The Hoarder',
       icon: '📦',
-      description: `${s.totalGames} games, ${s.completedCount} finished. Your backlog has a backlog. Every Steam sale adds to the pile — but hey, at least you have incredible taste. Let's put a dent in it.`,
+      description: `${s.totalGames} games, ${s.completedCount} finished. Your backlog has a backlog. Every Steam sale adds to the pile, but at least you have incredible taste. Let's put a dent in it.`,
       tone: 'roast',
     };
     return null;
@@ -168,7 +168,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.totalGames > 30 && s.avgHoursPerGame < 3 && s.completionRate < 0.15) return {
       title: 'The Dabbler',
       icon: '🦋',
-      description: `You sample everything and commit to nothing — yet. Call it exploration. One of those quick dips is going to hook you. When it does, you'll know.`,
+      description: `You sample everything and commit to nothing. Yet. Call it exploration. One of those quick dips is going to hook you. When it does, you'll know.`,
       tone: 'roast',
     };
     return null;
@@ -190,7 +190,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.nowPlayingCount >= 4) return {
       title: 'The Juggler',
       icon: '🤹',
-      description: `${s.nowPlayingCount} games in flight at once. That's not indecision — that's range. But one of them needs to land on "cleared" soon. Pick your favorite and commit.`,
+      description: `${s.nowPlayingCount} games in flight at once. Call it range. But one of them needs to land on "cleared" soon. Pick your favorite and commit.`,
       tone: 'roast',
     };
     return null;
@@ -201,7 +201,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.oldestBacklogDays > 365 && s.backlogCount > 20) return {
       title: 'The Archaeologist',
       icon: '🏺',
-      description: `Games from ${Math.round(s.oldestBacklogDays / 365) === 1 ? '1 year' : Math.round(s.oldestBacklogDays / 365) + ' years'} ago are still waiting for you. They're not dead — they're patient. Some of them are genuinely great. Maybe it's time for a resurrection run.`,
+      description: `Games from ${Math.round(s.oldestBacklogDays / 365) === 1 ? '1 year' : Math.round(s.oldestBacklogDays / 365) + ' years'} ago are still waiting for you. Not dead. Patient. Some of them are genuinely great. Maybe it's time for a resurrection run.`,
       tone: 'roast',
     };
     return null;
@@ -212,7 +212,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.totalGames > 50 && s.totalHoursPlayed < 20) return {
       title: 'The Window Shopper',
       icon: '🪟',
-      description: `${s.totalGames} games collected, ${s.totalHoursPlayed} hours played. You've built an incredible library — now it's time to actually live in it. Pick something short and sweet to get the momentum going.`,
+      description: `${s.totalGames} games collected, ${s.totalHoursPlayed} hours played. You've built an incredible library. Now it's time to actually live in it. Pick something short and sweet to get the momentum going.`,
       tone: 'roast',
     };
     return null;
@@ -389,7 +389,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.installedCount > 15 && s.nowPlayingCount <= 1) return {
       title: 'The Optimizer',
       icon: '💾',
-      description: `${s.installedCount} games installed and ready to launch. The hard part is done — they're right there. Close this tab and pick one. We'll be here when you get back.`,
+      description: `${s.installedCount} games installed and ready to launch. The hard part is done. They're right there. Close this tab and pick one. We'll be here when you get back.`,
       tone: 'roast',
     };
     return null;
@@ -433,7 +433,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.nonFinishableCount >= 5 && s.nonFinishableCount > s.totalGames * 0.15) return {
       title: 'The Infinite Player',
       icon: '♾️',
-      description: `${s.nonFinishableCount} games in your library that can't technically be "finished." MMOs, sandboxes, endless modes. That's not a flaw in your taste — some games are meant to be ongoing. Just don't let them crowd out the ones with endings.`,
+      description: `${s.nonFinishableCount} games in your library that can't technically be "finished." MMOs, sandboxes, endless modes. Nothing wrong with that. Some games are meant to be ongoing. Just don't let them crowd out the ones with endings.`,
       tone: 'neutral',
     };
     return null;
@@ -455,7 +455,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.totalGames > 80 && s.avgHoursPerGame < 5 && s.completionRate < 0.1) return {
       title: 'The Bargain Hunter',
       icon: '🏷️',
-      description: `You can't resist a deal. ${s.totalGames} games, most of them under 5 hours played. Every sale is an event, every bundle a treasure chest. The library is stacked — now it's time to actually unwrap some of those gifts you bought yourself.`,
+      description: `You can't resist a deal. ${s.totalGames} games, most of them under 5 hours played. Every sale is an event, every bundle a treasure chest. The library is stacked. Time to actually unwrap some of those gifts you bought yourself.`,
       tone: 'roast',
     };
     return null;
@@ -466,7 +466,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.deepCutCount >= 8 && s.marathonCount >= 3) return {
       title: 'The Night Owl',
       icon: '🦉',
-      description: `Your library is stacked with games that demand long sessions. Deep cuts, marathons, sprawling RPGs. You're not a casual player — you're someone who blocks out entire evenings. Respect the commitment.`,
+      description: `Your library is stacked with games that demand long sessions. Deep cuts, marathons, sprawling RPGs. You block out entire evenings for this. Respect the commitment.`,
       tone: 'neutral',
     };
     return null;

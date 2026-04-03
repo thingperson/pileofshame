@@ -81,7 +81,7 @@ export default function TermsPage() {
             <h2 className="text-lg font-bold text-text-primary mb-3">5. Affiliate links</h2>
             <p>
               Some game deal links may include affiliate parameters. If you purchase through these
-              links, we may earn a small commission. We always show the actual price — we never
+              links, we may earn a small commission. We always show the actual price. We never
               inflate or misrepresent pricing.
             </p>
           </section>

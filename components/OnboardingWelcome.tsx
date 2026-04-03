@@ -121,7 +121,7 @@ export default function OnboardingWelcome({ onImport, onAddManual }: OnboardingW
                   <span className="text-lg shrink-0">📚</span>
                   <div>
                     <p className="text-sm font-semibold text-text-primary">We auto-fill everything</p>
-                    <p className="text-xs text-text-dim">Descriptions, mood tags, completion times — we pull it all in so you never have to tag or organize anything.</p>
+                    <p className="text-xs text-text-dim">Descriptions, mood tags, completion times. We pull it all in so you never have to tag or organize anything.</p>
                   </div>
                 </div>
                 <div className="flex gap-3 items-start">

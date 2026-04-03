@@ -232,7 +232,7 @@ export default function HelpModal({ open, onClose }: HelpModalProps) {
         {/* Footer */}
         <div className="px-5 py-3 border-t shrink-0" style={{ borderColor: 'var(--color-border-subtle)' }}>
           <p className="text-[10px] text-text-faint text-center font-[family-name:var(--font-mono)]">
-            Still stuck? We&apos;re always improving — check back, things get better all the time.
+            Still stuck? We&apos;re always improving. Check back, things get better all the time.
           </p>
         </div>
       </div>
