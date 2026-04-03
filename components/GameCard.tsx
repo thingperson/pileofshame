@@ -90,6 +90,13 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
         showToast(`${game.name} → ${cfg.label} ${cfg.icon}`);
       }
 
+      // Scroll to the section where the game moved — prevents losing track on mobile
+      if (newStatus === 'on-deck' || newStatus === 'playing') {
+        setTimeout(() => {
+          document.getElementById('up-next-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      }
+
       // Milestone celebrations (delayed so they don't overlap with status toast)
       setTimeout(() => {
         const allGames = useStore.getState().games;
@@ -241,15 +248,16 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
           >
             <span className="emoji-icon">{statusConfig.icon}</span>
             <span className="ascii-icon hidden">{statusConfig.asciiIcon}</span>
+            <span className="sm:hidden">{statusConfig.shortLabel || statusConfig.label}</span>
             <span className="hidden sm:inline">{statusConfig.label}</span>
             {/* Chevron hint — shows this badge is tappable */}
             {nextStatus && (
-              <span className="text-[10px] opacity-50 ml-0.5 hidden sm:inline">›</span>
+              <span className="text-[10px] opacity-50 ml-0.5">›</span>
             )}
           </button>
           {/* First-time hint — visible until user taps a status badge */}
           {showBadgeHint && nextStatus && (
-            <span className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] ml-1.5 animate-[fadeIn_500ms_ease-out] whitespace-nowrap">
+            <span className="hidden sm:inline text-[10px] text-text-faint font-[family-name:var(--font-mono)] ml-1.5 animate-[fadeIn_500ms_ease-out] whitespace-nowrap">
               tap to advance →
             </span>
           )}

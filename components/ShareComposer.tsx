@@ -112,6 +112,17 @@ const FUN_CTAS = [
   'The pile is real.',
   'Mood-based matching is weirdly effective.',
   'The backlog effect is real.',
+  'Your library is judging you. We\'re just making it official.',
+  'The hardest part is picking. We fixed that.',
+  'Less scrolling. More playing.',
+  'Every cleared game is a small victory.',
+  'It tells you what to play. That\'s it. That\'s the app.',
+  'My backlog doesn\'t scare me anymore. Much.',
+  'Somewhere, a game in your library is gathering dust. We can help.',
+  'No tagging. No sorting. Just answers.',
+  'It even tells you how long each one takes.',
+  'Import your Steam library. Prepare to be humbled.',
+  'Turns out I own some bangers I forgot about.',
 ];
 
 export default function ShareComposer({ stats, showToast, onSelectionChange }: ShareComposerProps) {

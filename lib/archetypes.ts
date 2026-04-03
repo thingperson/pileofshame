@@ -146,7 +146,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.totalGames > 200 && s.completionRate < 0.05) return {
       title: 'Pure Collector',
       icon: '🏛️',
-      description: `A non-gamer with true gamer taste. You own ${s.totalGames} games just so you can say you own them. The only question is... why?`,
+      description: `You've assembled ${s.totalGames} games. That's not a backlog, that's an empire. The collection is immaculate — now pick one and give it the attention it deserves.`,
       tone: 'roast',
     };
     return null;
@@ -157,7 +157,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.totalGames > 100 && s.completionRate < 0.1) return {
       title: 'The Hoarder',
       icon: '📦',
-      description: `${s.totalGames} games and you've finished ${s.completedCount}. Your backlog has a backlog. Every Steam sale is a crime scene and you're the perpetrator.`,
+      description: `${s.totalGames} games, ${s.completedCount} finished. Your backlog has a backlog. Every Steam sale adds to the pile — but hey, at least you have incredible taste. Let's put a dent in it.`,
       tone: 'roast',
     };
     return null;
@@ -168,7 +168,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.totalGames > 30 && s.avgHoursPerGame < 3 && s.completionRate < 0.15) return {
       title: 'The Dabbler',
       icon: '🦋',
-      description: `You dip in. You dip out. You try a few new titles. Now you forgot the story and controls. Dabbling ain't easy. You make it an artform.`,
+      description: `You sample everything and commit to nothing — yet. Call it exploration. One of those quick dips is going to hook you. When it does, you'll know.`,
       tone: 'roast',
     };
     return null;
@@ -190,7 +190,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.nowPlayingCount >= 4) return {
       title: 'The Juggler',
       icon: '🤹',
-      description: `${s.nowPlayingCount} games "in progress" simultaneously. At this point it's a portfolio, not a playlist. None of them will be finished.`,
+      description: `${s.nowPlayingCount} games in flight at once. That's not indecision — that's range. But one of them needs to land on "cleared" soon. Pick your favorite and commit.`,
       tone: 'roast',
     };
     return null;
@@ -201,7 +201,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.oldestBacklogDays > 365 && s.backlogCount > 20) return {
       title: 'The Archaeologist',
       icon: '🏺',
-      description: `You have games from ${Math.round(s.oldestBacklogDays / 365) === 1 ? '1 year' : Math.round(s.oldestBacklogDays / 365) + ' years'} ago collecting dust. At this point they're not a backlog, they're artifacts. Future civilizations will study your Steam library.`,
+      description: `Games from ${Math.round(s.oldestBacklogDays / 365) === 1 ? '1 year' : Math.round(s.oldestBacklogDays / 365) + ' years'} ago are still waiting for you. They're not dead — they're patient. Some of them are genuinely great. Maybe it's time for a resurrection run.`,
       tone: 'roast',
     };
     return null;
@@ -212,7 +212,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.totalGames > 50 && s.totalHoursPlayed < 20) return {
       title: 'The Window Shopper',
       icon: '🪟',
-      description: `${s.totalGames} games in the library, ${s.totalHoursPlayed} hours actually played. More of a museum curator than a gamer at this point. Admission is free but nobody visits.`,
+      description: `${s.totalGames} games collected, ${s.totalHoursPlayed} hours played. You've built an incredible library — now it's time to actually live in it. Pick something short and sweet to get the momentum going.`,
       tone: 'roast',
     };
     return null;
@@ -304,7 +304,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.totalGames > 10 && s.totalGames < 50 && s.completionRate > 0.15 && s.completionRate < 0.5) return {
       title: 'The Balanced Gamer',
       icon: '⚖️',
-      description: `A healthy mix of playing, clearing, and accumulating. You're disgustingly well-adjusted. Where's the shame in that? Boring, but admirable.`,
+      description: `A healthy mix of playing, clearing, and collecting. You buy smart, play often, and finish what you start. The rest of us could learn something here.`,
       tone: 'neutral',
     };
     return null;
@@ -389,7 +389,7 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.installedCount > 15 && s.nowPlayingCount <= 1) return {
       title: 'The Optimizer',
       icon: '💾',
-      description: `${s.installedCount} games installed and ready to go. Any of them could be launched right now. But somehow you're scrolling this site instead.`,
+      description: `${s.installedCount} games installed and ready to launch. The hard part is done — they're right there. Close this tab and pick one. We'll be here when you get back.`,
       tone: 'roast',
     };
     return null;
@@ -433,7 +433,40 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     if (s.nonFinishableCount >= 5 && s.nonFinishableCount > s.totalGames * 0.15) return {
       title: 'The Infinite Player',
       icon: '♾️',
-      description: `${s.nonFinishableCount} games in your library that literally cannot be finished. MMOs, competitive multiplayer, sandboxes. You chose games that never end, then wondered why your pile never shrinks.`,
+      description: `${s.nonFinishableCount} games in your library that can't technically be "finished." MMOs, sandboxes, endless modes. That's not a flaw in your taste — some games are meant to be ongoing. Just don't let them crowd out the ones with endings.`,
+      tone: 'neutral',
+    };
+    return null;
+  },
+
+  // The Momentum Builder — recently clearing games at a good clip
+  (s) => {
+    if (s.completedCount >= 3 && s.completedCount > s.bailedCount * 2 && s.nowPlayingCount >= 1) return {
+      title: 'The Momentum Builder',
+      icon: '🚀',
+      description: `${s.completedCount} cleared, ${s.nowPlayingCount} in progress, and you're actually finishing more than you're bailing on. This is what progress looks like. Keep the streak alive.`,
+      tone: 'respect',
+    };
+    return null;
+  },
+
+  // The Bargain Hunter — lots of games, low hours = sale buyer
+  (s) => {
+    if (s.totalGames > 80 && s.avgHoursPerGame < 5 && s.completionRate < 0.1) return {
+      title: 'The Bargain Hunter',
+      icon: '🏷️',
+      description: `You can't resist a deal. ${s.totalGames} games, most of them under 5 hours played. Every sale is an event, every bundle a treasure chest. The library is stacked — now it's time to actually unwrap some of those gifts you bought yourself.`,
+      tone: 'roast',
+    };
+    return null;
+  },
+
+  // The Night Owl — has lots of long-session games
+  (s) => {
+    if (s.deepCutCount >= 8 && s.marathonCount >= 3) return {
+      title: 'The Night Owl',
+      icon: '🦉',
+      description: `Your library is stacked with games that demand long sessions. Deep cuts, marathons, sprawling RPGs. You're not a casual player — you're someone who blocks out entire evenings. Respect the commitment.`,
       tone: 'neutral',
     };
     return null;
@@ -544,7 +577,7 @@ const THEME_ARCHETYPES: ThemeArchetypeDef[] = [
 const FALLBACK: PlayerArchetype = {
   title: 'The Gamer',
   icon: '🎮',
-  description: `You've got a pile. It's not massive. Yet. But we both know how this ends. Every gamer starts somewhere, and this is your somewhere. Welcome to the intervention.`,
+  description: `You've got a pile. It's growing. Every gamer's does. The good news? You're here, which means you're ready to actually play some of them. Let's get started.`,
   tone: 'neutral',
 };
 

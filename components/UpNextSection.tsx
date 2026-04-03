@@ -95,7 +95,7 @@ export default function UpNextSection({ games }: UpNextSectionProps) {
   if (games.length < 3 && upNextGames.length === 0 && nowPlayingGames.length === 0) return null;
 
   return (
-    <div className="mb-7">
+    <div id="up-next-section" className="mb-7">
       {/* Now Playing */}
       {nowPlayingGames.length > 0 && (
         <div className="mb-4">

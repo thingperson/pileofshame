@@ -169,6 +169,13 @@ const CLEARED_FUN_CLOSERS = [
   'Check what your library is worth.',
   'Turns out finishing games feels good. Who knew.',
   'The backlog fears me now.',
+  'Clearing games hits different when someone\'s counting.',
+  'Less hoarding. More playing. That\'s the whole idea.',
+  'The confetti when you clear a game is embarrassingly motivating.',
+  'Every finished game is money well spent. Finally.',
+  'I stopped scrolling and started playing. It helped.',
+  'This thing figured out what I should play in 10 seconds.',
+  'My backlog just got smaller. Officially.',
 ];
 
 function ClearedShareComposer({

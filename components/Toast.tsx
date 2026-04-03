@@ -21,7 +21,7 @@ export function useToast() {
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
-  const showToast = useCallback((text: string, duration = 2500) => {
+  const showToast = useCallback((text: string, duration = 3200) => {
     const id = Math.random().toString(36).slice(2);
     setToasts((prev) => [...prev, { id, text, duration }]);
   }, []);
@@ -58,11 +58,11 @@ function ToastItem({ toast, onDone }: { toast: ToastMessage; onDone: () => void 
   return (
     <div
       className={`
-        px-4 py-2.5 rounded-xl text-sm font-medium font-[family-name:var(--font-mono)]
-        bg-bg-elevated border border-border-active text-text-secondary
-        shadow-lg shadow-black/30
-        transition-all duration-300 ease-out
-        ${visible && !leaving ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
+        px-5 py-3 rounded-xl text-sm font-semibold font-[family-name:var(--font-mono)]
+        bg-bg-elevated border border-accent-purple/40 text-text-primary
+        shadow-xl shadow-black/40
+        transition-all duration-300 ease-out max-w-[90vw] text-center
+        ${visible && !leaving ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'}
       `}
     >
       {toast.text}

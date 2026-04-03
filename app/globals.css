@@ -347,6 +347,50 @@ button:active:not(:disabled) {
   background: #808080;
 }
 
+/* 90s legibility — bright text for content on navy background */
+.theme-90s header h1 {
+  color: #ffffff !important;
+  text-shadow: 2px 2px 0px #000000 !important;
+}
+.theme-90s header p,
+.theme-90s header span {
+  color: #cccccc !important;
+}
+.theme-90s header span span {
+  color: #ffff00 !important;
+}
+.theme-90s header span .text-text-faint {
+  color: #aaaaaa !important;
+}
+
+/* Section headers on navy bg */
+.theme-90s h2, .theme-90s h3 {
+  color: #ffffff !important;
+}
+
+/* Filter bar / toolbar text on navy */
+.theme-90s > div > div > div > button {
+  color: #000000 !important;
+}
+
+/* Stat labels and category counts on navy bg */
+.theme-90s .text-text-muted,
+.theme-90s .text-text-dim,
+.theme-90s .text-text-faint {
+  color: #cccccc !important;
+}
+
+/* But restore dark text inside cards (grey bg) */
+.theme-90s .group .text-text-muted,
+.theme-90s .group .text-text-dim,
+.theme-90s .group .text-text-faint {
+  color: #666666 !important;
+}
+.theme-90s .group .text-text-primary,
+.theme-90s .group .text-text-secondary {
+  color: #000000 !important;
+}
+
 /* 90s marquee bar */
 .nineties-marquee {
   background: #000000;

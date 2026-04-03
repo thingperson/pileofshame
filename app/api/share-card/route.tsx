@@ -353,7 +353,7 @@ function renderPixelCard(d: CardData) {
         >
           <div style={{ fontSize: '56px', display: 'flex' }}>🦕</div>
           <div style={{ fontSize: '32px', fontWeight: 800, letterSpacing: '4px', display: 'flex' }}>
-            PILE OF SHAME
+            INVENTORY FULL
           </div>
           <div style={{ fontSize: '16px', color: '#88cc88', display: 'flex' }}>
             - - - PLAYER STATS - - -
@@ -421,7 +421,7 @@ function renderUltraCard(d: CardData) {
 
         {/* Header */}
         <div style={{ fontSize: '48px', fontWeight: 900, color: '#BFFF00', letterSpacing: '6px', textTransform: 'uppercase' as any, display: 'flex' }}>
-          PILE OF SHAME
+          INVENTORY FULL
         </div>
         {d.rank && (
           <div style={{ fontSize: '18px', color: '#ffffff', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase' as any, marginTop: '4px', display: 'flex' }}>

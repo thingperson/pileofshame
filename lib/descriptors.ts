@@ -148,6 +148,42 @@ const CURATED: Record<string, string> = {
   'ori and the will of the wisps': 'Everything the first game was, but more. The combat upgrade is massive.',
   'cuphead': 'Cartoon difficulty. Your hands will hurt. Your eyes will thank you.',
   'shovel knight': 'Retro platforming perfected. More content than games 5x its price.',
+
+  // More common Steam/PS/Xbox library titles (non-duplicates)
+  'devil may cry 5': 'Peak action combat. Three characters, three playstyles, all excellent.',
+  'metal gear solid v: the phantom pain': 'Unfinished story, perfect stealth sandbox. The gameplay is the real narrative.',
+  'dragon age: inquisition': 'BioWare\'s last great RPG. Companions that feel like friends.',
+  'divinity: original sin 2': 'The other CRPG masterpiece. Unmatched freedom in how you solve problems.',
+  'civilization v': 'Some argue this is still the best Civ. Those people have a point.',
+  'resident evil 2': 'Survival horror perfected for modern hardware. Mr. X will haunt your dreams.',
+  'rocket league': 'Car soccer. Infinite skill ceiling. You\'ll be terrible for 100 hours. Then just bad.',
+  'fall guys': 'Silly, chaotic fun. Perfect for 20 minutes. Or 3 hours. Hard to predict.',
+  'overcooked! 2': 'Will test your relationships. In the best way. Pure cooperative chaos.',
+  'overcooked! all you can eat': 'All the relationship-testing chaos in one package.',
+  'tony hawk\'s pro skater 1 + 2': 'Nostalgia done right. The remaster these games deserved.',
+  'uncharted 4: a thief\'s end': 'Nathan Drake\'s farewell tour. Gorgeous, emotional, and the best set pieces in gaming.',
+  'spider-man remastered': 'The best Spider-Man game ever made. Swinging never gets old.',
+  'marvel\'s spider-man remastered': 'The best Spider-Man game ever made. Swinging never gets old.',
+  'gran turismo 7': 'The driving simulator for people who care about cars. Beautiful and meticulous.',
+  'alan wake': 'Stephen King meets video games. Atmospheric and genuinely creepy.',
+  'prey': 'An immersive sim hiding in plain sight. Criminally underplayed.',
+  'dishonored': 'Play it stealthy. Play it loud. Play it twice. Every approach works.',
+  'dishonored 2': 'More powers, more options, two characters. The immersive sim at its finest.',
+  'hitman 3': 'Murder puzzles in beautiful locations. The trilogy is a masterclass in level design.',
+  'the outer worlds': 'Fallout in space, lighter and funnier. A solid RPG comfort food.',
+  'sonic mania': 'The Sonic game fans made. Better than anything Sega managed in 20 years.',
+  'untitled goose game': 'Be a goose. Ruin people\'s days. Somehow one of the funniest games ever.',
+  'wipeout omega collection': 'Anti-gravity racing perfection. The soundtrack alone justifies the purchase.',
+  'dirt rally 2.0': 'The most authentic rally experience in gaming. Your co-driver will become your best friend.',
+  'nhl 20': 'Hockey. On a screen. You know if this is your thing.',
+  'ea sports ufc 4': 'MMA fighting. Button-masher on the surface, surprisingly deep underneath.',
+  'starbound': 'Terraria in space. Explore planets, build bases, lose weeks.',
+  'the last guardian': 'A boy and his giant bird-dog. Frustrating controls, but the emotional payoff is real.',
+  'ace combat 7: skies unknown': 'Arcade flight combat with anime drama. Sounds absurd, plays fantastic.',
+  'tetris effect: connected': 'Tetris, but transcendent. The synesthesia experience gaming needed.',
+  'fall guys: ultimate knockout': 'Silly, chaotic fun. Perfect for 20 minutes. Or 3 hours. Hard to predict.',
+  'sonic mania plus': 'The definitive version of the definitive Sonic game.',
+  'the gardens between': 'A short puzzle game about friendship and memory. Beautiful and bittersweet.',
 };
 
 // --- Metacritic-based descriptors ---
@@ -258,8 +294,11 @@ function getGenreFallback(genres: string[]): string {
   if (g.some((s) => s.includes('simulation') || s.includes('sim'))) {
     return 'A sim game. You\'ll either play 5 minutes or 500 hours. No in-between.';
   }
-  if (g.some((s) => s.includes('shooter') || s.includes('fps') || s.includes('action'))) {
-    return 'Shoot things, feel good. Sometimes simple is exactly right.';
+  if (g.some((s) => s.includes('shooter') || s.includes('fps'))) {
+    return 'Bullets first, questions later. Pure adrenaline.';
+  }
+  if (g.some((s) => s.includes('action'))) {
+    return 'Fast combat, sharp reflexes. This one earns its spot in the pile.';
   }
   if (g.some((s) => s.includes('adventure') || s.includes('exploration'))) {
     return 'An adventure awaits. The pile can wait. This one\'s calling.';

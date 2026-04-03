@@ -53,14 +53,22 @@ export default function CategorySection({ name, games }: CategorySectionProps) {
     switch (sortBy) {
       case 'name':
         return a.name.localeCompare(b.name);
-      case 'rating':
-        return (b.metacritic || 0) - (a.metacritic || 0);
+      case 'rating': {
+        // Metacritic first, then user rating (scaled to 0-100), then alphabetical tiebreak
+        const ra = (a.metacritic || 0) || ((a.rating || 0) * 20);
+        const rb = (b.metacritic || 0) || ((b.rating || 0) * 20);
+        return rb - ra || a.name.localeCompare(b.name);
+      }
       case 'hltb':
-        return (a.hltbMain || 9999) - (b.hltbMain || 9999);
-      case 'newest':
-        return new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime();
-      case 'oldest':
-        return new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime();
+        return (a.hltbMain || 9999) - (b.hltbMain || 9999) || a.name.localeCompare(b.name);
+      case 'newest': {
+        const diff = new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime();
+        return diff !== 0 ? diff : a.name.localeCompare(b.name);
+      }
+      case 'oldest': {
+        const diff = new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime();
+        return diff !== 0 ? diff : a.name.localeCompare(b.name);
+      }
       default:
         return a.priority - b.priority;
     }

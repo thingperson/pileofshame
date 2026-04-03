@@ -73,7 +73,7 @@ function MarqueeBanner() {
   return (
     <div className="nineties-marquee">
       <span>
-        🔥🔥🔥 WELCOME TO PILE OF SHAME — THE #1 GAMING BACKLOG MANAGER ON THE WORLD WIDE WEB 🔥🔥🔥
+        🔥🔥🔥 WELCOME TO INVENTORY FULL — THE #1 GAMING BACKLOG MANAGER ON THE WORLD WIDE WEB 🔥🔥🔥
         &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
         ⚠️ THIS SITE IS UNDER CONSTRUCTION ⚠️
         &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
@@ -319,7 +319,7 @@ function SynthwaveBanner() {
   return (
     <div className="synthwave-banner">
       <div className="synthwave-banner-text">
-        P I L E &nbsp; O F &nbsp; S H A M E
+        I N V E N T O R Y &nbsp; F U L L
       </div>
       <div className="synthwave-banner-sub">
         ▸▸ INSERT COIN TO CONTINUE ▸▸
@@ -361,7 +361,7 @@ function SynthwaveFooter() {
     <div className="synthwave-footer">
       <div className="synthwave-footer-grid" />
       <div className="synthwave-footer-text">
-        🌅 SUNSET DRIVE • PILE OF SHAME™ • EST. 2024 • TURBO EDITION
+        🌅 SUNSET DRIVE • INVENTORY FULL™ • EST. 2024 • TURBO EDITION
       </div>
     </div>
   );
@@ -376,7 +376,7 @@ function FutureBanner() {
     <div className="future-banner">
       <div className="future-banner-inner">
         <span className="future-glyph">◈</span>
-        <span className="future-banner-text">PILE_OF_SHAME</span>
+        <span className="future-banner-text">INVENTORY_FULL</span>
         <span className="future-banner-version">v4.2.1</span>
         <span className="future-glyph">◈</span>
       </div>
@@ -444,7 +444,7 @@ function DinoBanner() {
     <div className="dino-banner">
       <div className="dino-banner-text">
         <span className="dino-walk">🦕</span>
-        PILE OF SHAME
+        INVENTORY FULL
         <span className="dino-walk-reverse">🦖</span>
       </div>
       <div className="dino-banner-sub">

@@ -438,7 +438,18 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
                 You cleared <span className="text-green-400 font-semibold">{game.name}</span> from your backlog.
               </p>
               <p className="text-sm text-text-dim italic mb-5">
-                One more slot opened up. Space cleared. Great work.
+                {(() => {
+                  const msgs = [
+                    'One more slot opened up. Space cleared. Great work.',
+                    'That\'s one less game looking at you from the pile.',
+                    'You committed, you followed through. That\'s the whole game.',
+                    'Another one done. The pile is officially lighter.',
+                    'Credits rolled. You earned this moment.',
+                    'Feels good, right? That\'s what finishing things feels like.',
+                    'The backlog just got a little less intimidating.',
+                  ];
+                  return msgs[Math.floor(Math.random() * msgs.length)];
+                })()}
               </p>
 
               {/* Stats impact */}
