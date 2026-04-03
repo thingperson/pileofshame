@@ -42,10 +42,10 @@ export const STATUS_CONFIG: Record<GameStatus, {
   bg: string;
 }> = {
   buried: { label: 'Backlog', icon: '📚', asciiIcon: '[=]', color: '#64748b', bg: '#1e293b' },
-  'on-deck': { label: 'Play Next', shortLabel: 'Next', icon: '🎯', asciiIcon: '>>>', color: '#38bdf8', bg: '#082f49' },
+  'on-deck': { label: 'Up Next', shortLabel: 'Next', icon: '🎯', asciiIcon: '>>>', color: '#38bdf8', bg: '#082f49' },
   playing: { label: 'Now Playing', shortLabel: 'Playing', icon: '🔥', asciiIcon: '(~)', color: '#f59e0b', bg: '#422006' },
-  played: { label: 'Played', icon: '✅', asciiIcon: '[x]', color: '#22c55e', bg: '#052e16' },
-  bailed: { label: 'Bailed', icon: '🚪', asciiIcon: '[!]', color: '#ef4444', bg: '#450a0a' },
+  played: { label: 'Completed', icon: '✅', asciiIcon: '[x]', color: '#22c55e', bg: '#052e16' },
+  bailed: { label: 'Moved On', icon: '👋', asciiIcon: '[!]', color: '#94a3b8', bg: '#1e293b' },
 };
 
 export const STATUS_CYCLE: GameStatus[] = ['buried', 'on-deck', 'playing', 'played'];

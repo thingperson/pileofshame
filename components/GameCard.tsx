@@ -10,13 +10,20 @@ import { getGameDescriptor } from '@/lib/descriptors';
 import { MOOD_TAG_CONFIG, getPlaytimeRoast } from '@/lib/enrichment';
 import { trackStatusChange } from '@/lib/analytics';
 
+interface ProgressAction {
+  label: string;
+  onClick: () => void;
+}
+
 interface GameCardProps {
   game: Game;
   upNextIndex?: number; // 1-based index for Play Next games
   forceExpanded?: boolean; // Used by GameDetailModal to render expanded without click
+  progressAction?: ProgressAction; // "→ Up Next" etc.
+  regressAction?: ProgressAction;  // "← Backlog" etc.
 }
 
-export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardProps) {
+export default function GameCard({ game, upNextIndex, forceExpanded, progressAction, regressAction }: GameCardProps) {
   const [expanded, setExpanded] = useState(forceExpanded ?? false);
   const [ghostStatus, setGhostStatus] = useState<GameStatus | null>(null);
   const [showBailConfirm, setShowBailConfirm] = useState(false);
@@ -344,6 +351,33 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
           >
             Maybe later
           </button>
+        </div>
+      )}
+
+      {/* Progression Arrows — always visible when provided */}
+      {(progressAction || regressAction) && !expanded && !showBailConfirm && (
+        <div className="flex items-center gap-1.5 px-3.5 pb-2 -mt-0.5">
+          {regressAction && (
+            <button
+              onClick={(e) => { e.stopPropagation(); regressAction.onClick(); }}
+              className="px-2 py-1 text-[10px] font-medium font-[family-name:var(--font-mono)] rounded-md text-text-dim hover:text-text-muted hover:bg-white/5 transition-all"
+            >
+              {regressAction.label}
+            </button>
+          )}
+          {progressAction && (
+            <button
+              onClick={(e) => { e.stopPropagation(); progressAction.onClick(); }}
+              className="px-2.5 py-1 text-[10px] font-semibold font-[family-name:var(--font-mono)] rounded-md transition-all hover:scale-[1.02] active:scale-[0.98]"
+              style={{
+                backgroundColor: 'rgba(167, 139, 250, 0.12)',
+                color: '#a78bfa',
+                border: '1px solid rgba(167, 139, 250, 0.2)',
+              }}
+            >
+              {progressAction.label}
+            </button>
+          )}
         </div>
       )}
 

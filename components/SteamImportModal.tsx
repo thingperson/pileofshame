@@ -6,6 +6,7 @@ import { useToast } from './Toast';
 import { trackImport } from '@/lib/analytics';
 import { DEFAULT_CATEGORIES } from '@/lib/constants';
 import { getDupeNudge } from '@/lib/descriptors';
+import { getSmartImportStatus } from '@/lib/smartSort';
 
 interface SteamGameData {
   appid: number;
@@ -117,7 +118,14 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
     const toImport = games.filter((g) => selected.has(g.appid));
     let count = 0;
 
+    // Track import breakdown for post-import summary
+    const breakdown = { total: 0, backlog: 0, started: 0, upNext: 0, completed: 0 };
+
     toImport.forEach((game) => {
+      const smartStatus = getSmartImportStatus(game.playtimeHours, undefined, undefined);
+      // Cap Up Next at 5 — overflow goes to backlog with started flag
+      const status = smartStatus === 'on-deck' && breakdown.upNext >= 5 ? 'buried' : smartStatus;
+
       addGame({
         name: game.name,
         source: 'steam',
@@ -127,8 +135,17 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
         vibes: [],
         timeTier: game.playtimeHours > 50 ? 'marathon' : game.playtimeHours > 20 ? 'deep-cut' : game.playtimeHours > 5 ? 'wind-down' : 'quick-hit',
         notes: game.playtimeHours > 0 ? `${game.playtimeHours}h on Steam` : '',
-        status: 'buried',
+        status,
+        hoursPlayed: game.playtimeHours,
       });
+
+      // Track breakdown
+      breakdown.total++;
+      if (status === 'played') breakdown.completed++;
+      else if (status === 'on-deck') breakdown.upNext++;
+      else if (game.playtimeHours > 0) breakdown.started++;
+      else breakdown.backlog++;
+
       count++;
     });
 
@@ -149,7 +166,11 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
       }
     }
 
-    showToast(`Imported ${count} games from Steam. Now go play one.`);
+    const smartParts = [];
+    if (breakdown.completed > 0) smartParts.push(`${breakdown.completed} already beaten`);
+    if (breakdown.upNext > 0) smartParts.push(`${breakdown.upNext} ready to jump back into`);
+    const smartMsg = smartParts.length > 0 ? ` ${smartParts.join(', ')}.` : '';
+    showToast(`Imported ${count} games from Steam.${smartMsg}`);
     handleClose();
   };
 
