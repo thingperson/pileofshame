@@ -29,17 +29,26 @@ export default function PostImportSummary({ breakdown, onDismiss }: PostImportSu
 
   return (
     <div
-      className={`rounded-xl border overflow-hidden transition-all duration-500 mb-4 ${
+      className={`relative rounded-xl border overflow-hidden transition-all duration-500 mb-4 ${
         visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
       }`}
       style={{
-        backgroundColor: 'rgba(167, 139, 250, 0.04)',
-        borderColor: 'rgba(167, 139, 250, 0.2)',
+        backgroundColor: 'rgba(167, 139, 250, 0.08)',
+        borderColor: 'rgba(167, 139, 250, 0.3)',
+        boxShadow: '0 0 24px rgba(167, 139, 250, 0.06)',
       }}
     >
-      <div className="px-5 py-4 space-y-3">
+      {/* Close X */}
+      <button
+        onClick={onDismiss}
+        className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-md text-text-faint hover:text-text-muted hover:bg-white/5 transition-all"
+        aria-label="Dismiss"
+      >
+        ✕
+      </button>
+      <div className="px-5 py-5 space-y-3">
         <div className="text-center">
-          <p className="text-lg font-bold text-text-primary">
+          <p className="text-xl font-bold text-text-primary">
             {breakdown.total} games imported
           </p>
           {hasSmartSorting ? (
@@ -79,7 +88,8 @@ export default function PostImportSummary({ breakdown, onDismiss }: PostImportSu
 
         <button
           onClick={onDismiss}
-          className="w-full py-2 text-xs text-text-dim hover:text-text-muted transition-colors font-[family-name:var(--font-mono)]"
+          className="w-full py-2.5 text-xs font-medium rounded-lg border transition-all hover:bg-white/5 active:scale-[0.98] font-[family-name:var(--font-mono)]"
+          style={{ borderColor: 'rgba(255,255,255,0.1)', color: 'var(--color-text-muted)' }}
         >
           Got it
         </button>

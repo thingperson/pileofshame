@@ -97,12 +97,8 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
         showToast(`${game.name} → ${cfg.label} ${cfg.icon}`);
       }
 
-      // Scroll to the section where the game moved — prevents losing track on mobile
-      if (newStatus === 'on-deck' || newStatus === 'playing') {
-        setTimeout(() => {
-          document.getElementById('up-next-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 300);
-      }
+      // Notify parent to switch tabs
+      onStatusChange?.(newStatus);
 
       // Milestone celebrations (delayed so they don't overlap with status toast)
       setTimeout(() => {
@@ -143,7 +139,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
         }
       }, 2000);
     }
-  }, [game.id, game.name, game.status, cycleStatus, getNextStatus, showToast, showBadgeHint]);
+  }, [game.id, game.name, game.status, cycleStatus, getNextStatus, showToast, showBadgeHint, onStatusChange]);
 
   const handleLongPressStart = useCallback(() => {
     if (game.status === 'played') return;
