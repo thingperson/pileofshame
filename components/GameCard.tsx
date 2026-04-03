@@ -224,10 +224,10 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
             onTouchStart={handleLongPressStart}
             onTouchEnd={handleLongPressEnd}
             className={`
-              relative flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium
+              relative flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium
               font-[family-name:var(--font-mono)] transition-all duration-150
               ${game.status !== 'played' && game.status !== 'bailed'
-                ? 'hover:ring-1 hover:ring-white/20 hover:brightness-110 active:scale-95 cursor-pointer'
+                ? 'hover:brightness-125 active:scale-95 cursor-pointer ring-1 ring-white/10 hover:ring-white/25'
                 : 'cursor-default'}
               ${showBadgeHint ? 'animate-[pulse_2s_ease-in-out_3]' : ''}
             `}
@@ -250,18 +250,12 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
             <span className="ascii-icon hidden">{statusConfig.asciiIcon}</span>
             <span className="sm:hidden">{statusConfig.shortLabel || statusConfig.label}</span>
             <span className="hidden sm:inline">{statusConfig.label}</span>
-            {/* Chevron hint — shows this badge is tappable */}
+            {/* Arrow — makes it obvious this is tappable */}
             {nextStatus && (
-              <span className="text-[10px] opacity-50 ml-0.5">›</span>
+              <span className="text-[10px] opacity-60">→</span>
             )}
           </button>
-          {/* First-time hint — visible until user taps a status badge */}
-          {showBadgeHint && nextStatus && (
-            <span className="hidden sm:inline text-[10px] text-text-faint font-[family-name:var(--font-mono)] ml-1.5 animate-[fadeIn_500ms_ease-out] whitespace-nowrap">
-              tap to advance →
-            </span>
-          )}
-          {/* Hover hint — shows what tapping does */}
+          {/* Hover hint — shows what tapping does (desktop) */}
           {ghostStatus && game.status !== 'played' && game.status !== 'bailed' && (
             <span
               className="absolute left-full ml-1.5 whitespace-nowrap flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium font-[family-name:var(--font-mono)] opacity-0 animate-[fadeIn_150ms_100ms_forwards] pointer-events-none z-10"

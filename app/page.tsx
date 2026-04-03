@@ -321,18 +321,18 @@ function AppContent() {
             <SettingsMenu />
           </div>
         </div>
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           <ViewToggle />
           {!isEmpty && <InlineSearch />}
           <button
             onClick={() => setImportHubOpen(true)}
-            className="px-2.5 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+            className="px-2 sm:px-4 py-1.5 sm:py-2.5 text-[11px] sm:text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
           >
-            📥&nbsp;Import
+            📥 Import
           </button>
           <button
             onClick={() => setAddModalOpen(true)}
-            className="px-2.5 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+            className="px-2 sm:px-4 py-1.5 sm:py-2.5 text-[11px] sm:text-sm font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
           >
             + Add
           </button>
@@ -344,7 +344,7 @@ function AppContent() {
         <div className="mb-4 space-y-2">
           <button
             onClick={() => handleOpenReroll('anything')}
-            className={`w-full px-6 py-4 text-lg font-bold rounded-xl text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98] ${mounted && !hasUsedReroll ? 'animate-[pulse_2s_ease-in-out_infinite]' : ''}`}
+            className={`w-full px-4 sm:px-6 py-3.5 sm:py-4 text-base sm:text-lg font-bold rounded-xl text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98] ${mounted && !hasUsedReroll ? 'animate-[pulse_2s_ease-in-out_infinite]' : ''}`}
             style={{ background: 'linear-gradient(135deg, #7c3aed, #a78bfa)' }}
           >
             🎲&nbsp; What Should I Play?
@@ -354,30 +354,30 @@ function AppContent() {
               ↑ Tell us your mood. We&apos;ll find your game.
             </p>
           )}
-          <div className="flex gap-1.5 sm:gap-2">
+          <div className="flex gap-1.5 sm:gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
             <button
               onClick={() => openReroll('quick-session')}
-              className="flex-1 px-2 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+              className="shrink-0 px-3 sm:px-4 py-2 sm:py-2.5 text-[11px] sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, #6366f1, #818cf8)' }}
               title="Pick a game you can finish in one sitting"
             >
-              🌙&nbsp; Quick Session
+              🌙 Quick Session
             </button>
             <button
               onClick={() => openReroll('deep-cut')}
-              className="flex-1 px-2 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+              className="shrink-0 px-3 sm:px-4 py-2 sm:py-2.5 text-[11px] sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, #dc2626, #f87171)' }}
               title="Pick a long game you can really sink into"
             >
-              🔥&nbsp; Deep Cut
+              🔥 Deep Cut
             </button>
             <button
               onClick={() => openReroll('continue')}
-              className="flex-1 px-2 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+              className="shrink-0 px-3 sm:px-4 py-2 sm:py-2.5 text-[11px] sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, #d97706, #fbbf24)' }}
               title="Pick from games you already started"
             >
-              ▶&nbsp; Keep Playing
+              ▶ Keep Playing
             </button>
             <JustFiveMinutes games={games} />
           </div>

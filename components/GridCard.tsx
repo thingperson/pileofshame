@@ -91,16 +91,17 @@ export default function GridCard({ game }: GridCardProps) {
           {/* Status badge overlay — top left */}
           <button
             onClick={handleStatusClick}
-            className={`absolute top-2 left-2 flex items-center gap-1 px-2 py-1 rounded text-xs font-medium font-[family-name:var(--font-mono)] backdrop-blur-sm transition-all ${
-              game.status !== 'played' && game.status !== 'bailed' ? 'hover:scale-105 active:scale-95' : ''
+            className={`absolute top-2 left-2 flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] backdrop-blur-sm transition-all ${
+              game.status !== 'played' && game.status !== 'bailed' ? 'hover:scale-105 active:scale-95 ring-1 ring-white/15' : ''
             }`}
             style={{
-              backgroundColor: `${statusConfig.bg}cc`,
+              backgroundColor: `${statusConfig.bg}dd`,
               color: statusConfig.color,
             }}
           >
             <span>{statusConfig.icon}</span>
-            <span>{statusConfig.label}</span>
+            <span>{statusConfig.shortLabel || statusConfig.label}</span>
+            {nextStatus && <span className="text-[10px] opacity-60">→</span>}
           </button>
 
           {/* Time tier — top right */}

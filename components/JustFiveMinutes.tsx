@@ -153,11 +153,11 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
     return (
       <button
         onClick={startSession}
-        className="flex-1 px-3 py-2.5 text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+        className="shrink-0 px-3 sm:px-4 py-2 sm:py-2.5 text-[11px] sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
         style={{ background: 'linear-gradient(135deg, #059669, #34d399)' }}
         title="Try a game for 5 minutes. Then decide where it goes."
       >
-        ⚡&nbsp; <span className="hidden sm:inline">Just </span>5 Min
+        ⚡ Just 5 Min
       </button>
     );
   }
