@@ -9,6 +9,129 @@ import { getGameDescriptor } from '@/lib/descriptors';
 import { MOOD_TAG_CONFIG, getPlaytimeRoast } from '@/lib/enrichment';
 import { trackStatusChange } from '@/lib/analytics';
 
+// ── Jump Back In Cheat Sheet ──────────────────────────────────────
+
+function JumpBackIn({ game }: { game: Game }) {
+  const [open, setOpen] = useState(false);
+
+  // Progress estimate
+  const progressPct = game.hoursPlayed && game.hltbMain
+    ? Math.min(Math.round((game.hoursPlayed / game.hltbMain) * 100), 100)
+    : null;
+
+  // Genre-aware context tips
+  const genreTips = getGenreTips(game.genres || []);
+
+  return (
+    <div
+      className="rounded-lg border overflow-hidden"
+      style={{
+        backgroundColor: 'rgba(245, 158, 11, 0.04)',
+        borderColor: 'rgba(245, 158, 11, 0.15)',
+      }}
+    >
+      <button
+        onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
+        className="w-full flex items-center justify-between px-3 py-2 text-[11px] font-medium font-[family-name:var(--font-mono)] text-amber-300/80 hover:text-amber-300 transition-colors"
+      >
+        <span>🗺️ Jump Back In</span>
+        <span className="text-[10px] opacity-60">{open ? '▲' : '▼'}</span>
+      </button>
+      {open && (
+        <div className="px-3 pb-3 space-y-2 animate-[fadeIn_150ms_ease-out]">
+          {/* Progress estimate */}
+          {progressPct !== null && (
+            <div className="space-y-1">
+              <div className="flex items-center justify-between text-[11px] font-[family-name:var(--font-mono)]">
+                <span className="text-text-dim">
+                  ~{progressPct}% through ({game.hoursPlayed}h / {game.hltbMain}h)
+                </span>
+                {progressPct >= 75 && (
+                  <span className="text-green-400">Almost there</span>
+                )}
+                {progressPct < 25 && progressPct > 0 && (
+                  <span className="text-text-faint">Early game</span>
+                )}
+                {progressPct >= 25 && progressPct < 75 && (
+                  <span className="text-amber-300/60">Mid-game</span>
+                )}
+              </div>
+              <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
+                <div
+                  className="h-full rounded-full transition-all"
+                  style={{
+                    width: `${progressPct}%`,
+                    backgroundColor: progressPct >= 75 ? '#22c55e' : '#f59e0b',
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Genre tips */}
+          {genreTips.length > 0 && (
+            <div className="space-y-1">
+              <p className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider">Quick reminders</p>
+              {genreTips.map((tip, i) => (
+                <p key={i} className="text-[11px] text-text-muted leading-relaxed">
+                  {tip}
+                </p>
+              ))}
+            </div>
+          )}
+
+          {/* No enrichment data? */}
+          {!game.description && !game.hltbMain && (!game.genres || game.genres.length === 0) && (
+            <p className="text-[11px] text-text-faint italic">
+              No game data available yet. It might still be enriching.
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function getGenreTips(genres: string[]): string[] {
+  const tips: string[] = [];
+  const g = genres.map(s => s.toLowerCase());
+
+  if (g.some(x => x.includes('rpg') || x.includes('role-playing'))) {
+    tips.push('📋 Check your quest log or journal for active objectives.');
+    tips.push('🗡️ Review your equipment and skill loadout before diving in.');
+  }
+  if (g.some(x => x.includes('action') || x.includes('shooter'))) {
+    tips.push('🎮 Spend a minute in a safe area to re-learn the controls.');
+  }
+  if (g.some(x => x.includes('strategy') || x.includes('simulation'))) {
+    tips.push('📊 Check your resources and any pending decisions before making moves.');
+  }
+  if (g.some(x => x.includes('adventure') || x.includes('story'))) {
+    tips.push('📖 Read your last save\'s chapter or area name to jog your memory.');
+  }
+  if (g.some(x => x.includes('puzzle'))) {
+    tips.push('🧩 Look around the current room. The answer is usually in front of you.');
+  }
+  if (g.some(x => x.includes('stealth'))) {
+    tips.push('👀 Quicksave before you do anything. Relearn the patrol patterns.');
+  }
+  if (g.some(x => x.includes('survival') || x.includes('craft'))) {
+    tips.push('🔨 Check your inventory and crafting options. Repair anything broken.');
+  }
+  if (g.some(x => x.includes('metroidvania') || x.includes('platformer'))) {
+    tips.push('🗺️ Open the map. Look for unexplored areas near your current position.');
+  }
+  if (g.some(x => x.includes('souls') || x.includes('roguelike') || x.includes('roguelite'))) {
+    tips.push('💀 Expect to die a few times while you get back into the rhythm.');
+  }
+  if (g.some(x => x.includes('open world'))) {
+    tips.push('🧭 Pick ONE objective. Ignore everything else until it\'s done.');
+  }
+
+  // Cap at 3 tips max
+  return tips.slice(0, 3);
+}
+
 interface ProgressAction {
   label: string;
   onClick: () => void;
@@ -504,6 +627,11 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                     ) : null;
                   })}
                 </div>
+              )}
+
+              {/* Jump Back In — Now Playing cheat sheet */}
+              {(game.status === 'playing' || game.status === 'on-deck') && (game.description || game.hltbMain || game.genres?.length) && (
+                <JumpBackIn game={game} />
               )}
 
               {/* Playtime insight */}
