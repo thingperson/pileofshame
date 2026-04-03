@@ -20,6 +20,7 @@ export default function GridCard({ game }: GridCardProps) {
   const { showToast } = useToast();
 
   const statusConfig = STATUS_CONFIG[game.status];
+  const nextStatus = getNextStatus(game.status);
   const tierConfig = TIME_TIER_CONFIG[game.timeTier];
 
   // Achievement progress
