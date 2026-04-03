@@ -22,6 +22,11 @@
       "Bash(git merge *)",
       "Bash(GIT_SSH_COMMAND=*)",
 
+      "Bash(cd * && git *)",
+      "Bash(cd * && npm *)",
+      "Bash(cd * && export *)",
+      "Bash(cd * && npx *)",
+
       "Bash(npm run *)",
       "Bash(npm install*)",
       "Bash(npm ci*)",

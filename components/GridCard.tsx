@@ -114,7 +114,7 @@ export default function GridCard({ game }: GridCardProps) {
 
           {/* Platform source — bottom left of cover */}
           <span
-            className="absolute bottom-1.5 left-2 text-[10px] font-bold font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded backdrop-blur-sm z-10"
+            className="absolute bottom-1.5 left-2 text-[11px] font-bold font-[family-name:var(--font-mono)] px-2 py-0.5 rounded backdrop-blur-sm z-10"
             style={{
               backgroundColor: SOURCE_COLORS[game.source].bg,
               color: SOURCE_COLORS[game.source].text,

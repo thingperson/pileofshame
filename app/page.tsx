@@ -342,25 +342,12 @@ function AppContent() {
         </div>
       </header>
 
-      {/* Sync nudge — shows once for unsigned-in users after first import */}
-      {!isEmpty && <SyncNudge />}
-
-      {/* Filters */}
+      {/* Get Playing — Hero Action (gravitational center) */}
       {!isEmpty && (
-        <div className="mb-4">
-          <FilterBar />
-        </div>
-      )}
-
-      {/* Auto-enrichment progress */}
-      <EnrichmentIndicator />
-
-      {/* Get Playing — Hero Action */}
-      {!isEmpty && (
-        <div className="mb-6 space-y-2">
+        <div className="mb-5 space-y-2">
           <button
             onClick={() => handleOpenReroll('anything')}
-            className={`w-full px-6 py-4 text-lg font-bold rounded-xl text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98] ${mounted && !hasUsedReroll ? 'animate-[pulse_2s_ease-in-out_infinite]' : ''}`}
+            className={`w-full px-6 py-5 text-lg font-bold rounded-xl text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98] ${mounted && !hasUsedReroll ? 'animate-[pulse_2s_ease-in-out_infinite]' : ''}`}
             style={{ background: 'linear-gradient(135deg, #7c3aed, #a78bfa)' }}
           >
             🎲&nbsp; What Should I Play?
@@ -398,6 +385,17 @@ function AppContent() {
             <JustFiveMinutes games={games} />
           </div>
         </div>
+      )}
+
+      {/* Sync nudge — shows once for unsigned-in users after first import */}
+      {!isEmpty && <SyncNudge />}
+
+      {/* Auto-enrichment progress */}
+      <EnrichmentIndicator />
+
+      {/* Filters — collapsible, secondary to the decision */}
+      {!isEmpty && (
+        <FilterBar />
       )}
 
       {/* Stats Panel */}

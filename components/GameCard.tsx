@@ -286,7 +286,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
           {game.name}
         </span>
 
-        {/* Achievement mini + Time Tier + Source Icons */}
+        {/* Achievement mini + Time Tier + Platform Source */}
         <div className="flex items-center gap-1.5 shrink-0">
           {game.achievements && game.achievements.total > 0 && (
             <span
@@ -306,10 +306,11 @@ export default function GameCard({ game, upNextIndex, forceExpanded }: GameCardP
             {tierConfig.icon}
           </span>
           <span
-            className="text-[10px] font-bold font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded"
+            className="text-[11px] font-bold font-[family-name:var(--font-mono)] px-2 py-0.5 rounded"
             style={{
               backgroundColor: SOURCE_COLORS[game.source].bg,
               color: SOURCE_COLORS[game.source].text,
+              border: `1px solid ${SOURCE_COLORS[game.source].text}25`,
             }}
             title={SOURCE_LABELS[game.source]}
           >
