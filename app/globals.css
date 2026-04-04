@@ -232,11 +232,6 @@ button:active:not(:disabled) {
   100% { opacity: 0; transform: scale(0); }
 }
 
-@keyframes star-twinkle {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
-}
-
 .theme-90s {
   --color-bg-primary: #000080;
   --color-bg-card: #c0c0c0;
@@ -536,12 +531,6 @@ button:active:not(:disabled) {
   100% { background-position: 0 40px; }
 }
 
-@keyframes float-up {
-  0% { transform: translateY(0); opacity: 0.4; }
-  50% { opacity: 0.8; }
-  100% { transform: translateY(-100vh); opacity: 0; }
-}
-
 @keyframes vhs-flicker {
   0%, 95%, 100% { opacity: 1; }
   96% { opacity: 0.8; transform: translateX(2px); }
@@ -737,11 +726,6 @@ button:active:not(:disabled) {
 @keyframes future-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-100vh); }
-}
-
-@keyframes future-scan {
-  0% { top: -2px; }
-  100% { top: 100%; }
 }
 
 @keyframes future-glow-pulse {
@@ -1051,12 +1035,6 @@ button:active:not(:disabled) {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-3px); }
 }
-@keyframes footprint-fade {
-  0% { opacity: 0; transform: scale(0.5); }
-  30% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0.3; transform: scale(1); }
-}
-
 .theme-dino {
   --color-bg-primary: #1a2e1a;
   --color-bg-card: #233323;

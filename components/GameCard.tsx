@@ -564,7 +564,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               {upNextIndex}.
             </span>
           )}
-          {game.isWishlisted && <span className="text-yellow-400 mr-1" title="Wishlisted">⭐</span>}
+          {game.isWishlisted && <span className="text-yellow-400 mr-1" title="Wishlisted" aria-label="Wishlisted" role="img">⭐</span>}
           {game.name}
         </span>
 
@@ -584,7 +584,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               {game.achievements.earnedPlatinum ? '🏆' : `${Math.round((game.achievements.earned / game.achievements.total) * 100)}%`}
             </span>
           )}
-          <span className="text-sm" title={tierConfig.label}>
+          <span className="text-sm" title={tierConfig.label} aria-hidden="true">
             {tierConfig.icon}
           </span>
           <span

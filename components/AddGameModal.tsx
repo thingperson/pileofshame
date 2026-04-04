@@ -196,26 +196,32 @@ export default function AddGameModal({ open, onClose, initialName }: AddGameModa
 
           {/* Source & Category */}
           <div className="flex gap-2">
-            <select
-              value={source}
-              onChange={(e) => setSource(e.target.value as GameSource)}
-              aria-label="Game source"
-              className="flex-1 text-sm bg-bg-primary border border-border-subtle rounded-lg px-2 py-2 text-text-secondary focus:outline-none focus:border-accent-purple"
-            >
-              {(Object.keys(SOURCE_LABELS) as GameSource[]).map((s) => (
-                <option key={s} value={s}>{SOURCE_LABELS[s]}</option>
-              ))}
-            </select>
-            <select
-              value={category || categories[0]}
-              onChange={(e) => setCategory(e.target.value)}
-              aria-label="Game category"
-              className="flex-1 text-sm bg-bg-primary border border-border-subtle rounded-lg px-2 py-2 text-text-secondary focus:outline-none focus:border-accent-purple"
-            >
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
+            <div className="flex-1">
+              <label htmlFor="add-game-source" className="block text-xs text-text-dim font-[family-name:var(--font-mono)] mb-1">Source</label>
+              <select
+                id="add-game-source"
+                value={source}
+                onChange={(e) => setSource(e.target.value as GameSource)}
+                className="w-full text-sm bg-bg-primary border border-border-subtle rounded-lg px-2 py-2 text-text-secondary focus:outline-none focus:border-accent-purple"
+              >
+                {(Object.keys(SOURCE_LABELS) as GameSource[]).map((s) => (
+                  <option key={s} value={s}>{SOURCE_LABELS[s]}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex-1">
+              <label htmlFor="add-game-category" className="block text-xs text-text-dim font-[family-name:var(--font-mono)] mb-1">Category</label>
+              <select
+                id="add-game-category"
+                value={category || categories[0]}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full text-sm bg-bg-primary border border-border-subtle rounded-lg px-2 py-2 text-text-secondary focus:outline-none focus:border-accent-purple"
+              >
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* Time Tier */}
