@@ -504,10 +504,10 @@ function AppContent() {
                         setAddModalInitialName(filters.search);
                         setAddModalOpen(true);
                       }}
-                      className="px-4 py-2 text-xs font-semibold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
+                      className="px-4 py-2 text-xs font-semibold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98] max-w-full truncate"
                       style={{ backgroundColor: 'rgba(167, 139, 250, 0.15)', color: '#a78bfa', border: '1px solid rgba(167, 139, 250, 0.25)' }}
                     >
-                      + Add &ldquo;{filters.search}&rdquo; to your pile
+                      + Add &ldquo;{filters.search.length > 30 ? filters.search.slice(0, 30) + '...' : filters.search}&rdquo; to your pile
                     </button>
                   </div>
                 );

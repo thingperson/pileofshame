@@ -1703,14 +1703,21 @@ body.theme-cozy {
   color: #554E4A !important;
 }
 
-/* Cozy: softer cards */
-.theme-cozy [class*="rounded-"] {
-  border-radius: 16px !important;
-}
-
-.theme-cozy button[class*="rounded-"] {
+/* Cozy: softer cards — targeted, not blanket */
+.theme-cozy .rounded-xl,
+.theme-cozy .rounded-2xl {
   border-radius: 20px !important;
 }
+
+.theme-cozy .rounded-lg {
+  border-radius: 14px !important;
+}
+
+.theme-cozy .rounded-md {
+  border-radius: 10px !important;
+}
+
+/* Don't override rounded-full (pills, progress bars) or rounded (tiny badges) */
 
 .theme-cozy [class*="bg-bg-card"],
 .theme-cozy [style*="background-color: var(--color-bg-card)"] {
@@ -1834,9 +1841,17 @@ body.theme-minimal {
   border-radius: 0 !important;
 }
 
-/* Minimal: no card radius anywhere */
-.theme-minimal [class*="rounded-"] {
+/* Minimal: strip radius on cards and buttons, preserve on modals */
+.theme-minimal .rounded-xl,
+.theme-minimal .rounded-lg,
+.theme-minimal .rounded-md,
+.theme-minimal .rounded {
   border-radius: 0 !important;
+}
+
+/* Keep modal containers rounded for visual separation */
+.theme-minimal [role="dialog"] {
+  border-radius: 8px !important;
 }
 
 /* Minimal: strip gradient buttons */

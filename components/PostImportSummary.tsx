@@ -43,7 +43,7 @@ export default function PostImportSummary({ breakdown, onDismiss }: PostImportSu
       {/* Close X */}
       <button
         onClick={onDismiss}
-        className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-md text-text-faint hover:text-text-muted hover:bg-white/5 transition-all"
+        className="absolute top-1.5 right-1.5 w-10 h-10 flex items-center justify-center rounded-lg text-text-faint hover:text-text-muted hover:bg-white/5 transition-all"
         aria-label="Dismiss"
       >
         ✕
