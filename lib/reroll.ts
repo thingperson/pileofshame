@@ -112,6 +112,43 @@ function calculateWeight(game: Game, skippedIds: Set<string>): number {
   return Math.max(0.1, Math.min(weight, 20));
 }
 
+export interface PickReason {
+  label: string;
+  icon: string;
+}
+
+/** Build human-readable reasons why a game was surfaced */
+export function getPickReasons(game: Game): PickReason[] {
+  const reasons: PickReason[] = [];
+
+  if (game.metacritic && game.metacritic >= 90) {
+    reasons.push({ label: `Rated ${game.metacritic} on Metacritic`, icon: '⭐' });
+  } else if (game.metacritic && game.metacritic >= 75) {
+    reasons.push({ label: `Well-reviewed (${game.metacritic} Metacritic)`, icon: '👍' });
+  }
+
+  if (game.hoursPlayed > 0 && game.hoursPlayed <= 20) {
+    reasons.push({ label: `You've started this one (${game.hoursPlayed}h in)`, icon: '▶' });
+  }
+
+  const daysSinceAdded = (Date.now() - new Date(game.addedAt).getTime()) / (1000 * 60 * 60 * 24);
+  if (daysSinceAdded > 365) {
+    reasons.push({ label: `In your pile for ${Math.round(daysSinceAdded / 365)}+ year${Math.round(daysSinceAdded / 365) > 1 ? 's' : ''}`, icon: '📅' });
+  } else if (daysSinceAdded > 180) {
+    reasons.push({ label: 'Been in your pile a while', icon: '📅' });
+  }
+
+  if (game.hltbMain && game.hltbMain <= 8) {
+    reasons.push({ label: `Beatable in ~${game.hltbMain}h`, icon: '⏱️' });
+  }
+
+  if (game.moodTags && game.moodTags.length > 0) {
+    reasons.push({ label: `Mood: ${game.moodTags.slice(0, 2).join(', ')}`, icon: '🎭' });
+  }
+
+  return reasons.slice(0, 3);
+}
+
 /**
  * Weighted random selection. Games with higher signals (metacritic, enrichment,
  * backlog age) are more likely to be picked. Skipped games are deprioritized.

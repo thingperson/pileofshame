@@ -6,7 +6,7 @@ import { useStore } from '@/lib/store';
 import { STATUS_CONFIG, REROLL_MESSAGES, TIME_TIER_CONFIG } from '@/lib/constants';
 import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
 import { getGameDescriptor } from '@/lib/descriptors';
-import { REROLL_MODES, RerollMode, getEligibleGames, pickWeighted } from '@/lib/reroll';
+import { REROLL_MODES, RerollMode, getEligibleGames, pickWeighted, getPickReasons } from '@/lib/reroll';
 import { useToast } from './Toast';
 import { trackReroll, trackRerollCommit } from '@/lib/analytics';
 
@@ -372,9 +372,22 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
               <h3 className="text-xl font-bold text-text-primary mb-2">
                 {currentPick.name}
               </h3>
-              <div className="flex justify-center gap-4 text-xs text-text-dim font-[family-name:var(--font-mono)]">
+              <div className="flex flex-wrap justify-center gap-3 text-xs text-text-dim font-[family-name:var(--font-mono)]">
+                {currentPick.metacritic && (
+                  <span
+                    className="px-1.5 py-0.5 rounded font-bold"
+                    style={{
+                      backgroundColor: currentPick.metacritic >= 75 ? 'rgba(34,197,94,0.15)' : currentPick.metacritic >= 50 ? 'rgba(234,179,8,0.15)' : 'rgba(239,68,68,0.15)',
+                      color: currentPick.metacritic >= 75 ? '#22c55e' : currentPick.metacritic >= 50 ? '#eab308' : '#ef4444',
+                    }}
+                  >
+                    {currentPick.metacritic}
+                  </span>
+                )}
+                {currentPick.hltbMain && (
+                  <span>🕐 ~{currentPick.hltbMain}h to beat</span>
+                )}
                 <span>{TIME_TIER_CONFIG[currentPick.timeTier].icon} {TIME_TIER_CONFIG[currentPick.timeTier].label}</span>
-                <span>{STATUS_CONFIG[currentPick.status].icon} {STATUS_CONFIG[currentPick.status].label}</span>
                 {currentPick.hoursPlayed > 0 && <span>{currentPick.hoursPlayed}h logged</span>}
               </div>
               {/* Descriptor */}
@@ -391,9 +404,26 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                   </p>
                 ) : null;
               })()}
-              {currentPick.notes && (
-                <p className="text-xs text-text-muted mt-2 leading-relaxed">{currentPick.notes}</p>
-              )}
+              {/* Why this game? */}
+              {(() => {
+                const reasons = getPickReasons(currentPick);
+                return reasons.length > 0 ? (
+                  <div className="mt-3 pt-2 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                    <p className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider mb-1.5">Why this one?</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {reasons.map((r, i) => (
+                        <span
+                          key={i}
+                          className="text-[11px] text-text-muted font-[family-name:var(--font-mono)] px-2 py-1 rounded-md"
+                          style={{ backgroundColor: 'rgba(255,255,255,0.04)' }}
+                        >
+                          {r.icon} {r.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : null;
+              })()}
               </div>
             </div>
 
@@ -429,31 +459,56 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
         {/* Forced Choice (Roll 10) */}
         {showForced && (
           <div className="px-5 pb-5">
-            <p className="text-center text-sm font-medium text-text-secondary mb-4">
+            <p className="text-center text-sm font-medium text-text-secondary mb-1">
               Pick one. No more rolls.
             </p>
+            <p className="text-center text-[10px] text-text-faint font-[family-name:var(--font-mono)] mb-4">
+              These came up during your session. One of them is calling your name.
+            </p>
             <div className="space-y-2">
-              {forcedPicks.map((game) => (
-                <button
-                  key={game.id}
-                  onClick={() => handleLetsGo(game)}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl border transition-all hover:border-accent-purple hover:scale-[1.01]"
-                  style={{
-                    backgroundColor: 'var(--color-bg-card)',
-                    borderColor: 'var(--color-border-subtle)',
-                  }}
-                >
-                  {game.coverUrl && (
-                    <img src={game.coverUrl} alt="" className="w-10 h-10 rounded-lg object-cover shrink-0" />
-                  )}
-                  <span className="flex-1 text-sm font-medium text-text-primary text-left truncate">
-                    {game.name}
-                  </span>
-                  <span className="text-xs text-text-dim">
-                    {TIME_TIER_CONFIG[game.timeTier].icon}
-                  </span>
-                </button>
-              ))}
+              {forcedPicks.map((game) => {
+                const desc = getGameDescriptor(game.name, game.metacritic, game.genres);
+                return (
+                  <button
+                    key={game.id}
+                    onClick={() => handleLetsGo(game)}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl border transition-all hover:border-accent-purple hover:scale-[1.01]"
+                    style={{
+                      backgroundColor: 'var(--color-bg-card)',
+                      borderColor: 'var(--color-border-subtle)',
+                    }}
+                  >
+                    {game.coverUrl && (
+                      <img src={game.coverUrl} alt="" className="w-12 h-12 rounded-lg object-cover shrink-0" />
+                    )}
+                    <div className="flex-1 min-w-0 text-left">
+                      <span className="text-sm font-medium text-text-primary truncate block">
+                        {game.name}
+                      </span>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        {game.metacritic && (
+                          <span
+                            className="text-[10px] font-bold px-1 rounded"
+                            style={{
+                              backgroundColor: game.metacritic >= 75 ? 'rgba(34,197,94,0.15)' : 'rgba(234,179,8,0.15)',
+                              color: game.metacritic >= 75 ? '#22c55e' : '#eab308',
+                            }}
+                          >
+                            {game.metacritic}
+                          </span>
+                        )}
+                        {game.hltbMain && (
+                          <span className="text-[10px] text-text-dim font-[family-name:var(--font-mono)]">~{game.hltbMain}h</span>
+                        )}
+                        <span className="text-[10px] text-text-dim">{TIME_TIER_CONFIG[game.timeTier].icon}</span>
+                      </div>
+                      {desc && (
+                        <p className="text-[10px] text-text-faint mt-0.5 truncate italic">{desc.line}</p>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
             <button
               onClick={handleNotNow}
