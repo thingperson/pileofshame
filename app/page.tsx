@@ -610,16 +610,24 @@ function AppContent() {
         </div>
       )}
 
-      {/* ── View Toggle + Stats Link ── */}
+      {/* ── View Toggle + Stats + Help ── */}
       {!isEmpty && (
         <div className="flex items-center justify-between mt-4 mb-2">
           <ViewToggle />
-          <button
-            onClick={() => setHelpOpen(true)}
-            className="text-[11px] text-text-faint hover:text-text-muted transition-colors font-[family-name:var(--font-mono)]"
-          >
-            ? Help
-          </button>
+          <div className="flex items-center gap-3">
+            <a
+              href="/stats"
+              className="text-[11px] text-text-faint hover:text-accent-purple transition-colors font-[family-name:var(--font-mono)]"
+            >
+              📊 My Stats
+            </a>
+            <button
+              onClick={() => setHelpOpen(true)}
+              className="text-[11px] text-text-faint hover:text-text-muted transition-colors font-[family-name:var(--font-mono)]"
+            >
+              ? Help
+            </button>
+          </div>
         </div>
       )}
 
