@@ -65,15 +65,30 @@
 
 ## CURRENT SPRINT — April 2026
 
-### Landing Page (HIGH)
+### Xbox Import + Game Pass (HIGH — Priority 1)
+- Bug: OpenXBL API key not configured → users see error on Xbox import
+- Sign up at xbl.io, add `OPENXBL_API_KEY` to `.env.local` + Vercel env vars
+- Test import flow against real Xbox account
+- Free tier: 150 req/hr, no credit card, covers all endpoints we need
+- **Game Pass catalog feature**: OpenXBL has Game Pass endpoints on free tier
+  - Import Game Pass catalog as browsable pool
+  - "I have Game Pass" mode: recommend from available catalog based on mood/time
+  - Hybrid: overlay Game Pass catalog with play history (what you've tried + what's available)
+  - Solves: "I have 400 free games and can't pick one" — stronger version of the core problem
+
+### Landing Page (HIGH — Priority 2)
 - Design doc: `docs/landing-page-plan.md`
 - Hero section with CTA
 - How-it-works breakdown (3 steps)
 - Before/after comparison
-- Social proof section
+- Key copy discovered in Discord conversation (Apr 4):
+  - "Treat it like a condition that needs healing"
+  - "We nudged you to play. If you don't like it, blame us."
+  - "Celebrating bailing on a game — that's a decision. That's a win."
+  - The identity pressure angle: it's not about what's good, it's what you *chose*
 - Show for visitors with empty library, redirect to app when library exists
 
-### Enrichment Reliability Audit (HIGH)
+### Enrichment Reliability Audit (MEDIUM)
 - Name normalization shipped ✅
 - Result scoring shipped ✅
 - Still needed: test accuracy at scale with large libraries (200+ games)
@@ -83,17 +98,30 @@
 ### Accessibility Hardening (MEDIUM)
 - Cozy theme text-faint/dim contrast fixed ✅
 - Minimal theme opacity bumped ✅
-- Still needed: aria-hidden on emoji icons in GameCard
-- Still needed: visual labels on AddGameModal selects
 - Still needed: close button accessibility in Reroll modal
+
+### Visual Identity Pass (MEDIUM)
+- Extend geometric element system beyond landing page into main app (reroll modal, stats, empty states)
+- Explore custom illustrated mascot/icon (backpack with controller, consistent style)
+- Consider spot illustrations for key moments (import complete, first recommendation, completion)
+- One strong visual mark > 20 decorative elements — find the ONE thing
+- AI generation possible for spot illustrations if done tastefully (not hero art)
+- Must not clutter — personality without noise
+
+### Infrastructure Prep (MEDIUM)
+- Sentry error monitoring (free tier — rough in now, refine later)
+- Uptime monitoring (BetterUptime or UptimeRobot free tier)
+- Goal: have these ready to activate, not scramble when traffic arrives
 
 ---
 
-## NEXT SPRINT — May 2026
+## NEXT SPRINT
 
 ### Decision Engine V3 (HIGH)
+- **"Ignore this title" / negative weighting** — if user bails, stop suggesting (from user feedback)
 - "Why not this?" skip feedback (optional 1-tap reason: too long, not in mood, played recently)
 - Energy matching (user picks energy level 1-5 before roll)
+- **Behavioral learning over time** — engine gets smarter about *this user* based on decisions
 - Post-recommendation nudge (after "Let's go": motivational push + launch link)
 - See: `docs/decision-engine-plan-2026-04-03.md` items 4-8
 
@@ -111,16 +139,30 @@
 
 ## FUTURE PHASES
 
-### Phase 3: Social & Sharing (LOW priority for now)
+### Phase 3: User Insights & Self-Reflection
+- Personal gaming data breakdowns (genre distribution, play patterns, decision history)
+- "Your gaming personality" profile built from behavior over time
+- Auto-clustering similar user types for better recommendations at scale
+- Natural lock-in through accumulated self-knowledge (not gamification)
+- From user feedback: "I like data breakdowns on my own behaviour over time"
+
+### Phase 4: Social & Sharing (LOW priority for now)
 - Public profile route (/u/username)
 - OG link previews for shared profiles
 - Share card redesign
 - Friend comparisons ("your pile vs. theirs")
 
-### Phase 4: Smart Notifications (LOW)
+### Phase 5: Smart Notifications (LOW)
 - Email digest: "You haven't played in 3 days"
 - Deal alerts for games in your pile (price drops)
 - See: `.claude/plans/future-notifications-email.md`
+
+### Research — Decision Paralysis & Choice Architecture
+- Formal study of choice overload interventions (Schwartz, Iyengar)
+- What streaming platforms learned (Netflix browse-to-watch ratio, Spotify Discover Weekly)
+- Failed approaches: Steam discovery queue, Google Play "play next"
+- Pattern languages from outside gaming (meal planning, reading lists, streaming)
+- Has anyone measured the "entertainment backlog" userbase size?
 
 ### Parking Lot (ideas, not committed)
 - Drag-to-reorder Up Next (dnd-kit installed)
@@ -155,3 +197,9 @@
 - `.claude/plans/future-notifications-email.md` — Email/notification roadmap
 - `docs/scale-up-plan.md` — Infrastructure scaling playbook + emergency viral plan
 - `docs/marketing-prep.md` — Channel strategy, email scaffold, pre-launch checklist
+
+## USER FEEDBACK LOG
+
+| Date | Source | User | Key Feedback | Status |
+|------|--------|------|-------------|--------|
+| Apr 4, 2026 | Discord | Nate (ex-Xbox) | Xbox import broken (no API key), wants "ignore title" + behavioral learning | Xbox fix queued as Priority 1, features roadmapped |

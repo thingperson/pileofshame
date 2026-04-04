@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
       }
 
       const data = await res.json();
-      const people = data.people || data.profileUsers || [];
+      const people = data.content?.people || data.people || data.profileUsers || [];
       if (people.length === 0) {
         return NextResponse.json({ error: `No Xbox profile found for "${gamertag}"` }, { status: 404 });
       }
@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await res.json();
-    const titles = data.titles || [];
+    const titles = data.content?.titles || data.titles || [];
 
     // Filter and format titles
     const games = titles

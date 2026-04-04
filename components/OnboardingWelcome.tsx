@@ -3,9 +3,10 @@
 interface OnboardingWelcomeProps {
   onImport: () => void;
   onAddManual: () => void;
+  onGamePass?: () => void;
 }
 
-export default function OnboardingWelcome({ onImport, onAddManual }: OnboardingWelcomeProps) {
+export default function OnboardingWelcome({ onImport, onAddManual, onGamePass }: OnboardingWelcomeProps) {
   return (
     <div className="card-enter py-8 sm:py-14">
       <div
@@ -37,6 +38,19 @@ export default function OnboardingWelcome({ onImport, onAddManual }: OnboardingW
           <p className="text-[10px] text-text-faint font-[family-name:var(--font-mono)]">
             Steam, PlayStation, Xbox, GOG, Playnite
           </p>
+
+          {onGamePass && (
+            <button
+              onClick={onGamePass}
+              className="w-full py-2.5 rounded-xl text-sm font-bold transition-all hover:scale-[1.01] active:scale-[0.99]"
+              style={{
+                background: 'linear-gradient(135deg, #107c10, #2ecc40)',
+                color: '#ffffff',
+              }}
+            >
+              🟩 I Have Game Pass
+            </button>
+          )}
 
           <button
             onClick={onAddManual}

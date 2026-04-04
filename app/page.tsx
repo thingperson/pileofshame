@@ -26,7 +26,9 @@ import NinetiesMode from '@/components/NinetiesMode';
 import SyncNudge from '@/components/SyncNudge';
 import { useAutoEnrich } from '@/hooks/useAutoEnrich';
 import OnboardingWelcome from '@/components/OnboardingWelcome';
+import LandingPage from '@/components/LandingPage';
 import PostImportSummary from '@/components/PostImportSummary';
+import GamePassBrowse from '@/components/GamePassBrowse';
 import { trackThemeSession } from '@/lib/archetypes';
 
 // ── Inline Search ──────────────────────────────────────────────────
@@ -92,6 +94,7 @@ function AppContent() {
   const [rerollOpen, setRerollOpen] = useState(false);
   const [rerollMode, setRerollMode] = useState<RerollMode | undefined>();
   const [importHubOpen, setImportHubOpen] = useState(false);
+  const [gamePassOpen, setGamePassOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>('backlog');
   const [backlogLimit, setBacklogLimit] = useState(10);
@@ -353,6 +356,18 @@ function AppContent() {
     );
   }
 
+  // ── Landing page for empty library ──
+  if (isEmpty) {
+    return (
+      <>
+        <LandingPage onImport={() => setImportHubOpen(true)} />
+        <ImportHub open={importHubOpen} onClose={() => setImportHubOpen(false)} />
+        <AddGameModal open={addModalOpen} onClose={() => { setAddModalOpen(false); setAddModalInitialName(''); }} initialName={addModalInitialName} />
+        <CloudSync />
+      </>
+    );
+  }
+
   // ── Next tab action label for game cards ──
   const nextTabLabel = activeTab === 'backlog' ? 'Up Next'
     : activeTab === 'up-next' ? 'Now Playing'
@@ -381,7 +396,7 @@ function AppContent() {
             </p>
           </div>
           <div className="flex items-center gap-1.5">
-            {!isEmpty && <InlineSearch />}
+            <InlineSearch />
             <button
               onClick={() => setImportHubOpen(true)}
               className="px-2.5 py-2 text-[11px] sm:text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
@@ -401,8 +416,7 @@ function AppContent() {
       </header>
 
       {/* ── Hero CTA ── */}
-      {!isEmpty && (
-        <div className="mb-3 space-y-2">
+      <div className="mb-3 space-y-2">
           <button
             onClick={() => handleOpenReroll('anything')}
             className={`w-full px-4 sm:px-6 py-3 sm:py-3.5 text-base sm:text-lg font-bold rounded-xl text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98] ${mounted && !hasUsedReroll ? 'animate-[pulse_2s_ease-in-out_infinite]' : ''}`}
@@ -438,27 +452,27 @@ function AppContent() {
               ▶ Keep Playing
             </button>
             <JustFiveMinutes games={games} />
+            <button
+              onClick={() => setGamePassOpen(true)}
+              className="shrink-0 px-3 sm:px-4 py-2 sm:py-2.5 text-[11px] sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap flex items-center gap-1.5"
+              style={{ background: 'linear-gradient(135deg, #107c10 0%, #1a8a1a 50%, #0070d1 100%)' }}
+              title="Pick a game from Game Pass or PS+ catalog"
+            >
+              <span className="font-bold" style={{ color: '#7ec850' }}>X</span>
+              <span className="text-[10px] opacity-70">|</span>
+              <span className="font-bold" style={{ color: '#ffd800' }}>+</span>
+              <span>Sub Shuffle</span>
+            </button>
           </div>
         </div>
-      )}
 
       {/* Auto-enrichment progress */}
       <EnrichmentIndicator />
 
-      {/* ── Empty State ── */}
-      {isEmpty && (
-        <OnboardingWelcome
-          onImport={() => setImportHubOpen(true)}
-          onAddManual={() => { setAddModalInitialName(''); setAddModalOpen(true); }}
-        />
-      )}
-
       {/* ── Tab Navigation ── */}
-      {!isEmpty && (
-        <div className="mb-3">
-          <TabNav activeTab={activeTab} onTabChange={setActiveTab} counts={tabCounts} />
-        </div>
-      )}
+      <div className="mb-3">
+        <TabNav activeTab={activeTab} onTabChange={setActiveTab} counts={tabCounts} />
+      </div>
 
       {/* ── Sort control (Backlog tab only) ── */}
       {!isEmpty && activeTab === 'backlog' && tabGames.length > 0 && (
@@ -668,6 +682,7 @@ function AppContent() {
       <ImportHub open={importHubOpen} onClose={() => setImportHubOpen(false)} />
       <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} />
       <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
+      <GamePassBrowse open={gamePassOpen} onClose={() => setGamePassOpen(false)} />
       {/* GridCard handles its own detail modal */}
       <CompletionCelebration
         game={celebrationGame}
