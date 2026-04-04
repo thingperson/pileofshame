@@ -29,6 +29,8 @@ export default function PostImportSummary({ breakdown, onDismiss }: PostImportSu
 
   return (
     <div
+      role="status"
+      aria-live="polite"
       className={`relative rounded-xl border overflow-hidden transition-all duration-500 mb-4 ${
         visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
       }`}

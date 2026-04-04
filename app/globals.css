@@ -1675,9 +1675,9 @@ button:active:not(:disabled) {
   --color-border-active: rgba(139, 115, 85, 0.25) !important;
   --color-text-primary: #3D3837 !important;
   --color-text-secondary: #554E4A !important;
-  --color-text-muted: #7A706A !important;
-  --color-text-dim: #9E918A !important;
-  --color-text-faint: #B8ADA6 !important;
+  --color-text-muted: #6B5F58 !important;
+  --color-text-dim: #8A7D75 !important;
+  --color-text-faint: #9E918A !important;
   --color-accent-purple: #B8A9C9 !important;
   --color-accent-pink: #E8A598 !important;
 }
@@ -1798,9 +1798,9 @@ body.theme-cozy {
   --color-border-active: rgba(255, 255, 255, 0.12) !important;
   --color-text-primary: #E0E0E0 !important;
   --color-text-secondary: rgba(255, 255, 255, 0.7) !important;
-  --color-text-muted: rgba(255, 255, 255, 0.45) !important;
-  --color-text-dim: rgba(255, 255, 255, 0.3) !important;
-  --color-text-faint: rgba(255, 255, 255, 0.2) !important;
+  --color-text-muted: rgba(255, 255, 255, 0.55) !important;
+  --color-text-dim: rgba(255, 255, 255, 0.4) !important;
+  --color-text-faint: rgba(255, 255, 255, 0.3) !important;
   --color-accent-purple: rgba(255, 255, 255, 0.8) !important;
   --color-accent-pink: rgba(255, 255, 255, 0.5) !important;
 }

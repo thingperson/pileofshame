@@ -32,10 +32,11 @@ function JumpBackIn({ game }: { game: Game }) {
     >
       <button
         onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
+        aria-expanded={open}
         className="w-full flex items-center justify-between px-3 py-2 text-[11px] font-medium font-[family-name:var(--font-mono)] text-amber-300/80 hover:text-amber-300 transition-colors"
       >
         <span>🗺️ Jump Back In</span>
-        <span className="text-[10px] opacity-60">{open ? '▲' : '▼'}</span>
+        <span className="text-[10px] opacity-60" aria-hidden="true">{open ? '▲' : '▼'}</span>
       </button>
       {open && (
         <div className="px-3 pb-3 space-y-2 animate-[fadeIn_150ms_ease-out]">
