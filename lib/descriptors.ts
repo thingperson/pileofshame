@@ -95,7 +95,7 @@ const CURATED: Record<string, string> = {
   'marvel\'s spider-man: miles morales': 'Shorter, tighter, and Miles is a better protagonist. Fight me.',
   'alan wake 2': 'A survival horror musical detective mystery. As weird as it sounds. Brilliant.',
   'resident evil 4': 'The remake that showed how remakes should be done. Perfect pacing.',
-  'resident evil village': 'The tall vampire lady game. But actually a really solid horror romp.',
+  'resident evil village': 'The tall vampire lady game. Also a genuinely solid horror romp.',
   'deathloop': 'Groundhog Day meets Hitman. Stylish. Smart. Better on second playthrough.',
   'death stranding': 'A walking simulator about Amazon delivery in the apocalypse. Either your thing or absolutely not.',
   'control': 'The building is the star. Brutalist architecture meets telekinesis. Underrated gem.',
@@ -109,7 +109,7 @@ const CURATED: Record<string, string> = {
 
   // Strategy & simulation
   'civilization vi': 'One more turn. You\'ll say this at 3 AM on a work night. Every time.',
-  'cities: skylines': 'SimCity but actually good. Your city will have traffic problems. Accept it.',
+  'cities: skylines': 'SimCity done right. Your city will have traffic problems. Accept it.',
   'total war: warhammer iii': 'The ultimate fantasy strategy sandbox. Overwhelming in the best way.',
   'xcom 2': 'Tactical perfection. You will name soldiers after friends. Friends will die.',
 

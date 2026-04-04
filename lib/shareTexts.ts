@@ -40,13 +40,13 @@ const VALUE_TEMPLATES = [
 // --- PROGRESS-LED templates (cleared count, momentum) ---
 const PROGRESS_TEMPLATES = [
   (s: ShareStats) =>
-    `${s.cleared} games cleared from the pile. ${s.pct}% explored. I didn't think I'd actually start finishing these, but here we are.`,
+    `${s.cleared} games cleared from the pile. ${s.pct}% explored. Didn't think I'd start finishing these, but here we are.`,
 
   (s: ShareStats) =>
     `I've tackled ${s.cleared} titles and made ${s.pct}% progress on games I would really have missed not playing. Changed how I game. Plain and simple.`,
 
   (s: ShareStats) =>
-    `${s.backlog} games in my backlog. ${s.cleared} cleared. ${s.pct}% progress. Sounds small but that's ${s.cleared} games I actually finished instead of just staring at my library.`,
+    `${s.backlog} games in my backlog. ${s.cleared} cleared. ${s.pct}% progress. Sounds small but that's ${s.cleared} games I finished instead of staring at my library.`,
 
   (s: ShareStats) =>
     `Remember when picking a game felt harder than playing one? ${s.cleared} games cleared now. ${s.backlog} to go. Progress is progress.`,
@@ -79,7 +79,7 @@ const STREAK_TEMPLATES = [
     `${s.streak} games cleared in a row without bailing. I'm on a roll. ${s.backlog} more to go but the momentum is real.`,
 
   (s: ShareStats) =>
-    `${s.streak}-game clear streak. ${s.cleared} total. Something clicked and I'm actually finishing games now instead of buying more.`,
+    `${s.streak}-game clear streak. ${s.cleared} total. Something clicked and I'm finishing games now instead of buying more.`,
 
   (s: ShareStats) =>
     `Hit a ${s.streak}-game streak. Haven't bailed on one in a while. Turns out the trick is picking the right game at the right time.`,
