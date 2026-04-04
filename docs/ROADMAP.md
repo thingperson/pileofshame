@@ -153,3 +153,5 @@
 - `.claude/plans/brand-social-kit.md` — Social presence plan
 - `.claude/plans/psychology-informed-features.md` — Psychology-backed feature rationale
 - `.claude/plans/future-notifications-email.md` — Email/notification roadmap
+- `docs/scale-up-plan.md` — Infrastructure scaling playbook + emergency viral plan
+- `docs/marketing-prep.md` — Channel strategy, email scaffold, pre-launch checklist
