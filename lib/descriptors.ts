@@ -59,7 +59,7 @@ const CURATED: Record<string, string> = {
   'mass effect legendary edition': 'Three games. One galaxy. The choices compound beautifully across the trilogy.',
   'mass effect': 'Janky but foundational. The universe-building is unmatched.',
   'mass effect 2': 'The peak. Perfect squad, perfect missions, perfect stakes.',
-  'mass effect 3': 'The ending discourse overshadowed a genuinely great game. The journey matters.',
+  'mass effect 3': 'The ending discourse overshadowed a genuinely great game. The ride matters more than the destination.',
 
   // Nintendo
   'super mario odyssey': 'Pure joy in game form. Every moon is a little surprise party.',
@@ -79,7 +79,7 @@ const CURATED: Record<string, string> = {
   'a short hike': 'A 2-hour game that\'ll make you feel more peaceful than a week of vacation.',
   'what remains of edith finch': 'A walking sim that justifies the entire genre. 2 hours. Unforgettable.',
   'subnautica': 'Survival horror but the horror is the ocean. Genuinely terrifying. Genuinely beautiful.',
-  'factorio': 'Warning: this game will optimize your brain. You will dream in conveyor belts.',
+  'factorio': 'Warning: this game will rewire your brain. You will dream in conveyor belts.',
   'rimworld': 'A war crime simulator disguised as a colony builder. Endlessly replayable.',
   'terraria': 'Minecraft\'s weird cousin who turned out way more interesting.',
   'valheim': 'Viking survival that respects your time. Best with friends, great alone.',

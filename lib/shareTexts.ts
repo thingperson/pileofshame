@@ -28,7 +28,7 @@ const VALUE_TEMPLATES = [
     `$${s.unplayedValue.toLocaleString()} in games I own but haven't played. I finally started tackling the pile. ${s.cleared} down so far, $${s.playedValue.toLocaleString()} in value recovered.`,
 
   (s: ShareStats) =>
-    `Turns out I was sitting on $${(s.unplayedValue + s.playedValue).toLocaleString()} in games. I've unlocked $${s.playedValue.toLocaleString()} of that by actually playing them. The other $${s.unplayedValue.toLocaleString()} is next.`,
+    `Turns out I was sitting on $${(s.unplayedValue + s.playedValue).toLocaleString()} in games. I've recovered $${s.playedValue.toLocaleString()} of that by actually playing them. The other $${s.unplayedValue.toLocaleString()} is next.`,
 
   (s: ShareStats) =>
     `I've spent $${(s.unplayedValue + s.playedValue).toLocaleString()} on games. Played $${s.playedValue.toLocaleString()} worth. That means $${s.unplayedValue.toLocaleString()} is just... sitting there. Working on it.`,

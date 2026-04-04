@@ -81,11 +81,11 @@ export default function PrivacyPage() {
               we make API calls to the following services using game names (not your personal data):
             </p>
             <ul className="list-disc list-inside space-y-1.5 text-text-muted">
-              <li><strong>RAWG API</strong> — game metadata, descriptions, genres, screenshots</li>
-              <li><strong>IsThereAnyDeal API</strong> — current game prices and deals across stores</li>
-              <li><strong>HowLongToBeat</strong> — estimated completion times</li>
-              <li><strong>Steam Web API</strong> — game library, playtime, achievements (when importing)</li>
-              <li><strong>Supabase</strong> — authentication and cloud sync (when signed in)</li>
+              <li><strong>RAWG API</strong>: game metadata, descriptions, genres, screenshots</li>
+              <li><strong>IsThereAnyDeal API</strong>: current game prices and deals across stores</li>
+              <li><strong>HowLongToBeat</strong>: estimated completion times</li>
+              <li><strong>Steam Web API</strong>: game library, playtime, achievements (when importing)</li>
+              <li><strong>Supabase</strong>: authentication and cloud sync (when signed in)</li>
             </ul>
           </section>
 
