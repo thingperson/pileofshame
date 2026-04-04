@@ -46,7 +46,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   const doRoll = useCallback((overrideMode?: RerollMode) => {
     const rollMode = overrideMode || mode;
     const eligible = getEligibleGames(games, rollMode, platformPreference, moodFilters);
-    const pick = pickWeighted(eligible, skippedIds);
+    const pick = pickWeighted(eligible, skippedIds, reroll.lastThreePicks);
     if (!pick) {
       showToast(moodFilters.length > 0
         ? 'No games match that mood. Try removing a filter.'

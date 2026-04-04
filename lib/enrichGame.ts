@@ -16,6 +16,50 @@ interface EnrichmentResult {
 }
 
 /**
+ * Normalize a game name for API lookups.
+ * Strips edition suffixes, parenthetical info, and trademark symbols.
+ */
+function normalizeGameName(name: string): string {
+  return name
+    // Remove trademark/registered symbols
+    .replace(/[™®©]/g, '')
+    // Remove edition suffixes (Deluxe, GOTY, Remastered, etc.)
+    .replace(/\s*[-–:]\s*(definitive|complete|goty|game of the year|remastered|remaster|deluxe|ultimate|enhanced|special|legendary|premium|gold|collector'?s?|anniversary|director'?s?\s*cut|standard)\s*(edition|version|cut)?$/i, '')
+    // Remove parenthetical info like (2020), (PC), (Early Access)
+    .replace(/\s*\([^)]*\)\s*$/g, '')
+    // Remove trailing "- " fragments (e.g., "Game - DLC Name" → "Game")
+    // Only if the part after the dash looks like an edition/platform tag
+    .replace(/\s*-\s*(pc|xbox|playstation|ps[45]|switch|mac|linux|windows)$/i, '')
+    // Collapse whitespace
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * Check if a RAWG/HLTB result name is a reasonable match for our game.
+ * Returns a confidence score 0-1.
+ */
+function matchConfidence(searchName: string, resultName: string): number {
+  const a = searchName.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
+  const b = resultName.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
+
+  // Exact match after normalization
+  if (a === b) return 1;
+
+  // One contains the other
+  if (a.includes(b) || b.includes(a)) return 0.85;
+
+  // Check word overlap (Jaccard similarity on words)
+  const wordsA = new Set(a.split(/\s+/));
+  const wordsB = new Set(b.split(/\s+/));
+  const intersection = [...wordsA].filter(w => wordsB.has(w)).length;
+  const union = new Set([...wordsA, ...wordsB]).size;
+  const jaccard = union > 0 ? intersection / union : 0;
+
+  return jaccard;
+}
+
+/**
  * Enrich a single game with data from RAWG and HLTB.
  * Returns partial Game update fields.
  */
@@ -40,11 +84,28 @@ export async function enrichGame(game: Game): Promise<EnrichmentResult | null> {
           rawgData = data.game;
         }
       } else {
-        // Search by name
-        const res = await fetch(`/api/rawg?search=${encodeURIComponent(game.name)}`);
+        // Search by normalized name for better matches
+        const cleanName = normalizeGameName(game.name);
+        const res = await fetch(`/api/rawg?search=${encodeURIComponent(cleanName)}`);
         if (res.ok) {
           const data = await res.json();
-          rawgData = data.results?.[0];
+          // Pick the best match by name similarity, not just the first result
+          const results = data.results || [];
+          if (results.length > 0) {
+            let bestMatch = results[0];
+            let bestScore = matchConfidence(cleanName, results[0].name || '');
+            for (let i = 1; i < results.length; i++) {
+              const score = matchConfidence(cleanName, results[i].name || '');
+              if (score > bestScore) {
+                bestScore = score;
+                bestMatch = results[i];
+              }
+            }
+            // Only use result if it's a reasonable match (> 0.4 Jaccard)
+            if (bestScore >= 0.4) {
+              rawgData = bestMatch;
+            }
+          }
         }
       }
 
@@ -89,7 +150,8 @@ export async function enrichGame(game: Game): Promise<EnrichmentResult | null> {
   // Step 3: HLTB — fetch completion time if we don't have it
   if (!game.hltbMain) {
     try {
-      const res = await fetch(`/api/hltb?title=${encodeURIComponent(game.name)}`);
+      const cleanName = normalizeGameName(game.name);
+      const res = await fetch(`/api/hltb?title=${encodeURIComponent(cleanName)}`);
       if (res.ok) {
         const data = await res.json();
         if (data.found && data.main > 0) {

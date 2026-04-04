@@ -1654,37 +1654,37 @@ button:active:not(:disabled) {
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 3px;
-  color: #8B7355;
-  opacity: 0.7;
+  color: #7A6840;
+  opacity: 0.75;
 }
 
 .cozy-banner-sub {
   display: block;
   font-family: var(--font-cozy), sans-serif;
   font-size: 11px;
-  color: #A89078;
-  opacity: 0.5;
+  color: #968560;
+  opacity: 0.6;
   margin-top: 4px;
 }
 
 .theme-cozy {
-  --color-bg-primary: #F5F0EB !important;
-  --color-bg-card: #FFFFFF !important;
-  --color-bg-elevated: #EDE8E2 !important;
-  --color-border-subtle: rgba(139, 115, 85, 0.12) !important;
-  --color-border-active: rgba(139, 115, 85, 0.25) !important;
-  --color-text-primary: #3D3837 !important;
-  --color-text-secondary: #554E4A !important;
-  --color-text-muted: #6B5F58 !important;
-  --color-text-dim: #8A7D75 !important;
-  --color-text-faint: #9E918A !important;
+  --color-bg-primary: #F7F1E3 !important;
+  --color-bg-card: #FFFDF8 !important;
+  --color-bg-elevated: #EFE8D8 !important;
+  --color-border-subtle: rgba(160, 130, 80, 0.14) !important;
+  --color-border-active: rgba(160, 130, 80, 0.28) !important;
+  --color-text-primary: #33302A !important;
+  --color-text-secondary: #4A453D !important;
+  --color-text-muted: #635B50 !important;
+  --color-text-dim: #7D7468 !important;
+  --color-text-faint: #958C80 !important;
   --color-accent-purple: #B8A9C9 !important;
   --color-accent-pink: #E8A598 !important;
 }
 
 .theme-cozy body,
 body.theme-cozy {
-  background-color: #F5F0EB !important;
+  background-color: #F7F1E3 !important;
 }
 
 /* Cozy: swap all fonts to Nunito, kill monospace */
@@ -1696,11 +1696,11 @@ body.theme-cozy {
 .theme-cozy h1 {
   font-size: 1.75rem !important;
   font-weight: 700 !important;
-  color: #3D3837 !important;
+  color: #33302A !important;
 }
 
 .theme-cozy h2, .theme-cozy h3 {
-  color: #554E4A !important;
+  color: #4A453D !important;
 }
 
 /* Cozy: softer cards — targeted, not blanket */
@@ -1721,23 +1721,23 @@ body.theme-cozy {
 
 .theme-cozy [class*="bg-bg-card"],
 .theme-cozy [style*="background-color: var(--color-bg-card)"] {
-  background-color: #FFFFFF !important;
-  box-shadow: 0 2px 12px rgba(139, 115, 85, 0.06) !important;
-  border-color: rgba(139, 115, 85, 0.08) !important;
+  background-color: #FFFDF8 !important;
+  box-shadow: 0 2px 12px rgba(160, 130, 80, 0.07) !important;
+  border-color: rgba(160, 130, 80, 0.10) !important;
 }
 
 /* Cozy: status colors softened */
 .theme-cozy {
-  --color-status-buried: #9E918A !important;
-  --color-status-buried-bg: #EDE8E2 !important;
-  --color-status-on-deck: #7BBEDB !important;
-  --color-status-on-deck-bg: #E8F4FA !important;
-  --color-status-playing: #D4A855 !important;
-  --color-status-playing-bg: #FAF0DC !important;
-  --color-status-played: #A8C5A0 !important;
-  --color-status-played-bg: #ECF5EA !important;
-  --color-status-bailed: #B8ADA6 !important;
-  --color-status-bailed-bg: #EDE8E2 !important;
+  --color-status-buried: #8C8374 !important;
+  --color-status-buried-bg: #EFE8D8 !important;
+  --color-status-on-deck: #6AADCA !important;
+  --color-status-on-deck-bg: #E4F1F8 !important;
+  --color-status-playing: #C49A40 !important;
+  --color-status-playing-bg: #F8EDCF !important;
+  --color-status-played: #7DAF74 !important;
+  --color-status-played-bg: #E8F2E5 !important;
+  --color-status-bailed: #A89B90 !important;
+  --color-status-bailed-bg: #EFE8D8 !important;
 }
 
 /* Cozy: hero CTA softened */
@@ -1767,14 +1767,14 @@ body.theme-cozy {
 .theme-cozy input,
 .theme-cozy select,
 .theme-cozy textarea {
-  background-color: #FAF7F2 !important;
-  border-color: rgba(139, 115, 85, 0.15) !important;
-  color: #3D3837 !important;
+  background-color: #FBF7ED !important;
+  border-color: rgba(160, 130, 80, 0.18) !important;
+  color: #33302A !important;
   border-radius: 12px !important;
 }
 
 .theme-cozy input::placeholder {
-  color: #B8ADA6 !important;
+  color: #A89B90 !important;
 }
 
 /* Cozy: grid cards */
@@ -1790,7 +1790,7 @@ body.theme-cozy {
 }
 
 .theme-cozy ::-webkit-scrollbar-track {
-  background-color: #F5F0EB !important;
+  background-color: #F7F1E3 !important;
 }
 
 /* ========================

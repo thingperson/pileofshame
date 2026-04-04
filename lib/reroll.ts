@@ -67,11 +67,79 @@ export function getEligibleGames(
   });
 }
 
+// ── Time-of-day awareness ──────────────────────────────────────────
+// Evening (after 8pm) → boost chill/wind-down, penalize intense
+// Late night (after 11pm) → strong boost for quick-hit, penalize marathon
+// Morning/afternoon → neutral, slight boost for intense/competitive
+
+type TimeOfDay = 'morning' | 'afternoon' | 'evening' | 'late-night';
+
+function getTimeOfDay(): TimeOfDay {
+  const hour = new Date().getHours();
+  if (hour >= 23 || hour < 5) return 'late-night';
+  if (hour >= 20) return 'evening';
+  if (hour >= 12) return 'afternoon';
+  return 'morning';
+}
+
+function getTimeOfDayWeight(game: Game, time: TimeOfDay): number {
+  const moods = game.moodTags || [];
+  const tier = game.timeTier;
+
+  switch (time) {
+    case 'late-night':
+      // Late night: short & chill wins, long & intense loses
+      if (tier === 'quick-hit') return 1.8;
+      if (tier === 'wind-down') return 1.4;
+      if (tier === 'marathon') return 0.4;
+      if (moods.includes('chill') || moods.includes('brainless')) return 1.5;
+      if (moods.includes('intense') || moods.includes('competitive')) return 0.5;
+      return 1;
+
+    case 'evening':
+      // Evening: wind-down games rise, intense drops slightly
+      if (moods.includes('chill') || moods.includes('atmospheric') || moods.includes('story-rich')) return 1.3;
+      if (tier === 'wind-down' || tier === 'quick-hit') return 1.2;
+      if (moods.includes('intense') || moods.includes('competitive')) return 0.7;
+      return 1;
+
+    case 'morning':
+      // Morning: slight boost for energetic picks
+      if (moods.includes('intense') || moods.includes('competitive')) return 1.2;
+      return 1;
+
+    case 'afternoon':
+    default:
+      return 1; // Neutral
+  }
+}
+
+// ── Genre balance ──────────────────────────────────────────────────
+// Avoid recommending 3 RPGs in a row. Penalize genres that appeared
+// in the last few picks.
+
+function getGenreBalanceWeight(game: Game, recentGenres: string[]): number {
+  if (recentGenres.length === 0) return 1;
+  const gameGenres = (game.genres || []).map(g => g.toLowerCase());
+  if (gameGenres.length === 0) return 1;
+
+  // Count how many of this game's genres appeared recently
+  const overlap = gameGenres.filter(g => recentGenres.includes(g)).length;
+
+  if (overlap >= 2) return 0.4;  // Heavy genre overlap — strong penalty
+  if (overlap === 1) return 0.7; // Some overlap — mild penalty
+  return 1.2; // Fresh genre — slight boost
+}
+
 /**
  * Calculate a weight for a game based on available signals.
  * Higher weight = more likely to be picked.
  */
-function calculateWeight(game: Game, skippedIds: Set<string>): number {
+function calculateWeight(
+  game: Game,
+  skippedIds: Set<string>,
+  recentPickGenres: string[] = [],
+): number {
   let weight = 1;
 
   // Metacritic score
@@ -102,6 +170,12 @@ function calculateWeight(game: Game, skippedIds: Set<string>): number {
   } else if (game.hoursPlayed > 50) {
     weight *= 0.5; // Probably a comfort game, deprioritize for discovery
   }
+
+  // Time-of-day awareness
+  weight *= getTimeOfDayWeight(game, getTimeOfDay());
+
+  // Genre balance: avoid same-genre streaks
+  weight *= getGenreBalanceWeight(game, recentPickGenres);
 
   // Recently skipped: strongly deprioritize
   if (skippedIds.has(game.id)) {
@@ -142,7 +216,16 @@ export function getPickReasons(game: Game): PickReason[] {
     reasons.push({ label: `Beatable in ~${game.hltbMain}h`, icon: '⏱️' });
   }
 
-  if (game.moodTags && game.moodTags.length > 0) {
+  // Time-of-day contextual reason
+  const time = getTimeOfDay();
+  const moods = game.moodTags || [];
+  if (time === 'late-night' && (moods.includes('chill') || moods.includes('brainless') || game.timeTier === 'quick-hit')) {
+    reasons.push({ label: 'Good pick for a late session', icon: '🌙' });
+  } else if (time === 'evening' && (moods.includes('chill') || moods.includes('story-rich') || moods.includes('atmospheric'))) {
+    reasons.push({ label: 'Fits an evening wind-down', icon: '🌆' });
+  }
+
+  if (game.moodTags && game.moodTags.length > 0 && reasons.length < 3) {
     reasons.push({ label: `Mood: ${game.moodTags.slice(0, 2).join(', ')}`, icon: '🎭' });
   }
 
@@ -151,14 +234,23 @@ export function getPickReasons(game: Game): PickReason[] {
 
 /**
  * Weighted random selection. Games with higher signals (metacritic, enrichment,
- * backlog age) are more likely to be picked. Skipped games are deprioritized.
+ * backlog age, time-of-day, genre balance) are more likely to be picked.
+ * Skipped games are deprioritized.
  */
-export function pickWeighted(games: Game[], skippedIds: Set<string> = new Set()): Game | null {
+export function pickWeighted(
+  games: Game[],
+  skippedIds: Set<string> = new Set(),
+  recentPicks: Game[] = [],
+): Game | null {
   if (games.length === 0) return null;
+
+  // Collect genres from recent picks for balance scoring
+  const recentGenres = recentPicks
+    .flatMap(g => (g.genres || []).map(genre => genre.toLowerCase()));
 
   const weighted = games.map((game) => ({
     game,
-    weight: calculateWeight(game, skippedIds),
+    weight: calculateWeight(game, skippedIds, recentGenres),
   }));
 
   const totalWeight = weighted.reduce((sum, w) => sum + w.weight, 0);

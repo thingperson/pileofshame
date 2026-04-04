@@ -19,8 +19,8 @@ function JumpBackIn({ game }: { game: Game }) {
     ? Math.min(Math.round((game.hoursPlayed / game.hltbMain) * 100), 100)
     : null;
 
-  // Genre-aware context tips
-  const genreTips = getGenreTips(game.genres || []);
+  // Genre-aware or game-specific context tips
+  const genreTips = getGenreTips(game.genres || [], game.name);
 
   return (
     <div
@@ -81,6 +81,18 @@ function JumpBackIn({ game }: { game: Game }) {
             </div>
           )}
 
+          {/* Progress-based nudge */}
+          {progressPct !== null && progressPct >= 75 && game.hltbMain && (
+            <p className="text-[11px] text-green-400/80 font-medium font-[family-name:var(--font-mono)]">
+              ~{Math.max(1, Math.round(game.hltbMain - game.hoursPlayed))}h left. One more session might finish this.
+            </p>
+          )}
+          {progressPct !== null && progressPct >= 40 && progressPct < 75 && game.hltbMain && (
+            <p className="text-[11px] text-amber-300/60 font-[family-name:var(--font-mono)]">
+              ~{Math.round(game.hltbMain - game.hoursPlayed)}h to go. You&apos;re past the halfway mark.
+            </p>
+          )}
+
           {/* No enrichment data? */}
           {!game.description && !game.hltbMain && (!game.genres || game.genres.length === 0) && (
             <p className="text-[11px] text-text-faint italic">
@@ -93,7 +105,136 @@ function JumpBackIn({ game }: { game: Game }) {
   );
 }
 
-function getGenreTips(genres: string[]): string[] {
+// ── Game-specific return tips for popular titles ──────────────────
+// Pre-seeded tips for games where generic genre advice isn't enough.
+// Key: lowercase substring match against game name.
+const GAME_SPECIFIC_TIPS: Record<string, string[]> = {
+  'elden ring': [
+    '🗺️ Open the map and look for unexplored golden tree markers.',
+    '⚔️ Check your flask allocation at a Site of Grace.',
+    '💀 If you\'re stuck, go explore somewhere else. Come back stronger.',
+  ],
+  'baldur\'s gate 3': [
+    '📋 Check your quest journal — active quests are sorted by proximity.',
+    '🎭 Talk to your camp companions. They react to recent events.',
+    '💾 Quicksave before conversations. Choices matter here.',
+  ],
+  'witcher 3': [
+    '📋 Check the quest log and read the objectives carefully.',
+    '🗡️ Reapply your blade oils and check potion stocks.',
+    '🗺️ Follow the yellow quest marker on the minimap.',
+  ],
+  'red dead redemption': [
+    '🐴 Head to camp first. Someone there probably has a mission.',
+    '🗺️ Yellow blips on the map are story missions.',
+    '🎯 Do a quick hunt to warm up your aim.',
+  ],
+  'cyberpunk 2077': [
+    '📱 Check your phone messages and journal for active gigs.',
+    '🗡️ Review your cyberware and perks — you might have unspent points.',
+    '🗺️ Yellow markers are main story, blue are side gigs.',
+  ],
+  'persona 5': [
+    '📅 Check the calendar. Deadlines are real and you can\'t go back.',
+    '🎭 Spend time with confidants who are close to ranking up.',
+    '📋 Check Mementos requests — they expire.',
+  ],
+  'hollow knight': [
+    '🗺️ Buy the map for the current area from Cornifer (humming sound).',
+    '💎 Equip your best charm loadout at a bench.',
+    '🧭 If lost, head toward areas you haven\'t filled on the map.',
+  ],
+  'zelda': [
+    '🗺️ Open the map and look for blinking quest markers.',
+    '🎒 Cook some meals before heading out. Full hearts matter.',
+    '🧭 Climb something tall and scan the horizon for points of interest.',
+  ],
+  'dark souls': [
+    '💀 You will die. That\'s fine. Learn the enemy patterns.',
+    '🔥 Rest at the nearest bonfire and level up if you can.',
+    '🛡️ Check your equipment load — stay under 70% for medium roll.',
+  ],
+  'mass effect': [
+    '📋 Check the journal — main quests are marked.',
+    '🎭 Talk to your squad on the ship. New dialogue after each mission.',
+    '⚙️ Spend any unassigned skill points before the next mission.',
+  ],
+  'skyrim': [
+    '📋 Check your quest log — pick the one closest to you.',
+    '🎒 Sell junk at the nearest merchant. Free up carry weight.',
+    '⚙️ Check if you have unspent perk points.',
+  ],
+  'god of war': [
+    '🗺️ Check the map for undiscovered areas nearby.',
+    '⚔️ Look at your skill tree — you might have upgrades waiting.',
+    '📖 Atreus\'s journal has story recaps.',
+  ],
+  'stardew valley': [
+    '📅 Check the calendar on your wall for birthdays and events.',
+    '🌱 Water your crops first, then decide how to spend the day.',
+    '📦 Check the Community Center bundles for what to collect.',
+  ],
+  'hades': [
+    '🏛️ Talk to everyone in the House before your next run.',
+    '💎 Check the contractor for permanent upgrades.',
+    '⚔️ Try a weapon with a dark glow — it gives bonus Darkness.',
+  ],
+  'final fantasy': [
+    '📋 Check active quests and any side content you missed.',
+    '⚙️ Review your party setup and equipment before moving on.',
+    '💰 Sell duplicate gear at the nearest shop.',
+  ],
+  'monster hunter': [
+    '📋 Check the quest board for assigned and optional quests.',
+    '🔨 Upgrade or try a different weapon at the smithy.',
+    '🍖 Eat at the canteen before every hunt. Always.',
+  ],
+  'metroid': [
+    '🗺️ Check the map for blinking doors or unexplored rooms.',
+    '🔫 Test your current abilities — you might have forgotten one.',
+    '🔍 Scan walls near dead ends. Breakable blocks are everywhere.',
+  ],
+  'dragon age': [
+    '🎭 Check in with party members at camp. They have opinions.',
+    '📋 Review your quest journal — the war table has new missions.',
+    '⚙️ Spend any unused ability points.',
+  ],
+  'horizon': [
+    '🏹 Restock on ammo and potions at your stash.',
+    '📋 Check the quest log — main quests are gold, sides are teal.',
+    '🤖 Scan machines before fighting. Weak points save you time.',
+  ],
+  'disco elysium': [
+    '📋 Check your thought cabinet and task list.',
+    '🗣️ Talk to Kim. He keeps you grounded.',
+    '📖 Read your internal monologue carefully. The answer is in there.',
+  ],
+  'divinity': [
+    '📋 Check your journal — quest entries update with new clues.',
+    '💬 Talk to every NPC. Persuasion checks open new paths.',
+    '⚙️ Re-examine your skill books. You might have new combos.',
+  ],
+  'subnautica': [
+    '📻 Check your radio for new signals.',
+    '🔋 Charge your equipment and restock supplies at base.',
+    '🗺️ Head toward the deepest biome you haven\'t explored yet.',
+  ],
+};
+
+function getGameSpecificTips(gameName: string): string[] {
+  const lower = gameName.toLowerCase();
+  for (const [key, tips] of Object.entries(GAME_SPECIFIC_TIPS)) {
+    if (lower.includes(key)) return tips;
+  }
+  return [];
+}
+
+function getGenreTips(genres: string[], gameName: string): string[] {
+  // Check game-specific tips first
+  const specificTips = getGameSpecificTips(gameName);
+  if (specificTips.length > 0) return specificTips.slice(0, 3);
+
+  // Fall back to genre-based tips
   const tips: string[] = [];
   const g = genres.map(s => s.toLowerCase());
 
@@ -127,6 +268,22 @@ function getGenreTips(genres: string[]): string[] {
   }
   if (g.some(x => x.includes('open world'))) {
     tips.push('🧭 Pick ONE objective. Ignore everything else until it\'s done.');
+  }
+  if (g.some(x => x.includes('racing'))) {
+    tips.push('🏎️ Do a practice lap to remember the track before going competitive.');
+  }
+  if (g.some(x => x.includes('fighting'))) {
+    tips.push('🥊 Hit training mode for 5 minutes. Muscle memory comes back fast.');
+  }
+  if (g.some(x => x.includes('visual novel'))) {
+    tips.push('📖 Re-read the last few dialogue lines in the backlog to catch up.');
+  }
+  if (g.some(x => x.includes('turn-based'))) {
+    tips.push('⚙️ Review your party composition and any pending upgrades.');
+  }
+  if (g.some(x => x.includes('horror'))) {
+    tips.push('🔦 Check your inventory. Ammo and healing items are usually scarce.');
+    tips.push('🎧 Play with headphones. Audio cues are half the experience.');
   }
 
   // Cap at 3 tips max

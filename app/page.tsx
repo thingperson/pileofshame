@@ -95,6 +95,7 @@ function AppContent() {
   const [helpOpen, setHelpOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>('backlog');
   const [backlogLimit, setBacklogLimit] = useState(10);
+  const [backlogSort, setBacklogSort] = useState<'smart' | 'a-z' | 'z-a' | 'newest' | 'oldest' | 'most-playtime' | 'least-playtime'>('smart');
   // GridCard handles its own detail modal internally
 
   const openReroll = (mode?: RerollMode) => {
@@ -168,7 +169,17 @@ function AppContent() {
 
     // Sort based on tab
     if (activeTab === 'backlog') {
-      return sortBestForYou(inTab, games);
+      if (backlogSort === 'smart') return sortBestForYou(inTab, games);
+      const sorted = [...inTab];
+      switch (backlogSort) {
+        case 'a-z': return sorted.sort((a, b) => a.name.localeCompare(b.name));
+        case 'z-a': return sorted.sort((a, b) => b.name.localeCompare(a.name));
+        case 'newest': return sorted.sort((a, b) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
+        case 'oldest': return sorted.sort((a, b) => new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime());
+        case 'most-playtime': return sorted.sort((a, b) => (b.hoursPlayed || 0) - (a.hoursPlayed || 0) || a.name.localeCompare(b.name));
+        case 'least-playtime': return sorted.sort((a, b) => (a.hoursPlayed || 0) - (b.hoursPlayed || 0) || a.name.localeCompare(b.name));
+        default: return sortBestForYou(inTab, games);
+      }
     }
     if (activeTab === 'completed') {
       // Most recently completed first
@@ -183,7 +194,7 @@ function AppContent() {
       if (activeTab === 'up-next') return a.priority - b.priority;
       return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
     });
-  }, [filteredGames, activeTab, activeTabDef, games]);
+  }, [filteredGames, activeTab, activeTabDef, games, backlogSort]);
 
   // Paginated backlog (show `backlogLimit` at a time)
   const visibleGames = activeTab === 'backlog' ? tabGames.slice(0, backlogLimit) : tabGames;
@@ -449,6 +460,27 @@ function AppContent() {
         </div>
       )}
 
+      {/* ── Sort control (Backlog tab only) ── */}
+      {!isEmpty && activeTab === 'backlog' && tabGames.length > 0 && (
+        <div className="flex items-center gap-2 mb-2">
+          <label htmlFor="backlog-sort" className="text-[10px] text-text-faint font-[family-name:var(--font-mono)]">Sort:</label>
+          <select
+            id="backlog-sort"
+            value={backlogSort}
+            onChange={(e) => { setBacklogSort(e.target.value as typeof backlogSort); setBacklogLimit(10); }}
+            className="text-[11px] bg-bg-card border border-border-subtle rounded-lg px-2 py-1 text-text-muted focus:outline-none focus:border-accent-purple transition-all cursor-pointer font-[family-name:var(--font-mono)]"
+          >
+            <option value="smart">✨ Best for You</option>
+            <option value="a-z">A → Z</option>
+            <option value="z-a">Z → A</option>
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="most-playtime">Most playtime</option>
+            <option value="least-playtime">Least playtime</option>
+          </select>
+        </div>
+      )}
+
       {/* ── Sync Nudge (below tabs, above games) ── */}
       {!isEmpty && <SyncNudge />}
 
@@ -601,8 +633,8 @@ function AppContent() {
             </div>
           )}
 
-          {/* Backlog "Best for You" explainer (first load only) */}
-          {activeTab === 'backlog' && tabGames.length > 0 && backlogLimit <= 10 && (
+          {/* Backlog "Best for You" explainer (first load only, smart sort) */}
+          {activeTab === 'backlog' && tabGames.length > 0 && backlogLimit <= 10 && backlogSort === 'smart' && (
             <p className="text-[10px] text-text-faint text-center mt-3 font-[family-name:var(--font-mono)]">
               Sorted by what we think you&apos;d enjoy most, based on your library and ratings.
             </p>
