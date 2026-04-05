@@ -1062,10 +1062,10 @@ button:active:not(:disabled) {
 
   background: #1a2e1a !important;
   background-image:
-    radial-gradient(ellipse at 30% 80%, rgba(109, 191, 109, 0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 20%, rgba(212, 162, 78, 0.04) 0%, transparent 50%),
-    url('/dino-bg.png') !important;
-  background-size: auto, auto, 400px 400px !important;
+    linear-gradient(180deg, rgba(26, 46, 26, 0.6) 0%, rgba(26, 46, 26, 0.85) 40%, #1a2e1a 100%),
+    url('/dino-landscape.png') !important;
+  background-size: cover !important;
+  background-position: center top !important;
   background-attachment: fixed !important;
 }
 
@@ -1104,6 +1104,22 @@ button:active:not(:disabled) {
   background: linear-gradient(180deg, rgba(212, 162, 78, 0.08), transparent);
   border-bottom: 1px solid rgba(109, 191, 109, 0.15);
 }
+.dino-banner-mascot {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+.dino-mascot-img {
+  width: 120px;
+  height: auto;
+  border-radius: 12px;
+  filter: drop-shadow(0 4px 12px rgba(212, 162, 78, 0.3));
+}
+@media (min-width: 640px) {
+  .dino-mascot-img {
+    width: 160px;
+  }
+}
 .dino-banner-text {
   font-size: 24px;
   font-weight: 900;
@@ -1114,16 +1130,6 @@ button:active:not(:disabled) {
   align-items: center;
   justify-content: center;
   gap: 12px;
-}
-.dino-walk {
-  display: inline-block;
-  animation: dino-walk 2s ease-in-out infinite;
-  font-size: 32px;
-}
-.dino-walk-reverse {
-  display: inline-block;
-  animation: dino-walk-reverse 2.5s ease-in-out infinite;
-  font-size: 32px;
 }
 .dino-banner-sub {
   color: #6dbf6d;

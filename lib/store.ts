@@ -71,7 +71,7 @@ export const useStore = create<LibraryState & StoreActions>()(
       settings: {
         showPlayed: false,
         showBailed: false,
-        viewMode: 'list' as const,
+        viewMode: 'grid' as const,
         theme: 'dark' as const,
         platformPreference: 'any' as PlatformPreference,
       },

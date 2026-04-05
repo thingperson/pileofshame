@@ -442,10 +442,12 @@ function FutureFooter() {
 function DinoBanner() {
   return (
     <div className="dino-banner">
+      <div className="dino-banner-mascot">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/dino-mascot.png" alt="" className="dino-mascot-img" />
+      </div>
       <div className="dino-banner-text">
-        <span className="dino-walk">🦕</span>
         INVENTORY FULL
-        <span className="dino-walk-reverse">🦖</span>
       </div>
       <div className="dino-banner-sub">
         RAWR means &ldquo;play your backlog&rdquo; in dinosaur

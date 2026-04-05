@@ -373,6 +373,7 @@ function AppContent() {
           onLoadSample={() => {
             useStore.setState({
               games: SAMPLE_GAMES,
+              settings: { ...useStore.getState().settings, viewMode: 'grid' },
               lastSaved: new Date().toISOString(),
             });
             window.scrollTo({ top: 0 });
