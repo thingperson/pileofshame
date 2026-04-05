@@ -1,3 +1,13 @@
+---
+paths:
+  - "components/**/*.tsx"
+  - "app/**/*.tsx"
+  - "lib/archetypes.ts"
+  - "lib/descriptors.ts"
+  - "lib/seedData.ts"
+  - "lib/constants.ts"
+---
+
 # Voice & Tone Guide — Inventory Full
 
 ## Who We Sound Like

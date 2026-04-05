@@ -1674,41 +1674,38 @@ button:active:not(:disabled) {
 
 .default-banner {
   text-align: center;
-  padding: 20px 16px 16px;
+  padding: 16px 16px 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
 }
 .default-banner-logo {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
   filter: drop-shadow(0 0 8px color-mix(in srgb, var(--color-accent-purple) 20%, transparent));
 }
 @media (min-width: 640px) {
   .default-banner-logo {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
   }
 }
 
 .default-banner-text {
-  font-size: 1.25rem;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  color: var(--color-text-primary);
-  opacity: 0.85;
-  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  opacity: 0.7;
+  font-family: var(--font-mono);
 }
 @media (min-width: 640px) {
   .default-banner-text {
-    font-size: 1.5rem;
-  }
-}
-@media (min-width: 768px) {
-  .default-banner-text {
-    font-size: 1.875rem;
+    font-size: 13px;
+    letter-spacing: 4px;
   }
 }
 

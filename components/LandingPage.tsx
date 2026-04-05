@@ -66,7 +66,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
       {/* ═══════════════════════════════════════════
           HERO
           ═══════════════════════════════════════════ */}
-      <section className="relative min-h-[50vh] flex flex-col items-center justify-center px-6 py-12 text-center">
+      <section className="relative min-h-[40vh] flex flex-col items-center justify-center px-6 py-8 text-center">
         {/* Landing page background image */}
         <div
           className="absolute inset-0 pointer-events-none"
@@ -104,17 +104,17 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           }}
         >
           {/* Hero illustration */}
-          <div className="mb-6 flex justify-center">
+          <div className="mb-4 flex justify-center">
             <img
-              src="/inventoryfull-hero.png"
+              src="/inventoryfull-hero-transparent.png"
               alt="A hand rising from a pile of games, holding a controller"
-              className="w-56 h-auto sm:w-72 md:w-80 object-contain"
-              style={{ filter: 'drop-shadow(0 0 24px color-mix(in srgb, var(--color-accent-purple) 30%, transparent))' }}
+              className="w-48 h-auto sm:w-64 md:w-72 object-contain"
+              style={{ filter: 'drop-shadow(0 0 20px color-mix(in srgb, var(--color-accent-purple) 25%, transparent))' }}
             />
           </div>
 
           <h1
-            className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] mb-4"
             style={{ color: 'var(--color-text-primary)' }}
           >
             Your pile&apos;s not gonna
@@ -123,7 +123,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           </h1>
 
           <p
-            className="text-base sm:text-lg md:text-xl leading-relaxed max-w-md mx-auto mb-6"
+            className="text-sm sm:text-base md:text-lg leading-relaxed max-w-md mx-auto mb-5"
             style={{ color: 'var(--color-text-muted)' }}
           >
             Import your library. Tell us your mood.

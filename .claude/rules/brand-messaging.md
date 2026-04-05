@@ -1,3 +1,11 @@
+---
+paths:
+  - "components/**/*.tsx"
+  - "app/**/*.tsx"
+  - "lib/archetypes.ts"
+  - "lib/descriptors.ts"
+---
+
 # Inventory Full — Brand Messaging Guide
 
 ## Brand Description (Master)
