@@ -259,6 +259,7 @@ export default function SettingsMenu() {
                       { value: 'void', label: '🫥 Void' },
                       { value: 'cozy', label: '☕ Cozy' },
                       { value: 'minimal', label: '— Minimal' },
+                      { value: 'tropical', label: '🌴 Tropical' },
                     ].map((opt) => (
                       <button
                         key={opt.value}

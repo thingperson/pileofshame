@@ -1937,6 +1937,123 @@ body.theme-minimal {
   text-decoration: underline !important;
 }
 
+/* ══════════════════════════════════════════════
+   TROPICAL THEME
+   Palette: #264653 / #2A9D8F / #E9C46A / #F4A261 / #E76F51
+   Source: coolors.co/palette/264653-2a9d8f-e9c46a-f4a261-e76f51
+   ══════════════════════════════════════════════ */
+
+.theme-tropical {
+  --color-bg-primary: #1A3240 !important;
+  --color-bg-card: #213D4D !important;
+  --color-bg-elevated: #2A4E60 !important;
+  --color-border-subtle: rgba(42, 157, 143, 0.18) !important;
+  --color-border-active: rgba(42, 157, 143, 0.4) !important;
+  --color-text-primary: #F2E9DE !important;
+  --color-text-secondary: #D4C8BA !important;
+  --color-text-muted: #A89E92 !important;
+  --color-text-dim: #8A8078 !important;
+  --color-text-faint: #6E665E !important;
+  --color-accent-purple: #2A9D8F !important;
+  --color-accent-pink: #E76F51 !important;
+}
+
+.theme-tropical body,
+body.theme-tropical {
+  background-color: #1A3240 !important;
+}
+
+/* Tropical: status colors */
+.theme-tropical {
+  --color-status-buried: #6E665E !important;
+  --color-status-buried-bg: #264653 !important;
+  --color-status-on-deck: #E9C46A !important;
+  --color-status-on-deck-bg: rgba(233, 196, 106, 0.12) !important;
+  --color-status-playing: #2A9D8F !important;
+  --color-status-playing-bg: rgba(42, 157, 143, 0.12) !important;
+  --color-status-played: #F4A261 !important;
+  --color-status-played-bg: rgba(244, 162, 97, 0.12) !important;
+  --color-status-bailed: #8A8078 !important;
+  --color-status-bailed-bg: rgba(138, 128, 120, 0.12) !important;
+}
+
+/* Tropical: cards get warm depth */
+.theme-tropical [class*="bg-bg-card"],
+.theme-tropical [style*="background-color: var(--color-bg-card)"] {
+  background-color: #213D4D !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25) !important;
+  border-color: rgba(42, 157, 143, 0.12) !important;
+}
+
+/* Tropical: hero CTA — teal to saffron gradient */
+.theme-tropical button[style*="linear-gradient"] {
+  background: linear-gradient(135deg, #2A9D8F 0%, #E9C46A 100%) !important;
+  color: #1A3240 !important;
+}
+
+.theme-tropical button[style*="linear-gradient"]:hover {
+  background: linear-gradient(135deg, #34B8A8 0%, #F0D080 100%) !important;
+}
+
+/* Tropical: shortcut/mode buttons */
+.theme-tropical .shrink-0[style*="linear-gradient"] {
+  background: linear-gradient(135deg, #2A9D8F, #E9C46A) !important;
+  color: #1A3240 !important;
+}
+
+/* Tropical: tab active state */
+.theme-tropical nav button[aria-selected="true"] {
+  color: #2A9D8F !important;
+  border-color: #2A9D8F !important;
+}
+
+/* Tropical: inputs */
+.theme-tropical input,
+.theme-tropical select,
+.theme-tropical textarea {
+  background-color: #1A3240 !important;
+  border-color: rgba(42, 157, 143, 0.2) !important;
+  color: #F2E9DE !important;
+}
+
+.theme-tropical input:focus,
+.theme-tropical select:focus,
+.theme-tropical textarea:focus {
+  border-color: #2A9D8F !important;
+}
+
+.theme-tropical input::placeholder {
+  color: #6E665E !important;
+}
+
+/* Tropical: links */
+.theme-tropical a {
+  color: #2A9D8F !important;
+}
+.theme-tropical a:hover {
+  color: #34B8A8 !important;
+}
+
+/* Tropical: scrollbar */
+.theme-tropical ::-webkit-scrollbar-thumb {
+  background-color: rgba(42, 157, 143, 0.3) !important;
+}
+.theme-tropical ::-webkit-scrollbar-track {
+  background-color: #1A3240 !important;
+}
+
+/* Tropical: progress bars */
+.theme-tropical [role="progressbar"] div {
+  background-color: #2A9D8F !important;
+}
+
+/* Tropical: banner */
+.theme-tropical .default-banner-text {
+  color: #2A9D8F !important;
+  opacity: 0.7;
+  letter-spacing: 6px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

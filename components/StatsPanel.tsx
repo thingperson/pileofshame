@@ -47,7 +47,7 @@ function useCountUp(target: number, active: boolean, duration = 1500): number {
 // --- Main Component ---
 
 export default function StatsPanel({ games }: StatsPanelProps) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const [calculating, setCalculating] = useState(false);
   const [calculated, setCalculated] = useState(false);
   const [enriching, setEnriching] = useState(false);
