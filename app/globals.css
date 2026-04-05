@@ -1696,9 +1696,10 @@ button:active:not(:disabled) {
 .default-banner-text {
   font-size: 1.25rem;
   font-weight: 800;
-  letter-spacing: 2px;
+  letter-spacing: 0.5px;
   color: var(--color-text-primary);
   opacity: 0.85;
+  font-family: var(--font-sans);
 }
 @media (min-width: 640px) {
   .default-banner-text {
