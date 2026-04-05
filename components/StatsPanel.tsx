@@ -369,7 +369,7 @@ export default function StatsPanel({ games }: StatsPanelProps) {
             <StatCard label="Streak" value={stats.streak.toString()} icon="⚡" color="#a78bfa" sublabel="without bailing" />
             <StatCard
               label="Hours Logged"
-              value={stats.totalHours > 0 ? stats.totalHours.toLocaleString(undefined, { maximumFractionDigits: 0 }) : '—'}
+              value={stats.totalHours > 0 ? stats.totalHours.toLocaleString(undefined, { maximumFractionDigits: 0 }) : '-'}
               icon="⏱️"
               color="#38bdf8"
               sublabel={stats.totalHours === 0 ? 'via Steam import' : undefined}

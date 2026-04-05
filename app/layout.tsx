@@ -24,13 +24,13 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Inventory Full — Stop scrolling your library. Start playing.",
+  title: "Inventory Full - Stop scrolling your library. Start playing.",
   description: "Import your Steam, Xbox, or PlayStation library. Tell us your mood. We pick your game tonight. Free, no sign-up required.",
   metadataBase: new URL('https://inventoryfull.gg'),
   keywords: ['gaming backlog', 'backlog manager', 'game tracker', 'inventory full', 'steam backlog', 'xbox backlog', 'gaming queue', 'what to play next', 'game randomizer', 'backlog tracker', 'backlog payback'],
   authors: [{ name: 'Inventory Full' }],
   openGraph: {
-    title: 'Inventory Full — Stop scrolling. Start playing.',
+    title: 'Inventory Full - Stop scrolling. Start playing.',
     description: 'Import your Steam, Xbox, or PlayStation library. Tell us your mood. We pick your game tonight. Free, no sign-up required.',
     url: 'https://inventoryfull.gg',
     siteName: 'Inventory Full',
@@ -41,13 +41,13 @@ export const metadata: Metadata = {
         url: 'https://inventoryfull.gg/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'Inventory Full — Import your pile. Tell us your mood. We find your game.',
+        alt: 'Inventory Full - Import your pile. Tell us your mood. We find your game.',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Inventory Full — Stop scrolling. Start playing.',
+    title: 'Inventory Full - Stop scrolling. Start playing.',
     description: 'Import your Steam, Xbox, or PlayStation library. Tell us your mood. We pick your game tonight. Free, no sign-up required.',
     images: ['https://inventoryfull.gg/opengraph-image'],
   },

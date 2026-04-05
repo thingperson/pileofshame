@@ -115,7 +115,7 @@ const GAME_SPECIFIC_TIPS: Record<string, string[]> = {
     '💀 If you\'re stuck, go explore somewhere else. Come back stronger.',
   ],
   'baldur\'s gate 3': [
-    '📋 Check your quest journal — active quests are sorted by proximity.',
+    '📋 Check your quest journal - active quests are sorted by proximity.',
     '🎭 Talk to your camp companions. They react to recent events.',
     '💾 Quicksave before conversations. Choices matter here.',
   ],
@@ -131,13 +131,13 @@ const GAME_SPECIFIC_TIPS: Record<string, string[]> = {
   ],
   'cyberpunk 2077': [
     '📱 Check your phone messages and journal for active gigs.',
-    '🗡️ Review your cyberware and perks — you might have unspent points.',
+    '🗡️ Review your cyberware and perks - you might have unspent points.',
     '🗺️ Yellow markers are main story, blue are side gigs.',
   ],
   'persona 5': [
     '📅 Check the calendar. Deadlines are real and you can\'t go back.',
     '🎭 Spend time with confidants who are close to ranking up.',
-    '📋 Check Mementos requests — they expire.',
+    '📋 Check Mementos requests - they expire.',
   ],
   'hollow knight': [
     '🗺️ Buy the map for the current area from Cornifer (humming sound).',
@@ -152,21 +152,21 @@ const GAME_SPECIFIC_TIPS: Record<string, string[]> = {
   'dark souls': [
     '💀 You will die. That\'s fine. Learn the enemy patterns.',
     '🔥 Rest at the nearest bonfire and level up if you can.',
-    '🛡️ Check your equipment load — stay under 70% for medium roll.',
+    '🛡️ Check your equipment load - stay under 70% for medium roll.',
   ],
   'mass effect': [
-    '📋 Check the journal — main quests are marked.',
+    '📋 Check the journal - main quests are marked.',
     '🎭 Talk to your squad on the ship. New dialogue after each mission.',
     '⚙️ Spend any unassigned skill points before the next mission.',
   ],
   'skyrim': [
-    '📋 Check your quest log — pick the one closest to you.',
+    '📋 Check your quest log - pick the one closest to you.',
     '🎒 Sell junk at the nearest merchant. Free up carry weight.',
     '⚙️ Check if you have unspent perk points.',
   ],
   'god of war': [
     '🗺️ Check the map for undiscovered areas nearby.',
-    '⚔️ Look at your skill tree — you might have upgrades waiting.',
+    '⚔️ Look at your skill tree - you might have upgrades waiting.',
     '📖 Atreus\'s journal has story recaps.',
   ],
   'stardew valley': [
@@ -177,7 +177,7 @@ const GAME_SPECIFIC_TIPS: Record<string, string[]> = {
   'hades': [
     '🏛️ Talk to everyone in the House before your next run.',
     '💎 Check the contractor for permanent upgrades.',
-    '⚔️ Try a weapon with a dark glow — it gives bonus Darkness.',
+    '⚔️ Try a weapon with a dark glow - it gives bonus Darkness.',
   ],
   'final fantasy': [
     '📋 Check active quests and any side content you missed.',
@@ -191,17 +191,17 @@ const GAME_SPECIFIC_TIPS: Record<string, string[]> = {
   ],
   'metroid': [
     '🗺️ Check the map for blinking doors or unexplored rooms.',
-    '🔫 Test your current abilities — you might have forgotten one.',
+    '🔫 Test your current abilities - you might have forgotten one.',
     '🔍 Scan walls near dead ends. Breakable blocks are everywhere.',
   ],
   'dragon age': [
     '🎭 Check in with party members at camp. They have opinions.',
-    '📋 Review your quest journal — the war table has new missions.',
+    '📋 Review your quest journal - the war table has new missions.',
     '⚙️ Spend any unused ability points.',
   ],
   'horizon': [
     '🏹 Restock on ammo and potions at your stash.',
-    '📋 Check the quest log — main quests are gold, sides are teal.',
+    '📋 Check the quest log - main quests are gold, sides are teal.',
     '🤖 Scan machines before fighting. Weak points save you time.',
   ],
   'disco elysium': [
@@ -210,7 +210,7 @@ const GAME_SPECIFIC_TIPS: Record<string, string[]> = {
     '📖 Read your internal monologue carefully. The answer is in there.',
   ],
   'divinity': [
-    '📋 Check your journal — quest entries update with new clues.',
+    '📋 Check your journal - quest entries update with new clues.',
     '💬 Talk to every NPC. Persuasion checks open new paths.',
     '⚙️ Re-examine your skill books. You might have new combos.',
   ],
@@ -302,9 +302,10 @@ interface GameCardProps {
   progressAction?: ProgressAction; // "→ Up Next" etc.
   regressAction?: ProgressAction;  // "← Backlog" etc.
   onStatusChange?: (newStatus: GameStatus) => void; // Notify parent of status changes (e.g., Replay, Un-bail)
+  hideStatusLabel?: boolean; // Hide status badge label when viewing the matching tab (redundant info)
 }
 
-export default function GameCard({ game, upNextIndex, forceExpanded, progressAction, regressAction, onStatusChange }: GameCardProps) {
+export default function GameCard({ game, upNextIndex, forceExpanded, progressAction, regressAction, onStatusChange, hideStatusLabel }: GameCardProps) {
   const [expanded, setExpanded] = useState(forceExpanded ?? false);
   const [ghostStatus, setGhostStatus] = useState<GameStatus | null>(null);
   const [showBailConfirm, setShowBailConfirm] = useState(false);
@@ -536,9 +537,13 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
           >
             <span className="emoji-icon">{statusConfig.icon}</span>
             <span className="ascii-icon hidden">{statusConfig.asciiIcon}</span>
-            <span className="sm:hidden">{statusConfig.shortLabel || statusConfig.label}</span>
-            <span className="hidden sm:inline">{statusConfig.label}</span>
-            {/* Arrow — makes it obvious this is tappable */}
+            {!hideStatusLabel && (
+              <>
+                <span className="sm:hidden">{statusConfig.shortLabel || statusConfig.label}</span>
+                <span className="hidden sm:inline">{statusConfig.label}</span>
+              </>
+            )}
+            {/* Arrow - makes it obvious this is tappable */}
             {nextStatus && (
               <span className="text-[10px] opacity-60">→</span>
             )}
@@ -558,7 +563,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
         </div>
 
         {/* Game Name */}
-        <span className="flex-1 text-[15px] sm:text-base font-semibold text-text-primary truncate">
+        <span className="flex-1 min-w-0 text-[15px] sm:text-base font-semibold text-text-primary truncate">
           {upNextIndex && (
             <span className="text-accent-purple font-bold font-[family-name:var(--font-mono)] mr-1.5 text-sm">
               {upNextIndex}.
@@ -570,10 +575,10 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
         </span>
 
         {/* Achievement mini + Time Tier + Platform Source */}
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-1 shrink-0 ml-1">
           {game.achievements && game.achievements.total > 0 && (
             <span
-              className="text-[10px] font-bold font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded"
+              className="text-[9px] font-bold font-[family-name:var(--font-mono)] px-1 py-0.5 rounded hidden sm:inline"
               title={`${game.achievements.earned}/${game.achievements.total}${game.achievements.earnedPlatinum ? ' 🏆' : ''}`}
               style={{
                 backgroundColor: game.achievements.earned === game.achievements.total
@@ -585,11 +590,11 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               {game.achievements.earnedPlatinum ? '🏆' : `${Math.round((game.achievements.earned / game.achievements.total) * 100)}%`}
             </span>
           )}
-          <span className="text-sm" title={tierConfig.label} aria-hidden="true">
+          <span className="text-xs" title={tierConfig.label} aria-hidden="true">
             {tierConfig.icon}
           </span>
           <span
-            className="text-[11px] font-bold font-[family-name:var(--font-mono)] px-2 py-0.5 rounded"
+            className="text-[10px] font-bold font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded"
             style={{
               backgroundColor: SOURCE_COLORS[game.source].bg,
               color: SOURCE_COLORS[game.source].text,

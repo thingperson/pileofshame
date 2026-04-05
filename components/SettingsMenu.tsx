@@ -258,7 +258,7 @@ export default function SettingsMenu() {
                       { value: 'ultra', label: '⚡ ULTRA' },
                       { value: 'void', label: '🫥 Void' },
                       { value: 'cozy', label: '☕ Cozy' },
-                      { value: 'minimal', label: '— Minimal' },
+                      { value: 'minimal', label: '- Minimal' },
                       { value: 'tropical', label: '🌴 Tropical' },
                       { value: 'campfire', label: '🔥 Campfire' },
                     ].map((opt) => (

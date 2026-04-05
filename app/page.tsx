@@ -375,6 +375,7 @@ function AppContent() {
               games: SAMPLE_GAMES,
               lastSaved: new Date().toISOString(),
             });
+            window.scrollTo({ top: 0 });
           }}
         />
         <ImportHub open={importHubOpen} onClose={() => setImportHubOpen(false)} />
@@ -454,7 +455,7 @@ function AppContent() {
         >
           <span>
             You&apos;re exploring a sample library.{' '}
-            <span style={{ color: 'var(--color-text-dim)' }}>Poke around, try the features — it&apos;s all fake data.</span>
+            <span style={{ color: 'var(--color-text-dim)' }}>Poke around, try the features - it&apos;s all fake data.</span>
           </span>
           <div className="flex items-center gap-2 shrink-0">
             <button
@@ -684,12 +685,13 @@ function AppContent() {
                     <GameCard
                       game={game}
                       upNextIndex={activeTab === 'up-next' ? i + 1 : undefined}
+                      hideStatusLabel={true}
                       progressAction={nextTabLabel ? {
-                        label: `→ ${nextTabLabel}`,
+                        label: `Move to ${nextTabLabel}`,
                         onClick: () => moveGameForward(game),
                       } : undefined}
                       regressAction={prevTabLabel ? {
-                        label: `← ${prevTabLabel}`,
+                        label: `Back to ${prevTabLabel}`,
                         onClick: () => moveGameBack(game),
                       } : undefined}
                       onStatusChange={(newStatus) => {

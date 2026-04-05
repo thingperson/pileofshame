@@ -5,7 +5,7 @@ export type RerollMode = 'anything' | 'quick-session' | 'deep-cut' | 'continue';
 export const REROLL_MODES: { mode: RerollMode; label: string; icon: string; description: string }[] = [
   { mode: 'anything', label: 'Anything', icon: '🎲', description: 'Random from all games' },
   { mode: 'quick-session', label: 'Quick Session', icon: '🌙', description: 'Wind-down tier only' },
-  { mode: 'deep-cut', label: 'Deep Cut', icon: '🔥', description: 'Deep-cut tier only' },
+  { mode: 'deep-cut', label: 'Deep Cut', icon: '🔥', description: 'A game buried in your backlog you may have forgotten about' },
   { mode: 'continue', label: 'Keep Playing', icon: '▶', description: 'Games you already started' },
 ];
 

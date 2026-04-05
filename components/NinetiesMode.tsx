@@ -73,7 +73,7 @@ function MarqueeBanner() {
   return (
     <div className="nineties-marquee">
       <span>
-        🔥🔥🔥 WELCOME TO INVENTORY FULL — THE #1 GAMING BACKLOG MANAGER ON THE WORLD WIDE WEB 🔥🔥🔥
+        🔥🔥🔥 WELCOME TO INVENTORY FULL - THE #1 GAMING BACKLOG MANAGER ON THE WORLD WIDE WEB 🔥🔥🔥
         &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
         ⚠️ THIS SITE IS UNDER CONSTRUCTION ⚠️
         &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
@@ -91,7 +91,7 @@ function MarqueeBanner() {
 function UnderConstruction() {
   return (
     <div className="under-construction">
-      🚧 THIS PAGE IS UNDER CONSTRUCTION — COME BACK SOON!!! 🚧
+      🚧 THIS PAGE IS UNDER CONSTRUCTION - COME BACK SOON!!! 🚧
     </div>
   );
 }

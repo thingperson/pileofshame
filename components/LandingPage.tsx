@@ -66,7 +66,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
       {/* ═══════════════════════════════════════════
           HERO
           ═══════════════════════════════════════════ */}
-      <section className="relative min-h-[85vh] flex flex-col items-center justify-center px-6 py-12 text-center">
+      <section className="relative min-h-[50vh] flex flex-col items-center justify-center px-6 py-12 text-center">
         {/* Landing page background image */}
         <div
           className="absolute inset-0 pointer-events-none"
@@ -103,18 +103,24 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
             transform: visible ? 'translateY(0)' : 'translateY(24px)',
           }}
         >
-          {/* Hero illustration */}
-          <div className="mb-4 flex justify-center">
+          {/* Brand mark + title inline */}
+          <div className="mb-4 flex items-center justify-center gap-3">
             <img
-              src="/inventoryfull-hero.png"
-              alt="Inventory Full — hand holding a controller emerging from a pile of games"
-              className="w-full max-w-md sm:max-w-lg md:max-w-xl object-contain rounded-xl"
-              style={{ filter: 'drop-shadow(0 0 32px color-mix(in srgb, var(--color-accent-purple) 25%, transparent))' }}
+              src="/inventoryfull-logomark.png"
+              alt="Inventory Full logomark"
+              className="w-20 h-20 sm:w-24 sm:h-24 object-contain"
+              style={{ filter: 'drop-shadow(0 0 16px color-mix(in srgb, var(--color-accent-purple) 25%, transparent))' }}
             />
+            <span
+              className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Inventory Full
+            </span>
           </div>
 
           <h1
-            className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1] mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] mb-6"
             style={{ color: 'var(--color-text-primary)' }}
           >
             Your pile&apos;s not gonna
@@ -289,7 +295,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
             <FeatureCard
               icon={<MoodIcon />}
               title="Mood matching"
-              description="Cozy, intense, brain-off, narrative — match your energy to a game."
+              description="Cozy, intense, brain-off, narrative - match your energy to a game."
             />
             <FeatureCard
               icon={<ClockIcon />}
@@ -299,7 +305,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
             <FeatureCard
               icon={<TimerIcon />}
               title="5-minute try timer"
-              description="Not sure about a game? Give it five minutes. Timer says stop — you decide."
+              description="Not sure about a game? Give it five minutes. Timer says stop, you decide."
             />
             <FeatureCard
               icon={<PartyIcon />}
@@ -356,7 +362,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
               boxShadow: '0 4px 24px color-mix(in srgb, var(--color-accent-purple) 30%, transparent)',
             }}
           >
-            Import My Library — It&apos;s Free
+            Import My Library - It&apos;s Free
           </button>
 
           <button
