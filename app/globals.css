@@ -1063,7 +1063,9 @@ button:active:not(:disabled) {
   background: #1a2e1a !important;
   background-image:
     radial-gradient(ellipse at 30% 80%, rgba(109, 191, 109, 0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 20%, rgba(212, 162, 78, 0.04) 0%, transparent 50%) !important;
+    radial-gradient(ellipse at 70% 20%, rgba(212, 162, 78, 0.04) 0%, transparent 50%),
+    url('/dino-bg.png') !important;
+  background-size: auto, auto, 400px 400px !important;
   background-attachment: fixed !important;
 }
 

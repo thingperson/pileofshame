@@ -66,7 +66,18 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
       {/* ═══════════════════════════════════════════
           HERO
           ═══════════════════════════════════════════ */}
-      <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-6 py-20 text-center">
+      <section className="relative min-h-[85vh] flex flex-col items-center justify-center px-6 py-12 text-center">
+        {/* Landing page background image */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: 'url(/IF-landing-BG.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            opacity: 0.4,
+          }}
+        />
+
         {/* Ambient glow behind hero */}
         <div
           className="absolute inset-0 pointer-events-none"
@@ -78,7 +89,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
 
         {/* Subtle grid pattern behind hero */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-[0.03]"
+          className="absolute inset-0 pointer-events-none opacity-[0.02]"
           style={{
             backgroundImage: `linear-gradient(var(--color-text-primary) 1px, transparent 1px), linear-gradient(90deg, var(--color-text-primary) 1px, transparent 1px)`,
             backgroundSize: '60px 60px',
@@ -93,22 +104,14 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           }}
         >
           {/* Hero illustration */}
-          <div className="mb-6 flex justify-center">
+          <div className="mb-4 flex justify-center">
             <img
-              src="/inventoryfull-logomark.png"
+              src="/inventoryfull-hero.png"
               alt="Inventory Full — hand holding a controller emerging from a pile of games"
-              className="w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44 object-contain drop-shadow-lg"
-              style={{ filter: 'drop-shadow(0 0 24px color-mix(in srgb, var(--color-accent-purple) 20%, transparent))' }}
+              className="w-full max-w-md sm:max-w-lg md:max-w-xl object-contain rounded-xl"
+              style={{ filter: 'drop-shadow(0 0 32px color-mix(in srgb, var(--color-accent-purple) 25%, transparent))' }}
             />
           </div>
-
-          {/* Brand mark */}
-          <p
-            className="text-xs sm:text-sm font-[family-name:var(--font-mono)] tracking-[0.3em] uppercase mb-8"
-            style={{ color: 'var(--color-text-faint)' }}
-          >
-            Inventory Full
-          </p>
 
           <h1
             className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1] mb-6"
@@ -120,7 +123,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           </h1>
 
           <p
-            className="text-base sm:text-lg md:text-xl leading-relaxed max-w-md mx-auto mb-10"
+            className="text-base sm:text-lg md:text-xl leading-relaxed max-w-md mx-auto mb-6"
             style={{ color: 'var(--color-text-muted)' }}
           >
             Import your library. Tell us your mood.
@@ -149,7 +152,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
 
           <button
             onClick={onLoadSample}
-            className="mt-6 px-6 py-3 text-sm font-medium rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+            className="mt-4 px-6 py-3 text-sm font-medium rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
             style={{
               background: 'transparent',
               color: 'var(--color-text-muted)',
