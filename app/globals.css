@@ -1555,6 +1555,19 @@ button:active:not(:disabled) {
   display: none !important;
 }
 
+/* Void: toolbar buttons must be findable — faint at rest, visible on hover */
+.theme-void header button,
+.theme-void header a {
+  color: #333333 !important;
+  border-color: #1a1a1a !important;
+  transition: color 0.2s, border-color 0.2s !important;
+}
+.theme-void header button:hover,
+.theme-void header a:hover {
+  color: #888888 !important;
+  border-color: #444444 !important;
+}
+
 /* Void: everything fades except the action */
 .theme-void h1 {
   color: #666666 !important;
