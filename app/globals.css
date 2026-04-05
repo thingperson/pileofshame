@@ -1646,23 +1646,23 @@ button:active:not(:disabled) {
 }
 
 .theme-cozy {
-  --color-bg-primary: #F7F1E3 !important;
-  --color-bg-card: #FFFDF8 !important;
-  --color-bg-elevated: #EFE8D8 !important;
-  --color-border-subtle: rgba(160, 130, 80, 0.14) !important;
-  --color-border-active: rgba(160, 130, 80, 0.28) !important;
-  --color-text-primary: #33302A !important;
-  --color-text-secondary: #4A453D !important;
-  --color-text-muted: #635B50 !important;
-  --color-text-dim: #6B6055 !important;
-  --color-text-faint: #7A6F63 !important;
-  --color-accent-purple: #B8A9C9 !important;
-  --color-accent-pink: #E8A598 !important;
+  --color-bg-primary: #FEFAE0 !important;
+  --color-bg-card: #FFF9ED !important;
+  --color-bg-elevated: #FAEDCD !important;
+  --color-border-subtle: rgba(212, 163, 115, 0.18) !important;
+  --color-border-active: rgba(212, 163, 115, 0.35) !important;
+  --color-text-primary: #3D3228 !important;
+  --color-text-secondary: #5C4F3D !important;
+  --color-text-muted: #7A6B55 !important;
+  --color-text-dim: #8C7D68 !important;
+  --color-text-faint: #A89880 !important;
+  --color-accent-purple: #D4A373 !important;
+  --color-accent-pink: #E26D5C !important;
 }
 
 .theme-cozy body,
 body.theme-cozy {
-  background-color: #F7F1E3 !important;
+  background-color: #FEFAE0 !important;
 }
 
 /* Cozy: swap all fonts to Nunito, kill monospace */
@@ -1699,30 +1699,31 @@ body.theme-cozy {
 
 .theme-cozy [class*="bg-bg-card"],
 .theme-cozy [style*="background-color: var(--color-bg-card)"] {
-  background-color: #FFFDF8 !important;
-  box-shadow: 0 2px 12px rgba(160, 130, 80, 0.07) !important;
-  border-color: rgba(160, 130, 80, 0.10) !important;
+  background-color: #FFF9ED !important;
+  box-shadow: 0 2px 12px rgba(212, 163, 115, 0.08) !important;
+  border-color: rgba(212, 163, 115, 0.12) !important;
 }
 
-/* Cozy: status colors softened */
+/* Cozy: status colors — warm, earthy, soft */
 .theme-cozy {
-  --color-status-buried: #8C8374 !important;
-  --color-status-buried-bg: #EFE8D8 !important;
-  --color-status-on-deck: #6AADCA !important;
-  --color-status-on-deck-bg: #E4F1F8 !important;
-  --color-status-playing: #C49A40 !important;
-  --color-status-playing-bg: #F8EDCF !important;
-  --color-status-played: #7DAF74 !important;
-  --color-status-played-bg: #E8F2E5 !important;
-  --color-status-bailed: #A89B90 !important;
-  --color-status-bailed-bg: #EFE8D8 !important;
+  --color-status-buried: #A89880 !important;
+  --color-status-buried-bg: #FAEDCD !important;
+  --color-status-on-deck: #CCD5AE !important;
+  --color-status-on-deck-bg: #E9EDC9 !important;
+  --color-status-playing: #D4A373 !important;
+  --color-status-playing-bg: #FAEDCD !important;
+  --color-status-played: #A7C4A0 !important;
+  --color-status-played-bg: #E4EDDC !important;
+  --color-status-bailed: #B8A898 !important;
+  --color-status-bailed-bg: #F2E8D8 !important;
 }
 
-/* Cozy: hero CTA softened */
+/* Cozy: hero CTA — fawn to terracotta */
 .theme-cozy button[style*="linear-gradient"] {
-  background: linear-gradient(135deg, #B8A9C9, #D4BFD8) !important;
+  background: linear-gradient(135deg, #D4A373, #E26D5C) !important;
   border-radius: 20px !important;
-  box-shadow: 0 4px 16px rgba(184, 169, 201, 0.2) !important;
+  box-shadow: 0 4px 16px rgba(212, 163, 115, 0.25) !important;
+  color: #FFF9ED !important;
 }
 
 .theme-cozy button[style*="linear-gradient"]:hover {
@@ -1776,23 +1777,23 @@ body.theme-cozy {
    ======================== */
 
 .theme-minimal {
-  --color-bg-primary: #0C0C0E !important;
-  --color-bg-card: #0C0C0E !important;
-  --color-bg-elevated: #111113 !important;
-  --color-border-subtle: rgba(255, 255, 255, 0.06) !important;
-  --color-border-active: rgba(255, 255, 255, 0.12) !important;
-  --color-text-primary: #E0E0E0 !important;
-  --color-text-secondary: rgba(255, 255, 255, 0.7) !important;
-  --color-text-muted: rgba(255, 255, 255, 0.55) !important;
-  --color-text-dim: rgba(255, 255, 255, 0.5) !important;
-  --color-text-faint: rgba(255, 255, 255, 0.4) !important;
-  --color-accent-purple: rgba(255, 255, 255, 0.8) !important;
-  --color-accent-pink: rgba(255, 255, 255, 0.5) !important;
+  --color-bg-primary: #2B2D42 !important;
+  --color-bg-card: #2B2D42 !important;
+  --color-bg-elevated: #33354A !important;
+  --color-border-subtle: rgba(141, 153, 174, 0.12) !important;
+  --color-border-active: rgba(141, 153, 174, 0.25) !important;
+  --color-text-primary: #EDF2F4 !important;
+  --color-text-secondary: #C8CDD4 !important;
+  --color-text-muted: #8D99AE !important;
+  --color-text-dim: #6B7790 !important;
+  --color-text-faint: #525E72 !important;
+  --color-accent-purple: #EF233C !important;
+  --color-accent-pink: #D90429 !important;
 }
 
 .theme-minimal body,
 body.theme-minimal {
-  background-color: #0C0C0E !important;
+  background-color: #2B2D42 !important;
 }
 
 /* Minimal: one font, one weight */
@@ -1835,17 +1836,17 @@ body.theme-minimal {
 /* Minimal: strip gradient buttons */
 .theme-minimal button[style*="linear-gradient"] {
   background: transparent !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  color: rgba(255, 255, 255, 0.6) !important;
+  border: 1px solid rgba(239, 35, 60, 0.4) !important;
+  color: #EF233C !important;
   font-weight: 400 !important;
   font-size: 14px !important;
   border-radius: 0 !important;
 }
 
 .theme-minimal button[style*="linear-gradient"]:hover {
-  background: rgba(255, 255, 255, 0.04) !important;
-  color: rgba(255, 255, 255, 0.9) !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
+  background: rgba(239, 35, 60, 0.08) !important;
+  color: #EF233C !important;
+  border-color: rgba(239, 35, 60, 0.6) !important;
   box-shadow: none !important;
   transform: none !important;
 }
@@ -1875,21 +1876,21 @@ body.theme-minimal {
 
 .theme-minimal nav button[class*="accent"],
 .theme-minimal nav button[aria-selected="true"] {
-  border-bottom-color: rgba(255, 255, 255, 0.5) !important;
-  color: rgba(255, 255, 255, 0.9) !important;
+  border-bottom-color: #EF233C !important;
+  color: #EDF2F4 !important;
 }
 
-/* Minimal: status colors muted */
+/* Minimal: status colors — gunmetal with red accent for active */
 .theme-minimal {
-  --color-status-buried: rgba(255, 255, 255, 0.25) !important;
+  --color-status-buried: #525E72 !important;
   --color-status-buried-bg: transparent !important;
-  --color-status-on-deck: rgba(255, 255, 255, 0.5) !important;
+  --color-status-on-deck: #8D99AE !important;
   --color-status-on-deck-bg: transparent !important;
-  --color-status-playing: rgba(255, 255, 255, 0.7) !important;
-  --color-status-playing-bg: transparent !important;
-  --color-status-played: rgba(255, 255, 255, 0.4) !important;
+  --color-status-playing: #EF233C !important;
+  --color-status-playing-bg: rgba(239, 35, 60, 0.08) !important;
+  --color-status-played: #8D99AE !important;
   --color-status-played-bg: transparent !important;
-  --color-status-bailed: rgba(255, 255, 255, 0.2) !important;
+  --color-status-bailed: #525E72 !important;
   --color-status-bailed-bg: transparent !important;
 }
 
@@ -1898,9 +1899,9 @@ body.theme-minimal {
 .theme-minimal select,
 .theme-minimal textarea {
   background-color: transparent !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(141, 153, 174, 0.2) !important;
   border-radius: 0 !important;
-  color: rgba(255, 255, 255, 0.8) !important;
+  color: #EDF2F4 !important;
 }
 
 .theme-minimal input::placeholder {
@@ -1944,114 +1945,117 @@ body.theme-minimal {
    ══════════════════════════════════════════════ */
 
 .theme-tropical {
-  --color-bg-primary: #1A3240 !important;
-  --color-bg-card: #213D4D !important;
-  --color-bg-elevated: #2A4E60 !important;
-  --color-border-subtle: rgba(42, 157, 143, 0.18) !important;
-  --color-border-active: rgba(42, 157, 143, 0.4) !important;
-  --color-text-primary: #F2E9DE !important;
-  --color-text-secondary: #D4C8BA !important;
-  --color-text-muted: #A89E92 !important;
-  --color-text-dim: #8A8078 !important;
-  --color-text-faint: #6E665E !important;
-  --color-accent-purple: #2A9D8F !important;
-  --color-accent-pink: #E76F51 !important;
+  --color-bg-primary: #122C31 !important;
+  --color-bg-card: #1A3B42 !important;
+  --color-bg-elevated: #224A53 !important;
+  --color-border-subtle: rgba(78, 205, 196, 0.15) !important;
+  --color-border-active: rgba(78, 205, 196, 0.4) !important;
+  --color-text-primary: #F7FFF7 !important;
+  --color-text-secondary: #D0EDE9 !important;
+  --color-text-muted: #8BBEB7 !important;
+  --color-text-dim: #5E9A92 !important;
+  --color-text-faint: #3D7A72 !important;
+  --color-accent-purple: #4ECDC4 !important;
+  --color-accent-pink: #FF6B6B !important;
 }
 
 .theme-tropical body,
 body.theme-tropical {
-  background-color: #1A3240 !important;
+  background-color: #122C31 !important;
 }
 
-/* Tropical: status colors */
+/* Tropical: status colors — bright and punchy */
 .theme-tropical {
-  --color-status-buried: #6E665E !important;
-  --color-status-buried-bg: #264653 !important;
-  --color-status-on-deck: #E9C46A !important;
-  --color-status-on-deck-bg: rgba(233, 196, 106, 0.12) !important;
-  --color-status-playing: #2A9D8F !important;
-  --color-status-playing-bg: rgba(42, 157, 143, 0.12) !important;
-  --color-status-played: #F4A261 !important;
-  --color-status-played-bg: rgba(244, 162, 97, 0.12) !important;
-  --color-status-bailed: #8A8078 !important;
-  --color-status-bailed-bg: rgba(138, 128, 120, 0.12) !important;
+  --color-status-buried: #5E9A92 !important;
+  --color-status-buried-bg: rgba(78, 205, 196, 0.06) !important;
+  --color-status-on-deck: #FFE66D !important;
+  --color-status-on-deck-bg: rgba(255, 230, 109, 0.12) !important;
+  --color-status-playing: #4ECDC4 !important;
+  --color-status-playing-bg: rgba(78, 205, 196, 0.12) !important;
+  --color-status-played: #FF6B6B !important;
+  --color-status-played-bg: rgba(255, 107, 107, 0.12) !important;
+  --color-status-bailed: #5E9A92 !important;
+  --color-status-bailed-bg: rgba(94, 154, 146, 0.10) !important;
 }
 
-/* Tropical: cards get warm depth */
+/* Tropical: cards — deep ocean with mint glow */
 .theme-tropical [class*="bg-bg-card"],
 .theme-tropical [style*="background-color: var(--color-bg-card)"] {
-  background-color: #213D4D !important;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25) !important;
-  border-color: rgba(42, 157, 143, 0.12) !important;
+  background-color: #1A3B42 !important;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3), 0 0 1px rgba(78, 205, 196, 0.1) !important;
+  border-color: rgba(78, 205, 196, 0.1) !important;
 }
 
-/* Tropical: hero CTA — teal to saffron gradient */
+/* Tropical: hero CTA — mint to coral gradient */
 .theme-tropical button[style*="linear-gradient"] {
-  background: linear-gradient(135deg, #2A9D8F 0%, #E9C46A 100%) !important;
-  color: #1A3240 !important;
+  background: linear-gradient(135deg, #4ECDC4 0%, #FF6B6B 100%) !important;
+  color: #122C31 !important;
+  font-weight: 700 !important;
 }
 
 .theme-tropical button[style*="linear-gradient"]:hover {
-  background: linear-gradient(135deg, #34B8A8 0%, #F0D080 100%) !important;
+  background: linear-gradient(135deg, #5EDED5 0%, #FF8585 100%) !important;
 }
 
 /* Tropical: shortcut/mode buttons */
 .theme-tropical .shrink-0[style*="linear-gradient"] {
-  background: linear-gradient(135deg, #2A9D8F, #E9C46A) !important;
-  color: #1A3240 !important;
+  background: linear-gradient(135deg, #4ECDC4, #FFE66D) !important;
+  color: #122C31 !important;
 }
 
 /* Tropical: tab active state */
 .theme-tropical nav button[aria-selected="true"] {
-  color: #2A9D8F !important;
-  border-color: #2A9D8F !important;
+  color: #4ECDC4 !important;
+  border-color: #4ECDC4 !important;
 }
 
 /* Tropical: inputs */
 .theme-tropical input,
 .theme-tropical select,
 .theme-tropical textarea {
-  background-color: #1A3240 !important;
-  border-color: rgba(42, 157, 143, 0.2) !important;
-  color: #F2E9DE !important;
+  background-color: #122C31 !important;
+  border-color: rgba(78, 205, 196, 0.2) !important;
+  color: #F7FFF7 !important;
 }
 
 .theme-tropical input:focus,
 .theme-tropical select:focus,
 .theme-tropical textarea:focus {
-  border-color: #2A9D8F !important;
+  border-color: #4ECDC4 !important;
+  box-shadow: 0 0 0 2px rgba(78, 205, 196, 0.15) !important;
 }
 
 .theme-tropical input::placeholder {
-  color: #6E665E !important;
+  color: #3D7A72 !important;
 }
 
-/* Tropical: links */
+/* Tropical: links — mint with coral hover */
 .theme-tropical a {
-  color: #2A9D8F !important;
+  color: #4ECDC4 !important;
 }
 .theme-tropical a:hover {
-  color: #34B8A8 !important;
+  color: #FF6B6B !important;
 }
 
 /* Tropical: scrollbar */
 .theme-tropical ::-webkit-scrollbar-thumb {
-  background-color: rgba(42, 157, 143, 0.3) !important;
+  background-color: rgba(78, 205, 196, 0.3) !important;
 }
 .theme-tropical ::-webkit-scrollbar-track {
-  background-color: #1A3240 !important;
+  background-color: #122C31 !important;
 }
 
 /* Tropical: progress bars */
 .theme-tropical [role="progressbar"] div {
-  background-color: #2A9D8F !important;
+  background-color: #4ECDC4 !important;
 }
 
-/* Tropical: banner */
+/* Tropical: banner — bright mint */
 .theme-tropical .default-banner-text {
-  color: #2A9D8F !important;
-  opacity: 0.7;
+  color: #4ECDC4 !important;
+  opacity: 0.8;
   letter-spacing: 6px;
+  text-shadow: 0 0 20px rgba(78, 205, 196, 0.2);
 }
 
 @media (prefers-reduced-motion: reduce) {
