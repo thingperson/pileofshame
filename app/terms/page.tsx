@@ -18,7 +18,7 @@ export default function TermsPage() {
 
         <h1 className="text-3xl font-bold mb-2">Terms of Service</h1>
         <p className="text-sm text-text-dim font-[family-name:var(--font-mono)] mb-8">
-          Last updated: April 2, 2026
+          Last updated: April 4, 2026
         </p>
 
         <div className="space-y-8 text-text-secondary text-[15px] leading-relaxed">
@@ -110,7 +110,22 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">8. Limitation of liability</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">8. Personalized recommendations</h2>
+            <p>
+              Inventory Full provides personalized game recommendations based on your library data,
+              selected mood, and available time. These recommendations are generated algorithmically
+              from your own data and are not influenced by third-party advertisers or publishers.
+              No one pays us to recommend specific games to you.
+            </p>
+            <p className="mt-2">
+              Player Archetypes, stats, and behavioral profiles are generated for your entertainment
+              and personal insight. They are not used for advertising, credit decisions, employment
+              screening, or any purpose outside of your experience in this app.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold text-text-primary mb-3">9. Limitation of liability</h2>
             <p>
               Inventory Full is provided &ldquo;as is&rdquo; without warranties of any kind. We&apos;re
               not liable for any data loss (always use the Export Backup feature), inaccurate game
@@ -123,7 +138,30 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">9. Intellectual property</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">10. Age requirement</h2>
+            <p>
+              Inventory Full is intended for users aged 13 and older. If you are under 13, please
+              do not use this service or provide any personal information. We do not knowingly
+              collect data from children under 13. If we discover that a user is under 13, we
+              will delete their account and associated data.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold text-text-primary mb-3">11. Data deletion</h2>
+            <p>
+              You have the right to request complete deletion of your account and all associated
+              data at any time. Email{' '}
+              <a href="mailto:privacy@inventoryfull.gg" className="text-accent-purple hover:underline">
+                privacy@inventoryfull.gg
+              </a>{' '}
+              and we will process your request within 30 days. Deletion is permanent and
+              irreversible. We do not retain backups of deleted accounts.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold text-text-primary mb-3">12. Intellectual property</h2>
             <p>
               The Inventory Full app, its design, code, and original content are our intellectual
               property. The themes, UI patterns, and brand identity are part of what makes this
@@ -132,7 +170,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">10. Changes to these terms</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">13. Changes to these terms</h2>
             <p>
               We may update these terms occasionally. The date at the top will reflect the latest
               revision. Continued use of the app after changes constitutes acceptance.

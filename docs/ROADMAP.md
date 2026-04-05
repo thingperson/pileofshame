@@ -182,6 +182,34 @@
 | Feature creep audit | Apr 3, 2026 | Healthy with watchlist | Quarterly |
 | Mobile responsiveness | Apr 2, 2026 | Clean | Monthly |
 | Enrichment accuracy | Apr 3, 2026 | Normalization shipped, scale test pending | After next large import |
+| Legal/privacy compliance | Apr 4, 2026 | Clean — policies updated, no grey areas | Before any feature touching user data, deals, or profiling |
+
+### Legal Guardrails (Locked, April 2026)
+
+Any feature that touches the following areas **must be reviewed against this checklist before building**:
+
+**Hard lines — never cross these:**
+- Never sell, rent, or share user data with third parties
+- Never let advertisers or publishers target specific users through our platform
+- Never track users across external sites or apps
+- Never collect data without disclosure in the Privacy Policy
+- Never market to users under 13
+- Never store PSN tokens, passwords, or auth credentials server-side
+
+**Requires disclosure update before shipping:**
+- Any new third-party API that receives user data (even game names)
+- Any new behavioral profiling or automated categorization
+- Any affiliate link or revenue-generating referral
+- Any new analytics or tracking beyond current GA4 scope
+- Any data that moves from client-side to server-side storage
+
+**The distinction that keeps us clean:**
+We do *personalized recommendations* (using a user's own data to help them), not *targeted advertising* (using a user's data to let third parties reach them). Every feature must stay on the recommendation side of that line. If a feature starts to feel like "we're using their data to sell them something," it fails review.
+
+**FTC/Competition Bureau requirements (when affiliate revenue goes live):**
+- Clear disclosure on any page with affiliate links
+- Never inflate or misrepresent pricing
+- Never recommend games to buy — only show deals on games they already own or wishlisted
 
 ---
 

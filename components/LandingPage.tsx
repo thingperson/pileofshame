@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react';
 
 interface LandingPageProps {
   onImport: () => void;
+  onLoadSample: () => void;
 }
 
-export default function LandingPage({ onImport }: LandingPageProps) {
+export default function LandingPage({ onImport, onLoadSample }: LandingPageProps) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -135,6 +136,26 @@ export default function LandingPage({ onImport }: LandingPageProps) {
           >
             Steam / PlayStation / Xbox / GOG / Playnite
           </p>
+
+          <button
+            onClick={onLoadSample}
+            className="mt-6 px-6 py-3 text-sm font-medium rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+            style={{
+              background: 'transparent',
+              color: 'var(--color-text-muted)',
+              border: '1px solid var(--color-border-subtle)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--color-accent-purple)';
+              e.currentTarget.style.color = 'var(--color-text-primary)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--color-border-subtle)';
+              e.currentTarget.style.color = 'var(--color-text-muted)';
+            }}
+          >
+            No library? Try a sample.
+          </button>
         </div>
 
         {/* Scroll hint */}
@@ -323,6 +344,26 @@ export default function LandingPage({ onImport }: LandingPageProps) {
             }}
           >
             Import My Library — It&apos;s Free
+          </button>
+
+          <button
+            onClick={onLoadSample}
+            className="mt-4 px-6 py-3 text-sm font-medium rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer block mx-auto"
+            style={{
+              background: 'transparent',
+              color: 'var(--color-text-muted)',
+              border: '1px solid var(--color-border-subtle)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--color-accent-purple)';
+              e.currentTarget.style.color = 'var(--color-text-primary)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--color-border-subtle)';
+              e.currentTarget.style.color = 'var(--color-text-muted)';
+            }}
+          >
+            Or try a sample library
           </button>
         </div>
 

@@ -18,7 +18,7 @@ export default function PrivacyPage() {
 
         <h1 className="text-3xl font-bold mb-2">Privacy Policy</h1>
         <p className="text-sm text-text-dim font-[family-name:var(--font-mono)] mb-8">
-          Last updated: April 2, 2026
+          Last updated: April 4, 2026
         </p>
 
         <div className="space-y-8 text-text-secondary text-[15px] leading-relaxed">
@@ -67,8 +67,18 @@ export default function PrivacyPage() {
                 <h3 className="text-sm font-semibold text-text-primary mb-1">If you import from PlayStation</h3>
                 <p>
                   You provide a PSN authentication token (npsso) which we use ephemerally to fetch your
-                  trophy and game data. The token is not stored on our servers. Your trophy data is stored
+                  trophy and game data. The token is sent to our server for the API call but is not
+                  stored, logged, or retained after the request completes. Your trophy data is stored
                   locally in your browser.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-text-primary mb-1">If you import from Xbox</h3>
+                <p>
+                  We use the OpenXBL API to fetch your game list and achievement data using your Xbox
+                  gamertag or XUID. Your gamertag is sent to our server for the API call but is not
+                  stored beyond what is saved in your local game library. The imported data is stored
+                  in your browser&apos;s localStorage (or in your synced account if you&apos;re signed in).
                 </p>
               </div>
             </div>
@@ -134,22 +144,55 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="text-lg font-bold text-text-primary mb-3">Your rights</h2>
-            <p>You can:</p>
+            <p>
+              Under applicable privacy laws (including CCPA, CPRA, and PIPEDA), you have the right to:
+            </p>
             <ul className="list-disc list-inside space-y-1.5 text-text-muted mt-2">
-              <li>Export your data at any time using the Export Backup feature</li>
-              <li>Delete your local data by clearing your browser&apos;s localStorage</li>
-              <li>Request deletion of your account and all cloud-synced data</li>
-              <li>Use the app without creating an account (all features work locally)</li>
+              <li><strong>Access</strong>: Export your data at any time using the Export Backup feature</li>
+              <li><strong>Delete</strong>: Clear your local data via browser settings, or request full
+                deletion of your account and all cloud-synced data by emailing us</li>
+              <li><strong>Portability</strong>: Your exported data is a standard JSON file you can take anywhere</li>
+              <li><strong>Opt out</strong>: Use the app without creating an account (all features work locally,
+                no data leaves your device)</li>
+              <li><strong>Know</strong>: This policy describes all data we collect and how we use it.
+                If you have questions, ask us</li>
             </ul>
+            <p className="mt-3">
+              We respond to data deletion requests within 30 days. When we delete your account,
+              we delete everything: your email, your library data, your sync history, and any
+              associated metadata. We do not retain anonymized copies.
+            </p>
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">Automated decision-making</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">Personalized recommendations and profiling</h2>
             <p>
               Our &ldquo;What Should I Play?&rdquo; feature uses algorithmic matching based on your
               selected mood, available time, and game metadata to suggest games from your own library.
               No AI models are used. No personal data is sent to external AI services. The matching
               happens entirely in your browser.
+            </p>
+            <p className="mt-2">
+              We also analyze your library data (games owned, completion status, play hours, genres)
+              to generate a &ldquo;Player Archetype&rdquo; profile and personalized stats. This profiling
+              is used solely to enhance your experience within the app. It runs in your browser and is
+              never shared with third parties.
+            </p>
+            <p className="mt-2">
+              When game deals are displayed, they are based on games already in your library or wishlist.
+              No third-party advertiser has access to your profile, library, or behavioral data.
+              We do not build advertising segments, sell user profiles, or allow external parties
+              to target you based on your data. We are not an advertising platform.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold text-text-primary mb-3">We do not sell your data</h2>
+            <p>
+              We do not sell, rent, lease, or trade your personal information to any third party for
+              any reason. Not for advertising. Not for marketing. Not for analytics. This applies to
+              all data we collect: your email, your game library, your play history, your behavioral
+              profile, and any other information associated with your account. Full stop.
             </p>
           </section>
 

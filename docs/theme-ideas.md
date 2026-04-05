@@ -87,3 +87,36 @@
 - **Cardboard**: Kraft paper textures, hand-drawn style borders, marker font for headings. Indie zine aesthetic.
 - **Neon Arcade**: Black background, neon glow effects on text and borders. Outrun vibes. Pink/cyan/yellow neon.
 - **Library Card**: Cream background, serif font (Merriweather/Lora), ruled lines, Dewey decimal numbering. Old-school library catalog card aesthetic.
+
+---
+
+## Palette Research (Apr 2026 — from Brady's Coolors deep dive)
+
+### Minimal Theme Upgrade
+Current minimal is near-black with opacity text. This palette has more character:
+- `#2B2D42` (dark gunmetal) / `#8D99AE` (cool grey) / `#EDF2F4` (ghost white) / `#EF233C` (red accent) / `#D90429` (crimson)
+- Source: https://coolors.co/palette/2b2d42-8d99ae-edf2f4-ef233c-d90429
+
+### Tropical Theme (NEW)
+- **Option A**: `#264653` (charcoal) / `#2A9D8F` (teal) / `#E9C46A` (saffron) / `#F4A261` (sandy brown) / `#E76F51` (burnt sienna)
+  - Source: https://coolors.co/palette/264653-2a9d8f-e9c46a-f4a261-e76f51
+- **Option B**: `#1A535C` (dark teal) / `#4ECDC4` (mint) / `#F7FFF7` (honeydew) / `#FF6B6B` (coral) / `#FFE66D` (maize)
+  - Source: https://coolors.co/palette/1a535c-4ecdc4-f7fff7-ff6b6b-ffe66d
+- **Option C**: `#001524` (rich black) / `#15616D` (teal) / `#FFECD1` (papaya whip) / `#FF7D00` (amber) / `#78290F` (chocolate)
+  - Source: https://coolors.co/palette/001524-15616d-ffecd1-ff7d00-78290f
+- **Option D**: `#55DDE0` (sky) / `#33658A` (lapis) / `#2F4858` (charcoal) / `#F6AE2D` (saffron) / `#F26419` (orange)
+  - Source: https://coolors.co/palette/55dde0-33658a-2f4858-f6ae2d-f26419
+
+### Cozy Theme Alternatives
+Current cozy is golden-cream. These feel warmer/earthier:
+- **Earthy**: `#C9CBA3` (sage) / `#FFE1A8` (peach) / `#E26D5C` (terracotta) / `#723D46` (wine) / `#472D30` (dark chocolate)
+  - Source: https://coolors.co/palette/c9cba3-ffe1a8-e26d5c-723d46-472d30
+- **Soft natural**: `#CCD5AE` (sage) / `#E9EDC9` (tea) / `#FEFAE0` (cornsilk) / `#FAEDCD` (champagne) / `#D4A373` (fawn)
+  - Source: https://coolors.co/palette/ccd5ae-e9edc9-fefae0-faedcd-d4a373
+
+### Potential New Themes (unnamed)
+- **Warm bold**: `#0D3B66` (prussian blue) / `#FAF0CA` (lemon chiffon) / `#F4D35E` (maize) / `#EE964B` (sandy) / `#F95738` (red-orange)
+  - Source: https://coolors.co/palette/0d3b66-faf0ca-f4d35e-ee964b-f95738
+- **Nature**: `#233D4D` (charcoal) / `#FE7F2D` (orange) / `#FCCA46` (saffron) / `#A1C181` (olivine) / `#619B8A` (wintergreen)
+  - Source: https://coolors.co/palette/233d4d-fe7f2d-fcca46-a1c181-619b8a
+- Could combine the warm bold + nature palettes into something like a "Sunset" or "Campfire" theme

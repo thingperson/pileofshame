@@ -27,6 +27,7 @@ import SyncNudge from '@/components/SyncNudge';
 import { useAutoEnrich } from '@/hooks/useAutoEnrich';
 import OnboardingWelcome from '@/components/OnboardingWelcome';
 import LandingPage from '@/components/LandingPage';
+import { SAMPLE_GAMES } from '@/lib/sampleLibrary';
 import PostImportSummary from '@/components/PostImportSummary';
 import GamePassBrowse from '@/components/GamePassBrowse';
 import { trackThemeSession } from '@/lib/archetypes';
@@ -298,6 +299,7 @@ function AppContent() {
   };
 
   const isEmpty = games.length === 0;
+  const isSampleLibrary = games.length > 0 && games.every(g => g.id.startsWith('sample-'));
   const isVoid = currentTheme === 'void' && !isEmpty;
 
   // Reset backlog limit when switching tabs
@@ -360,7 +362,15 @@ function AppContent() {
   if (isEmpty) {
     return (
       <>
-        <LandingPage onImport={() => setImportHubOpen(true)} />
+        <LandingPage
+          onImport={() => setImportHubOpen(true)}
+          onLoadSample={() => {
+            useStore.setState({
+              games: SAMPLE_GAMES,
+              lastSaved: new Date().toISOString(),
+            });
+          }}
+        />
         <ImportHub open={importHubOpen} onClose={() => setImportHubOpen(false)} />
         <AddGameModal open={addModalOpen} onClose={() => { setAddModalOpen(false); setAddModalInitialName(''); }} initialName={addModalInitialName} />
         <CloudSync />
@@ -414,6 +424,47 @@ function AppContent() {
           </div>
         </div>
       </header>
+
+      {/* ── Sample library banner ── */}
+      {isSampleLibrary && (
+        <div
+          className="mb-3 flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl text-xs font-[family-name:var(--font-mono)]"
+          style={{
+            backgroundColor: 'color-mix(in srgb, var(--color-accent-purple) 8%, var(--color-bg-card))',
+            border: '1px solid color-mix(in srgb, var(--color-accent-purple) 20%, transparent)',
+            color: 'var(--color-text-muted)',
+          }}
+        >
+          <span>
+            You&apos;re exploring a sample library.{' '}
+            <span style={{ color: 'var(--color-text-dim)' }}>Poke around, try the features — it&apos;s all fake data.</span>
+          </span>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => setImportHubOpen(true)}
+              className="px-3 py-1.5 text-[11px] font-semibold rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97]"
+              style={{
+                background: 'linear-gradient(135deg, var(--color-accent-purple) 0%, var(--color-accent-pink) 100%)',
+                color: '#fff',
+              }}
+            >
+              Import yours
+            </button>
+            <button
+              onClick={() => {
+                useStore.setState({ games: [], lastSaved: new Date().toISOString() });
+              }}
+              className="px-3 py-1.5 text-[11px] font-medium rounded-lg border transition-all hover:border-accent-purple"
+              style={{
+                borderColor: 'var(--color-border-subtle)',
+                color: 'var(--color-text-dim)',
+              }}
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ── Hero CTA ── */}
       <div className="mb-3 space-y-2">
