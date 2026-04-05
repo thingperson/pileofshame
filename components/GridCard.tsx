@@ -164,6 +164,7 @@ export default function GridCard({ game }: GridCardProps) {
           {/* Title */}
           <p className="text-sm font-semibold text-text-primary truncate">
             {game.isWishlisted && <span className="text-yellow-400 mr-1" title="Wishlisted">⭐</span>}
+            {game.ignored && <span className="text-text-faint mr-1" title="Ignored from recommendations">🚫</span>}
             {game.name}
           </p>
 

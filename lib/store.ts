@@ -13,6 +13,9 @@ interface StoreActions {
   updateGame: (id: string, updates: Partial<Game>) => void;
   deleteGame: (id: string) => void;
 
+  // Ignore
+  toggleIgnore: (id: string) => void;
+
   // Status
   cycleStatus: (id: string) => GameStatus | null;
   getNextStatus: (status: GameStatus) => GameStatus | null;
@@ -125,6 +128,17 @@ export const useStore = create<LibraryState & StoreActions>()(
         set((state) => ({
           games: state.games.filter((g) => g.id !== id),
           lastSaved: new Date().toISOString(),
+        }));
+      },
+
+      // Ignore
+      toggleIgnore: (id) => {
+        const now = new Date().toISOString();
+        set((state) => ({
+          games: state.games.map((g) =>
+            g.id === id ? { ...g, ignored: !g.ignored, updatedAt: now } : g
+          ),
+          lastSaved: now,
         }));
       },
 

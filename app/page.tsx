@@ -173,17 +173,23 @@ function AppContent() {
 
     // Sort based on tab
     if (activeTab === 'backlog') {
-      if (backlogSort === 'smart') return sortBestForYou(inTab, games);
-      const sorted = [...inTab];
-      switch (backlogSort) {
-        case 'a-z': return sorted.sort((a, b) => a.name.localeCompare(b.name));
-        case 'z-a': return sorted.sort((a, b) => b.name.localeCompare(a.name));
-        case 'newest': return sorted.sort((a, b) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
-        case 'oldest': return sorted.sort((a, b) => new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime());
-        case 'most-playtime': return sorted.sort((a, b) => (b.hoursPlayed || 0) - (a.hoursPlayed || 0) || a.name.localeCompare(b.name));
-        case 'least-playtime': return sorted.sort((a, b) => (a.hoursPlayed || 0) - (b.hoursPlayed || 0) || a.name.localeCompare(b.name));
-        default: return sortBestForYou(inTab, games);
+      let sorted: Game[];
+      if (backlogSort === 'smart') {
+        sorted = sortBestForYou(inTab, games);
+      } else {
+        sorted = [...inTab];
+        switch (backlogSort) {
+          case 'a-z': sorted.sort((a, b) => a.name.localeCompare(b.name)); break;
+          case 'z-a': sorted.sort((a, b) => b.name.localeCompare(a.name)); break;
+          case 'newest': sorted.sort((a, b) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime()); break;
+          case 'oldest': sorted.sort((a, b) => new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime()); break;
+          case 'most-playtime': sorted.sort((a, b) => (b.hoursPlayed || 0) - (a.hoursPlayed || 0) || a.name.localeCompare(b.name)); break;
+          case 'least-playtime': sorted.sort((a, b) => (a.hoursPlayed || 0) - (b.hoursPlayed || 0) || a.name.localeCompare(b.name)); break;
+          default: sorted = sortBestForYou(inTab, games);
+        }
       }
+      // Push ignored games to the bottom
+      return sorted.sort((a, b) => (a.ignored ? 1 : 0) - (b.ignored ? 1 : 0));
     }
     if (activeTab === 'completed') {
       // Most recently completed first
@@ -405,23 +411,28 @@ function AppContent() {
               Stop scrolling. Get playing.
             </p>
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1 sm:gap-1.5">
             <InlineSearch />
             <button
               onClick={() => setImportHubOpen(true)}
-              className="px-2.5 py-2 text-[11px] sm:text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+              className="w-9 h-9 sm:w-auto sm:h-auto flex items-center justify-center sm:px-2.5 sm:py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+              title="Import games"
             >
-              📥 Import
+              <span className="sm:hidden text-base">📥</span>
+              <span className="hidden sm:inline">📥 Import</span>
             </button>
             <button
               onClick={() => { setAddModalInitialName(''); setAddModalOpen(true); }}
-              className="px-2.5 py-2 text-[11px] sm:text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+              className="w-9 h-9 sm:w-auto sm:h-auto flex items-center justify-center sm:px-2.5 sm:py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+              title="Add game"
             >
-              + Add
+              <span className="sm:hidden text-base">+</span>
+              <span className="hidden sm:inline">+ Add</span>
             </button>
             <a
               href="/stats"
-              className="px-2.5 py-2 text-[11px] sm:text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+              className="hidden sm:inline-flex px-2.5 py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+              title="Stats"
             >
               📊 Stats
             </a>
@@ -476,7 +487,7 @@ function AppContent() {
       <div className="mb-3 space-y-2">
           <button
             onClick={() => handleOpenReroll('anything')}
-            className={`w-full px-4 sm:px-6 py-3 sm:py-3.5 text-base sm:text-lg font-bold rounded-xl text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98] ${mounted && !hasUsedReroll ? 'animate-[pulse_2s_ease-in-out_infinite]' : ''}`}
+            className={`w-full px-4 sm:px-6 py-4 sm:py-3.5 text-lg sm:text-lg font-bold rounded-xl text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98] ${mounted && !hasUsedReroll ? 'animate-[pulse_2s_ease-in-out_infinite]' : ''}`}
             style={{ background: 'linear-gradient(135deg, #7c3aed, #a78bfa)' }}
           >
             🎲&nbsp; What Should I Play?
@@ -489,21 +500,21 @@ function AppContent() {
           <div className="flex gap-1.5 sm:gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
             <button
               onClick={() => openReroll('quick-session')}
-              className="shrink-0 px-3 py-2 text-[11px] sm:text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
+              className="shrink-0 px-3 py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, #6366f1, #818cf8)' }}
             >
               🌙 Quick Session
             </button>
             <button
               onClick={() => openReroll('deep-cut')}
-              className="shrink-0 px-3 py-2 text-[11px] sm:text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
+              className="shrink-0 px-3 py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, #dc2626, #f87171)' }}
             >
               🔥 Deep Cut
             </button>
             <button
               onClick={() => openReroll('continue')}
-              className="shrink-0 px-3 py-2 text-[11px] sm:text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
+              className="shrink-0 px-3 py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, #d97706, #fbbf24)' }}
             >
               ▶ Keep Playing
@@ -661,7 +672,7 @@ function AppContent() {
             viewMode === 'grid' ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {visibleGames.map((game, i) => (
-                  <div key={game.id} className="card-enter" style={{ animationDelay: `${i * 30}ms` }}>
+                  <div key={game.id} className="card-enter" style={{ animationDelay: `${i * 30}ms`, opacity: activeTab === 'backlog' && game.ignored ? 0.45 : undefined }}>
                     <GridCard game={game} />
                   </div>
                 ))}
@@ -669,7 +680,7 @@ function AppContent() {
             ) : (
               <div className="space-y-1.5">
                 {visibleGames.map((game, i) => (
-                  <div key={game.id} className="card-enter" style={{ animationDelay: `${i * 30}ms` }}>
+                  <div key={game.id} className="card-enter" style={{ animationDelay: `${i * 30}ms`, opacity: activeTab === 'backlog' && game.ignored ? 0.45 : undefined }}>
                     <GameCard
                       game={game}
                       upNextIndex={activeTab === 'up-next' ? i + 1 : undefined}

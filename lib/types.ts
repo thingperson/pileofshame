@@ -46,6 +46,7 @@ export interface Game {
   hltbComplete?: number;       // Hours to 100% from HLTB
   enrichedAt?: string;         // ISO date of last enrichment
   isNonFinishable?: boolean;   // Auto-detected: MMOs, multiplayer-only, roguelikes, sandboxes
+  ignored?: boolean;           // User-dismissed from decision engine recommendations
 }
 
 export type PlatformPreference = 'any' | 'pc' | 'mac' | 'console';
@@ -61,7 +62,7 @@ export interface LibrarySettings {
   showPlayed: boolean;
   showBailed: boolean;
   viewMode: ViewMode;
-  theme: 'dark' | 'light' | '90s' | '80s' | 'future' | 'dino' | 'weird' | 'ultra' | 'void' | 'cozy' | 'minimal' | 'tropical';
+  theme: 'dark' | 'light' | '90s' | '80s' | 'future' | 'dino' | 'weird' | 'ultra' | 'void' | 'cozy' | 'minimal' | 'tropical' | 'campfire';
   platformPreference: PlatformPreference;
 }
 

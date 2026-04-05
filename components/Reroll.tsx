@@ -201,7 +201,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   const forcedPicks = reroll.lastThreePicks;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/80 backdrop-blur-md"
@@ -214,7 +214,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
         role="dialog"
         aria-modal="true"
         aria-label="What Should I Play"
-        className="relative w-full max-w-lg rounded-2xl border overflow-hidden"
+        className="relative w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl border overflow-hidden max-h-[95vh] sm:max-h-[85vh] overflow-y-auto"
         style={{
           backgroundColor: 'var(--color-bg-elevated)',
           borderColor: 'var(--color-border-active)',
@@ -245,7 +245,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                 <button
                   key={m}
                   onClick={() => setMode(m)}
-                  className={`px-3 py-2.5 rounded-xl text-left border transition-all ${
+                  className={`px-3 py-3 sm:py-2.5 rounded-xl text-left border transition-all ${
                     mode === m
                       ? 'border-accent-purple'
                       : 'border-border-subtle hover:border-border-active'
@@ -290,7 +290,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
 
             <button
               onClick={handleFirstRoll}
-              className="w-full mt-3 px-4 py-3 text-base font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full mt-3 px-4 py-4 sm:py-3 text-lg sm:text-base font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
               style={{
                 backgroundColor: 'var(--color-accent-purple)',
                 color: '#0a0a0f',
@@ -355,7 +355,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
             >
               {/* Cover art hero */}
               {currentPick.coverUrl ? (
-                <div className="relative w-full h-40 sm:h-48 overflow-hidden">
+                <div className="relative w-full h-48 sm:h-48 overflow-hidden">
                   <img
                     src={currentPick.coverUrl}
                     alt={currentPick.name}
@@ -369,7 +369,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                 </div>
               )}
               <div className="px-5 pb-5 pt-3">
-              <h3 className="text-xl font-bold text-text-primary mb-2">
+              <h3 className="text-2xl sm:text-xl font-bold text-text-primary mb-2">
                 {currentPick.name}
               </h3>
               <div className="flex flex-wrap justify-center gap-3 text-xs text-text-dim font-[family-name:var(--font-mono)]">
@@ -431,20 +431,20 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
             <div className="flex gap-2">
               <button
                 onClick={handleNotNow}
-                className="flex-1 px-3 py-2.5 text-sm font-medium text-text-dim rounded-xl border border-border-subtle hover:text-text-muted transition-colors"
+                className="flex-1 px-3 py-3.5 sm:py-2.5 text-sm font-medium text-text-dim rounded-xl border border-border-subtle hover:text-text-muted transition-colors"
               >
                 Not now
               </button>
               <button
                 onClick={() => doRoll()}
                 disabled={reroll.sessionCount >= 10}
-                className="flex-1 px-3 py-2.5 text-sm font-medium rounded-xl border border-border-subtle text-text-secondary hover:border-accent-purple transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                className="flex-1 px-3 py-3.5 sm:py-2.5 text-sm font-medium rounded-xl border border-border-subtle text-text-secondary hover:border-accent-purple transition-all disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 🎲 Roll Again
               </button>
               <button
                 onClick={() => handleLetsGo(currentPick)}
-                className="flex-1 px-3 py-2.5 text-sm font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex-1 px-3 py-3.5 sm:py-2.5 text-base sm:text-sm font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
                 style={{
                   backgroundColor: 'var(--color-accent-purple)',
                   color: '#0a0a0f',
@@ -472,7 +472,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                   <button
                     key={game.id}
                     onClick={() => handleLetsGo(game)}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl border transition-all hover:border-accent-purple hover:scale-[1.01]"
+                    className="w-full flex items-center gap-3 p-4 sm:p-3 rounded-xl border transition-all hover:border-accent-purple hover:scale-[1.01]"
                     style={{
                       backgroundColor: 'var(--color-bg-card)',
                       borderColor: 'var(--color-border-subtle)',

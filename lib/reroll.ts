@@ -40,6 +40,9 @@ export function getEligibleGames(
   moodFilters: MoodTag[] = [],
 ): Game[] {
   return games.filter((game) => {
+    // Exclude ignored games from all recommendations
+    if (game.ignored) return false;
+
     // Exclude played and bailed from all modes
     if (game.status === 'played' || game.status === 'bailed') return false;
 

@@ -1182,50 +1182,78 @@ button:active:not(:disabled) {
 
 @keyframes weird-breathe {
   0%, 100% { transform: scale(1) rotate(0deg); }
-  33% { transform: scale(1.008) rotate(0.15deg); }
-  66% { transform: scale(0.997) rotate(-0.1deg); }
+  33% { transform: scale(1.012) rotate(0.3deg); }
+  66% { transform: scale(0.993) rotate(-0.25deg); }
 }
 
 @keyframes weird-drift {
   0% { filter: hue-rotate(0deg) saturate(1); }
-  20% { filter: hue-rotate(25deg) saturate(0.7); }
-  40% { filter: hue-rotate(-15deg) saturate(1.3); }
-  60% { filter: hue-rotate(10deg) saturate(0.9); }
-  80% { filter: hue-rotate(-20deg) saturate(1.1); }
+  20% { filter: hue-rotate(35deg) saturate(0.6); }
+  40% { filter: hue-rotate(-25deg) saturate(1.4); }
+  60% { filter: hue-rotate(15deg) saturate(0.8); }
+  80% { filter: hue-rotate(-30deg) saturate(1.2); }
   100% { filter: hue-rotate(0deg) saturate(1); }
 }
 
 @keyframes weird-skew {
   0%, 100% { transform: skewX(0deg) skewY(0deg); }
-  20% { transform: skewX(-0.8deg) skewY(0.2deg); }
-  40% { transform: skewX(0.5deg) skewY(-0.3deg); }
-  60% { transform: skewX(-0.3deg) skewY(0.5deg); }
-  80% { transform: skewX(0.6deg) skewY(-0.1deg); }
+  20% { transform: skewX(-1.2deg) skewY(0.4deg); }
+  40% { transform: skewX(0.8deg) skewY(-0.5deg); }
+  60% { transform: skewX(-0.5deg) skewY(0.8deg); }
+  80% { transform: skewX(1deg) skewY(-0.2deg); }
 }
 
 @keyframes weird-flicker {
-  0%, 88%, 91%, 94%, 100% { opacity: 1; }
+  0%, 85%, 88%, 91%, 94%, 100% { opacity: 1; }
+  86% { opacity: 0.3; }
+  87% { opacity: 0.8; }
   89% { opacity: 0.4; }
   90% { opacity: 0.9; }
-  92% { opacity: 0.6; }
+  92% { opacity: 0.5; }
   93% { opacity: 1; }
-  95% { opacity: 0.3; }
+  95% { opacity: 0.2; }
   96% { opacity: 1; }
 }
 
 @keyframes weird-color-cycle {
   0% { color: #b8860b; }
-  25% { color: #8b6914; }
-  50% { color: #cc5588; }
-  75% { color: #5588aa; }
+  20% { color: #cc5588; }
+  40% { color: #44aa88; }
+  60% { color: #5588aa; }
+  80% { color: #aa8844; }
   100% { color: #b8860b; }
 }
 
 @keyframes weird-border-wander {
   0%, 100% { border-radius: 2px 8px 2px 12px; }
-  25% { border-radius: 10px 2px 14px 4px; }
-  50% { border-radius: 4px 12px 6px 2px; }
-  75% { border-radius: 14px 4px 2px 10px; }
+  25% { border-radius: 12px 2px 16px 4px; }
+  50% { border-radius: 4px 14px 6px 2px; }
+  75% { border-radius: 16px 4px 2px 12px; }
+}
+
+@keyframes weird-text-glitch {
+  0%, 92%, 100% { transform: translate(0, 0) skewX(0deg); }
+  93% { transform: translate(-2px, 1px) skewX(-2deg); }
+  94% { transform: translate(1px, -1px) skewX(1deg); }
+  95% { transform: translate(0, 0) skewX(0deg); }
+  96% { transform: translate(2px, 0) skewX(3deg); }
+  97% { transform: translate(-1px, 1px) skewX(-1deg); }
+  98% { transform: translate(0, 0) skewX(0deg); }
+}
+
+@keyframes weird-shadow-crawl {
+  0% { text-shadow: 1px 0 0 rgba(204, 85, 136, 0.3), -1px 0 0 rgba(85, 136, 170, 0.3); }
+  25% { text-shadow: -1px 1px 0 rgba(85, 170, 136, 0.3), 1px -1px 0 rgba(170, 85, 136, 0.3); }
+  50% { text-shadow: 0 -1px 0 rgba(136, 85, 204, 0.3), 0 1px 0 rgba(204, 136, 85, 0.3); }
+  75% { text-shadow: 1px 1px 0 rgba(85, 204, 170, 0.3), -1px -1px 0 rgba(204, 85, 85, 0.3); }
+  100% { text-shadow: 1px 0 0 rgba(204, 85, 136, 0.3), -1px 0 0 rgba(85, 136, 170, 0.3); }
+}
+
+@keyframes weird-card-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-1px) rotate(0.4deg); }
+  50% { transform: translateY(1px) rotate(-0.3deg); }
+  75% { transform: translateY(-0.5px) rotate(0.2deg); }
 }
 
 .theme-weird {
@@ -1234,27 +1262,29 @@ button:active:not(:disabled) {
   --color-bg-elevated: #1a1722;
   --color-border-subtle: #2a2535;
   --color-border-active: #cc5588;
-  --color-text-primary: #e8e0d0;
-  --color-text-secondary: #c9c0b0;
-  --color-text-muted: #9a9080;
-  --color-text-dim: #706858;
-  --color-text-faint: #504840;
+  --color-text-primary: #d0e8d8;
+  --color-text-secondary: #b0c9b8;
+  --color-text-muted: #809a88;
+  --color-text-dim: #587060;
+  --color-text-faint: #485048;
   --color-accent-purple: #cc5588;
   --color-accent-pink: #5588aa;
 
-  --color-status-buried: #706858;
-  --color-status-buried-bg: #1a1722;
-  --color-status-on-deck: #5588aa;
-  --color-status-on-deck-bg: #0e1520;
-  --color-status-playing: #b8860b;
-  --color-status-playing-bg: #1a1508;
-  --color-status-played: #558855;
-  --color-status-played-bg: #0e1a0e;
-  --color-status-bailed: #885555;
-  --color-status-bailed-bg: #1a0e0e;
+  /* Unconventional status colors — nothing means what you think */
+  --color-status-buried: #8855cc;
+  --color-status-buried-bg: #150e1a;
+  --color-status-on-deck: #cc8844;
+  --color-status-on-deck-bg: #1a1408;
+  --color-status-playing: #44aaaa;
+  --color-status-playing-bg: #0a1a1a;
+  --color-status-played: #aa8855;
+  --color-status-played-bg: #1a150e;
+  --color-status-bailed: #88cc44;
+  --color-status-bailed-bg: #121a0a;
 
   background: #0f0e11 !important;
   cursor: crosshair;
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', cursive, sans-serif !important;
 }
 
 .theme-weird::before {
@@ -1270,88 +1300,130 @@ button:active:not(:disabled) {
   animation: weird-drift 20s ease-in-out infinite;
 }
 
-/* Cards breathe and their corners wander */
+/* Cards breathe, wander, and float at random angles */
 .theme-weird .group {
-  animation: weird-breathe 5s ease-in-out infinite, weird-border-wander 12s ease-in-out infinite;
+  animation: weird-breathe 4s ease-in-out infinite, weird-border-wander 10s ease-in-out infinite, weird-card-float 7s ease-in-out infinite;
   border-color: rgba(204, 85, 136, 0.15) !important;
   border-left-color: rgba(85, 136, 170, 0.2) !important;
-  border-width: 1px 1px 1px 2px !important;
+  border-top-color: rgba(136, 204, 68, 0.15) !important;
+  border-width: 1px 1px 2px 2px !important;
 }
 
-/* Stagger the cards — no two breathe together */
-.theme-weird .group:nth-child(odd) { animation-delay: -1.7s, -4s; }
-.theme-weird .group:nth-child(3n) { animation-delay: -3.3s, -8s; }
-.theme-weird .group:nth-child(4n+1) { animation-delay: -0.5s, -2s; }
+/* Each card rotates slightly differently. Like a scattered pile of papers. */
+.theme-weird .group:nth-child(odd) { animation-delay: -1.7s, -4s, -2s; transform: rotate(0.4deg); }
+.theme-weird .group:nth-child(even) { transform: rotate(-0.3deg); }
+.theme-weird .group:nth-child(3n) { animation-delay: -3.3s, -8s, -5s; transform: rotate(-0.6deg); }
+.theme-weird .group:nth-child(4n+1) { animation-delay: -0.5s, -2s, -1s; transform: rotate(0.7deg); }
+.theme-weird .group:nth-child(5n+2) { transform: rotate(-0.9deg); }
 
-/* Title slowly cycles color and leans */
+/* Title slowly cycles color, leans, and glitches */
 .theme-weird h1 {
-  animation: weird-skew 8s ease-in-out infinite, weird-color-cycle 15s linear infinite;
-  letter-spacing: 4px;
+  animation: weird-skew 6s ease-in-out infinite, weird-color-cycle 12s linear infinite, weird-shadow-crawl 8s linear infinite;
+  letter-spacing: 5px;
   font-style: italic;
+  word-spacing: 4px;
 }
 
 .theme-weird h2 {
-  animation: weird-skew 6s ease-in-out infinite;
-  animation-delay: -2s;
-  letter-spacing: 1px;
+  animation: weird-skew 5s ease-in-out infinite, weird-shadow-crawl 10s linear infinite;
+  animation-delay: -2s, -4s;
+  letter-spacing: 2px;
+}
+
+/* All text gets a subtle glitch on hover. Something twitched. */
+.theme-weird p:hover, .theme-weird span:hover, .theme-weird a:hover, .theme-weird li:hover {
+  animation: weird-text-glitch 3s linear infinite;
 }
 
 /* Buttons flicker aggressively and have mismatched corners */
 .theme-weird button {
   border-color: rgba(204, 85, 136, 0.2) !important;
-  border-radius: 2px 8px 2px 8px !important;
-  animation: weird-flicker 8s linear infinite;
+  border-radius: 2px 10px 2px 10px !important;
+  animation: weird-flicker 6s linear infinite;
+  transition: all 0.3s ease;
 }
 
 /* Different buttons flicker at different times */
 .theme-weird button:nth-child(odd) { animation-delay: -3s; }
 .theme-weird button:nth-child(3n) { animation-delay: -5.5s; }
+.theme-weird button:nth-child(5n) { animation-delay: -1.2s; }
 
 .theme-weird button:hover {
   animation: none;
-  box-shadow: 0 0 25px rgba(204, 85, 136, 0.15), 0 0 50px rgba(85, 136, 170, 0.05);
-  transform: scale(1.02) rotate(0.3deg);
-  border-radius: 8px 2px 8px 2px !important;
+  box-shadow: 0 0 25px rgba(204, 85, 136, 0.2), 0 0 50px rgba(85, 136, 170, 0.08), inset 0 0 15px rgba(136, 204, 68, 0.05);
+  transform: scale(1.03) rotate(-0.5deg) skewX(0.5deg);
+  border-radius: 10px 2px 10px 2px !important;
+  letter-spacing: 1px;
 }
 
-/* Inputs — asymmetric borders, slightly rotated */
+/* Inputs — asymmetric borders, slightly rotated, wrong feel */
 .theme-weird input, .theme-weird textarea, .theme-weird select {
-  border-radius: 0 6px 0 6px !important;
+  border-radius: 0 8px 0 8px !important;
   border-color: rgba(85, 136, 170, 0.25) !important;
-  letter-spacing: 0.5px;
-  transform: rotate(-0.2deg);
+  letter-spacing: 0.8px;
+  transform: rotate(-0.3deg);
+  font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif !important;
 }
 
-/* Scrollbar — pink, inconsistent */
+.theme-weird input:focus, .theme-weird textarea:focus, .theme-weird select:focus {
+  border-color: rgba(136, 204, 68, 0.4) !important;
+  box-shadow: 0 0 12px rgba(204, 85, 136, 0.1), 0 0 24px rgba(85, 136, 170, 0.05) !important;
+  transform: rotate(0.2deg) scale(1.01);
+}
+
+/* Scrollbar — pink, inconsistent, wrong shape */
 .theme-weird ::-webkit-scrollbar-thumb {
-  background: rgba(204, 85, 136, 0.25);
-  border-radius: 0 8px 0 8px;
+  background: rgba(204, 85, 136, 0.3);
+  border-radius: 0 10px 0 10px;
 }
 .theme-weird ::-webkit-scrollbar-track {
-  background: rgba(85, 136, 170, 0.05);
+  background: rgba(136, 204, 68, 0.03);
 }
 
-/* Images — heavy desaturation + slight rotation. Something's off. */
+/* Images — heavy desaturation + slight rotation + color shift on hover */
 .theme-weird img {
-  filter: saturate(0.4) contrast(1.2) sepia(0.15) brightness(0.9);
-  transition: filter 0.8s, transform 0.5s;
-  transform: rotate(-0.5deg);
+  filter: saturate(0.3) contrast(1.25) sepia(0.2) brightness(0.85) hue-rotate(15deg);
+  transition: filter 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s ease;
+  transform: rotate(-0.7deg);
 }
 .theme-weird img:hover {
-  filter: saturate(1.2) contrast(1) sepia(0) brightness(1);
-  transform: rotate(0.5deg);
+  filter: saturate(1.4) contrast(1.1) sepia(0) brightness(1.05) hue-rotate(-10deg);
+  transform: rotate(0.8deg) scale(1.02);
 }
 
-/* The whole page very slowly rotates. You might not notice. But you will. */
+/* The whole page rotates. Slightly more than before. You WILL notice. */
 .theme-weird body, .theme-weird {
-  transform: rotate(-0.15deg);
-  transform-origin: 50% 0%;
+  transform: rotate(-0.25deg);
+  transform-origin: 48% 0%;
 }
 
 /* Select dropdowns reverse their text alignment */
 .theme-weird select {
   direction: rtl;
   text-align: left;
+}
+
+/* Links change to unexpected colors */
+.theme-weird a {
+  color: #88cc44 !important;
+  transition: all 0.4s ease;
+}
+.theme-weird a:hover {
+  color: #cc5588 !important;
+  letter-spacing: 1.5px;
+  animation: weird-text-glitch 2s linear infinite;
+}
+
+/* Tab text warps on selection */
+.theme-weird nav button[aria-selected="true"] {
+  transform: skewX(-2deg) !important;
+  letter-spacing: 2px;
+  text-shadow: 1px 0 rgba(204, 85, 136, 0.3), -1px 0 rgba(85, 136, 170, 0.3);
+}
+
+/* Progress bars use wrong colors */
+.theme-weird [role="progressbar"] div {
+  background: linear-gradient(90deg, #cc5588, #88cc44, #5588aa) !important;
 }
 
 
@@ -1622,12 +1694,15 @@ button:active:not(:disabled) {
   opacity: 0.5;
 }
 
-/* Weird override — subtle distortion */
+/* Weird override — distortion and wrongness */
 .theme-weird .default-banner {
-  transform: rotate(-0.3deg);
+  transform: rotate(-0.5deg) skewX(0.3deg);
 }
 .theme-weird .default-banner-text {
-  animation: weird-flicker 4s ease-in-out infinite;
+  animation: weird-flicker 3s ease-in-out infinite, weird-shadow-crawl 6s linear infinite;
+  font-family: 'Comic Sans MS', 'Chalkboard SE', cursive !important;
+  letter-spacing: 8px;
+  word-spacing: 6px;
 }
 
 /* ========================
@@ -2069,6 +2144,126 @@ body.theme-tropical {
   opacity: 0.8;
   letter-spacing: 6px;
   text-shadow: 0 0 20px rgba(78, 205, 196, 0.2);
+}
+
+/* ========================
+   CAMPFIRE THEME
+   Warm, earthy, nature-inspired.
+   Like organizing your games by a crackling fire.
+   ======================== */
+
+.theme-campfire {
+  --color-bg-primary: #1a2a2f !important;
+  --color-bg-card: #233D4D !important;
+  --color-bg-elevated: #2c4a5a !important;
+  --color-border-subtle: rgba(252, 202, 70, 0.12) !important;
+  --color-border-active: rgba(254, 127, 45, 0.5) !important;
+  --color-text-primary: #F0E8D8 !important;
+  --color-text-secondary: #D4C9B4 !important;
+  --color-text-muted: #A89880 !important;
+  --color-text-dim: #7A6E5A !important;
+  --color-text-faint: #5A5040 !important;
+  --color-accent-purple: #FE7F2D !important;
+  --color-accent-pink: #FCCA46 !important;
+}
+
+.theme-campfire body,
+body.theme-campfire {
+  background-color: #1a2a2f !important;
+}
+
+/* Campfire: status colors — nature-inspired */
+.theme-campfire {
+  --color-status-buried: #7A6E5A !important;
+  --color-status-buried-bg: rgba(122, 110, 90, 0.08) !important;
+  --color-status-on-deck: #FCCA46 !important;
+  --color-status-on-deck-bg: rgba(252, 202, 70, 0.12) !important;
+  --color-status-playing: #FE7F2D !important;
+  --color-status-playing-bg: rgba(254, 127, 45, 0.12) !important;
+  --color-status-played: #A1C181 !important;
+  --color-status-played-bg: rgba(161, 193, 129, 0.12) !important;
+  --color-status-bailed: #619B8A !important;
+  --color-status-bailed-bg: rgba(97, 155, 138, 0.10) !important;
+}
+
+/* Campfire: cards — deep forest with warm glow */
+.theme-campfire [class*="bg-bg-card"],
+.theme-campfire [style*="background-color: var(--color-bg-card)"] {
+  background-color: #233D4D !important;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3), 0 0 1px rgba(254, 127, 45, 0.08) !important;
+  border-color: rgba(252, 202, 70, 0.08) !important;
+}
+
+/* Campfire: hero CTA — warm orange to saffron gradient */
+.theme-campfire button[style*="linear-gradient"] {
+  background: linear-gradient(135deg, #FE7F2D 0%, #FCCA46 100%) !important;
+  color: #1a2a2f !important;
+  font-weight: 700 !important;
+}
+
+.theme-campfire button[style*="linear-gradient"]:hover {
+  background: linear-gradient(135deg, #FF9244 0%, #FDD660 100%) !important;
+}
+
+/* Campfire: shortcut/mode buttons */
+.theme-campfire .shrink-0[style*="linear-gradient"] {
+  background: linear-gradient(135deg, #FE7F2D, #A1C181) !important;
+  color: #1a2a2f !important;
+}
+
+/* Campfire: tab active state */
+.theme-campfire nav button[aria-selected="true"] {
+  color: #FE7F2D !important;
+  border-color: #FE7F2D !important;
+}
+
+/* Campfire: inputs */
+.theme-campfire input,
+.theme-campfire select,
+.theme-campfire textarea {
+  background-color: #1a2a2f !important;
+  border-color: rgba(252, 202, 70, 0.18) !important;
+  color: #F0E8D8 !important;
+}
+
+.theme-campfire input:focus,
+.theme-campfire select:focus,
+.theme-campfire textarea:focus {
+  border-color: #FE7F2D !important;
+  box-shadow: 0 0 0 2px rgba(254, 127, 45, 0.15) !important;
+}
+
+.theme-campfire input::placeholder {
+  color: #5A5040 !important;
+}
+
+/* Campfire: links — warm orange with saffron hover */
+.theme-campfire a {
+  color: #FE7F2D !important;
+}
+.theme-campfire a:hover {
+  color: #FCCA46 !important;
+}
+
+/* Campfire: scrollbar */
+.theme-campfire ::-webkit-scrollbar-thumb {
+  background-color: rgba(254, 127, 45, 0.25) !important;
+}
+.theme-campfire ::-webkit-scrollbar-track {
+  background-color: #1a2a2f !important;
+}
+
+/* Campfire: progress bars */
+.theme-campfire [role="progressbar"] div {
+  background-color: #FE7F2D !important;
+}
+
+/* Campfire: banner — warm glow */
+.theme-campfire .default-banner-text {
+  color: #FE7F2D !important;
+  opacity: 0.8;
+  letter-spacing: 6px;
+  text-shadow: 0 0 20px rgba(254, 127, 45, 0.2);
 }
 
 @media (prefers-reduced-motion: reduce) {

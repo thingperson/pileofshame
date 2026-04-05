@@ -311,7 +311,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [notesSaved, setNotesSaved] = useState(false);
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
-  const { cycleStatus, getNextStatus, setBailed, unBail, shelveGame, playAgain, newGamePlus, updateGame, deleteGame, showCelebration } = useStore();
+  const { cycleStatus, getNextStatus, setBailed, unBail, shelveGame, playAgain, newGamePlus, updateGame, deleteGame, showCelebration, toggleIgnore } = useStore();
   const { showToast } = useToast();
   const categories = useStore((s) => s.categories);
 
@@ -512,7 +512,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
             onTouchStart={handleLongPressStart}
             onTouchEnd={handleLongPressEnd}
             className={`
-              relative flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium
+              relative flex items-center gap-1.5 px-2.5 py-2 sm:py-1.5 rounded-lg text-xs font-medium
               font-[family-name:var(--font-mono)] transition-all duration-150
               ${game.status !== 'played' && game.status !== 'bailed'
                 ? 'hover:brightness-125 active:scale-95 cursor-pointer ring-1 ring-white/10 hover:ring-white/25'
@@ -558,13 +558,14 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
         </div>
 
         {/* Game Name */}
-        <span className="flex-1 text-base font-semibold text-text-primary truncate">
+        <span className="flex-1 text-[15px] sm:text-base font-semibold text-text-primary truncate">
           {upNextIndex && (
             <span className="text-accent-purple font-bold font-[family-name:var(--font-mono)] mr-1.5 text-sm">
               {upNextIndex}.
             </span>
           )}
           {game.isWishlisted && <span className="text-yellow-400 mr-1" title="Wishlisted" aria-label="Wishlisted" role="img">⭐</span>}
+          {game.ignored && <span className="text-text-faint mr-1" title="Ignored from recommendations" aria-label="Ignored">🚫</span>}
           {game.name}
         </span>
 
@@ -617,18 +618,18 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
 
       {/* Bail Confirmation — inline strip */}
       {showBailConfirm && !expanded && (
-        <div className="px-3.5 py-2 border-t flex items-center gap-2" style={{ borderColor: 'var(--color-border-subtle)' }}>
+        <div className="px-3.5 py-2.5 border-t flex items-center gap-2" style={{ borderColor: 'var(--color-border-subtle)' }}>
           <span className="text-xs text-text-muted">Drawing the line?</span>
           <button
             onClick={handleBail}
-            className="px-2 py-0.5 text-xs rounded-md font-medium"
+            className="px-3 py-1.5 text-xs rounded-md font-medium"
             style={{ backgroundColor: STATUS_CONFIG.bailed.bg, color: STATUS_CONFIG.bailed.color }}
           >
             ✊ Done
           </button>
           <button
             onClick={() => setShowBailConfirm(false)}
-            className="px-2 py-0.5 text-xs rounded-md text-text-dim hover:text-text-muted"
+            className="px-3 py-1.5 text-xs rounded-md text-text-dim hover:text-text-muted"
           >
             Maybe later
           </button>
@@ -637,11 +638,11 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
 
       {/* Progression Arrows — always visible when provided */}
       {(progressAction || regressAction) && !expanded && !showBailConfirm && (
-        <div className="flex items-center gap-1.5 px-3.5 pb-2 -mt-0.5">
+        <div className="flex items-center gap-1.5 px-3.5 pb-2.5 -mt-0.5">
           {regressAction && (
             <button
               onClick={(e) => { e.stopPropagation(); regressAction.onClick(); }}
-              className="px-2 py-1 text-[10px] font-medium font-[family-name:var(--font-mono)] rounded-md text-text-dim hover:text-text-muted hover:bg-white/5 transition-all"
+              className="px-3 py-2 text-xs sm:text-[10px] font-medium font-[family-name:var(--font-mono)] rounded-md text-text-dim hover:text-text-muted hover:bg-white/5 transition-all"
             >
               {regressAction.label}
             </button>
@@ -649,7 +650,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
           {progressAction && (
             <button
               onClick={(e) => { e.stopPropagation(); progressAction.onClick(); }}
-              className="px-2.5 py-1 text-[10px] font-semibold font-[family-name:var(--font-mono)] rounded-md transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="px-3 py-2 text-xs sm:text-[10px] font-semibold font-[family-name:var(--font-mono)] rounded-md transition-all hover:scale-[1.02] active:scale-[0.98]"
               style={{
                 backgroundColor: 'rgba(167, 139, 250, 0.12)',
                 color: '#a78bfa',
@@ -969,6 +970,26 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                 </button>
               </div>
             )}
+
+            {/* Ignore toggle */}
+            <button
+              onClick={() => {
+                toggleIgnore(game.id);
+                showToast(game.ignored
+                  ? `${game.name} is back in rotation.`
+                  : `${game.name} hidden from recommendations.`
+                );
+              }}
+              className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97]"
+              style={{
+                backgroundColor: game.ignored ? 'rgba(167, 139, 250, 0.1)' : 'rgba(255, 255, 255, 0.04)',
+                color: game.ignored ? '#a78bfa' : 'var(--color-text-faint)',
+                border: game.ignored ? '1px solid rgba(167, 139, 250, 0.25)' : '1px solid transparent',
+              }}
+              title={game.ignored ? 'Show in recommendations again' : 'Hide from recommendations'}
+            >
+              {game.ignored ? '👁 Un-ignore' : '🚫 Ignore'}
+            </button>
 
             {/* Delete — pushed to the right */}
             <div className="flex-1" />

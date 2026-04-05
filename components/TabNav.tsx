@@ -70,7 +70,7 @@ export default function TabNav({ activeTab, onTabChange, counts }: TabNavProps) 
             tabIndex={active ? 0 : -1}
             onClick={() => onTabChange(tab.id)}
             onKeyDown={(e) => handleKeyDown(e, index)}
-            className={`shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple ${
+            className={`shrink-0 flex items-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-lg text-sm font-medium transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple ${
               active
                 ? 'text-text-primary'
                 : 'text-text-dim hover:text-text-muted hover:bg-white/5'
