@@ -419,6 +419,12 @@ function AppContent() {
             >
               + Add
             </button>
+            <a
+              href="/stats"
+              className="px-2.5 py-2 text-[11px] sm:text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+            >
+              📊 Stats
+            </a>
             <AuthButton />
             <SettingsMenu />
           </div>
@@ -712,12 +718,6 @@ function AppContent() {
         <div className="flex items-center justify-between mt-4 mb-2">
           <ViewToggle />
           <div className="flex items-center gap-3">
-            <a
-              href="/stats"
-              className="text-[11px] text-text-faint hover:text-accent-purple transition-colors font-[family-name:var(--font-mono)]"
-            >
-              📊 My Stats
-            </a>
             <button
               onClick={() => setHelpOpen(true)}
               className="text-[11px] text-text-faint hover:text-text-muted transition-colors font-[family-name:var(--font-mono)]"
