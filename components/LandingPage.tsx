@@ -92,12 +92,22 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
             transform: visible ? 'translateY(0)' : 'translateY(24px)',
           }}
         >
+          {/* Hero illustration */}
+          <div className="mb-6 flex justify-center">
+            <img
+              src="/inventoryfull-logomark.png"
+              alt="Inventory Full — hand holding a controller emerging from a pile of games"
+              className="w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44 object-contain drop-shadow-lg"
+              style={{ filter: 'drop-shadow(0 0 24px color-mix(in srgb, var(--color-accent-purple) 20%, transparent))' }}
+            />
+          </div>
+
           {/* Brand mark */}
           <p
             className="text-xs sm:text-sm font-[family-name:var(--font-mono)] tracking-[0.3em] uppercase mb-8"
             style={{ color: 'var(--color-text-faint)' }}
           >
-            🎒 Inventory Full
+            Inventory Full
           </p>
 
           <h1

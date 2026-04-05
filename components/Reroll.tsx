@@ -214,7 +214,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
         role="dialog"
         aria-modal="true"
         aria-label="What Should I Play"
-        className="relative w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl border overflow-hidden max-h-[95vh] sm:max-h-[85vh] overflow-y-auto"
+        className="relative w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl border overflow-hidden flex flex-col max-h-[85dvh] sm:max-h-[85vh]"
         style={{
           backgroundColor: 'var(--color-bg-elevated)',
           borderColor: 'var(--color-border-active)',
@@ -303,7 +303,8 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
 
         {/* Current Pick */}
         {currentPick && !showForced && (
-          <div className={`px-5 pb-5 transition-all duration-500 ${revealed ? 'opacity-100' : 'opacity-0'}`}>
+          <div className={`flex flex-col min-h-0 flex-1 transition-all duration-500 ${revealed ? 'opacity-100' : 'opacity-0'}`}>
+          <div className="px-5 overflow-y-auto min-h-0 flex-1">
             {/* Mode switcher pills */}
             <div className="flex flex-wrap justify-center gap-1.5 mb-2">
               {REROLL_MODES.map(({ mode: m, icon, label }) => (
@@ -427,8 +428,9 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
               </div>
             </div>
 
-            {/* Action buttons */}
-            <div className="flex gap-2">
+            </div>
+            {/* Action buttons — pinned to bottom */}
+            <div className="flex gap-2 px-5 py-4 shrink-0 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)', backgroundColor: 'var(--color-bg-elevated)' }}>
               <button
                 onClick={handleNotNow}
                 className="flex-1 px-3 py-3.5 sm:py-2.5 text-sm font-medium text-text-dim rounded-xl border border-border-subtle hover:text-text-muted transition-colors"
