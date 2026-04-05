@@ -1865,23 +1865,23 @@ body.theme-cozy {
    ======================== */
 
 .theme-minimal {
-  --color-bg-primary: #2B2D42 !important;
-  --color-bg-card: #2B2D42 !important;
-  --color-bg-elevated: #33354A !important;
-  --color-border-subtle: rgba(141, 153, 174, 0.12) !important;
-  --color-border-active: rgba(141, 153, 174, 0.25) !important;
-  --color-text-primary: #EDF2F4 !important;
-  --color-text-secondary: #C8CDD4 !important;
-  --color-text-muted: #8D99AE !important;
-  --color-text-dim: #6B7790 !important;
-  --color-text-faint: #525E72 !important;
+  --color-bg-primary: #1a1a1c !important;
+  --color-bg-card: #1a1a1c !important;
+  --color-bg-elevated: #222224 !important;
+  --color-border-subtle: rgba(255, 255, 255, 0.06) !important;
+  --color-border-active: rgba(239, 35, 60, 0.3) !important;
+  --color-text-primary: #e8e8e8 !important;
+  --color-text-secondary: #a0a0a0 !important;
+  --color-text-muted: #707070 !important;
+  --color-text-dim: #555555 !important;
+  --color-text-faint: #404040 !important;
   --color-accent-purple: #EF233C !important;
   --color-accent-pink: #D90429 !important;
 }
 
 .theme-minimal body,
 body.theme-minimal {
-  background-color: #2B2D42 !important;
+  background-color: #1a1a1c !important;
 }
 
 /* Minimal: one font, one weight */
