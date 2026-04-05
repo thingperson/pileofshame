@@ -1677,6 +1677,16 @@ button:active:not(:disabled) {
   padding: 14px 16px 10px;
   letter-spacing: 4px;
   font-family: var(--font-mono);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.default-banner-logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  opacity: 0.6;
 }
 
 .default-banner-text {

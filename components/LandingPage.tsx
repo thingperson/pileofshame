@@ -108,7 +108,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
             <img
               src="/inventoryfull-logomark.png"
               alt="Inventory Full logomark"
-              className="w-20 h-20 sm:w-24 sm:h-24 object-contain"
+              className="w-28 h-28 sm:w-36 sm:h-36 object-contain"
               style={{ filter: 'drop-shadow(0 0 16px color-mix(in srgb, var(--color-accent-purple) 25%, transparent))' }}
             />
             <span
