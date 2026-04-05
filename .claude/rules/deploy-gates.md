@@ -19,14 +19,23 @@ Run the voice sweep from the deploy skill. Grep changed files for banned pattern
 
 This is non-negotiable. The user has explicitly requested this runs on every deploy with new copy.
 
-### 3. Product axiom check (if features were added or modified)
+### 3. Legal compliance check (if features touch user data, deals, profiling, or notifications)
+Review against `.claude/rules/legal-compliance.md`. Key questions:
+- Does this feature push content the user didn't request? → needs consent
+- Does behavioral data drive a purchase or commercial action? → needs disclosure
+- Is any new user data being collected, stored, or sent to a third party? → update Privacy Policy first
+- Could a third party benefit from our knowledge of a specific user? → hard no
+
+If any grey area trigger fires, resolve it before pushing. Policy updates must ship WITH or BEFORE the feature, never after.
+
+### 4. Product axiom check (if features were added or modified)
 Ask: "Does this change help someone get from 'I want to play something' to actually playing in under 60 seconds?"
 
 Check against the core loop: **Import → Tell us your mood → We find your game → Play → Celebrate**
 
 If a change adds complexity, cognitive load, or time-in-app without serving the core loop, flag it.
 
-### 4. For large changes (multiple features, end of sprint)
+### 5. For large changes (multiple features, end of sprint)
 Run the full `/pre-push-review` skill which bundles all of the above plus accessibility, code efficiency, and policy compliance checks.
 
 ## Why this exists
