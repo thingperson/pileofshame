@@ -103,20 +103,14 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
             transform: visible ? 'translateY(0)' : 'translateY(24px)',
           }}
         >
-          {/* Brand mark + title inline */}
-          <div className="mb-4 flex items-center justify-center gap-3">
+          {/* Hero illustration */}
+          <div className="mb-6 flex justify-center">
             <img
-              src="/inventoryfull-logomark.png"
-              alt="Inventory Full logomark"
-              className="w-28 h-28 sm:w-36 sm:h-36 object-contain"
-              style={{ filter: 'drop-shadow(0 0 16px color-mix(in srgb, var(--color-accent-purple) 25%, transparent))' }}
+              src="/inventoryfull-hero.png"
+              alt="A hand rising from a pile of games, holding a controller"
+              className="w-56 h-auto sm:w-72 md:w-80 object-contain"
+              style={{ filter: 'drop-shadow(0 0 24px color-mix(in srgb, var(--color-accent-purple) 30%, transparent))' }}
             />
-            <span
-              className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight"
-              style={{ color: 'var(--color-text-primary)' }}
-            >
-              Inventory Full
-            </span>
           </div>
 
           <h1
