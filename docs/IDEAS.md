@@ -180,6 +180,12 @@ Source image `if-icon.png` has massive internal padding. PWA icons (192px, 512px
 
 **Note:** For a permanent fix, the source `if-icon.png` should be re-exported from DALL-E or edited to fill the full 1024x1024 frame without padding. Current fix crops the existing image.
 
+### 5. Just 5 Minutes card crammed into button row ✅ FIXED
+Game suggestion card was rendering inline inside the horizontal scroll mode button row, causing it to appear crammed/overlapping. Card now renders as a bottom-sheet overlay (matching the Reroll modal pattern) while the button stays in the row.
+
+### 6. Reroll suggesting same game repeatedly ✅ FIXED
+PowerWash Simulator appeared 6/20 rolls because the engine only applied a 0.2x weight penalty to skipped games but didn't track or exclude previously shown games. Now tracks all shown games per session and excludes them from future picks. When the entire eligible pool has been shown, displays "You've seen all X games in this category." Shown tracking resets on mode switch and session start.
+
 ---
 
 ## Raw Rambles (unsorted, dump here)

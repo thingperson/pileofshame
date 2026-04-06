@@ -67,6 +67,8 @@
 - Theme picker now closes settings menu on selection ✅
 - Sample banner "Clear" → "Dismiss" (no longer wipes library) ✅
 - iOS Home Screen icon cropped to fill frame (was tiny due to source padding) ✅
+- Just 5 Minutes card renders as bottom-sheet overlay (was crammed into button row) ✅
+- Reroll no-repeat: tracks shown games per session, prevents same game appearing twice ✅
 
 ### Themes
 - Dark (default) ✅
