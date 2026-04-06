@@ -18,7 +18,7 @@ export default function PrivacyPage() {
 
         <h1 className="text-3xl font-bold mb-2">Privacy Policy</h1>
         <p className="text-sm text-text-dim font-[family-name:var(--font-mono)] mb-8">
-          Last updated: April 4, 2026
+          Last updated: April 6, 2026
         </p>
 
         <div className="space-y-8 text-text-secondary text-[15px] leading-relaxed">
@@ -44,10 +44,27 @@ export default function PrivacyPage() {
                 </p>
               </div>
               <div>
+                <h3 className="text-sm font-semibold text-text-primary mb-1">Behavioral and preference data</h3>
+                <p>
+                  To improve your recommendations over time, the app tracks how you interact with its
+                  suggestion engine. This includes which games you skip when asked &ldquo;What Should I Play?&rdquo;,
+                  how you respond to nudges, and your dismissal preferences. This data is currently stored
+                  in your browser&apos;s localStorage and never leaves your device.
+                </p>
+                <p className="mt-2">
+                  If you create an account, this behavioral data may be synced to our servers via Supabase
+                  to preserve your preferences across devices. This data is used solely to personalize your
+                  experience within the app. It is never shared with third parties, used for advertising,
+                  or made available to publishers, advertisers, or any external party.
+                </p>
+              </div>
+              <div>
                 <h3 className="text-sm font-semibold text-text-primary mb-1">If you create an account (cloud sync)</h3>
                 <p>
-                  We store your email address and your synced game library data via Supabase (our
-                  authentication and database provider). This enables cloud sync across devices.
+                  We store your email address, your synced game library data, and your recommendation
+                  preferences via Supabase (our authentication and database provider). This enables
+                  cloud sync across devices. Your behavioral data (skip history, nudge preferences,
+                  player archetype) may also be synced to provide a consistent experience.
                   Supabase&apos;s privacy practices are governed by their own{' '}
                   <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" className="text-accent-purple hover:underline">
                     privacy policy
@@ -95,6 +112,9 @@ export default function PrivacyPage() {
               <li><strong>IsThereAnyDeal API</strong>: current game prices and deals across stores</li>
               <li><strong>HowLongToBeat</strong>: estimated completion times</li>
               <li><strong>Steam Web API</strong>: game library, playtime, achievements (when importing)</li>
+              <li><strong>OpenXBL API</strong>: Xbox game library and achievements (when importing)</li>
+              <li><strong>PlayStation Store API</strong>: PS Plus catalog browsing (game names only, no user data sent)</li>
+              <li><strong>Xbox Game Pass catalog</strong>: Game Pass catalog browsing (game names only, no user data sent)</li>
               <li><strong>Supabase</strong>: authentication and cloud sync (when signed in)</li>
             </ul>
           </section>
@@ -133,12 +153,15 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-bold text-text-primary mb-3">Data storage and retention</h2>
             <p>
-              Without an account: your data lives in your browser only. You control it entirely.
-              Clear your browser data and it&apos;s gone.
+              Without an account: your data lives in your browser only. This includes your game
+              library, settings, recommendation preferences, skip history, nudge dismissals, and
+              player archetype. You control it entirely. Clear your browser data and it&apos;s gone.
             </p>
             <p className="mt-2">
-              With an account: your synced library data is stored in Supabase&apos;s infrastructure.
-              You can delete your account and all associated data at any time by contacting us.
+              With an account: your synced library data and behavioral preferences are stored in
+              Supabase&apos;s infrastructure. You can delete your account and all associated
+              data at any time by contacting us. Deletion includes all behavioral data, not just
+              your game library.
             </p>
           </section>
 
@@ -168,15 +191,18 @@ export default function PrivacyPage() {
             <h2 className="text-lg font-bold text-text-primary mb-3">Personalized recommendations and profiling</h2>
             <p>
               Our &ldquo;What Should I Play?&rdquo; feature uses algorithmic matching based on your
-              selected mood, available time, and game metadata to suggest games from your own library.
-              No AI models are used. No personal data is sent to external AI services. The matching
-              happens entirely in your browser.
+              selected mood, available time, game metadata, and your history of past recommendations
+              to suggest games from your own library. The engine learns from your skips and choices
+              to make better suggestions over time. No AI models are used. No personal data is sent
+              to external AI services. The matching happens entirely in your browser.
             </p>
             <p className="mt-2">
-              We also analyze your library data (games owned, completion status, play hours, genres)
-              to generate a &ldquo;Player Archetype&rdquo; profile and personalized stats. This profiling
-              is used solely to enhance your experience within the app. It runs in your browser and is
-              never shared with third parties.
+              We also analyze your library data (games owned, completion status, play hours, genres,
+              skip patterns, nudge responses) to generate a &ldquo;Player Archetype&rdquo; profile,
+              personalized stats, and contextual nudges (such as &ldquo;Did you finish this?&rdquo;
+              or &ldquo;Pick up where you left off&rdquo;). This profiling is used solely to enhance
+              your experience within the app. It runs in your browser and is never shared with
+              third parties.
             </p>
             <p className="mt-2">
               When game deals are displayed, they are based on games already in your library or wishlist.

@@ -18,7 +18,7 @@ export default function TermsPage() {
 
         <h1 className="text-3xl font-bold mb-2">Terms of Service</h1>
         <p className="text-sm text-text-dim font-[family-name:var(--font-mono)] mb-8">
-          Last updated: April 4, 2026
+          Last updated: April 6, 2026
         </p>
 
         <div className="space-y-8 text-text-secondary text-[15px] leading-relaxed">
@@ -78,7 +78,18 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">5. Affiliate links</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">5. Subscription catalog browsing</h2>
+            <p>
+              Inventory Full may offer the ability to browse game catalogs from subscription
+              services (such as Xbox Game Pass and PlayStation Plus). Catalog availability is
+              sourced from those platforms and may not always be current. We are not affiliated
+              with Microsoft, Sony, or any game publisher. The availability of specific games
+              on any subscription service is determined solely by those services.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold text-text-primary mb-3">6. Affiliate links</h2>
             <p>
               Some game deal links may include affiliate parameters. If you purchase through these
               links, we may earn a small commission. We always show the actual price. We never
@@ -87,7 +98,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">6. Acceptable use</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">7. Acceptable use</h2>
             <p>Don&apos;t:</p>
             <ul className="list-disc list-inside space-y-1.5 text-text-muted mt-2">
               <li>Abuse the API endpoints (rate limiting is in place)</li>
@@ -101,7 +112,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">7. Availability and changes</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">8. Availability and changes</h2>
             <p>
               We aim to keep the app running and improving, but we can&apos;t guarantee 100% uptime.
               Features may change, be added, or be removed. We&apos;ll try to communicate significant
@@ -110,22 +121,24 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">8. Personalized recommendations</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">9. Personalized recommendations</h2>
             <p>
               Inventory Full provides personalized game recommendations based on your library data,
-              selected mood, and available time. These recommendations are generated algorithmically
-              from your own data and are not influenced by third-party advertisers or publishers.
-              No one pays us to recommend specific games to you.
+              selected mood, available time, and your history with the recommendation engine. The app
+              learns from your choices over time (which games you skip, which you commit to, which
+              you finish) to make better suggestions. These recommendations are generated
+              algorithmically from your own data and are not influenced by third-party advertisers
+              or publishers. No one pays us to recommend specific games to you.
             </p>
             <p className="mt-2">
-              Player Archetypes, stats, and behavioral profiles are generated for your entertainment
-              and personal insight. They are not used for advertising, credit decisions, employment
-              screening, or any purpose outside of your experience in this app.
+              Player Archetypes, stats, behavioral profiles, and contextual nudges are generated for
+              your entertainment and personal insight. They are not used for advertising, credit
+              decisions, employment screening, or any purpose outside of your experience in this app.
             </p>
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">9. Limitation of liability</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">10. Limitation of liability</h2>
             <p>
               Inventory Full is provided &ldquo;as is&rdquo; without warranties of any kind. We&apos;re
               not liable for any data loss (always use the Export Backup feature), inaccurate game
@@ -138,7 +151,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">10. Age requirement</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">11. Age requirement</h2>
             <p>
               Inventory Full is intended for users aged 13 and older. If you are under 13, please
               do not use this service or provide any personal information. We do not knowingly
@@ -148,7 +161,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">11. Data deletion</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">12. Data deletion</h2>
             <p>
               You have the right to request complete deletion of your account and all associated
               data at any time. Email{' '}
@@ -161,7 +174,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">12. Intellectual property</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">13. Intellectual property</h2>
             <p>
               The Inventory Full app, its design, code, and original content are our intellectual
               property. The themes, UI patterns, and brand identity are part of what makes this
@@ -170,7 +183,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">13. Changes to these terms</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">14. Changes to these terms</h2>
             <p>
               We may update these terms occasionally. The date at the top will reflect the latest
               revision. Continued use of the app after changes constitutes acceptance.
