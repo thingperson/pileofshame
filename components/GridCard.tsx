@@ -8,6 +8,26 @@ import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
 import { useToast } from './Toast';
 import GameDetailModal from './GameDetailModal';
 
+function CoverImage({ src, alt }: { src: string; alt: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return (
+      <div className="w-full h-full flex items-center justify-center text-text-faint text-2xl">
+        🎮
+      </div>
+    );
+  }
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className="w-full h-full object-cover transition-all duration-200 group-hover:brightness-110"
+      loading="lazy"
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 interface GridCardProps {
   game: Game;
 }
@@ -22,6 +42,11 @@ export default function GridCard({ game }: GridCardProps) {
   const statusConfig = STATUS_CONFIG[game.status];
   const nextStatus = getNextStatus(game.status);
   const tierConfig = TIME_TIER_CONFIG[game.timeTier];
+
+  // HLTB progress inference
+  const hasProgress = game.hoursPlayed > 0 && game.hltbMain && game.hltbMain > 0;
+  const progressPct = hasProgress ? Math.min(Math.round((game.hoursPlayed / game.hltbMain!) * 100), 100) : null;
+  const remainingHours = hasProgress ? Math.max(game.hltbMain! - game.hoursPlayed, 0) : null;
 
   // Achievement progress
   const hasAchievements = game.achievements && game.achievements.total > 0;
@@ -69,12 +94,7 @@ export default function GridCard({ game }: GridCardProps) {
         {/* Cover Art — 16:9 landscape to match Steam header images (460x215 ≈ 2.14:1) */}
         <div className="aspect-video relative bg-bg-primary overflow-hidden">
           {game.coverUrl ? (
-            <img
-              src={game.coverUrl}
-              alt={game.name}
-              className="w-full h-full object-cover transition-all duration-200 group-hover:brightness-110"
-              loading="lazy"
-            />
+            <CoverImage src={game.coverUrl} alt={game.name} />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-text-faint text-2xl">
               🎮
@@ -185,11 +205,23 @@ export default function GridCard({ game }: GridCardProps) {
             </div>
           )}
 
-          {/* Hours played + mood tags row */}
+          {/* Hours played + progress + mood tags row */}
           <div className="flex items-center gap-1.5 flex-wrap">
             {game.hoursPlayed > 0 && (
               <span className="text-[11px] font-[family-name:var(--font-mono)] text-text-muted">
                 {game.hoursPlayed}h
+              </span>
+            )}
+            {remainingHours !== null && remainingHours > 0 && remainingHours <= 8 && (
+              <span
+                className="text-[10px] font-[family-name:var(--font-mono)] px-1 py-0 rounded"
+                style={{
+                  backgroundColor: progressPct! >= 85 ? 'rgba(34, 197, 94, 0.12)' : 'rgba(251, 191, 36, 0.12)',
+                  color: progressPct! >= 85 ? '#4ade80' : '#fbbf24',
+                }}
+                title={`~${progressPct}% through (${game.hoursPlayed}h / ${game.hltbMain}h)`}
+              >
+                {progressPct! >= 85 ? '🏁' : '⏳'} ~{Math.round(remainingHours)}h left
               </span>
             )}
             {game.moodTags && game.moodTags.slice(0, 2).map((mood) => {

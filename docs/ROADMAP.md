@@ -11,10 +11,12 @@
 - Weighted random selection (metacritic, enrichment, backlog age, hours played) ✅
 - Mood mode with 10 mood tag filters (AND logic) ✅
 - Skip memory (0.2x weight penalty for session-skipped games) ✅
-- Forced choice after 10 rolls ✅
+- Forced choice after 10 rolls (last 3 picks shown) ✅
 - "Why this game?" explainer with pick reasons ✅
 - Time-of-day awareness (evening boosts chill, late-night boosts quick-hit) ✅
 - Genre balance (penalizes same-genre picks in a row) ✅
+- "Ignore this title" toggle — ignored games excluded from reroll, 45% opacity in backlog ✅
+- Just 5 Minutes mode — ultra-short session picker for quick-hit games ✅
 
 ### Import Pipeline
 - Steam library import (API-based) ✅
@@ -36,7 +38,7 @@
 
 ### UI / UX
 - Tab navigation (Backlog, Up Next, Now Playing, Completed) with ARIA tabs ✅
-- List + grid view toggle ✅
+- List + grid view toggle (grid default for new users) ✅
 - Backlog sort picker (Best for You, A-Z, newest, oldest, playtime) ✅
 - Auto tab-switch when game status changes ✅
 - Completion celebration (confetti, affirmations) ✅
@@ -44,68 +46,118 @@
 - Progress nudges ("One more session might finish this") ✅
 - Post-import summary with breakdown ✅
 - Onboarding welcome state ✅
+- Sample library (40+ games for try-before-import onboarding) ✅
+- Landing page with hero illustration, mono brand banner, logomark ✅
+- Bold "Inventory Full" brand header with logomark ✅
+- Stats link promoted to header toolbar ✅
+- Milestone toasts (1/5/10/25/50 games cleared + decisions made) ✅
+- Behavioral archetypes — 20+ player personality types based on library composition ✅
+- Achievement showcase — Xbox/PSN achievement counts on game cards ✅
+- iOS Safari reroll fix (85dvh + sticky action buttons) ✅
+- Mobile UX pass (bottom-sheet reroll, tap targets, viewport fix) ✅
+- PDF feedback fixes (em dashes, card spacing, action button clarity, status label cleanup) ✅
+- "Move to Up Next" / "Back to Backlog" progression labels (was arrows) ✅
+- Hide redundant status badge when already on that tab ✅
+- Deep Cut description rewritten to "A game buried in your backlog you may have forgotten about" ✅
 
 ### Themes
 - Dark (default) ✅
 - Light ✅
 - 90s (full easter egg: marquee, cursor trails, guestbook, visitor counter) ✅
 - 80s (synthwave gradients) ✅
-- Future, Dino, Weird, Ultra, Void ✅
+- Future, Ultra, Void ✅
+- Dino: DALL-E illustrated mascot banner + landscape background ✅
+- Weird: Comic Sans, glitch effects, card rotation, chromatic aberration ✅
 - Cozy (warm golden cream, Nunito font, soft radius) ✅
-- Minimal (near-black, opacity text, dividers only) ✅
+- Minimal (near-black, opacity text, red-only accent, dividers only) ✅
+- Tropical (vibrant mint/coral/maize on deep teal) ✅
+- Campfire (deep forest charcoal, warm orange/saffron accents) ✅
+- 13 themes total across all palettes ✅
+- 12 per-theme DALL-E prompt files for future asset generation ✅
 
 ### Infrastructure
 - Supabase auth + cloud sync ✅
 - Google + GitHub OAuth ✅
 - OG image for Discord/Twitter unfurls ✅
 - GA4 analytics (reroll, commit, import events) ✅
-- PWA manifest ✅
+- PWA manifest + 192/512px icons + apple-icon fix ✅
+- Token efficiency restructure (plan file 94% reduction, path-scoped rules) ✅
 
 ---
 
 ## CURRENT SPRINT — April 2026
 
 ### Xbox Import + Game Pass (HIGH — Priority 1)
-- Bug: OpenXBL API key not configured → users see error on Xbox import
-- Sign up at xbl.io, add `OPENXBL_API_KEY` to `.env.local` + Vercel env vars
+- OpenXBL API key in `.env.local` ✅ — verify it's also in Vercel env vars
 - Test import flow against real Xbox account
 - Free tier: 150 req/hr, no credit card, covers all endpoints we need
-- **Game Pass catalog feature**: OpenXBL has Game Pass endpoints on free tier
-  - Import Game Pass catalog as browsable pool
-  - "I have Game Pass" mode: recommend from available catalog based on mood/time
-  - Hybrid: overlay Game Pass catalog with play history (what you've tried + what's available)
-  - Solves: "I have 400 free games and can't pick one" — stronger version of the core problem
+- **Game Pass Browse component built** — `components/GamePassBrowse.tsx` exists ✅
+- Still needed: verify Game Pass catalog endpoint works end-to-end
+- Still needed: PS+ catalog side of Sub Shuffle (Sony GraphQL API researched, `psn-api` already returns `membership: "PS_PLUS"` field)
 
-### Landing Page (HIGH — Priority 2)
+### Landing Page — SHIPPED ✅
+- Hero illustration + bold brand banner with logomark ✅
+- Mono banner, transparent hero, tighter spacing ✅
+- Shows for visitors with empty library, redirects to app when library exists ✅
 - Design doc: `docs/landing-page-plan.md`
-- Hero section with CTA
-- How-it-works breakdown (3 steps)
-- Before/after comparison
 - Key copy discovered in Discord conversation (Apr 4):
   - "Treat it like a condition that needs healing"
   - "We nudged you to play. If you don't like it, blame us."
   - "Celebrating bailing on a game — that's a decision. That's a win."
   - The identity pressure angle: it's not about what's good, it's what you *chose*
-- Show for visitors with empty library, redirect to app when library exists
+
+### Custom Icon Set (HIGH — Priority 2)
+- Colored icon brief finalized: `docs/dalle-prompts/14-icon-colored-final.md`
+- 29 icons total: status (5), mood tags (10), reroll modes (4), time tiers (5), nav (5 optional)
+- DALL-E generation in progress — status icons first (highest impact)
+- Drop PNGs into `public/icons/` → wire into components replacing emoji placeholders
+- Naming convention defined in brief
 
 ### Enrichment Reliability Audit (MEDIUM)
 - Name normalization shipped ✅
 - Result scoring shipped ✅
+- RAWG in-memory cache (1hr TTL, 500 entries) + Cache-Control headers ✅
+- Enrichment retry logic (1 retry with 2s delay on 429/5xx) ✅
+- Broken image fallback (onError → gamepad emoji) ✅
 - Still needed: test accuracy at scale with large libraries (200+ games)
-- Still needed: retry logic for failed enrichments
 - Still needed: verify edge cases (DLC names, remasters, numbered sequels)
+
+### "Best for You" Sort Upgrade — SHIPPED ✅
+- Added completion proximity scoring (HLTB progress inference: 85%+ = huge boost) ✅
+- Added backlog age signal (365d+ = forgotten gem boost) ✅
+- Tiered metacritic scoring (replaces flat linear scale) ✅
+- Rebalanced weights: genre 30, metacritic 20, completion 20, hours 15, age 10, enrichment 5 ✅
+
+### HLTB Progress Inference — PARTIALLY SHIPPED
+- "~Xh left" badge on GridCard + GameCard (shows when remaining ≤ 8h) ✅
+- Green 🏁 at 85%+ progress, amber ⏳ below that ✅
+- "Closest to Done" sort option in backlog picker ✅
+- Sub Shuffle button logos upgraded (GP / PS+ text badges, readable) ✅
+- Still planned: stalled game nudge card ("Pick up where you left off?")
+- Still planned: "Did you finish this?" prompt for 130%+ HLTB games
+- See: `docs/IDEAS.md` + `docs/behavioral-learning-framework.md` sections 2 + 4
 
 ### Accessibility Hardening (MEDIUM)
 - Cozy theme text-faint/dim contrast fixed ✅
 - Minimal theme opacity bumped ✅
 - Still needed: close button accessibility in Reroll modal
 
+### Skip Tracking (HIGH — Priority 3)
+- Locked in as next feature build
+- Tracks reroll skips, reduces weight after 3, soft-ignores after 5
+- First piece of the behavioral learning moat
+- See: `docs/behavioral-learning-framework.md`
+
+### Decision Engine V2 Refinements (MEDIUM)
+- Mood-first quick-pick flow
+- Genre balance tuning
+- Time-of-day awareness tuning
+
 ### Visual Identity Pass (MEDIUM)
+- Custom icon set replacing emojis (in progress — see Custom Icon Set above)
 - Extend geometric element system beyond landing page into main app (reroll modal, stats, empty states)
-- Explore custom illustrated mascot/icon (backpack with controller, consistent style)
 - Consider spot illustrations for key moments (import complete, first recommendation, completion)
 - One strong visual mark > 20 decorative elements — find the ONE thing
-- AI generation possible for spot illustrations if done tastefully (not hero art)
 - Must not clutter — personality without noise
 
 ### Infrastructure Prep (MEDIUM)
@@ -118,10 +170,11 @@
 ## NEXT SPRINT
 
 ### Decision Engine V3 (HIGH)
-- **"Ignore this title" / negative weighting** — if user bails, stop suggesting (from user feedback)
+- ~~"Ignore this title" / negative weighting~~ — **SHIPPED** (moved to Shipped section)
 - "Why not this?" skip feedback (optional 1-tap reason: too long, not in mood, played recently)
 - Energy matching (user picks energy level 1-5 before roll)
 - **Behavioral learning over time** — engine gets smarter about *this user* based on decisions
+- Stalled game detection — nudge games stuck at 2+ hours but under 85% completion
 - Post-recommendation nudge (after "Let's go": motivational push + launch link)
 - See: `docs/decision-engine-plan-2026-04-03.md` items 4-8
 
@@ -177,12 +230,12 @@
 
 | Review | Last Run | Status | Frequency |
 |--------|----------|--------|-----------|
-| Voice/AI lingo sweep | Apr 3, 2026 | Clean (6 minor fixes applied) | Every deploy with new copy |
+| Voice/AI lingo sweep | Apr 5, 2026 | Clean | Every deploy with new copy |
 | Accessibility audit | Apr 3, 2026 | 2 critical fixed, 3 major open | Monthly |
 | Feature creep audit | Apr 3, 2026 | Healthy with watchlist | Quarterly |
 | Mobile responsiveness | Apr 2, 2026 | Clean | Monthly |
-| Enrichment accuracy | Apr 3, 2026 | Normalization shipped, scale test pending | After next large import |
-| Legal/privacy compliance | Apr 4, 2026 | Clean — policies updated, no grey areas | Before any feature touching user data, deals, or profiling |
+| Enrichment accuracy | Apr 5, 2026 | Cache + retry shipped, scale test pending | After next large import |
+| Legal/privacy compliance | Apr 5, 2026 | Clean — no new user data, RAWG cache is public metadata only | Before any feature touching user data, deals, or profiling |
 
 ### Legal Guardrails (Locked, April 2026)
 
@@ -215,6 +268,7 @@ We do *personalized recommendations* (using a user's own data to help them), not
 
 ## KEY DOCS
 
+- `docs/IDEAS.md` — Running brainstorm dump (raw ideas, rambles, half-formed thoughts)
 - `docs/decision-engine-plan-2026-04-03.md` — Decision engine feature specs
 - `docs/feature-creep-audit-2026-04-03.md` — Scope audit results
 - `docs/landing-page-plan.md` — Landing page design
@@ -230,4 +284,5 @@ We do *personalized recommendations* (using a user's own data to help them), not
 
 | Date | Source | User | Key Feedback | Status |
 |------|--------|------|-------------|--------|
-| Apr 4, 2026 | Discord | Nate (ex-Xbox) | Xbox import broken (no API key), wants "ignore title" + behavioral learning | Xbox fix queued as Priority 1, features roadmapped |
+| Apr 4, 2026 | Discord | Nate (ex-Xbox) | Xbox import broken (no API key), wants "ignore title" + behavioral learning | API key added ✅, ignore title shipped ✅, behavioral learning roadmapped |
+| Apr 5, 2026 | PDF | Brady | 12 issues: em dashes, card spacing, action clarity, hero too big, below fold, Deep Cut label, broken images | Most fixed ✅, Sub Shuffle PS+ and platform logos still pending |

@@ -2,8 +2,12 @@ import { Game } from './types';
 
 /**
  * "Best for You" sort algorithm.
- * Scores each game based on genre affinity, metacritic, playtime signals, and enrichment quality.
+ * Scores each game based on genre affinity, metacritic, playtime signals,
+ * enrichment quality, completion proximity, and backlog age.
  * Returns games sorted highest-score-first.
+ *
+ * This should feel like the decision engine's "if we had to rank your whole
+ * library right now, here's what deserves your attention most."
  */
 
 interface GenreDistribution {
@@ -33,45 +37,92 @@ export function getGenreDistribution(games: Game[]): GenreDistribution {
 
 /**
  * Score a game for "Best for You" sorting.
- * Higher score = more likely the user would enjoy this.
+ * Higher score = more likely the user should play this next.
+ *
+ * Scoring breakdown (max ~100 points):
+ *   Genre affinity:         0-30  (what do they gravitate toward?)
+ *   Metacritic:             0-20  (is this actually good?)
+ *   Completion proximity:   0-20  (are they close to finishing?)
+ *   Hours played signal:    0-15  (have they started and stopped?)
+ *   Backlog age:            0-10  (has this been buried forever?)
+ *   Enrichment quality:     0-5   (do we know enough to recommend it?)
  */
 export function scoreGame(game: Game, genreDist: GenreDistribution): number {
   let score = 0;
 
-  // Genre affinity (0.4 weight) — how over-indexed is the user on this game's genres?
+  // ── Genre affinity (0-30) ──
+  // How over-indexed is the user on this game's genres?
   if (game.genres && game.genres.length > 0 && genreDist.total > 0) {
     const uniqueGenres = Object.keys(genreDist.counts).length || 1;
-    const expectedShare = 1 / uniqueGenres; // flat distribution baseline
+    const expectedShare = 1 / uniqueGenres;
 
     let affinitySum = 0;
     for (const genre of game.genres) {
       const actualShare = (genreDist.counts[genre] || 0) / genreDist.total;
-      // How much more (or less) of this genre vs expected
       affinitySum += actualShare / expectedShare;
     }
-    // Normalize by number of genres on this game
     const affinityScore = affinitySum / game.genres.length;
-    score += affinityScore * 40; // Scale to ~0-40 range
+    score += Math.min(affinityScore * 30, 30);
   }
 
-  // Metacritic (0.3 weight) — normalized 0-30
+  // ── Metacritic (0-20) ──
+  // Tiered, not linear. Great games deserve a real boost.
   if (game.metacritic) {
-    score += (game.metacritic / 100) * 30;
+    if (game.metacritic >= 90) score += 20;
+    else if (game.metacritic >= 80) score += 16;
+    else if (game.metacritic >= 75) score += 12;
+    else if (game.metacritic >= 60) score += 6;
+    // Below 60: no boost. Not punishing, just not prioritizing.
   }
 
-  // Hours signal (0.2 weight)
+  // ── Completion proximity (0-20) ──
+  // The closer you are to finishing, the higher you should be.
+  // This is the HLTB inference — if they're 15h into a 20h game, surface it.
+  if (game.hoursPlayed > 0 && game.hltbMain && game.hltbMain > 0) {
+    const progress = game.hoursPlayed / game.hltbMain;
+    const remainingHours = game.hltbMain - game.hoursPlayed;
+
+    if (progress >= 0.85) {
+      // Almost done — huge boost. "You're right there."
+      score += 20;
+    } else if (progress >= 0.6) {
+      // Past the halfway point. Solid momentum.
+      score += 15;
+    } else if (progress >= 0.3) {
+      // Meaningful progress. They know the game.
+      score += 10;
+    } else if (remainingHours < 5 && game.hoursPlayed >= 1) {
+      // Short game, already started — quick win opportunity
+      score += 12;
+    }
+  }
+
+  // ── Hours played signal (0-15) ──
+  // Started but didn't finish = high reactivation potential
   if (game.hoursPlayed > 0 && game.hoursPlayed <= 20) {
-    // Started but not deep — they were interested, nudge them back
-    score += 20;
+    score += 15; // Started, worth nudging back
   } else if (game.hoursPlayed > 20 && game.hoursPlayed <= 50) {
-    score += 10; // Moderate play, still relevant
+    score += 8; // Moderate play, still relevant
   }
-  // 0 hours or 50+ hours: no boost (unstarted or comfort game)
+  // 0 hours: no boost (unstarted)
+  // 50+ hours: no boost (comfort game or already deep)
 
-  // Enrichment quality (0.1 weight) — better-enriched games make better recs
-  if (game.description) score += 4;
-  if (game.coverUrl) score += 3;
-  if (game.moodTags && game.moodTags.length > 0) score += 3;
+  // ── Backlog age (0-10) ──
+  // Games buried for over a year deserve to surface.
+  if (game.addedAt) {
+    const ageMs = Date.now() - new Date(game.addedAt).getTime();
+    const ageDays = ageMs / (1000 * 60 * 60 * 24);
+    if (ageDays > 365) score += 10;     // Over a year — forgotten gem territory
+    else if (ageDays > 180) score += 6; // 6+ months — starting to collect dust
+    else if (ageDays > 90) score += 3;  // 3+ months — mild nudge
+  }
+
+  // ── Enrichment quality (0-5) ──
+  // Better-enriched games make better recs. Slight tiebreaker.
+  if (game.description) score += 2;
+  if (game.coverUrl) score += 1;
+  if (game.moodTags && game.moodTags.length > 0) score += 1;
+  if (game.hltbMain) score += 1;
 
   return score;
 }

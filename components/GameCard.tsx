@@ -678,6 +678,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                 src={game.coverUrl}
                 alt=""
                 className="w-16 h-24 sm:w-20 sm:h-28 rounded-lg object-cover shrink-0 bg-bg-primary"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
               />
             )}
             <div className="flex-1 min-w-0 space-y-2">
@@ -686,6 +687,24 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                 {game.hoursPlayed > 0 && (
                   <span className="text-text-primary font-semibold">{game.hoursPlayed}h played</span>
                 )}
+                {game.hoursPlayed > 0 && game.hltbMain && game.hltbMain > 0 && (() => {
+                  const remaining = Math.max(game.hltbMain - game.hoursPlayed, 0);
+                  const pct = Math.min(Math.round((game.hoursPlayed / game.hltbMain) * 100), 100);
+                  if (remaining > 0 && remaining <= 8) {
+                    return (
+                      <span
+                        className="px-1.5 py-0.5 rounded text-xs font-medium"
+                        style={{
+                          backgroundColor: pct >= 85 ? 'rgba(34, 197, 94, 0.12)' : 'rgba(251, 191, 36, 0.12)',
+                          color: pct >= 85 ? '#4ade80' : '#fbbf24',
+                        }}
+                      >
+                        {pct >= 85 ? '🏁' : '⏳'} ~{Math.round(remaining)}h left
+                      </span>
+                    );
+                  }
+                  return null;
+                })()}
                 <span className="text-text-muted">{SOURCE_LABELS[game.source]}</span>
                 {game.metacritic && (
                   <span

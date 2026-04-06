@@ -1,6 +1,21 @@
 import { Game, MoodTag, TimeTier } from './types';
 import { inferMoodTags, inferTimeTier } from './enrichment';
 
+/**
+ * Fetch with a single retry on failure (rate limit or network error).
+ * Waits 2s before retry to let rate limits cool down.
+ */
+async function fetchWithRetry(url: string, retries = 1): Promise<Response> {
+  const res = await fetch(url);
+  if (res.ok || retries <= 0) return res;
+  // Rate limited (429) or server error (5xx) — wait and retry once
+  if (res.status === 429 || res.status >= 500) {
+    await new Promise((r) => setTimeout(r, 2000));
+    return fetch(url);
+  }
+  return res;
+}
+
 interface EnrichmentResult {
   coverUrl?: string;
   rawgSlug?: string;
@@ -78,7 +93,7 @@ export async function enrichGame(game: Game): Promise<EnrichmentResult | null> {
 
       if (game.rawgSlug) {
         // Fetch by slug (most accurate)
-        const res = await fetch(`/api/rawg?slug=${encodeURIComponent(game.rawgSlug)}`);
+        const res = await fetchWithRetry(`/api/rawg?slug=${encodeURIComponent(game.rawgSlug)}`);
         if (res.ok) {
           const data = await res.json();
           rawgData = data.game;
@@ -86,7 +101,7 @@ export async function enrichGame(game: Game): Promise<EnrichmentResult | null> {
       } else {
         // Search by normalized name for better matches
         const cleanName = normalizeGameName(game.name);
-        const res = await fetch(`/api/rawg?search=${encodeURIComponent(cleanName)}`);
+        const res = await fetchWithRetry(`/api/rawg?search=${encodeURIComponent(cleanName)}`);
         if (res.ok) {
           const data = await res.json();
           // Pick the best match by name similarity, not just the first result
@@ -123,7 +138,7 @@ export async function enrichGame(game: Game): Promise<EnrichmentResult | null> {
         // do a follow-up slug fetch for the full description
         if (!rawgData.description && rawgData.slug && !game.rawgSlug) {
           try {
-            const slugRes = await fetch(`/api/rawg?slug=${encodeURIComponent(rawgData.slug)}`);
+            const slugRes = await fetchWithRetry(`/api/rawg?slug=${encodeURIComponent(rawgData.slug)}`);
             if (slugRes.ok) {
               const slugData = await slugRes.json();
               if (slugData.game?.description) {
@@ -151,7 +166,7 @@ export async function enrichGame(game: Game): Promise<EnrichmentResult | null> {
   if (!game.hltbMain) {
     try {
       const cleanName = normalizeGameName(game.name);
-      const res = await fetch(`/api/hltb?title=${encodeURIComponent(cleanName)}`);
+      const res = await fetchWithRetry(`/api/hltb?title=${encodeURIComponent(cleanName)}`);
       if (res.ok) {
         const data = await res.json();
         if (data.found && data.main > 0) {

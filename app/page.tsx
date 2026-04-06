@@ -99,7 +99,7 @@ function AppContent() {
   const [helpOpen, setHelpOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>('backlog');
   const [backlogLimit, setBacklogLimit] = useState(10);
-  const [backlogSort, setBacklogSort] = useState<'smart' | 'a-z' | 'z-a' | 'newest' | 'oldest' | 'most-playtime' | 'least-playtime'>('smart');
+  const [backlogSort, setBacklogSort] = useState<'smart' | 'a-z' | 'z-a' | 'newest' | 'oldest' | 'most-playtime' | 'least-playtime' | 'closest-to-done'>('smart');
   // GridCard handles its own detail modal internally
 
   const openReroll = (mode?: RerollMode) => {
@@ -185,6 +185,12 @@ function AppContent() {
           case 'oldest': sorted.sort((a, b) => new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime()); break;
           case 'most-playtime': sorted.sort((a, b) => (b.hoursPlayed || 0) - (a.hoursPlayed || 0) || a.name.localeCompare(b.name)); break;
           case 'least-playtime': sorted.sort((a, b) => (a.hoursPlayed || 0) - (b.hoursPlayed || 0) || a.name.localeCompare(b.name)); break;
+          case 'closest-to-done': sorted.sort((a, b) => {
+            const remA = (a.hoursPlayed > 0 && a.hltbMain && a.hltbMain > 0) ? Math.max(a.hltbMain - a.hoursPlayed, 0) : Infinity;
+            const remB = (b.hoursPlayed > 0 && b.hltbMain && b.hltbMain > 0) ? Math.max(b.hltbMain - b.hoursPlayed, 0) : Infinity;
+            if (remA === Infinity && remB === Infinity) return a.name.localeCompare(b.name);
+            return remA - remB;
+          }); break;
           default: sorted = sortBestForYou(inTab, games);
         }
       }
@@ -528,9 +534,11 @@ function AppContent() {
               style={{ background: 'linear-gradient(135deg, #107c10 0%, #1a8a1a 50%, #0070d1 100%)' }}
               title="Pick a game from Game Pass or PS+ catalog"
             >
-              <span className="font-bold" style={{ color: '#7ec850' }}>X</span>
-              <span className="text-[10px] opacity-70">|</span>
-              <span className="font-bold" style={{ color: '#ffd800' }}>+</span>
+              <span className="inline-flex items-center gap-1">
+                <span className="text-[11px] sm:text-xs font-black tracking-tight" style={{ color: '#7ec850' }}>GP</span>
+                <span className="text-[10px] opacity-50">/</span>
+                <span className="text-[11px] sm:text-xs font-black tracking-tight" style={{ color: '#ffd800' }}>PS+</span>
+              </span>
               <span>Sub Shuffle</span>
             </button>
           </div>
@@ -559,6 +567,7 @@ function AppContent() {
             <option value="z-a">Z → A</option>
             <option value="newest">Newest first</option>
             <option value="oldest">Oldest first</option>
+            <option value="closest-to-done">🏁 Closest to Done</option>
             <option value="most-playtime">Most playtime</option>
             <option value="least-playtime">Least playtime</option>
           </select>
@@ -721,7 +730,7 @@ function AppContent() {
           {/* Backlog "Best for You" explainer (first load only, smart sort) */}
           {activeTab === 'backlog' && tabGames.length > 0 && backlogLimit <= 10 && backlogSort === 'smart' && (
             <p className="text-[10px] text-text-faint text-center mt-3 font-[family-name:var(--font-mono)]">
-              Sorted by what we think you&apos;d enjoy most, based on your library and ratings.
+              Sorted by what deserves your attention: games you&apos;re close to finishing, genres you gravitate toward, and buried gems worth resurfacing.
             </p>
           )}
         </div>
