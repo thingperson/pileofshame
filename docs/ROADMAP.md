@@ -154,10 +154,12 @@
 - Reset skip count from game detail view ✅
 - See: `docs/behavioral-learning-framework.md`
 
-### Accessibility Hardening (MEDIUM)
+### Accessibility Hardening — SHIPPED ✅
 - Cozy theme text-faint/dim contrast fixed ✅
 - Minimal theme opacity bumped ✅
-- Still needed: close button accessibility in Reroll modal
+- Reroll modal close button with aria-label ✅
+- Status button aria-labels on GridCard ✅
+- Reroll mode button aria-labels ✅
 
 ### Decision Engine V2 Refinements (MEDIUM)
 - Mood-first quick-pick flow
@@ -242,8 +244,8 @@
 
 | Review | Last Run | Status | Frequency |
 |--------|----------|--------|-----------|
-| Voice/AI lingo sweep | Apr 5, 2026 | Clean | Every deploy with new copy |
-| Accessibility audit | Apr 5, 2026 | 1 critical fixed (status aria-label), contrast fix, 2 major open (Reroll close btn, mode btn labels) | Monthly |
+| Voice/AI lingo sweep | Apr 6, 2026 | Clean | Every deploy with new copy |
+| Accessibility audit | Apr 6, 2026 | All critical/major items resolved. Reroll close btn ✅, mode btn labels ✅, status aria-labels ✅, contrast ✅ | Monthly |
 | Feature creep audit | Apr 3, 2026 | Healthy with watchlist | Quarterly |
 | Mobile responsiveness | Apr 5, 2026 | Tab labels fixed, mode buttons scroll OK, cards render clean at 375px | Monthly |
 | Enrichment accuracy | Apr 5, 2026 | Cache + retry shipped, scale test pending | After next large import |
