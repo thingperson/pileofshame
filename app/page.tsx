@@ -31,6 +31,7 @@ import { SAMPLE_GAMES } from '@/lib/sampleLibrary';
 import PostImportSummary from '@/components/PostImportSummary';
 import GamePassBrowse from '@/components/GamePassBrowse';
 import StalledGameNudge from '@/components/StalledGameNudge';
+import FinishCheckNudge from '@/components/FinishCheckNudge';
 import { trackThemeSession } from '@/lib/archetypes';
 
 // ── Inline Search ──────────────────────────────────────────────────
@@ -578,8 +579,9 @@ function AppContent() {
         </div>
       )}
 
-      {/* ── Stalled Game Nudge (1 per session, dismissable) ── */}
+      {/* ── Behavioral Nudges (1 each per session, dismissable) ── */}
       {!isEmpty && <StalledGameNudge games={games} />}
+      {!isEmpty && <FinishCheckNudge games={games} />}
 
       {/* ── Sync Nudge (below tabs, above games) ── */}
       {!isEmpty && <SyncNudge />}

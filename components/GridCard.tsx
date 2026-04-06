@@ -7,6 +7,7 @@ import { STATUS_CONFIG, TIME_TIER_CONFIG, SOURCE_LABELS, SOURCE_SHORT, SOURCE_CO
 import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
 import { useToast } from './Toast';
 import GameDetailModal from './GameDetailModal';
+import { isSoftIgnored } from '@/lib/skipTracking';
 
 function CoverImage({ src, alt }: { src: string; alt: string }) {
   const [failed, setFailed] = useState(false);
@@ -186,6 +187,7 @@ export default function GridCard({ game }: GridCardProps) {
           <p className="text-sm font-semibold text-text-primary truncate">
             {game.isWishlisted && <span className="text-yellow-400 mr-1" title="Wishlisted">⭐</span>}
             {game.ignored && <span className="text-text-faint mr-1" title="Ignored from recommendations">🚫</span>}
+            {!game.ignored && isSoftIgnored(game.id) && <span className="text-text-faint mr-1" title="Skipped 5+ times. Hidden from picker. Reset in game details.">💤</span>}
             {game.name}
           </p>
 

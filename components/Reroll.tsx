@@ -9,6 +9,7 @@ import { getGameDescriptor } from '@/lib/descriptors';
 import { REROLL_MODES, RerollMode, getEligibleGames, pickWeighted, getPickReasons } from '@/lib/reroll';
 import { useToast } from './Toast';
 import { trackReroll, trackRerollCommit } from '@/lib/analytics';
+import { recordSkip } from '@/lib/skipTracking';
 
 const ALL_MOODS: MoodTag[] = ['chill', 'intense', 'story-rich', 'brainless', 'atmospheric', 'competitive', 'spooky', 'creative', 'strategic', 'emotional'];
 
@@ -54,10 +55,11 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
       return;
     }
 
-    // Track skipped game
+    // Track skipped game (session + persistent)
     if (currentPick) {
       pushLastPick(currentPick);
       setSkippedIds((prev) => new Set(prev).add(currentPick.id));
+      recordSkip(currentPick.id);
     }
 
     incrementReroll();

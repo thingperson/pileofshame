@@ -64,7 +64,7 @@ export default async function Image() {
             alignItems: 'center',
             justifyContent: 'center',
             flex: 1,
-            padding: '60px 80px',
+            padding: '40px 80px 20px',
             gap: '0px',
           }}
         >
@@ -72,15 +72,26 @@ export default async function Image() {
           <div
             style={{
               fontSize: '15px',
-              fontWeight: 600,
+              fontWeight: 700,
               color: '#a78bfa',
-              letterSpacing: '4px',
+              letterSpacing: '5px',
               textTransform: 'uppercase',
-              marginBottom: '20px',
+              marginBottom: '16px',
               display: 'flex',
             }}
           >
-            GAMING BACKLOG TOOL
+            STOP SCROLLING. START PLAYING.
+          </div>
+
+          {/* Controller visual */}
+          <div
+            style={{
+              fontSize: '64px',
+              marginBottom: '12px',
+              display: 'flex',
+            }}
+          >
+            🎮
           </div>
 
           {/* Title */}
@@ -109,7 +120,7 @@ export default async function Image() {
               display: 'flex',
             }}
           >
-            Import your pile. Tell us your mood. We find your game.
+            Too many games. No idea what to play. We fix that.
           </div>
 
           {/* Feature row */}
@@ -117,7 +128,7 @@ export default async function Image() {
             style={{
               display: 'flex',
               gap: '10px',
-              marginTop: '36px',
+              marginTop: '32px',
               flexWrap: 'wrap',
               justifyContent: 'center',
             }}
@@ -125,9 +136,9 @@ export default async function Image() {
             {[
               '⚡ Steam + Xbox + PS Import',
               '🎲 Mood Matching',
-              '💰 Backlog Payback',
+              '🏆 Track Your Wins',
               '🎉 Completion Celebrations',
-              '🆓 Free',
+              '🆓 Free, no sign-up',
             ].map((label) => (
               <div
                 key={label}
@@ -160,8 +171,9 @@ export default async function Image() {
         >
           <div
             style={{
-              fontSize: '16px',
-              color: '#475569',
+              fontSize: '18px',
+              fontWeight: 600,
+              color: '#64748b',
               letterSpacing: '2px',
               display: 'flex',
             }}
@@ -170,8 +182,8 @@ export default async function Image() {
           </div>
           <div
             style={{
-              fontSize: '14px',
-              color: '#334155',
+              fontSize: '15px',
+              color: '#475569',
               display: 'flex',
             }}
           >

@@ -79,7 +79,7 @@
 ### Infrastructure
 - Supabase auth + cloud sync ✅
 - Google + GitHub OAuth ✅
-- OG image for Discord/Twitter unfurls ✅
+- OG image for Discord/Twitter/SMS unfurls (v2: brand copy, controller visual, feature pills) ✅
 - GA4 analytics (reroll, commit, import events) ✅
 - PWA manifest + 192/512px icons + apple-icon fix ✅
 - Token efficiency restructure (plan file 94% reduction, path-scoped rules) ✅
@@ -138,19 +138,26 @@
   - Detects games with 2+ hours, 14+ days stale, not completed
   - Genre-aware messaging (story-rich, difficult, open world, general)
   - 1 per session, rotates, backs off after 3 dismissals per game
-- Still planned: "Did you finish this?" prompt for 130%+ HLTB games
+- "Did you finish this?" nudge for 85%+ HLTB games ✅
+  - Detects games at 85%+ completion, asks if they finished
+  - YES: auto-mark Cleared + trigger celebration
+  - NO: move to Now Playing with encouragement
+  - Separate from stalled nudge, backs off after 3 dismissals
 - See: `docs/IDEAS.md` + `docs/behavioral-learning-framework.md`
+
+### Skip Tracking — SHIPPED ✅
+- Persistent skip memory across sessions (localStorage) ✅
+- 1-2 skips: no penalty ✅
+- 3-4 skips: 50% weight reduction in decision engine ✅
+- 5+ skips: soft-ignore (hidden from picker, stays in library) ✅
+- 💤 indicator on cards for soft-ignored games ✅
+- Reset skip count from game detail view ✅
+- See: `docs/behavioral-learning-framework.md`
 
 ### Accessibility Hardening (MEDIUM)
 - Cozy theme text-faint/dim contrast fixed ✅
 - Minimal theme opacity bumped ✅
 - Still needed: close button accessibility in Reroll modal
-
-### Skip Tracking (HIGH — Priority 3)
-- Locked in as next feature build
-- Tracks reroll skips, reduces weight after 3, soft-ignores after 5
-- First piece of the behavioral learning moat
-- See: `docs/behavioral-learning-framework.md`
 
 ### Decision Engine V2 Refinements (MEDIUM)
 - Mood-first quick-pick flow
@@ -174,11 +181,12 @@
 ## NEXT SPRINT
 
 ### Decision Engine V3 (HIGH)
-- ~~"Ignore this title" / negative weighting~~ — **SHIPPED** (moved to Shipped section)
+- ~~"Ignore this title" / negative weighting~~ — **SHIPPED**
+- ~~Skip tracking~~ — **SHIPPED** (persistent skip memory, soft-ignore after 5)
+- ~~Stalled game detection~~ — **SHIPPED** (nudge card + "Did you finish?" prompt)
 - "Why not this?" skip feedback (optional 1-tap reason: too long, not in mood, played recently)
 - Energy matching (user picks energy level 1-5 before roll)
 - **Behavioral learning over time** — engine gets smarter about *this user* based on decisions
-- Stalled game detection — nudge games stuck at 2+ hours but under 85% completion
 - Post-recommendation nudge (after "Let's go": motivational push + launch link)
 - See: `docs/decision-engine-plan-2026-04-03.md` items 4-8
 

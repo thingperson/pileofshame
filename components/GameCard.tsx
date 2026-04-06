@@ -8,6 +8,7 @@ import { useToast } from './Toast';
 import { getGameDescriptor } from '@/lib/descriptors';
 import { MOOD_TAG_CONFIG, getPlaytimeRoast } from '@/lib/enrichment';
 import { trackStatusChange } from '@/lib/analytics';
+import { getSkipCount, resetSkipCount, isSoftIgnored } from '@/lib/skipTracking';
 
 // ── Jump Back In Cheat Sheet ──────────────────────────────────────
 
@@ -571,6 +572,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
           )}
           {game.isWishlisted && <span className="text-yellow-400 mr-1" title="Wishlisted" aria-label="Wishlisted" role="img">⭐</span>}
           {game.ignored && <span className="text-text-faint mr-1" title="Ignored from recommendations" aria-label="Ignored">🚫</span>}
+          {!game.ignored && isSoftIgnored(game.id) && <span className="text-text-faint mr-1" title="Skipped 5+ times. Hidden from picker." aria-label="Soft-ignored">💤</span>}
           {game.name}
         </span>
 
@@ -1014,6 +1016,29 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
             >
               {game.ignored ? '👁 Un-ignore' : '🚫 Ignore'}
             </button>
+
+            {/* Skip count reset (only visible when game has been skipped 3+ times) */}
+            {(() => {
+              const skipCount = getSkipCount(game.id);
+              if (skipCount < 3) return null;
+              return (
+                <button
+                  onClick={() => {
+                    resetSkipCount(game.id);
+                    showToast(`${game.name} skip count cleared. Fresh start.`);
+                  }}
+                  className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97]"
+                  style={{
+                    backgroundColor: 'rgba(251, 191, 36, 0.08)',
+                    color: 'var(--color-text-faint)',
+                    border: '1px solid transparent',
+                  }}
+                  title={`Skipped ${skipCount} times in the picker. ${skipCount >= 5 ? 'Currently hidden from suggestions.' : 'Showing less often in suggestions.'} Click to reset.`}
+                >
+                  🔄 {skipCount >= 5 ? 'Un-hide' : 'Reset'} ({skipCount} skips)
+                </button>
+              );
+            })()}
 
             {/* Delete — pushed to the right */}
             <div className="flex-1" />

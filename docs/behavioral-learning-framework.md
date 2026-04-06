@@ -8,22 +8,24 @@ We're not tracking users to sell them things. We're learning their patterns to r
 
 ---
 
-## 1. Skip Tracking (Priority: HIGH — build soon)
+## 1. Skip Tracking — SHIPPED ✅
 
 **What:** When the decision engine suggests a game and the user hits "Not now," record that skip.
 
+**Implementation:** `lib/skipTracking.ts`
+
 **Logic:**
-- Skip count per game, stored in localStorage
-- After 3 skips: reduce weighting by 50% in pickWeighted
-- After 5 skips: soft-ignore (filtered from suggestions, but not from library)
-- Soft-ignored games get a subtle indicator (different from hard-ignore)
-- User can reset skip count from game detail
+- Skip count per game, stored in localStorage ✅
+- After 3 skips: reduce weighting by 50% in pickWeighted ✅
+- After 5 skips: soft-ignore (filtered from suggestions, but not from library) ✅
+- Soft-ignored games get a 💤 indicator on cards (different from hard-ignore 🚫) ✅
+- User can reset skip count from game detail (button appears at 3+ skips) ✅
 
 **Why it matters:** Users skip games for reasons they can't always articulate. The pattern reveals preference better than any survey.
 
 ---
 
-## 2. Momentum Detection (Priority: HIGH — build soon)
+## 2. Momentum Detection — SHIPPED ✅
 
 **What:** Detect games with meaningful playtime that dropped off the user's radar and gently surface them.
 
@@ -98,7 +100,7 @@ NOT a push notification or email. An in-app element visible when they open the a
 
 ---
 
-## 4. Completion Proximity (Priority: MEDIUM)
+## 4. Completion Proximity — SHIPPED ✅
 
 **What:** Surface games where the user is close to finishing.
 
@@ -171,11 +173,11 @@ Users may have multiplayer games they want to play but lack a group. This is esp
 
 ## Implementation Order
 
-1. **Skip tracking** — lowest effort, highest signal. Add `skipCount` to Game, increment on Reroll "Not now," decay weighting.
-2. **Stalled game detection + nudge UI** — playtime vs HLTB calc on import, in-app nudge card.
-3. **Completion proximity display** — "~X hours to finish" in game cards, "Almost Done" sort option.
+1. ~~**Skip tracking**~~ — **SHIPPED** ✅ `lib/skipTracking.ts`
+2. ~~**Stalled game detection + nudge UI**~~ — **SHIPPED** ✅ `components/StalledGameNudge.tsx` + `components/FinishCheckNudge.tsx`
+3. ~~**Completion proximity display**~~ — **SHIPPED** ✅ Progress badges on GridCard/GameCard, "Closest to Done" sort
 4. **Cooldown/genre fatigue** — track last completed genres, reduce weighting.
-5. **Session-start bias** — time-of-day and recent-activity weighting in pickWeighted.
+5. **Session-start bias** — time-of-day and recent-activity weighting in pickWeighted. (Time-of-day already shipped in V2)
 6. **Stall reason input** — optional quick-tap on bail/ignore.
 7. **Crew matchmaking** — requires social features, Discord integration. Phase 3+.
 

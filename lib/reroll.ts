@@ -1,4 +1,5 @@
 import { Game, MoodTag, PlatformPreference } from './types';
+import { isSoftIgnored, getSkipWeightMultiplier } from './skipTracking';
 
 export type RerollMode = 'anything' | 'quick-session' | 'deep-cut' | 'continue';
 
@@ -42,6 +43,9 @@ export function getEligibleGames(
   return games.filter((game) => {
     // Exclude ignored games from all recommendations
     if (game.ignored) return false;
+
+    // Exclude soft-ignored games (5+ skips in decision engine)
+    if (isSoftIgnored(game.id)) return false;
 
     // Exclude played and bailed from all modes
     if (game.status === 'played' || game.status === 'bailed') return false;
@@ -180,7 +184,10 @@ function calculateWeight(
   // Genre balance: avoid same-genre streaks
   weight *= getGenreBalanceWeight(game, recentPickGenres);
 
-  // Recently skipped: strongly deprioritize
+  // Persistent skip tracking: penalize repeatedly skipped games
+  weight *= getSkipWeightMultiplier(game.id);
+
+  // Session skips: strongly deprioritize games skipped this session
   if (skippedIds.has(game.id)) {
     weight *= 0.2;
   }
