@@ -1,13 +1,14 @@
 import { Game, MoodTag, PlatformPreference } from './types';
 import { isSoftIgnored, getSkipWeightMultiplier } from './skipTracking';
 
-export type RerollMode = 'anything' | 'quick-session' | 'deep-cut' | 'continue';
+export type RerollMode = 'anything' | 'quick-session' | 'deep-cut' | 'continue' | 'almost-done';
 
 export const REROLL_MODES: { mode: RerollMode; label: string; icon: string; description: string }[] = [
   { mode: 'anything', label: 'Anything', icon: '🎲', description: 'Random from all games' },
   { mode: 'quick-session', label: 'Quick Session', icon: '🌙', description: 'Wind-down tier only' },
   { mode: 'deep-cut', label: 'Deep Cut', icon: '🔥', description: 'A game buried in your backlog you may have forgotten about' },
   { mode: 'continue', label: 'Keep Playing', icon: '▶', description: 'Games you already started' },
+  { mode: 'almost-done', label: 'Almost Done', icon: '🏁', description: 'Games you\'re close to finishing' },
 ];
 
 // Sources that are PC-compatible (Steam can be Mac too, handled separately)
@@ -68,6 +69,13 @@ export function getEligibleGames(
         return game.timeTier === 'deep-cut' || game.timeTier === 'marathon';
       case 'continue':
         return game.status === 'playing';
+      case 'almost-done': {
+        if (game.isNonFinishable) return false;
+        if (!game.hltbMain || game.hltbMain <= 0 || game.hoursPlayed <= 0) return false;
+        const remaining = (game.hltbMain - game.hoursPlayed) / game.hltbMain;
+        // Games past the HLTB estimate (remaining < 0) also qualify — they're probably close
+        return remaining < 0.20;
+      }
       default:
         return true;
     }

@@ -13,6 +13,31 @@ import { recordSkip } from '@/lib/skipTracking';
 
 const ALL_MOODS: MoodTag[] = ['chill', 'intense', 'story-rich', 'brainless', 'atmospheric', 'competitive', 'spooky', 'creative', 'strategic', 'emotional'];
 
+const POST_ACCEPT_LINES = [
+  "Go. We'll be here when you get back.",
+  "{game} isn't going to play itself. Close the app.",
+  "You made a decision. That's the hard part. Now play.",
+  "The pile just got smaller. Go.",
+  "You picked it. Trust your gut.",
+  "One less game to wonder about. Go find out.",
+];
+
+function getPostAcceptLine(gameName: string): string {
+  const line = POST_ACCEPT_LINES[Math.floor(Math.random() * POST_ACCEPT_LINES.length)];
+  return line.replace('{game}', gameName);
+}
+
+function getSessionEstimate(game: Game): string | null {
+  if (game.hltbMain && game.hltbMain > 0) {
+    if (game.hoursPlayed > 0) {
+      const remaining = Math.max(Math.ceil(game.hltbMain - game.hoursPlayed), 1);
+      return `~${remaining}h left`;
+    }
+    return `~${game.hltbMain}h to beat`;
+  }
+  return null;
+}
+
 interface RerollProps {
   open: boolean;
   onClose: () => void;
@@ -29,6 +54,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   const [skipModePicker, setSkipModePicker] = useState(false);
   const [skippedIds, setSkippedIds] = useState<Set<string>>(new Set());
   const [shownIds, setShownIds] = useState<Set<string>>(new Set());
+  const [postAccept, setPostAccept] = useState<Game | null>(null);
 
   const games = useStore((s) => s.games);
   const platformPreference = useStore((s) => s.settings.platformPreference) || 'any';
@@ -112,17 +138,24 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
     }
     updateGame(game.id, { status: 'playing' });
     trackRerollCommit();
-    showToast(`${game.name} → Playing 🔥 Let's go!`);
-    resetReroll();
+
+    // Show post-accept nudge instead of immediately closing
+    setPostAccept(game);
     setCurrentPick(null);
     setShowForced(false);
-    setRevealed(false);
-    onClose();
-  }, [games, updateGame, resetReroll, showToast, onClose]);
+
+    // Auto-dismiss after 3 seconds
+    setTimeout(() => {
+      setPostAccept(null);
+      resetReroll();
+      onClose();
+    }, 3000);
+  }, [games, updateGame, resetReroll, onClose]);
 
   const handleNotNow = useCallback(() => {
     resetReroll();
     setCurrentPick(null);
+    setPostAccept(null);
     setShowForced(false);
     setRevealed(false);
     onClose();
@@ -143,6 +176,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   useEffect(() => {
     if (open) {
       setCurrentPick(null);
+      setPostAccept(null);
       setShowForced(false);
       setRevealed(false);
       setSkippedIds(new Set());
@@ -552,6 +586,51 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
             >
               Fine, I&apos;ll pick later
             </button>
+          </div>
+        )}
+
+        {/* Post-accept nudge overlay */}
+        {postAccept && (
+          <div
+            className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm cursor-pointer"
+            onClick={() => {
+              setPostAccept(null);
+              resetReroll();
+              onClose();
+            }}
+          >
+            <div
+              className="text-center px-8 py-6 max-w-sm"
+              style={{ animation: 'scaleIn 300ms ease-out' }}
+            >
+              <p className="text-2xl font-extrabold text-text-primary mb-2">
+                {postAccept.name}
+              </p>
+              {(() => {
+                const est = getSessionEstimate(postAccept);
+                return est ? (
+                  <p className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-4">
+                    {est}
+                  </p>
+                ) : null;
+              })()}
+              <p className="text-sm text-text-muted mb-4">
+                {getPostAcceptLine(postAccept.name)}
+              </p>
+              {postAccept.steamAppId && (
+                <a
+                  href={`steam://run/${postAccept.steamAppId}`}
+                  className="inline-block px-5 py-2.5 text-sm font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] mb-2"
+                  style={{ backgroundColor: 'var(--color-accent-purple)', color: '#0a0a0f' }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Launch on Steam
+                </a>
+              )}
+              <p className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] mt-3">
+                tap anywhere to close
+              </p>
+            </div>
           </div>
         )}
 
