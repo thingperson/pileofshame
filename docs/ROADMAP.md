@@ -110,8 +110,8 @@
 ### Custom Icon Set (HIGH — Priority 2)
 - Colored icon brief finalized: `docs/dalle-prompts/14-icon-colored-final.md`
 - 29 icons total: status (5), mood tags (10), reroll modes (4), time tiers (5), nav (5 optional)
-- DALL-E generation in progress — status icons first (highest impact)
-- Drop PNGs into `public/icons/` → wire into components replacing emoji placeholders
+- DALL-E generation in progress — 8 assets in `public/icons/` so far (mix of SVG/PNG)
+- Drop into `public/icons/` → wire into components replacing emoji placeholders
 - Naming convention defined in brief
 
 ### Enrichment Reliability Audit (MEDIUM)
@@ -120,8 +120,8 @@
 - RAWG in-memory cache (1hr TTL, 500 entries) + Cache-Control headers ✅
 - Enrichment retry logic (1 retry with 2s delay on 429/5xx) ✅
 - Broken image fallback (onError → gamepad emoji) ✅
-- Still needed: test accuracy at scale with large libraries (200+ games)
-- Still needed: verify edge cases (DLC names, remasters, numbered sequels)
+- 200+ game library working without issues ✅
+- Still watch: edge cases (DLC names, remasters, numbered sequels) — no formal audit yet
 
 ### "Best for You" Sort Upgrade — SHIPPED ✅
 - Added completion proximity scoring (HLTB progress inference: 85%+ = huge boost) ✅
@@ -246,10 +246,10 @@
 |--------|----------|--------|-----------|
 | Voice/AI lingo sweep | Apr 6, 2026 | Clean | Every deploy with new copy |
 | Accessibility audit | Apr 6, 2026 | All critical/major items resolved. Reroll close btn ✅, mode btn labels ✅, status aria-labels ✅, contrast ✅ | Monthly |
-| Feature creep audit | Apr 3, 2026 | Healthy with watchlist | Quarterly |
-| Mobile responsiveness | Apr 5, 2026 | Tab labels fixed, mode buttons scroll OK, cards render clean at 375px | Monthly |
-| Enrichment accuracy | Apr 5, 2026 | Cache + retry shipped, scale test pending | After next large import |
-| Legal/privacy compliance | Apr 5, 2026 | Clean — no new user data, RAWG cache is public metadata only | Before any feature touching user data, deals, or profiling |
+| Feature creep audit | Apr 6, 2026 | Healthy. 12 buttons above fold (was 13). New nudges are contextual/dismissable, skip tracking is invisible. 13 themes = maintenance watch. | Quarterly |
+| Mobile responsiveness | Apr 6, 2026 | Tab labels fixed, mode buttons scroll OK, cards render clean at 375px, nudge cards stack cleanly | Monthly |
+| Enrichment accuracy | Apr 6, 2026 | Cache + retry shipped, 200+ library working at a glance. Edge cases (DLC, remasters) not formally audited | Quarterly |
+| Legal/privacy compliance | Apr 6, 2026 | Clean — skip tracking + nudge dismissals are localStorage only, no data sent externally | Before any feature touching user data, deals, or profiling |
 
 ### Legal Guardrails (Locked, April 2026)
 
