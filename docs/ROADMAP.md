@@ -158,7 +158,7 @@
 - See: `docs/behavioral-learning-framework.md`
 
 ### UX Feedback Sweep (April 6 PDF) — SHIPPED ✅
-- 16 items from Brady's UX review, 15 of 16 addressed
+- All 16 items from Brady's UX review addressed
 - Now Playing cap (3 games, enforced across all entry points) ✅
 - Tab auto-follow on game move + nudge actions ✅
 - Nudge cards restricted to Backlog tab only ✅
