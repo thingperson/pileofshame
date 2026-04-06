@@ -19,14 +19,18 @@ export default async function AppleIcon() {
           alignItems: 'center',
           justifyContent: 'center',
           background: '#0f0f13',
-          borderRadius: '40px',
+          overflow: 'hidden',
         }}
       >
+        {/* Scale up to crop out the padding in the source image */}
         <img
           src={`data:image/png;base64,${base64}`}
-          width={170}
-          height={170}
-          style={{ objectFit: 'contain' }}
+          width={300}
+          height={300}
+          style={{
+            objectFit: 'cover',
+            marginTop: '10px',
+          }}
         />
       </div>
     ),

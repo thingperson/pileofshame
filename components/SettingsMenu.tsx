@@ -269,6 +269,7 @@ export default function SettingsMenu() {
                             settings: { ...s.settings, theme: opt.value as LibrarySettings['theme'] },
                           }));
                           trackThemeSession(opt.value);
+                          setOpen(false);
                         }}
                         className={`px-2 py-1 text-[11px] rounded-md font-medium transition-all ${
                           settings.theme === opt.value

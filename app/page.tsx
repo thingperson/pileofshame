@@ -204,10 +204,24 @@ function AppContent() {
           case 'most-playtime': sorted.sort((a, b) => (b.hoursPlayed || 0) - (a.hoursPlayed || 0) || a.name.localeCompare(b.name)); break;
           case 'least-playtime': sorted.sort((a, b) => (a.hoursPlayed || 0) - (b.hoursPlayed || 0) || a.name.localeCompare(b.name)); break;
           case 'closest-to-done': sorted.sort((a, b) => {
-            const remA = (a.hoursPlayed > 0 && a.hltbMain && a.hltbMain > 0) ? Math.max(a.hltbMain - a.hoursPlayed, 0) : Infinity;
-            const remB = (b.hoursPlayed > 0 && b.hltbMain && b.hltbMain > 0) ? Math.max(b.hltbMain - b.hoursPlayed, 0) : Infinity;
-            if (remA === Infinity && remB === Infinity) return a.name.localeCompare(b.name);
-            return remA - remB;
+            // Tier 1: Has HLTB + progress → sort by remaining hours (lowest first)
+            const hasDataA = a.hoursPlayed > 0 && a.hltbMain && a.hltbMain > 0;
+            const hasDataB = b.hoursPlayed > 0 && b.hltbMain && b.hltbMain > 0;
+            const remA = hasDataA ? Math.max(a.hltbMain! - a.hoursPlayed, 0) : Infinity;
+            const remB = hasDataB ? Math.max(b.hltbMain! - b.hoursPlayed, 0) : Infinity;
+            if (hasDataA && hasDataB) return remA - remB;
+            if (hasDataA && !hasDataB) return -1;
+            if (!hasDataA && hasDataB) return 1;
+            // Tier 2: Has playtime but no HLTB → sort by most hours (likely furthest along)
+            if (a.hoursPlayed > 0 && b.hoursPlayed > 0) return (b.hoursPlayed || 0) - (a.hoursPlayed || 0);
+            if (a.hoursPlayed > 0) return -1;
+            if (b.hoursPlayed > 0) return 1;
+            // Tier 3: Has HLTB but no playtime → short games first (quick wins)
+            if (a.hltbMain && b.hltbMain) return a.hltbMain - b.hltbMain;
+            if (a.hltbMain) return -1;
+            if (b.hltbMain) return 1;
+            // Tier 4: No data → A-Z fallback
+            return a.name.localeCompare(b.name);
           }); break;
           default: sorted = sortBestForYou(inTab, games);
         }
@@ -539,16 +553,14 @@ function AppContent() {
               Import yours
             </button>
             <button
-              onClick={() => {
-                useStore.setState({ games: [], lastSaved: new Date().toISOString() });
-              }}
+              onClick={() => setSampleBannerDismissed(true)}
               className="px-3 py-1.5 text-[11px] font-medium rounded-lg border transition-all hover:border-accent-purple"
               style={{
                 borderColor: 'var(--color-border-subtle)',
                 color: 'var(--color-text-dim)',
               }}
             >
-              Clear
+              Dismiss
             </button>
           </div>
         </div>
