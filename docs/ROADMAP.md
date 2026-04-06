@@ -98,12 +98,15 @@
 ## CURRENT SPRINT — April 2026
 
 ### Xbox Import + Game Pass (HIGH — Priority 1)
-- OpenXBL API key in `.env.local` ✅ — verify it's also in Vercel env vars
-- Test import flow against real Xbox account
+- OpenXBL API key in `.env.local` ✅ — verified working (gamertag search returns results)
+- API key tested against real endpoint (Major Nelson lookup) ✅
 - Free tier: 150 req/hr, no credit card, covers all endpoints we need
 - **Game Pass Browse component built** — `components/GamePassBrowse.tsx` exists ✅
-- Still needed: verify Game Pass catalog endpoint works end-to-end
-- Still needed: PS+ catalog side of Sub Shuffle (GraphQL endpoint found: `categoryGridRetrieve` with UUID `3a7006fe`, see IDEAS.md for full spec)
+- **Game Pass catalog endpoint verified** — returns 500+ product IDs ✅
+- **PS+ catalog built** — `/api/psplus` route fetches 427 games from Sony public GraphQL ✅
+- **Sub Shuffle unified** — GamePassBrowse now supports both Game Pass and PS+ via service tabs ✅
+- Still needed: test Xbox import flow against real Xbox account (gamertag with public profile)
+- Still needed: verify OPENXBL_API_KEY is in Vercel env vars
 
 ### Landing Page — SHIPPED ✅
 - Hero illustration + bold brand banner with logomark ✅
@@ -200,10 +203,13 @@
 - One strong visual mark > 20 decorative elements — find the ONE thing
 - Must not clutter — personality without noise
 
-### Infrastructure Prep (MEDIUM)
-- Sentry error monitoring (free tier — rough in now, refine later)
-- Uptime monitoring (BetterUptime or UptimeRobot free tier)
-- Goal: have these ready to activate, not scramble when traffic arrives
+### Infrastructure Prep (MEDIUM) — SHIPPED ✅
+- Sentry error monitoring wired up (free tier, production-only, no PII) ✅
+- Global error boundary (`app/global-error.tsx`) catches root layout errors ✅
+- Health endpoint (`/api/health`) for uptime monitoring ✅
+- instrumentation.ts for server/edge Sentry init ✅
+- Still needed: add `NEXT_PUBLIC_SENTRY_DSN` in Vercel env vars (get from sentry.io)
+- Still needed: set up UptimeRobot free tier to ping `/api/health`
 
 ---
 
@@ -213,11 +219,15 @@
 - ~~"Ignore this title" / negative weighting~~ — **SHIPPED**
 - ~~Skip tracking~~ — **SHIPPED** (persistent skip memory, soft-ignore after 5)
 - ~~Stalled game detection~~ — **SHIPPED** (nudge card + "Did you finish?" prompt)
-- "Why not this?" skip feedback (optional 1-tap reason: too long, not in mood, played recently)
-- Energy matching (user picks energy level 1-5 before roll)
-- **Behavioral learning over time** — engine gets smarter about *this user* based on decisions
-- Post-recommendation nudge (after "Let's go": motivational push + launch link)
-- See: `docs/decision-engine-plan-2026-04-03.md` items 4-8
+- **Full V3 spec written** — see `docs/decision-engine-v3-spec.md`
+- 6 features specced with priority order:
+  1. "Almost Done" reroll mode (1h, filter only)
+  2. Post-recommendation nudge (1-2h, motivational overlay after commit)
+  3. Cooldown / genre fatigue (1-2h, 7-day same-genre penalty after completion)
+  4. "Why'd you skip?" feedback (3-4h, optional 1-tap reason: too long, not in mood, etc.)
+  5. Energy matching (3-4h, Low/Medium/High selector with time-of-day defaults)
+  6. Behavioral learning (8-12h, decision history, genre affinity, time tier preference)
+- TypeScript interfaces, localStorage schemas, weight tables, and testing plans included
 
 ### Jump Back In V3 (MEDIUM)
 - Story progress estimation from HLTB chapter data (if available)
@@ -310,7 +320,8 @@ We do *personalized recommendations* (using a user's own data to help them), not
 ## KEY DOCS
 
 - `docs/IDEAS.md` — Running brainstorm dump (raw ideas, rambles, half-formed thoughts)
-- `docs/decision-engine-plan-2026-04-03.md` — Decision engine feature specs
+- `docs/decision-engine-plan-2026-04-03.md` — Decision engine V2 feature specs
+- `docs/decision-engine-v3-spec.md` — Decision engine V3 comprehensive spec (6 features, TypeScript schemas, weight tables)
 - `docs/feature-creep-audit-2026-04-03.md` — Scope audit results
 - `docs/landing-page-plan.md` — Landing page design
 - `docs/theme-ideas.md` — Theme specifications
