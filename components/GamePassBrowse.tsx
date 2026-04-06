@@ -10,24 +10,68 @@ import { getGameDescriptor } from '@/lib/descriptors';
 import { TIME_TIER_CONFIG } from '@/lib/constants';
 import { useToast } from './Toast';
 
+type SubService = 'gamepass' | 'psplus';
+
 interface GamePassGame {
   productId: string;
   name: string;
   imageUrl: string;
   description: string;
   genres: string[];
-  platforms: ('PC' | 'Console')[];
+  platforms: ('PC' | 'Console')[] | string[];
+  tier?: string;
 }
 
 const ALL_MOODS: MoodTag[] = ['chill', 'intense', 'story-rich', 'brainless', 'atmospheric', 'competitive', 'spooky', 'creative', 'strategic', 'emotional'];
 
-const GAMEPASS_QUIPS = [
-  "400 games and you're scrolling the store. Classic.",
-  "Your subscription is judging you.",
-  "Microsoft gave you the buffet. Let us fill your plate.",
-  "You're paying for these whether you play them or not.",
-  "The catalog rotates. Your indecision doesn't.",
-];
+const SERVICE_CONFIG: Record<SubService, {
+  label: string;
+  icon: string;
+  color: string;
+  badgeColor: string;
+  badgeText: string;
+  gradient: string;
+  source: Game['source'];
+  apiEndpoint: string;
+  quips: string[];
+}> = {
+  gamepass: {
+    label: 'Game Pass',
+    icon: '🟩',
+    color: '#2ecc40',
+    badgeColor: 'rgba(16, 124, 16, 0.15)',
+    badgeText: 'On Game Pass',
+    gradient: 'linear-gradient(135deg, #107c10, #2ecc40)',
+    source: 'xbox',
+    apiEndpoint: '/api/gamepass',
+    quips: [
+      "400 games and you're scrolling the store. Classic.",
+      "Your subscription is judging you.",
+      "Microsoft gave you the buffet. Let us fill your plate.",
+      "You're paying for these whether you play them or not.",
+      "The catalog rotates. Your indecision doesn't.",
+    ],
+  },
+  psplus: {
+    label: 'PS+',
+    icon: '🔵',
+    color: '#003791',
+    badgeColor: 'rgba(0, 55, 145, 0.15)',
+    badgeText: 'On PS+',
+    gradient: 'linear-gradient(135deg, #003791, #0070d1)',
+    source: 'playstation',
+    apiEndpoint: '/api/psplus',
+    quips: [
+      "Sony gave you the catalog. You gave them your wallet.",
+      "Hundreds of games. You played Astro Bot twice.",
+      "Your PS+ is renewing next month. Make it worth it.",
+      "The catalog rotates. Your pile doesn't.",
+      "Extra tier, extra guilt.",
+    ],
+  },
+};
+
+const GAMEPASS_QUIPS = SERVICE_CONFIG.gamepass.quips;
 
 function getRandomQuip(): string {
   return GAMEPASS_QUIPS[Math.floor(Math.random() * GAMEPASS_QUIPS.length)];
@@ -75,7 +119,8 @@ interface GamePassBrowseProps {
 }
 
 export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
-  const [catalog, setCatalog] = useState<GamePassGame[]>([]);
+  const [service, setService] = useState<SubService>('gamepass');
+  const [catalogs, setCatalogs] = useState<Record<SubService, GamePassGame[]>>({ gamepass: [], psplus: [] });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [mode, setMode] = useState<RerollMode>('anything');
@@ -86,8 +131,11 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
   const [skippedIds, setSkippedIds] = useState<Set<string>>(new Set());
   const [recentPicks, setRecentPicks] = useState<Game[]>([]);
   const [rollCount, setRollCount] = useState(0);
-  const [quip] = useState(getRandomQuip);
+  const [quip, setQuip] = useState(getRandomQuip);
   const [platformFilter, setPlatformFilter] = useState<'all' | 'PC' | 'Console'>('all');
+
+  const svc = SERVICE_CONFIG[service];
+  const catalog = catalogs[service];
 
   const addGame = useStore((s) => s.addGame);
   const existingGames = useStore((s) => s.games);
@@ -98,8 +146,13 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
   const catalogAsGames = useMemo(() => {
     return catalog
       .filter((gp) => platformFilter === 'all' || gp.platforms.includes(platformFilter))
-      .map(gamePassToGame);
-  }, [catalog, platformFilter]);
+      .map((gp) => {
+        const game = gamePassToGame(gp);
+        game.source = svc.source;
+        game.id = `${service}-${gp.productId}`;
+        return game;
+      });
+  }, [catalog, platformFilter, service, svc.source]);
 
   // Check if a game is already in user's library
   const isInLibrary = useCallback((name: string) => {
@@ -107,29 +160,29 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
     return existingGames.some((g) => g.name.toLowerCase() === lower);
   }, [existingGames]);
 
-  // Fetch catalog on open
+  // Fetch catalog on open or service switch
   useEffect(() => {
     if (!open) return;
-    if (catalog.length > 0) return; // Already loaded
+    if (catalogs[service].length > 0) return; // Already loaded for this service
 
     setLoading(true);
     setError('');
 
-    fetch('/api/gamepass')
+    fetch(svc.apiEndpoint)
       .then((res) => {
         if (!res.ok) throw new Error('Failed to load catalog');
         return res.json();
       })
       .then((data) => {
-        setCatalog(data.games || []);
+        setCatalogs((prev) => ({ ...prev, [service]: data.games || [] }));
       })
       .catch(() => {
-        setError('Couldn\'t load the Game Pass catalog. Try again in a sec.');
+        setError(`Couldn't load the ${svc.label} catalog. Try again in a sec.`);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [open, catalog.length]);
+  }, [open, service, catalogs, svc.apiEndpoint, svc.label]);
 
   // Reset state on open
   useEffect(() => {
@@ -142,6 +195,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
       setRollCount(0);
       setMoodFilters([]);
       setMode('anything');
+      setQuip(getRandomQuip());
     }
   }, [open]);
 
@@ -161,7 +215,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
     const pick = pickWeighted(fresh, skippedIds, recentPicks);
     if (!pick) {
       showToast(moodFilters.length > 0
-        ? 'No Game Pass games match that mood. Try removing a filter.'
+        ? `No ${svc.label} games match that mood. Try removing a filter.`
         : 'No games match this mode. The catalog might still be loading.');
       return;
     }
@@ -191,7 +245,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
 
     addGame({
       name: game.name,
-      source: 'xbox',
+      source: svc.source,
       coverUrl: game.coverUrl,
       description: game.description,
       genres: game.genres,
@@ -199,13 +253,13 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
       timeTier: game.timeTier,
       category: 'The Pile',
       vibes: [],
-      notes: 'Added from Game Pass',
+      notes: `Added from ${svc.label}`,
       status: 'buried',
       enrichedAt: game.enrichedAt,
     });
 
     showToast(`${game.name} added to your pile. Now go play it.`);
-  }, [addGame, showToast, isInLibrary]);
+  }, [addGame, showToast, isInLibrary, svc]);
 
   const handleAddAndPlay = useCallback((game: Game) => {
     if (isInLibrary(game.name)) {
@@ -215,7 +269,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
 
     addGame({
       name: game.name,
-      source: 'xbox',
+      source: svc.source,
       coverUrl: game.coverUrl,
       description: game.description,
       genres: game.genres,
@@ -223,7 +277,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
       timeTier: game.timeTier,
       category: 'The Pile',
       vibes: [],
-      notes: 'Added from Game Pass',
+      notes: `Added from ${svc.label}`,
       status: 'playing',
       enrichedAt: game.enrichedAt,
     });
@@ -267,8 +321,38 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
       >
         {/* Header */}
         <div className="px-5 pt-5 pb-3 text-center">
+          {/* Service tabs */}
+          <div className="flex justify-center gap-1 mb-3">
+            {(Object.keys(SERVICE_CONFIG) as SubService[]).map((s) => {
+              const cfg = SERVICE_CONFIG[s];
+              const active = service === s;
+              return (
+                <button
+                  key={s}
+                  onClick={() => {
+                    if (s !== service) {
+                      setService(s);
+                      setCurrentPick(null);
+                      setRolling(false);
+                      setRevealed(false);
+                      setSkippedIds(new Set());
+                      setRecentPicks([]);
+                      setRollCount(0);
+                      setQuip(cfg.quips[Math.floor(Math.random() * cfg.quips.length)]);
+                    }
+                  }}
+                  className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                    active ? 'text-white scale-[1.02]' : 'text-text-dim hover:text-text-muted opacity-60'
+                  }`}
+                  style={active ? { background: cfg.gradient } : { backgroundColor: 'rgba(255,255,255,0.05)' }}
+                >
+                  {cfg.icon} {cfg.label}
+                </button>
+              );
+            })}
+          </div>
           <h2 className="text-2xl font-extrabold text-text-primary tracking-tight">
-            🟩 Game Pass Pick
+            {svc.icon} {svc.label} Pick
           </h2>
           <p className="text-xs text-text-dim mt-1 font-[family-name:var(--font-mono)]">
             {loading ? 'Loading the catalog...' : currentPick ? `Roll ${rollCount}` : quip}
@@ -278,8 +362,8 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
         {/* Loading state */}
         {loading && (
           <div className="px-5 pb-5 text-center">
-            <div className="text-4xl mb-3 animate-bounce">🟩</div>
-            <p className="text-sm text-text-muted">Grabbing the Game Pass catalog from Microsoft...</p>
+            <div className="text-4xl mb-3 animate-bounce">{svc.icon}</div>
+            <p className="text-sm text-text-muted">Grabbing the {svc.label} catalog...</p>
             <p className="text-[10px] text-text-faint mt-1 font-[family-name:var(--font-mono)]">This takes a few seconds the first time. We cache it after.</p>
           </div>
         )}
@@ -289,7 +373,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
           <div className="px-5 pb-5 text-center">
             <p className="text-sm text-text-muted mb-3">{error}</p>
             <button
-              onClick={() => { setCatalog([]); setError(''); }}
+              onClick={() => { setCatalogs((prev) => ({ ...prev, [service]: [] })); setError(''); }}
               className="px-4 py-2 text-sm text-text-secondary rounded-xl border border-border-subtle hover:border-accent-purple transition-all"
             >
               Try again
@@ -305,22 +389,24 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
               {catalog.length} games in the catalog right now
             </p>
 
-            {/* Platform filter */}
-            <div className="flex justify-center gap-1.5 mb-3">
-              {(['all', 'PC', 'Console'] as const).map((pf) => (
-                <button
-                  key={pf}
-                  onClick={() => setPlatformFilter(pf)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium font-[family-name:var(--font-mono)] transition-all ${
-                    platformFilter === pf
-                      ? 'bg-white/10 text-text-primary'
-                      : 'text-text-dim hover:text-text-muted hover:bg-white/5'
-                  }`}
-                >
-                  {pf === 'all' ? 'All' : pf}
-                </button>
-              ))}
-            </div>
+            {/* Platform filter (Game Pass only — PS+ uses PS4/PS5 which aren't filterable the same way) */}
+            {service === 'gamepass' && (
+              <div className="flex justify-center gap-1.5 mb-3">
+                {(['all', 'PC', 'Console'] as const).map((pf) => (
+                  <button
+                    key={pf}
+                    onClick={() => setPlatformFilter(pf)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium font-[family-name:var(--font-mono)] transition-all ${
+                      platformFilter === pf
+                        ? 'bg-white/10 text-text-primary'
+                        : 'text-text-dim hover:text-text-muted hover:bg-white/5'
+                    }`}
+                  >
+                    {pf === 'all' ? 'All' : pf}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* Mode buttons */}
             <div className="grid grid-cols-2 gap-2">
@@ -376,11 +462,11 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
               onClick={() => doRoll()}
               className="w-full mt-3 px-4 py-3 text-base font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
               style={{
-                background: 'linear-gradient(135deg, #107c10, #2ecc40)',
+                background: svc.gradient,
                 color: '#fff',
               }}
             >
-              🎲 Pick from Game Pass
+              🎲 Pick from {svc.label}
             </button>
           </div>
         )}
@@ -449,7 +535,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
                 </div>
               ) : (
                 <div className="w-full h-24 flex items-center justify-center text-4xl" style={{ backgroundColor: 'var(--color-bg-primary)' }}>
-                  🟩
+                  {svc.icon}
                 </div>
               )}
               <div className="px-5 pb-5 pt-3">
@@ -461,9 +547,9 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
                 <div className="flex flex-wrap justify-center gap-2 mb-2">
                   <span
                     className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider"
-                    style={{ backgroundColor: 'rgba(16, 124, 16, 0.15)', color: '#2ecc40' }}
+                    style={{ backgroundColor: svc.badgeColor, color: svc.color }}
                   >
-                    On Game Pass
+                    {svc.badgeText}
                   </span>
                   {isInLibrary(currentPick.name) && (
                     <span
@@ -554,7 +640,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
                   onClick={() => handleAddAndPlay(currentPick)}
                   className="flex-1 px-3 py-2.5 text-sm font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
                   style={{
-                    background: 'linear-gradient(135deg, #107c10, #2ecc40)',
+                    background: svc.gradient,
                     color: '#fff',
                   }}
                 >
@@ -578,7 +664,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
         {/* Rolling animation overlay */}
         {rolling && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-            <div className="text-5xl animate-bounce">🟩</div>
+            <div className="text-5xl animate-bounce">{svc.icon}</div>
           </div>
         )}
 
