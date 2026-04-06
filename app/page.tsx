@@ -30,6 +30,7 @@ import LandingPage from '@/components/LandingPage';
 import { SAMPLE_GAMES } from '@/lib/sampleLibrary';
 import PostImportSummary from '@/components/PostImportSummary';
 import GamePassBrowse from '@/components/GamePassBrowse';
+import StalledGameNudge from '@/components/StalledGameNudge';
 import { trackThemeSession } from '@/lib/archetypes';
 
 // ── Inline Search ──────────────────────────────────────────────────
@@ -508,6 +509,7 @@ function AppContent() {
           <div className="flex gap-1.5 sm:gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
             <button
               onClick={() => openReroll('quick-session')}
+              aria-label="Quick Session: pick a game you can finish in one sitting"
               className="shrink-0 px-3 py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, #6366f1, #818cf8)' }}
             >
@@ -515,6 +517,7 @@ function AppContent() {
             </button>
             <button
               onClick={() => openReroll('deep-cut')}
+              aria-label="Deep Cut: a game buried in your backlog you may have forgotten about"
               className="shrink-0 px-3 py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, #dc2626, #f87171)' }}
             >
@@ -522,6 +525,7 @@ function AppContent() {
             </button>
             <button
               onClick={() => openReroll('continue')}
+              aria-label="Keep Playing: pick from games you've already started"
               className="shrink-0 px-3 py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, #d97706, #fbbf24)' }}
             >
@@ -573,6 +577,9 @@ function AppContent() {
           </select>
         </div>
       )}
+
+      {/* ── Stalled Game Nudge (1 per session, dismissable) ── */}
+      {!isEmpty && <StalledGameNudge games={games} />}
 
       {/* ── Sync Nudge (below tabs, above games) ── */}
       {!isEmpty && <SyncNudge />}

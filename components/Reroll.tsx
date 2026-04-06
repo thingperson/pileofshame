@@ -221,6 +221,15 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
           animation: 'scaleIn 400ms ease-out',
         }}
       >
+        {/* Close button */}
+        <button
+          onClick={handleNotNow}
+          aria-label="Close"
+          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full text-text-dim hover:text-text-primary hover:bg-white/10 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
+        >
+          ✕
+        </button>
+
         {/* Header */}
         <div className="px-5 pt-5 pb-3 text-center">
           <h2 className="text-2xl font-extrabold text-text-primary tracking-tight">
