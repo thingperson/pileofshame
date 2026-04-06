@@ -63,6 +63,10 @@
 - "Move to Up Next" / "Back to Backlog" progression labels (was arrows) ✅
 - Hide redundant status badge when already on that tab ✅
 - Deep Cut description rewritten to "A game buried in your backlog you may have forgotten about" ✅
+- "Closest to Done" sort fixed (was falling through to A-Z during enrichment) ✅
+- Theme picker now closes settings menu on selection ✅
+- Sample banner "Clear" → "Dismiss" (no longer wipes library) ✅
+- iOS Home Screen icon cropped to fill frame (was tiny due to source padding) ✅
 
 ### Themes
 - Dark (default) ✅

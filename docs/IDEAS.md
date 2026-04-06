@@ -164,6 +164,24 @@ Stats button (📊) now visible in header on mobile, not just desktop.
 
 ---
 
+## Bug Fixes (April 6, 2026 — ongoing notes PDF)
+
+### 1. "Closest to Done" sort showing A-Z ✅ FIXED
+Sort fell through to alphabetical tiebreaker when games lacked HLTB data (common during enrichment). Now uses 4-tier sort: games with HLTB+progress (by remaining hours) > games with playtime only (by most hours) > games with HLTB only (short games first) > A-Z fallback.
+
+### 2. Theme picker inconsistent close ✅ FIXED
+Clicking a theme updated the theme but did not close the settings menu. Backdrop clicks closed it, button clicks didn't. Now closes on theme selection.
+
+### 3. Sample banner "Clear" wiped library ✅ FIXED
+"Clear" button on sample library banner was calling `setState({ games: [] })`, sending user to landing page. Renamed to "Dismiss" and now just hides the banner. The auto-dismiss-on-first-action behavior still works too.
+
+### 4. iOS Home Screen icon too small ✅ FIXED
+Source image `if-icon.png` has massive internal padding. PWA icons (192px, 512px) were rendering the full padded image. Cropped to center artwork and regenerated at correct sizes. Apple-icon also scaled up to crop padding.
+
+**Note:** For a permanent fix, the source `if-icon.png` should be re-exported from DALL-E or edited to fill the full 1024x1024 frame without padding. Current fix crops the existing image.
+
+---
+
 ## Raw Rambles (unsorted, dump here)
 
 (Brady: drop notes here when you're away from desktop. I'll sort them when you're back.)
