@@ -129,14 +129,17 @@
 - Tiered metacritic scoring (replaces flat linear scale) ✅
 - Rebalanced weights: genre 30, metacritic 20, completion 20, hours 15, age 10, enrichment 5 ✅
 
-### HLTB Progress Inference — PARTIALLY SHIPPED
+### HLTB Progress Inference + Behavioral Nudges — SHIPPED ✅
 - "~Xh left" badge on GridCard + GameCard (shows when remaining ≤ 8h) ✅
 - Green 🏁 at 85%+ progress, amber ⏳ below that ✅
 - "Closest to Done" sort option in backlog picker ✅
 - Sub Shuffle button logos upgraded (GP / PS+ text badges, readable) ✅
-- Still planned: stalled game nudge card ("Pick up where you left off?")
+- Stalled game nudge card: "Pick up where you left off?" ✅
+  - Detects games with 2+ hours, 14+ days stale, not completed
+  - Genre-aware messaging (story-rich, difficult, open world, general)
+  - 1 per session, rotates, backs off after 3 dismissals per game
 - Still planned: "Did you finish this?" prompt for 130%+ HLTB games
-- See: `docs/IDEAS.md` + `docs/behavioral-learning-framework.md` sections 2 + 4
+- See: `docs/IDEAS.md` + `docs/behavioral-learning-framework.md`
 
 ### Accessibility Hardening (MEDIUM)
 - Cozy theme text-faint/dim contrast fixed ✅
@@ -232,9 +235,9 @@
 | Review | Last Run | Status | Frequency |
 |--------|----------|--------|-----------|
 | Voice/AI lingo sweep | Apr 5, 2026 | Clean | Every deploy with new copy |
-| Accessibility audit | Apr 3, 2026 | 2 critical fixed, 3 major open | Monthly |
+| Accessibility audit | Apr 5, 2026 | 1 critical fixed (status aria-label), contrast fix, 2 major open (Reroll close btn, mode btn labels) | Monthly |
 | Feature creep audit | Apr 3, 2026 | Healthy with watchlist | Quarterly |
-| Mobile responsiveness | Apr 2, 2026 | Clean | Monthly |
+| Mobile responsiveness | Apr 5, 2026 | Tab labels fixed, mode buttons scroll OK, cards render clean at 375px | Monthly |
 | Enrichment accuracy | Apr 5, 2026 | Cache + retry shipped, scale test pending | After next large import |
 | Legal/privacy compliance | Apr 5, 2026 | Clean — no new user data, RAWG cache is public metadata only | Before any feature touching user data, deals, or profiling |
 
