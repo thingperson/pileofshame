@@ -69,6 +69,10 @@
 - iOS Home Screen icon cropped to fill frame (was tiny due to source padding) ✅
 - Just 5 Minutes card renders as bottom-sheet overlay (was crammed into button row) ✅
 - Reroll no-repeat: tracks shown games per session, prevents same game appearing twice ✅
+- "Almost Done" reroll mode: filters to games within 20% of HLTB completion ✅
+- Post-accept nudge: 3s motivational overlay after "Let's Go" with session estimate + Steam launch ✅
+- PS+ Sub Shuffle: `/api/psplus` fetches 427 games from Sony public GraphQL, unified with Game Pass in service tabs ✅
+- Sentry error monitoring + global error boundary + `/api/health` endpoint ✅
 
 ### Themes
 - Dark (default) ✅
@@ -220,14 +224,14 @@
 - ~~Skip tracking~~ — **SHIPPED** (persistent skip memory, soft-ignore after 5)
 - ~~Stalled game detection~~ — **SHIPPED** (nudge card + "Did you finish?" prompt)
 - **Full V3 spec written** — see `docs/decision-engine-v3-spec.md`
-- 6 features specced with priority order:
-  1. "Almost Done" reroll mode (1h, filter only)
-  2. Post-recommendation nudge (1-2h, motivational overlay after commit)
+- ~~"Almost Done" reroll mode~~ — **SHIPPED** (filters to games within 20% of HLTB completion) ✅
+- ~~Post-recommendation nudge~~ — **SHIPPED** (3s motivational overlay after "Let's Go", with session estimate + Steam launch link) ✅
+- Remaining V3 features (specced, not yet built):
   3. Cooldown / genre fatigue (1-2h, 7-day same-genre penalty after completion)
   4. "Why'd you skip?" feedback (3-4h, optional 1-tap reason: too long, not in mood, etc.)
   5. Energy matching (3-4h, Low/Medium/High selector with time-of-day defaults)
   6. Behavioral learning (8-12h, decision history, genre affinity, time tier preference)
-- TypeScript interfaces, localStorage schemas, weight tables, and testing plans included
+- TypeScript interfaces, localStorage schemas, weight tables, and testing plans in spec doc
 
 ### Jump Back In V3 (MEDIUM)
 - Story progress estimation from HLTB chapter data (if available)
