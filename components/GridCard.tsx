@@ -112,6 +112,7 @@ export default function GridCard({ game }: GridCardProps) {
           {/* Status badge overlay — top left */}
           <button
             onClick={handleStatusClick}
+            aria-label={nextStatus ? `${statusConfig.label}. Move to ${STATUS_CONFIG[nextStatus].label}` : statusConfig.label}
             className={`absolute top-2 left-2 flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] backdrop-blur-sm transition-all ${
               game.status !== 'played' && game.status !== 'bailed' ? 'hover:scale-105 active:scale-95 ring-1 ring-white/15' : ''
             }`}
@@ -216,8 +217,8 @@ export default function GridCard({ game }: GridCardProps) {
               <span
                 className="text-[10px] font-[family-name:var(--font-mono)] px-1 py-0 rounded"
                 style={{
-                  backgroundColor: progressPct! >= 85 ? 'rgba(34, 197, 94, 0.12)' : 'rgba(251, 191, 36, 0.12)',
-                  color: progressPct! >= 85 ? '#4ade80' : '#fbbf24',
+                  backgroundColor: progressPct! >= 85 ? 'rgba(34, 197, 94, 0.15)' : 'rgba(251, 191, 36, 0.15)',
+                  color: progressPct! >= 85 ? '#4ade80' : '#fcd34d',
                 }}
                 title={`~${progressPct}% through (${game.hoursPlayed}h / ${game.hltbMain}h)`}
               >

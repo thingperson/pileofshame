@@ -695,8 +695,8 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                       <span
                         className="px-1.5 py-0.5 rounded text-xs font-medium"
                         style={{
-                          backgroundColor: pct >= 85 ? 'rgba(34, 197, 94, 0.12)' : 'rgba(251, 191, 36, 0.12)',
-                          color: pct >= 85 ? '#4ade80' : '#fbbf24',
+                          backgroundColor: pct >= 85 ? 'rgba(34, 197, 94, 0.15)' : 'rgba(251, 191, 36, 0.15)',
+                          color: pct >= 85 ? '#4ade80' : '#fcd34d',
                         }}
                       >
                         {pct >= 85 ? '🏁' : '⏳'} ~{Math.round(remaining)}h left

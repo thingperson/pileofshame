@@ -8,16 +8,17 @@ export type TabId = 'backlog' | 'up-next' | 'now-playing' | 'completed';
 export interface TabDef {
   id: TabId;
   label: string;
+  shortLabel: string;
   statuses: GameStatus[];
   icon: string;
   color: string;
 }
 
 export const TABS: TabDef[] = [
-  { id: 'backlog', label: 'Backlog', statuses: ['buried'], icon: '📚', color: '#64748b' },
-  { id: 'up-next', label: 'Up Next', statuses: ['on-deck'], icon: '🎯', color: '#38bdf8' },
-  { id: 'now-playing', label: 'Now Playing', statuses: ['playing'], icon: '🔥', color: '#f59e0b' },
-  { id: 'completed', label: 'Completed', statuses: ['played', 'bailed'], icon: '✅', color: '#22c55e' },
+  { id: 'backlog', label: 'Backlog', shortLabel: 'Backlog', statuses: ['buried'], icon: '📚', color: '#64748b' },
+  { id: 'up-next', label: 'Up Next', shortLabel: 'Next', statuses: ['on-deck'], icon: '🎯', color: '#38bdf8' },
+  { id: 'now-playing', label: 'Now Playing', shortLabel: 'Playing', statuses: ['playing'], icon: '🔥', color: '#f59e0b' },
+  { id: 'completed', label: 'Completed', shortLabel: 'Done', statuses: ['played', 'bailed'], icon: '✅', color: '#22c55e' },
 ];
 
 interface TabNavProps {
@@ -82,7 +83,7 @@ export default function TabNav({ activeTab, onTabChange, counts }: TabNavProps) 
           >
             <span className="text-xs" aria-hidden="true">{tab.icon}</span>
             <span className="hidden sm:inline">{tab.label}</span>
-            <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
+            <span className="sm:hidden">{tab.shortLabel}</span>
             {count > 0 && (
               <span
                 className="text-[10px] font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded-full"
