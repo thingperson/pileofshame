@@ -49,6 +49,8 @@
 - Onboarding welcome state ✅
 - Sample library (40+ games for try-before-import onboarding) ✅
 - Landing page with hero illustration, mono brand banner, logomark ✅
+- /about page (landing content for returning users, no import CTAs) ✅
+- Landing page sign-in affordance for returning users ✅
 - Bold "Inventory Full" brand header with logomark ✅
 - Stats link promoted to header toolbar ✅
 - Milestone toasts (1/5/10/25/50 games cleared + decisions made) ✅
@@ -79,7 +81,7 @@
 ### Infrastructure
 - Supabase auth + cloud sync ✅
 - Google + GitHub OAuth ✅
-- OG image for Discord/Twitter/SMS unfurls (v2: brand copy, controller visual, feature pills) ✅
+- OG image for Discord/Twitter/SMS unfurls (v3: hero illustration, landing headline, Outfit + JetBrains Mono fonts, purple glow) ✅
 - GA4 analytics (reroll, commit, import events) ✅
 - PWA manifest + 192/512px icons + apple-icon fix ✅
 - Token efficiency restructure (plan file 94% reduction, path-scoped rules) ✅
@@ -153,6 +155,24 @@
 - 💤 indicator on cards for soft-ignored games ✅
 - Reset skip count from game detail view ✅
 - See: `docs/behavioral-learning-framework.md`
+
+### UX Feedback Sweep (April 6 PDF) — SHIPPED ✅
+- 16 items from Brady's UX review, 15 of 16 addressed
+- Now Playing cap (3 games, enforced across all entry points) ✅
+- Tab auto-follow on game move + nudge actions ✅
+- Nudge cards restricted to Backlog tab only ✅
+- "Move this game to:" label on stalled nudge buttons ✅
+- List view: platform badge hidden on mobile for title space ✅
+- Mobile tab label "Playing" → "Now" ✅
+- Sample library banner auto-dismiss after first action ✅
+- Library status pill (Sample / Your Library / Synced as [name]) ✅
+- + button removed, merged into search bar as add icon ✅
+- ViewToggle added to top of game list (was bottom-only) ✅
+- Stats button visible on mobile ✅
+- Header click resets to Backlog + scrolls to top ✅
+- /about page built (landing content, no import CTAs) ✅
+- Landing page sign-in affordance for returning users ✅
+- See: `docs/IDEAS.md` UX Feedback section for full detail
 
 ### Accessibility Hardening — SHIPPED ✅
 - Cozy theme text-faint/dim contrast fixed ✅

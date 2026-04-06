@@ -94,9 +94,10 @@ function getFinishMessage(game: Game): { question: string; subtext: string } {
 
 interface FinishCheckNudgeProps {
   games: Game[];
+  onTabSwitch?: (tabId: string) => void;
 }
 
-export default function FinishCheckNudge({ games }: FinishCheckNudgeProps) {
+export default function FinishCheckNudge({ games, onTabSwitch }: FinishCheckNudgeProps) {
   const [dismissed, setDismissed] = useState(isSessionDismissed);
   const { showCelebration } = useStore();
   const updateGame = useStore((s) => s.updateGame);
@@ -129,21 +130,30 @@ export default function FinishCheckNudge({ games }: FinishCheckNudgeProps) {
       updatedAt: new Date().toISOString(),
     });
     showCelebration(nudgeGame);
+    onTabSwitch?.('completed');
     setSessionDismissed();
     setDismissed(true);
-  }, [nudgeGame, updateGame, showCelebration]);
+  }, [nudgeGame, updateGame, showCelebration, onTabSwitch]);
 
   const handleNotYet = useCallback(() => {
     if (!nudgeGame) return;
+    // Now Playing cap check
+    const { games } = useStore.getState();
+    const nowPlayingCount = games.filter((g) => g.status === 'playing').length;
+    if (nowPlayingCount >= 3) {
+      showToast('Now Playing is capped at 3. Finish or shelve something first.');
+      return;
+    }
     // Move to Now Playing to encourage finishing
     updateGame(nudgeGame.id, {
       status: 'playing',
       updatedAt: new Date().toISOString(),
     });
     showToast(`${nudgeGame.name} -> Now Playing. You're so close.`);
+    onTabSwitch?.('now-playing');
     setSessionDismissed();
     setDismissed(true);
-  }, [nudgeGame, updateGame, showToast]);
+  }, [nudgeGame, updateGame, showToast, onTabSwitch]);
 
   if (dismissed || !nudgeGame) return null;
 

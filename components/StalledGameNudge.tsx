@@ -107,9 +107,10 @@ function getRemainingText(game: Game): string | null {
 
 interface StalledGameNudgeProps {
   games: Game[];
+  onTabSwitch?: (tabId: string) => void;
 }
 
-export default function StalledGameNudge({ games }: StalledGameNudgeProps) {
+export default function StalledGameNudge({ games, onTabSwitch }: StalledGameNudgeProps) {
   const [dismissed, setDismissed] = useState(isSessionDismissed);
   const { cycleStatus, showCelebration } = useStore();
   const updateGame = useStore((s) => s.updateGame);
@@ -136,17 +137,26 @@ export default function StalledGameNudge({ games }: StalledGameNudgeProps) {
     if (!nudgeGame) return;
 
     if (action === 'playing') {
+      // Now Playing cap check
+      const { games } = useStore.getState();
+      const nowPlayingCount = games.filter((g) => g.status === 'playing').length;
+      if (nowPlayingCount >= 3) {
+        showToast('Now Playing is capped at 3. Finish or shelve something first.');
+        return;
+      }
       updateGame(nudgeGame.id, { status: 'playing', updatedAt: new Date().toISOString() });
       showToast(`${nudgeGame.name} → Now Playing 🔥`);
+      onTabSwitch?.('now-playing');
     } else if (action === 'on-deck') {
       updateGame(nudgeGame.id, { status: 'on-deck', updatedAt: new Date().toISOString() });
       showToast(`${nudgeGame.name} → Up Next 🎯`);
+      onTabSwitch?.('up-next');
     }
     // 'buried' = leave it where it is, just dismiss the nudge
 
     setSessionDismissed();
     setDismissed(true);
-  }, [nudgeGame, updateGame, showToast]);
+  }, [nudgeGame, updateGame, showToast, onTabSwitch]);
 
   if (dismissed || !nudgeGame) return null;
 
@@ -203,7 +213,10 @@ export default function StalledGameNudge({ games }: StalledGameNudgeProps) {
           </div>
         </div>
 
-        {/* Action buttons */}
+        {/* Action label + buttons */}
+        <p className="text-[10px] text-text-dim font-[family-name:var(--font-mono)] uppercase tracking-wider mb-1.5">
+          Move this game to:
+        </p>
         <div className="flex gap-2">
           <button
             onClick={() => handleAction('playing')}

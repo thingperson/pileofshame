@@ -100,9 +100,16 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
   const handleTriage = (action: 'playing' | 'on-deck' | 'pile' | 'bail') => {
     if (!game) return;
     switch (action) {
-      case 'playing':
+      case 'playing': {
+        const { games: allGames } = useStore.getState();
+        const nowPlayingCount = allGames.filter((g) => g.status === 'playing').length;
+        if (nowPlayingCount >= 3) {
+          showToast('Now Playing is capped at 3. Finish or shelve something first.');
+          return;
+        }
         updateGame(game.id, { status: 'playing' as GameStatus });
         showToast(`🙌 ${game.name} → Now Playing. You tried it, you liked it, you're in.`);
+      }
         break;
       case 'on-deck':
         updateGame(game.id, { status: 'on-deck' as GameStatus });

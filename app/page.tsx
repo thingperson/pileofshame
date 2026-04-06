@@ -33,10 +33,11 @@ import GamePassBrowse from '@/components/GamePassBrowse';
 import StalledGameNudge from '@/components/StalledGameNudge';
 import FinishCheckNudge from '@/components/FinishCheckNudge';
 import { trackThemeSession } from '@/lib/archetypes';
+import { useAuth } from '@/lib/useAuth';
 
 // ── Inline Search ──────────────────────────────────────────────────
 
-function InlineSearch() {
+function InlineSearch({ onAddManual }: { onAddManual: () => void }) {
   const [expanded, setExpanded] = useState(false);
   const filters = useStore((s) => s.filters);
   const setFilter = useStore((s) => s.setFilter);
@@ -52,23 +53,35 @@ function InlineSearch() {
   };
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center gap-1">
       {expanded ? (
-        <div className="relative animate-[fadeIn_150ms_ease-out]">
-          <svg aria-hidden="true" className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-dim" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <input
-            ref={inputRef}
-            type="text"
-            value={filters.search}
-            onChange={(e) => setFilter('search', e.target.value)}
-            onBlur={() => { if (!filters.search) setExpanded(false); }}
-            placeholder="Search..."
-            aria-label="Search games"
-            className="w-24 sm:w-36 md:w-48 text-xs sm:text-sm bg-bg-card border border-border-subtle rounded-lg pl-7 sm:pl-8 pr-2 sm:pr-3 py-1.5 sm:py-2 text-text-primary placeholder-text-faint focus:outline-none focus:border-accent-purple transition-all"
-          />
-        </div>
+        <>
+          <div className="relative animate-[fadeIn_150ms_ease-out]">
+            <svg aria-hidden="true" className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-dim" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              ref={inputRef}
+              type="text"
+              value={filters.search}
+              onChange={(e) => setFilter('search', e.target.value)}
+              onBlur={() => { if (!filters.search) setExpanded(false); }}
+              placeholder="Search or add..."
+              aria-label="Search games or add manually"
+              className="w-28 sm:w-40 md:w-48 text-xs sm:text-sm bg-bg-card border border-border-subtle rounded-lg pl-7 sm:pl-8 pr-2 sm:pr-3 py-1.5 sm:py-2 text-text-primary placeholder-text-faint focus:outline-none focus:border-accent-purple transition-all"
+            />
+          </div>
+          <button
+            onMouseDown={(e) => { e.preventDefault(); onAddManual(); }}
+            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-text-dim hover:text-accent-purple hover:bg-white/5 transition-all"
+            title="Add a game manually"
+            aria-label="Add a game manually"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+          </button>
+        </>
       ) : (
         <button
           onClick={handleToggle}
@@ -88,6 +101,7 @@ function InlineSearch() {
 // ── Up Next Cap Constant ───────────────────────────────────────────
 
 const UP_NEXT_CAP = 5;
+const NOW_PLAYING_CAP = 3;
 
 // ── Main App ───────────────────────────────────────────────────────
 
@@ -102,6 +116,7 @@ function AppContent() {
   const [activeTab, setActiveTab] = useState<TabId>('backlog');
   const [backlogLimit, setBacklogLimit] = useState(10);
   const [backlogSort, setBacklogSort] = useState<'smart' | 'a-z' | 'z-a' | 'newest' | 'oldest' | 'most-playtime' | 'least-playtime' | 'closest-to-done'>('smart');
+  const [sampleBannerDismissed, setSampleBannerDismissed] = useState(false);
   // GridCard handles its own detail modal internally
 
   const openReroll = (mode?: RerollMode) => {
@@ -132,6 +147,7 @@ function AppContent() {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const { user, isSignedIn } = useAuth();
   const celebrationGame = useStore((s) => s.celebrationGame);
   const closeCelebration = useStore((s) => s.closeCelebration);
   const cycleStatus = useStore((s) => s.cycleStatus);
@@ -231,6 +247,7 @@ function AppContent() {
   }, []);
 
   const moveGameForward = useCallback((game: Game) => {
+    setSampleBannerDismissed(true);
     const next = getNextTabStatus(game.status);
     if (!next) return;
 
@@ -239,6 +256,15 @@ function AppContent() {
       const upNextCount = games.filter((g) => g.status === 'on-deck').length;
       if (upNextCount >= UP_NEXT_CAP) {
         showToast(`Up Next is capped at ${UP_NEXT_CAP}. These are games you're actually going to play next. Move something back first.`);
+        return;
+      }
+    }
+
+    // Now Playing cap check
+    if (next.status === 'playing') {
+      const nowPlayingCount = games.filter((g) => g.status === 'playing').length;
+      if (nowPlayingCount >= NOW_PLAYING_CAP) {
+        showToast(`Now Playing is capped at ${NOW_PLAYING_CAP}. Finish or shelve something first.`);
         return;
       }
     }
@@ -413,7 +439,7 @@ function AppContent() {
           <div>
             <h1
               className="text-2xl font-extrabold tracking-tight text-text-primary cursor-pointer hover:text-accent-purple transition-colors"
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              onClick={() => { setActiveTab('backlog'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             >
               Inventory Full
             </h1>
@@ -422,29 +448,22 @@ function AppContent() {
             </p>
           </div>
           <div className="flex items-center gap-1 sm:gap-1.5">
-            <InlineSearch />
+            <InlineSearch onAddManual={() => { setAddModalInitialName(''); setAddModalOpen(true); }} />
             <button
               onClick={() => setImportHubOpen(true)}
-              className="w-9 h-9 sm:w-auto sm:h-auto flex items-center justify-center sm:px-2.5 sm:py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+              className="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-2 text-[11px] sm:text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
               title="Import games"
             >
-              <span className="sm:hidden text-base">📥</span>
-              <span className="hidden sm:inline">📥 Import</span>
-            </button>
-            <button
-              onClick={() => { setAddModalInitialName(''); setAddModalOpen(true); }}
-              className="w-9 h-9 sm:w-auto sm:h-auto flex items-center justify-center sm:px-2.5 sm:py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
-              title="Add game"
-            >
-              <span className="sm:hidden text-base">+</span>
-              <span className="hidden sm:inline">+ Add</span>
+              <span className="text-sm sm:text-base">📥</span>
+              <span className="hidden sm:inline">Import</span>
             </button>
             <a
               href="/stats"
-              className="hidden sm:inline-flex px-2.5 py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+              className="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-2 text-[11px] sm:text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
               title="Stats"
             >
-              📊 Stats
+              <span className="text-sm sm:text-base">📊</span>
+              <span className="hidden sm:inline">Stats</span>
             </a>
             <AuthButton />
             <SettingsMenu />
@@ -452,8 +471,50 @@ function AppContent() {
         </div>
       </header>
 
-      {/* ── Sample library banner ── */}
-      {isSampleLibrary && (
+      {/* ── Library status pill ── */}
+      {!isEmpty && (
+        <div className="mb-2 flex items-center gap-2">
+          <span
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-[family-name:var(--font-mono)]"
+            style={{
+              backgroundColor: isSampleLibrary
+                ? 'color-mix(in srgb, var(--color-accent-purple) 10%, transparent)'
+                : isSignedIn
+                  ? 'rgba(34, 197, 94, 0.08)'
+                  : 'rgba(255, 255, 255, 0.04)',
+              color: isSampleLibrary
+                ? 'var(--color-accent-purple)'
+                : isSignedIn
+                  ? '#4ade80'
+                  : 'var(--color-text-faint)',
+              border: `1px solid ${isSampleLibrary
+                ? 'color-mix(in srgb, var(--color-accent-purple) 20%, transparent)'
+                : isSignedIn
+                  ? 'rgba(34, 197, 94, 0.15)'
+                  : 'rgba(255, 255, 255, 0.06)'}`,
+            }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full" style={{
+              backgroundColor: isSampleLibrary
+                ? 'var(--color-accent-purple)'
+                : isSignedIn ? '#4ade80' : 'var(--color-text-faint)',
+            }} />
+            {isSampleLibrary
+              ? 'Sample Library'
+              : isSignedIn
+                ? `Synced as ${user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'you'}`
+                : 'Your Library'}
+          </span>
+          {!isSampleLibrary && !isSignedIn && (
+            <span className="text-[10px] text-text-faint font-[family-name:var(--font-mono)]">
+              not synced
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* ── Sample library banner (auto-dismiss after first action) ── */}
+      {isSampleLibrary && !sampleBannerDismissed && (
         <div
           className="mb-3 flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl text-xs font-[family-name:var(--font-mono)]"
           style={{
@@ -557,31 +618,38 @@ function AppContent() {
         <TabNav activeTab={activeTab} onTabChange={setActiveTab} counts={tabCounts} />
       </div>
 
-      {/* ── Sort control (Backlog tab only) ── */}
-      {!isEmpty && activeTab === 'backlog' && tabGames.length > 0 && (
+      {/* ── Sort control + View toggle ── */}
+      {!isEmpty && tabGames.length > 0 && (
         <div className="flex items-center gap-2 mb-2">
-          <label htmlFor="backlog-sort" className="text-[10px] text-text-faint font-[family-name:var(--font-mono)]">Sort:</label>
-          <select
-            id="backlog-sort"
-            value={backlogSort}
-            onChange={(e) => { setBacklogSort(e.target.value as typeof backlogSort); setBacklogLimit(10); }}
-            className="text-[11px] bg-bg-card border border-border-subtle rounded-lg px-2 py-1 text-text-muted focus:outline-none focus:border-accent-purple transition-all cursor-pointer font-[family-name:var(--font-mono)]"
-          >
-            <option value="smart">✨ Best for You</option>
-            <option value="a-z">A → Z</option>
-            <option value="z-a">Z → A</option>
-            <option value="newest">Newest first</option>
-            <option value="oldest">Oldest first</option>
-            <option value="closest-to-done">🏁 Closest to Done</option>
-            <option value="most-playtime">Most playtime</option>
-            <option value="least-playtime">Least playtime</option>
-          </select>
+          {activeTab === 'backlog' && (
+            <>
+              <label htmlFor="backlog-sort" className="text-[10px] text-text-faint font-[family-name:var(--font-mono)]">Sort:</label>
+              <select
+                id="backlog-sort"
+                value={backlogSort}
+                onChange={(e) => { setBacklogSort(e.target.value as typeof backlogSort); setBacklogLimit(10); }}
+                className="text-[11px] bg-bg-card border border-border-subtle rounded-lg px-2 py-1 text-text-muted focus:outline-none focus:border-accent-purple transition-all cursor-pointer font-[family-name:var(--font-mono)]"
+              >
+                <option value="smart">✨ Best for You</option>
+                <option value="a-z">A → Z</option>
+                <option value="z-a">Z → A</option>
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+                <option value="closest-to-done">🏁 Closest to Done</option>
+                <option value="most-playtime">Most playtime</option>
+                <option value="least-playtime">Least playtime</option>
+              </select>
+            </>
+          )}
+          <div className="ml-auto">
+            <ViewToggle />
+          </div>
         </div>
       )}
 
       {/* ── Behavioral Nudges (1 each per session, dismissable) ── */}
-      {!isEmpty && <StalledGameNudge games={games} />}
-      {!isEmpty && <FinishCheckNudge games={games} />}
+      {!isEmpty && activeTab === 'backlog' && <StalledGameNudge games={games} onTabSwitch={(id) => setActiveTab(id as TabId)} />}
+      {!isEmpty && activeTab === 'backlog' && <FinishCheckNudge games={games} onTabSwitch={(id) => setActiveTab(id as TabId)} />}
 
       {/* ── Sync Nudge (below tabs, above games) ── */}
       {!isEmpty && <SyncNudge />}
@@ -653,6 +721,13 @@ function AppContent() {
           {activeTab === 'up-next' && tabGames.length >= UP_NEXT_CAP && (
             <div className="mb-3 px-3 py-2 rounded-lg text-xs text-text-muted font-[family-name:var(--font-mono)]" style={{ backgroundColor: 'rgba(56, 189, 248, 0.06)' }}>
               Up Next is capped at {UP_NEXT_CAP}. These are games you&apos;re actually going to play, not a second backlog. Move something back to make room.
+            </div>
+          )}
+
+          {/* Now Playing cap message */}
+          {activeTab === 'now-playing' && tabGames.length >= NOW_PLAYING_CAP && (
+            <div className="mb-3 px-3 py-2 rounded-lg text-xs text-text-muted font-[family-name:var(--font-mono)]" style={{ backgroundColor: 'rgba(245, 158, 11, 0.06)' }}>
+              Now Playing is capped at {NOW_PLAYING_CAP}. The constraint is the feature. Finish or shelve something to make room.
             </div>
           )}
 
@@ -750,6 +825,12 @@ function AppContent() {
         <div className="flex items-center justify-between mt-4 mb-2">
           <ViewToggle />
           <div className="flex items-center gap-3">
+            <a
+              href="/about"
+              className="text-[11px] text-text-faint hover:text-text-muted transition-colors font-[family-name:var(--font-mono)]"
+            >
+              About
+            </a>
             <button
               onClick={() => setHelpOpen(true)}
               className="text-[11px] text-text-faint hover:text-text-muted transition-colors font-[family-name:var(--font-mono)]"

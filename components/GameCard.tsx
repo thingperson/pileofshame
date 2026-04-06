@@ -456,6 +456,12 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
   }, [game.id, game.name, setBailed, showToast]);
 
   const handlePlayAgain = useCallback(() => {
+    const { games } = useStore.getState();
+    const nowPlayingCount = games.filter((g) => g.status === 'playing').length;
+    if (nowPlayingCount >= 3) {
+      showToast('Now Playing is capped at 3. Finish or shelve something first.');
+      return;
+    }
     playAgain(game.id);
     showToast(`Back for more? Let's go.`);
     onStatusChange?.('playing');
@@ -596,7 +602,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
             {tierConfig.icon}
           </span>
           <span
-            className="text-[10px] font-bold font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded"
+            className="hidden sm:inline text-[10px] font-bold font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded"
             style={{
               backgroundColor: SOURCE_COLORS[game.source].bg,
               color: SOURCE_COLORS[game.source].text,

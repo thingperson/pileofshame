@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import AuthButton from '@/components/AuthButton';
 
 interface LandingPageProps {
   onImport: () => void;
@@ -169,6 +170,17 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           >
             No library? Try a sample.
           </button>
+
+          {/* Sign-in affordance for returning users */}
+          <div className="mt-6 flex items-center justify-center gap-2">
+            <span
+              className="text-xs font-[family-name:var(--font-mono)]"
+              style={{ color: 'var(--color-text-faint)' }}
+            >
+              Already have an account?
+            </span>
+            <AuthButton />
+          </div>
         </div>
 
         {/* Scroll hint */}

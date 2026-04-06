@@ -88,6 +88,12 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   }, [games, mode, moodFilters, currentPick, reroll.sessionCount, incrementReroll, pushLastPick, showToast, skippedIds, platformPreference]);
 
   const handleLetsGo = useCallback((game: Game) => {
+    // Now Playing cap check
+    const nowPlayingCount = games.filter((g) => g.status === 'playing').length;
+    if (nowPlayingCount >= 3) {
+      showToast('Now Playing is capped at 3. Finish or shelve something first.');
+      return;
+    }
     updateGame(game.id, { status: 'playing' });
     trackRerollCommit();
     showToast(`${game.name} → Playing 🔥 Let's go!`);
@@ -96,7 +102,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
     setShowForced(false);
     setRevealed(false);
     onClose();
-  }, [updateGame, resetReroll, showToast, onClose]);
+  }, [games, updateGame, resetReroll, showToast, onClose]);
 
   const handleNotNow = useCallback(() => {
     resetReroll();

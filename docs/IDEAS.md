@@ -107,6 +107,63 @@ Targeted at clearing the backlog, not just picking something to play.
 
 ---
 
+## UX Feedback (April 6, 2026 PDF review)
+
+Captured from Brady's feedback document (April 6, 2026 PDF).
+
+### 1. Tab auto-follow on game move ✅ SHIPPED
+Tabs auto-switch to destination after moving a game. Nudge actions also switch tabs.
+
+### 2. Stalled game nudge button confusion ✅ SHIPPED
+Added "Move this game to:" label above action buttons.
+
+### 3. List view title truncation ✅ SHIPPED
+Platform badge hidden on mobile (< sm breakpoint). Full platform info visible in expanded details and on desktop.
+
+### 4. After tab switch disorientation ✅ SHIPPED
+Nudge cards now only show on the Backlog tab, not on destination tabs.
+
+### 5. Now Playing cap ✅ SHIPPED
+NOW_PLAYING_CAP = 3 enforced across all entry points: moveGameForward, Reroll, StalledGameNudge, FinishCheckNudge, JustFiveMinutes, and playAgain. Cap message shown in Now Playing tab when full.
+
+### 6. "Playing" tab label ✅ SHIPPED
+Mobile short label changed from "Playing" to "Now" in TabNav.
+
+### 7. Sample library banner auto-dismiss ✅ SHIPPED
+Banner auto-dismisses after first game action (move forward/back). Also dismissed when sample library is cleared or replaced by import.
+
+### 8. Library status indicator ✅ SHIPPED
+Subtle pill below header showing library state: "Sample Library" (purple), "Synced as [name]" (green), or "Your Library - not synced" (dim). Uses colored dot indicator.
+
+### 9. Search no-results inline ✅ VERIFIED
+Already positioned correctly. No-results message and add prompt appear immediately below search indicator, not below game cards.
+
+### 10. + button removed, merged into search ✅ SHIPPED
+Standalone + button removed from header. A + icon now appears inside the search bar when expanded, opening the Add Game modal. Reduces header clutter.
+
+### 11. Import emoji labeling ✅ SHIPPED
+Button shows emoji on mobile, "📥 Import" on desktop. Title attribute provides tooltip.
+
+### 12. Search-to-add merged ✅ SHIPPED
++ button removed. Search now handles both finding existing games and adding new ones. "+ Add manually" icon appears when search is expanded.
+
+### 13. Grid/list toggle placement ✅ SHIPPED
+ViewToggle now appears at top of game list (next to sort controls) as well as at the bottom.
+
+### 14. "Inventory Full" header clickable ✅ SHIPPED
+Header click resets to Backlog tab and scrolls to top. /about page built for landing content access.
+
+### 15. Return to landing page ✅ SHIPPED
+/about route created with landing page content (no import CTAs). "About" link in bottom nav bar. "Open App" button links back to /.
+
+### 16. Stats page discoverability ✅ SHIPPED
+Stats button (📊) now visible in header on mobile, not just desktop.
+
+### + Landing page sign-in affordance ✅ SHIPPED
+"Already have an account?" + AuthButton added to landing page hero. Returning users can sign in directly without re-importing.
+
+---
+
 ## Raw Rambles (unsorted, dump here)
 
 (Brady: drop notes here when you're away from desktop. I'll sort them when you're back.)
