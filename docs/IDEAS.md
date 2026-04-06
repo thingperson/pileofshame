@@ -36,16 +36,27 @@ The data already exists (hoursPlayed + hltbMain). We just need to tell stories w
 
 ### PS+ Sub Shuffle
 We know:
-- `psn-api` returns `membership: "PS_PLUS"` field
+- `psn-api` returns `membership: "PS_PLUS"` field on each game
 - Users tell us their tier (Essential / Extra / Premium)
 - We can see which monthly games they've claimed
 - We can deduce catalog access from tier + claimed games
 
+**PS+ Catalog API (researched April 2026):**
+- Sony's PS Store uses a GraphQL endpoint: `https://web.np.playstation.com/api/graphql/v1/op`
+- Operation: `categoryGridRetrieve` with category UUID `3a7006fe-e26f-49fe-87e5-4473d7ed0fb2` (PS+ Game Catalog)
+- Pagination: `pageArgs: {size: 24, offset: 0}`, supports sorting and filtering
+- Requires `sha256Hash` in extensions param (may rotate, can be refreshed from browser network tab)
+- Reference: `mrt1m/playstation-store-api` on GitHub has Postman collection with exact queries
+- Public URL: `store.playstation.com/en-us/category/3a7006fe-e26f-49fe-87e5-4473d7ed0fb2`
+- NOT an official API. Undocumented/reverse-engineered. Same approach as Game Pass catalog but Sony could change it.
+
 **Implementation:**
+- Build `/api/psplus/route.ts` mirroring the Game Pass catalog route
 - Add tier selector to PS import or settings
-- Match claimed games against known PS+ catalog
+- Match claimed games against live catalog
 - Filter Sub Shuffle to show games available on their tier
 - Parity with Game Pass browse experience
+- Need to handle sha256Hash rotation (check if stable or needs refresh)
 
 ### Sub Shuffle Logo Fix
 Current platform logos on Sub Shuffle button are generic/tiny. Options:

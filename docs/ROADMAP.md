@@ -94,7 +94,7 @@
 - Free tier: 150 req/hr, no credit card, covers all endpoints we need
 - **Game Pass Browse component built** — `components/GamePassBrowse.tsx` exists ✅
 - Still needed: verify Game Pass catalog endpoint works end-to-end
-- Still needed: PS+ catalog side of Sub Shuffle (Sony GraphQL API researched, `psn-api` already returns `membership: "PS_PLUS"` field)
+- Still needed: PS+ catalog side of Sub Shuffle (GraphQL endpoint found: `categoryGridRetrieve` with UUID `3a7006fe`, see IDEAS.md for full spec)
 
 ### Landing Page — SHIPPED ✅
 - Hero illustration + bold brand banner with logomark ✅
