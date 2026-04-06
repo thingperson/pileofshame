@@ -53,6 +53,7 @@
 - Landing page sign-in affordance for returning users ✅
 - Bold "Inventory Full" brand header with logomark ✅
 - Stats link promoted to header toolbar ✅
+- Stats share buttons (X, Reddit, Copy for Discord) on value calculator ✅
 - Milestone toasts (1/5/10/25/50 games cleared + decisions made) ✅
 - Behavioral archetypes — 20+ player personality types based on library composition ✅
 - Achievement showcase — Xbox/PSN achievement counts on game cards ✅
@@ -236,7 +237,7 @@
 ### Phase 4: Social & Sharing (LOW priority for now)
 - Public profile route (/u/username)
 - OG link previews for shared profiles
-- Share card redesign
+- Share image cards (PNG generation via /api/share-card exists but UI stripped — restore when prioritized)
 - Friend comparisons ("your pile vs. theirs")
 
 ### Phase 5: Smart Notifications (LOW)
