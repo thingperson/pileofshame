@@ -155,9 +155,9 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
 
   const pct = ((300 - timeLeft) / TIMER_SECONDS) * 100;
 
-  // Just the button when not active
-  if (!active) {
-    return (
+  return (
+    <>
+      {/* Button — always rendered in the mode button row */}
       <button
         onClick={startSession}
         className="shrink-0 px-3 sm:px-4 py-2 sm:py-2.5 text-[11px] sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
@@ -166,22 +166,20 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
       >
         ⚡ Just 5 Min
       </button>
-    );
-  }
 
-  return (
-    <>
-      {/* Main card — shows during suggest and triage phases */}
-      {(step === 'suggest' || step === 'triage') && (
-        <div
-          className="rounded-xl border p-4 space-y-3"
-          style={{
-            backgroundColor: 'var(--color-bg-card)',
-            borderColor: 'rgba(5, 150, 105, 0.3)',
-            background: 'linear-gradient(135deg, var(--color-bg-card), rgba(5, 150, 105, 0.05))',
-            animation: 'scaleIn 300ms ease-out',
-          }}
-        >
+      {/* Main card — bottom-sheet overlay for suggest and triage phases */}
+      {active && (step === 'suggest' || step === 'triage') && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4">
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={handleClose} />
+          <div
+            className="relative w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl border p-4 space-y-3"
+            style={{
+              backgroundColor: 'var(--color-bg-card)',
+              borderColor: 'rgba(5, 150, 105, 0.3)',
+              background: 'linear-gradient(135deg, var(--color-bg-card), rgba(5, 150, 105, 0.05))',
+              animation: 'scaleIn 300ms ease-out',
+            }}
+          >
           {/* Header */}
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider" style={{ color: '#34d399' }}>
@@ -264,11 +262,12 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
               </button>
             </div>
           )}
+          </div>
         </div>
       )}
 
       {/* Floating timer pill — shows during timing phase, sticks to bottom */}
-      {step === 'timing' && (
+      {active && step === 'timing' && (
         <div
           className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 pl-3 pr-2 py-2 rounded-full shadow-xl shadow-black/40"
           style={{

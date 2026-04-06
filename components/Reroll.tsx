@@ -28,6 +28,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   const [revealed, setRevealed] = useState(false);
   const [skipModePicker, setSkipModePicker] = useState(false);
   const [skippedIds, setSkippedIds] = useState<Set<string>>(new Set());
+  const [shownIds, setShownIds] = useState<Set<string>>(new Set());
 
   const games = useStore((s) => s.games);
   const platformPreference = useStore((s) => s.settings.platformPreference) || 'any';
@@ -47,7 +48,19 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   const doRoll = useCallback((overrideMode?: RerollMode) => {
     const rollMode = overrideMode || mode;
     const eligible = getEligibleGames(games, rollMode, platformPreference, moodFilters);
-    const pick = pickWeighted(eligible, skippedIds, reroll.lastThreePicks);
+
+    // Filter out games already shown this session to prevent repetition
+    const unseenEligible = eligible.filter((g) => !shownIds.has(g.id));
+
+    // If all eligible games have been shown, tell the user
+    if (unseenEligible.length === 0 && eligible.length > 0) {
+      showToast(eligible.length === 1
+        ? 'Only one game matches this mode. Try a different mode or adjust your filters.'
+        : `You've seen all ${eligible.length} games in this category. Try a different mode or adjust your filters.`);
+      return;
+    }
+
+    const pick = pickWeighted(unseenEligible.length > 0 ? unseenEligible : eligible, skippedIds, reroll.lastThreePicks);
     if (!pick) {
       showToast(moodFilters.length > 0
         ? 'No games match that mood. Try removing a filter.'
@@ -61,6 +74,9 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
       setSkippedIds((prev) => new Set(prev).add(currentPick.id));
       recordSkip(currentPick.id);
     }
+
+    // Track shown game to prevent repetition
+    setShownIds((prev) => new Set(prev).add(pick.id));
 
     incrementReroll();
     trackReroll(rollMode);
@@ -85,7 +101,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
         setTimeout(() => setShowForced(true), 600);
       }
     }, 500);
-  }, [games, mode, moodFilters, currentPick, reroll.sessionCount, incrementReroll, pushLastPick, showToast, skippedIds, platformPreference]);
+  }, [games, mode, moodFilters, currentPick, reroll.sessionCount, incrementReroll, pushLastPick, showToast, skippedIds, shownIds, platformPreference]);
 
   const handleLetsGo = useCallback((game: Game) => {
     // Now Playing cap check
@@ -130,6 +146,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
       setShowForced(false);
       setRevealed(false);
       setSkippedIds(new Set());
+      setShownIds(new Set());
       setMoodFilters([]);
       if (initialMode) {
         setMode(initialMode);
@@ -327,7 +344,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
               {REROLL_MODES.map(({ mode: m, icon, label }) => (
                 <button
                   key={m}
-                  onClick={() => { setMode(m); doRoll(m); }}
+                  onClick={() => { setMode(m); setShownIds(new Set()); doRoll(m); }}
                   className={`px-3 py-2 rounded-full text-xs font-medium font-[family-name:var(--font-mono)] transition-all ${
                     mode === m
                       ? 'bg-white/10 text-text-primary'
