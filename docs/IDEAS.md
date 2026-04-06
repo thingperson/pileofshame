@@ -42,21 +42,38 @@ We know:
 - We can deduce catalog access from tier + claimed games
 
 **PS+ Catalog API (researched April 2026):**
-- Sony's PS Store uses a GraphQL endpoint: `https://web.np.playstation.com/api/graphql/v1/op`
-- Operation: `categoryGridRetrieve` with category UUID `3a7006fe-e26f-49fe-87e5-4473d7ed0fb2` (PS+ Game Catalog)
-- Pagination: `pageArgs: {size: 24, offset: 0}`, supports sorting and filtering
-- Requires `sha256Hash` in extensions param (may rotate, can be refreshed from browser network tab)
-- Reference: `mrt1m/playstation-store-api` on GitHub has Postman collection with exact queries
-- Public URL: `store.playstation.com/en-us/category/3a7006fe-e26f-49fe-87e5-4473d7ed0fb2`
-- NOT an official API. Undocumented/reverse-engineered. Same approach as Game Pass catalog but Sony could change it.
+- Endpoint: `https://web.np.playstation.com/api/graphql/v1/op` (same base URL psn-api uses)
+- **NO PSN auth needed** — public endpoint, just needs sha256Hash + locale header
+- Header: `x-psn-store-locale-override: en-US`
+
+Category UUIDs:
+- `3a7006fe-e26f-49fe-87e5-4473d7ed0fb2` — PS Plus Game Catalog (all games, ~250-300 titles)
+- `05a2d027-cedc-4ac0-abeb-8fc26fec7180` — Game Catalog (all games)
+- `038b4df3-bb4c-48f8-8290-3feb35f0f0fd` — PS Plus (general)
+
+Operations:
+- `categoryGridRetrieve` — browse catalog by category UUID
+  - variables: `{ id: "<UUID>", pageArgs: { size: 24, offset: 0 }, sortBy: { name: "productReleaseDate", isAscending: false } }`
+  - sha256Hash: `4ce7d410a4db2c8b635a48c1dcec375906ff63b19dadd87e073f8fd0c0481d35`
+- `featuresRetrieve` — tier-specific content
+  - TIER_10 = Essential, TIER_20 = Extra, TIER_30 = Premium
+  - sha256Hash: `010870e8e9269c5bcf06b60190edbf5229310d8fae5b86515ad73f05bd11c4d1`
+
+Risk: sha256 hashes can rotate. Hashes have been stable since PS Store redesign (2020+). If broken, refresh from browser DevTools on store.playstation.com.
+
+References:
+- `mrt1m/playstation-store-api` (GitHub) — PHP wrapper with Postman collection, all hashes
+- `store.playstation.com/en-us/category/3a7006fe-e26f-49fe-87e5-4473d7ed0fb2` — live page
+- `platprices.com/developers.php` — third-party alternative API
+- `olegshulyakov.github.io/psn-swagger/` — community swagger docs
 
 **Implementation:**
 - Build `/api/psplus/route.ts` mirroring the Game Pass catalog route
+- No auth needed — simpler than Game Pass route
 - Add tier selector to PS import or settings
-- Match claimed games against live catalog
+- Cross-reference catalog against user's library
 - Filter Sub Shuffle to show games available on their tier
 - Parity with Game Pass browse experience
-- Need to handle sha256Hash rotation (check if stable or needs refresh)
 
 ### Sub Shuffle Logo Fix
 Current platform logos on Sub Shuffle button are generic/tiny. Options:
