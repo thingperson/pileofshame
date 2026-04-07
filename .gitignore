@@ -36,6 +36,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# scratch / reference images (not deployed)
+public/_slop/
+public/dino theme images/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
