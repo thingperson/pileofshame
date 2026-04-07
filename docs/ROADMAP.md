@@ -30,7 +30,7 @@
 
 ### Enrichment Pipeline
 - RAWG: cover art, metacritic, genres, description ✅
-- HLTB: main story hours, completionist hours ✅
+- HLTB: main story hours, completionist hours (direct API integration, no npm dependency) ✅
 - Auto mood tag inference from genres + game overrides ✅
 - Time tier inference from HLTB data ✅
 - Non-finishable game detection (MMOs, sandboxes, multiplayer-only) ✅
@@ -73,6 +73,9 @@
 - Post-accept nudge: 3s motivational overlay after "Let's Go" with session estimate + Steam launch ✅
 - PS+ Sub Shuffle: `/api/psplus` fetches 427 games from Sony public GraphQL, unified with Game Pass in service tabs ✅
 - Sentry error monitoring + global error boundary + `/api/health` endpoint ✅
+- Custom 404 page + app-level error boundary with Sentry reporting ✅
+- Favicon cropped to fill Chrome tab (was tiny due to source padding) ✅
+- HLTB direct API integration (replaced broken npm packages with /api/find + token auth + honeypot) ✅
 
 ### Themes
 - Dark (default) ✅
