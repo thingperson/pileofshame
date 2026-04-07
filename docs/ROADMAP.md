@@ -215,8 +215,8 @@
 - Global error boundary (`app/global-error.tsx`) catches root layout errors ✅
 - Health endpoint (`/api/health`) for uptime monitoring ✅
 - instrumentation.ts for server/edge Sentry init ✅
-- Still needed: add `NEXT_PUBLIC_SENTRY_DSN` in Vercel env vars (get from sentry.io)
-- Still needed: set up UptimeRobot free tier to ping `/api/health`
+- Sentry DSN configured in Vercel, first event received ✅
+- UptimeRobot monitoring `/api/health` every 5 min ✅
 
 ---
 
@@ -288,12 +288,12 @@
 
 | Review | Last Run | Status | Frequency |
 |--------|----------|--------|-----------|
-| Voice/AI lingo sweep | Apr 6, 2026 | Clean | Every deploy with new copy |
+| Voice/AI lingo sweep | Apr 7, 2026 | Clean — 404 page, error pages, post-accept nudge copy, Sub Shuffle quips all reviewed | Every deploy with new copy |
 | Accessibility audit | Apr 6, 2026 | All critical/major items resolved. Reroll close btn ✅, mode btn labels ✅, status aria-labels ✅, contrast ✅ | Monthly |
-| Feature creep audit | Apr 6, 2026 | Healthy. 12 buttons above fold (was 13). New nudges are contextual/dismissable, skip tracking is invisible. 13 themes = maintenance watch. | Quarterly |
+| Feature creep audit | Apr 7, 2026 | Healthy. 3 new pages (404, error, global-error) are edge-case only. Genre cooldown is invisible. Zero new happy-path UI elements. 13 themes = maintenance watch. | Quarterly |
 | Mobile responsiveness | Apr 6, 2026 | Tab labels fixed, mode buttons scroll OK, cards render clean at 375px, nudge cards stack cleanly | Monthly |
-| Enrichment accuracy | Apr 6, 2026 | Cache + retry shipped, 200+ library working at a glance. Edge cases (DLC, remasters) not formally audited | Quarterly |
-| Legal/privacy compliance | Apr 6, 2026 | Clean — skip tracking + nudge dismissals are localStorage only, no data sent externally | Before any feature touching user data, deals, or profiling |
+| Enrichment accuracy | Apr 7, 2026 | HLTB direct API integration replaced broken npm packages. All test games returning data. RAWG cache + retry still solid. | Quarterly |
+| Legal/privacy compliance | Apr 7, 2026 | Sentry added to Privacy Policy (third-party services + cookies/tracking sections). Genre cooldown is localStorage only. | Before any feature touching user data, deals, or profiling |
 
 ### Legal Guardrails (Locked, April 2026)
 

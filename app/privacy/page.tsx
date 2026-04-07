@@ -18,7 +18,7 @@ export default function PrivacyPage() {
 
         <h1 className="text-3xl font-bold mb-2">Privacy Policy</h1>
         <p className="text-sm text-text-dim font-[family-name:var(--font-mono)] mb-8">
-          Last updated: April 6, 2026
+          Last updated: April 7, 2026
         </p>
 
         <div className="space-y-8 text-text-secondary text-[15px] leading-relaxed">
@@ -116,6 +116,7 @@ export default function PrivacyPage() {
               <li><strong>PlayStation Store API</strong>: PS Plus catalog browsing (game names only, no user data sent)</li>
               <li><strong>Xbox Game Pass catalog</strong>: Game Pass catalog browsing (game names only, no user data sent)</li>
               <li><strong>Supabase</strong>: authentication and cloud sync (when signed in)</li>
+              <li><strong>Sentry</strong>: error monitoring (anonymous error reports, no personal data sent)</li>
             </ul>
           </section>
 
@@ -137,8 +138,11 @@ export default function PrivacyPage() {
             <p>
               We use Google Analytics to understand how people use the app (page views, feature usage,
               general traffic patterns). Google Analytics may set cookies to distinguish users. We do
-              not use this data to identify individuals or build advertising profiles. We do not use
-              pixel trackers, fingerprinting, or any form of cross-site tracking.
+              not use this data to identify individuals or build advertising profiles. We also use
+              Sentry for error monitoring: when the app crashes or encounters an error, an anonymous
+              error report is sent to Sentry so we can fix bugs. These reports contain the error
+              message and browser type but no personally identifiable information (PII is explicitly
+              disabled). We do not use pixel trackers, fingerprinting, or any form of cross-site tracking.
             </p>
             <p className="mt-2">
               We use localStorage (a browser storage mechanism) to save your app state locally.
