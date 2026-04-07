@@ -188,6 +188,26 @@ PowerWash Simulator appeared 6/20 rolls because the engine only applied a 0.2x w
 
 ---
 
+## UX Feedback (April 7, 2026 — Visual Density Pass)
+
+Brady flagged that nudge cards and import summary consume too much viewport real estate, disconnecting users from their library and current tab.
+
+### 1. Nudge cards too tall — collapse by default
+**Problem:** "Pick up where you left off" and "Did you finish this?" each take a full viewport of space. Stacked together they push the actual game library completely off screen.
+**Fix:** Render as compact header (icon + title only), click to expand. Still visible, still actionable, but ~40px tall instead of ~200px. Dense page = good problem to have, but solve with progressive disclosure.
+
+### 2. Import summary should be a one-time modal
+**Problem:** The "39 games imported" card persists as an inline card, eating real estate every session.
+**Fix:** Show as a centered modal/popup on import completion. User reads it, clicks "Got it", never sees it again. Store dismissal in localStorage.
+
+### 3. Re-import handling
+**Question:** When a user imports again (adding to existing library), the summary should sound different. "12 new games added to your library" vs "39 games imported" — the first import is a fresh start, subsequent imports are additions. Detect existing library size and adjust copy.
+
+### 4. Info density sweep (recurring practice)
+Add to review cadence: periodic visual density audit. Flag screens where information competes for attention, recommend collapsible sections, progressive disclosure, or removal. Brady audits visually, Claude flags code-side density issues.
+
+---
+
 ## Raw Rambles (unsorted, dump here)
 
 (Brady: drop notes here when you're away from desktop. I'll sort them when you're back.)

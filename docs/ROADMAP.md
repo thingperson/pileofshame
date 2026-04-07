@@ -294,6 +294,7 @@
 | Mobile responsiveness | Apr 6, 2026 | Tab labels fixed, mode buttons scroll OK, cards render clean at 375px, nudge cards stack cleanly | Monthly |
 | Enrichment accuracy | Apr 7, 2026 | HLTB direct API integration replaced broken npm packages. All test games returning data. RAWG cache + retry still solid. | Quarterly |
 | Legal/privacy compliance | Apr 7, 2026 | Sentry added to Privacy Policy (third-party services + cookies/tracking sections). Genre cooldown is localStorage only. | Before any feature touching user data, deals, or profiling |
+| Info density sweep | Apr 7, 2026 | Flagged: nudge cards too tall (compact by default), import summary should be one-time modal. Logged in IDEAS.md. | Periodic — Brady audits visually, Claude flags code-side |
 
 ### Legal Guardrails (Locked, April 2026)
 
