@@ -1,3 +1,5 @@
+// Sentry client-side error monitoring (free tier)
+// DSN configured via NEXT_PUBLIC_SENTRY_DSN in Vercel env vars
 import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
