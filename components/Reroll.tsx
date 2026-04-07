@@ -10,6 +10,8 @@ import { REROLL_MODES, RerollMode, getEligibleGames, pickWeighted, getPickReason
 import { useToast } from './Toast';
 import { trackReroll, trackRerollCommit } from '@/lib/analytics';
 import { recordSkip } from '@/lib/skipTracking';
+import { MOOD_ICONS, REROLL_ICONS } from '@/lib/iconMap';
+import CustomIcon from './CustomIcon';
 
 const ALL_MOODS: MoodTag[] = ['chill', 'intense', 'story-rich', 'brainless', 'atmospheric', 'competitive', 'spooky', 'creative', 'strategic', 'emotional'];
 
@@ -320,8 +322,8 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                   }`}
                   style={{ backgroundColor: 'var(--color-bg-card)' }}
                 >
-                  <div className="text-sm font-medium text-text-primary">
-                    {icon} {label}
+                  <div className="text-sm font-medium text-text-primary flex items-center gap-1.5">
+                    <CustomIcon src={REROLL_ICONS[m]} fallback={icon} size={20} /> {label}
                   </div>
                   <div className="text-[10px] text-text-dim mt-0.5">{description}</div>
                 </button>
@@ -349,7 +351,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                         border: active ? `1px solid ${config.color}50` : '1px solid transparent',
                       }}
                     >
-                      {config.icon} {config.label}
+                      <CustomIcon src={MOOD_ICONS[mood]} fallback={config.icon} size={16} className="mr-0.5" /> {config.label}
                     </button>
                   );
                 })}
@@ -386,7 +388,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                   }`}
                   title={label}
                 >
-                  {icon} {label}
+                  <CustomIcon src={REROLL_ICONS[m]} fallback={icon} size={14} className="mr-0.5" /> {label}
                 </button>
               ))}
             </div>
@@ -408,9 +410,10 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                       color: active ? config.color : 'var(--color-text-dim)',
                     }}
                   >
-                    {config.icon} {config.label}
+                    <CustomIcon src={MOOD_ICONS[mood]} fallback={config.icon} size={14} className="mr-0.5" /> {config.label}
                   </button>
                 );
+
               })}
             </div>
 
