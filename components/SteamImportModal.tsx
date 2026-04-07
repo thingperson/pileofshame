@@ -250,7 +250,7 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
               </p>
             )}
 
-            <div className="text-[11px] text-text-faint space-y-1">
+            <div className="text-xs text-text-faint space-y-1">
               <p>
                 <a
                   href="https://steamcommunity.com/my/profile"
@@ -352,7 +352,7 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
                 </li>
                 <li>Copy the <strong className="text-text-secondary">URL from your browser bar</strong>. It&apos;ll look like:
                   <br />
-                  <code className="text-accent-purple text-[11px] font-[family-name:var(--font-mono)]">
+                  <code className="text-accent-purple text-xs font-[family-name:var(--font-mono)]">
                     steamcommunity.com/profiles/76561198...
                   </code>
                 </li>
@@ -447,7 +447,7 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-text-primary truncate">{game.name}</p>
                     {game.playtimeHours > 0 && (
-                      <p className="text-[11px] text-text-dim font-[family-name:var(--font-mono)]">
+                      <p className="text-xs text-text-dim font-[family-name:var(--font-mono)]">
                         {game.playtimeHours}h played
                       </p>
                     )}

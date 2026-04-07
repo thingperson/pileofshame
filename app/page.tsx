@@ -403,7 +403,7 @@ function AppContent() {
               </button>
             ))}
           </div>
-          <p className="text-[10px] text-[#222] font-[family-name:var(--font-mono)] mt-4">less deciding. more playing.</p>
+          <p className="text-xs text-[#222] font-[family-name:var(--font-mono)] mt-4">less deciding. more playing.</p>
         </div>
         <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} />
         <CompletionCelebration game={celebrationGame} onClose={closeCelebration} onConfirm={() => { if (celebrationGame) cycleStatus(celebrationGame.id); }} />
@@ -465,7 +465,7 @@ function AppContent() {
             <InlineSearch onAddManual={() => { setAddModalInitialName(''); setAddModalOpen(true); }} />
             <button
               onClick={() => setImportHubOpen(true)}
-              className="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-2 text-[11px] sm:text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+              className="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
               title="Import games"
             >
               <span className="text-sm sm:text-base">📥</span>
@@ -473,7 +473,7 @@ function AppContent() {
             </button>
             <a
               href="/stats"
-              className="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-2 text-[11px] sm:text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+              className="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
               title="Stats"
             >
               <span className="text-sm sm:text-base">📊</span>
@@ -489,7 +489,7 @@ function AppContent() {
       {!isEmpty && (
         <div className="mb-2 flex items-center gap-2">
           <span
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-[family-name:var(--font-mono)]"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-[family-name:var(--font-mono)]"
             style={{
               backgroundColor: isSampleLibrary
                 ? 'color-mix(in srgb, var(--color-accent-purple) 10%, transparent)'
@@ -520,7 +520,7 @@ function AppContent() {
                 : 'Your Library'}
           </span>
           {!isSampleLibrary && !isSignedIn && (
-            <span className="text-[10px] text-text-faint font-[family-name:var(--font-mono)]">
+            <span className="text-xs text-text-faint font-[family-name:var(--font-mono)]">
               not synced
             </span>
           )}
@@ -544,7 +544,7 @@ function AppContent() {
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setImportHubOpen(true)}
-              className="px-3 py-1.5 text-[11px] font-semibold rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97]"
+              className="px-3 py-1.5 text-xs font-semibold rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97]"
               style={{
                 background: 'linear-gradient(135deg, var(--color-accent-purple) 0%, var(--color-accent-pink) 100%)',
                 color: '#fff',
@@ -554,7 +554,7 @@ function AppContent() {
             </button>
             <button
               onClick={() => setSampleBannerDismissed(true)}
-              className="px-3 py-1.5 text-[11px] font-medium rounded-lg border transition-all hover:border-accent-purple"
+              className="px-3 py-1.5 text-xs font-medium rounded-lg border transition-all hover:border-accent-purple"
               style={{
                 borderColor: 'var(--color-border-subtle)',
                 color: 'var(--color-text-dim)',
@@ -608,14 +608,14 @@ function AppContent() {
             <JustFiveMinutes games={games} />
             <button
               onClick={() => setGamePassOpen(true)}
-              className="shrink-0 px-3 sm:px-4 py-2 sm:py-2.5 text-[11px] sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap flex items-center gap-1.5"
+              className="shrink-0 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap flex items-center gap-1.5"
               style={{ background: 'linear-gradient(135deg, #107c10 0%, #1a8a1a 50%, #0070d1 100%)' }}
               title="Pick a game from Game Pass or PS+ catalog"
             >
               <span className="inline-flex items-center gap-1">
-                <span className="text-[11px] sm:text-xs font-black tracking-tight" style={{ color: '#7ec850' }}>GP</span>
-                <span className="text-[10px] opacity-50">/</span>
-                <span className="text-[11px] sm:text-xs font-black tracking-tight" style={{ color: '#ffd800' }}>PS+</span>
+                <span className="text-xs font-black tracking-tight" style={{ color: '#7ec850' }}>GP</span>
+                <span className="text-xs opacity-50">/</span>
+                <span className="text-xs font-black tracking-tight" style={{ color: '#ffd800' }}>PS+</span>
               </span>
               <span>Sub Shuffle</span>
             </button>
@@ -635,12 +635,12 @@ function AppContent() {
         <div className="flex items-center gap-2 mb-2">
           {activeTab === 'backlog' && (
             <>
-              <label htmlFor="backlog-sort" className="text-[10px] text-text-faint font-[family-name:var(--font-mono)]">Sort:</label>
+              <label htmlFor="backlog-sort" className="text-xs text-text-faint font-[family-name:var(--font-mono)]">Sort:</label>
               <select
                 id="backlog-sort"
                 value={backlogSort}
                 onChange={(e) => { setBacklogSort(e.target.value as typeof backlogSort); setBacklogLimit(10); }}
-                className="text-[11px] bg-bg-card border border-border-subtle rounded-lg px-2 py-1 text-text-muted focus:outline-none focus:border-accent-purple transition-all cursor-pointer font-[family-name:var(--font-mono)]"
+                className="text-xs bg-bg-card border border-border-subtle rounded-lg px-2 py-1 text-text-muted focus:outline-none focus:border-accent-purple transition-all cursor-pointer font-[family-name:var(--font-mono)]"
               >
                 <option value="smart">✨ Best for You</option>
                 <option value="a-z">A → Z</option>
@@ -684,11 +684,11 @@ function AppContent() {
                 <span className="text-xs text-text-dim">Searching: &ldquo;{filters.search}&rdquo;</span>
                 <button
                   onClick={() => setFilter('search', '')}
-                  className="text-[10px] text-text-faint hover:text-text-muted transition-colors"
+                  className="text-xs text-text-faint hover:text-text-muted transition-colors"
                 >
                   Clear
                 </button>
-                <span className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] ml-auto">
+                <span className="text-xs text-text-faint font-[family-name:var(--font-mono)] ml-auto">
                   {tabGames.length} result{tabGames.length !== 1 ? 's' : ''} in {activeTabDef.label}
                 </span>
               </div>
@@ -825,7 +825,7 @@ function AppContent() {
 
           {/* Backlog "Best for You" explainer (first load only, smart sort) */}
           {activeTab === 'backlog' && tabGames.length > 0 && backlogLimit <= 10 && backlogSort === 'smart' && (
-            <p className="text-[10px] text-text-faint text-center mt-3 font-[family-name:var(--font-mono)]">
+            <p className="text-xs text-text-faint text-center mt-3 font-[family-name:var(--font-mono)]">
               Sorted by what deserves your attention: games you&apos;re close to finishing, genres you gravitate toward, and buried gems worth resurfacing.
             </p>
           )}
@@ -839,13 +839,13 @@ function AppContent() {
           <div className="flex items-center gap-3">
             <a
               href="/about"
-              className="text-[11px] text-text-faint hover:text-text-muted transition-colors font-[family-name:var(--font-mono)]"
+              className="text-xs text-text-faint hover:text-text-muted transition-colors font-[family-name:var(--font-mono)]"
             >
               About
             </a>
             <button
               onClick={() => setHelpOpen(true)}
-              className="text-[11px] text-text-faint hover:text-text-muted transition-colors font-[family-name:var(--font-mono)]"
+              className="text-xs text-text-faint hover:text-text-muted transition-colors font-[family-name:var(--font-mono)]"
             >
               ? Help
             </button>
@@ -884,8 +884,8 @@ function AppContent() {
           ❤️ Free forever. Tips keep the servers running and new features coming.
         </p>
         <div className="flex items-center justify-center gap-4 mt-3">
-          <a href="/privacy" className="text-[11px] text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)]">Privacy</a>
-          <a href="/terms" className="text-[11px] text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)]">Terms</a>
+          <a href="/privacy" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)]">Privacy</a>
+          <a href="/terms" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)]">Terms</a>
         </div>
       </footer>
     </div>

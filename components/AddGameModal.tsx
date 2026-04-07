@@ -174,7 +174,7 @@ export default function AddGameModal({ open, onClose, initialName }: AddGameModa
                   </span>
                 )}
                 {genres && genres.length > 0 && (
-                  <p className="text-[11px] text-text-faint truncate">
+                  <p className="text-xs text-text-faint truncate">
                     {genres.join(', ')}
                   </p>
                 )}

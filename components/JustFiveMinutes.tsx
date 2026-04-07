@@ -160,7 +160,7 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
       {/* Button — always rendered in the mode button row */}
       <button
         onClick={startSession}
-        className="shrink-0 px-3 sm:px-4 py-2 sm:py-2.5 text-[11px] sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
+        className="shrink-0 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
         style={{ background: 'linear-gradient(135deg, #059669, #34d399)' }}
         title="Try a game for 5 minutes. Then decide where it goes."
       >
@@ -292,7 +292,7 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
                 className="transition-all duration-1000"
               />
             </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold font-[family-name:var(--font-mono)] text-text-primary" aria-live="off" aria-label={`${formatTime(timeLeft)} remaining`}>
+            <span className="absolute inset-0 flex items-center justify-center text-xs font-bold font-[family-name:var(--font-mono)] text-text-primary" aria-live="off" aria-label={`${formatTime(timeLeft)} remaining`}>
               {formatTime(timeLeft)}
             </span>
           </div>
@@ -300,7 +300,7 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
           {/* Game name */}
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-text-primary truncate">{game?.name}</p>
-            <p className="text-[10px] text-text-dim font-[family-name:var(--font-mono)]">go play. we&apos;ll wait</p>
+            <p className="text-xs text-text-dim font-[family-name:var(--font-mono)]">go play. we&apos;ll wait</p>
           </div>
 
           {/* Quick actions */}

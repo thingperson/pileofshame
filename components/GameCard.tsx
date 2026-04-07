@@ -34,17 +34,17 @@ function JumpBackIn({ game }: { game: Game }) {
       <button
         onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
         aria-expanded={open}
-        className="w-full flex items-center justify-between px-3 py-2 text-[11px] font-medium font-[family-name:var(--font-mono)] text-amber-300/80 hover:text-amber-300 transition-colors"
+        className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium font-[family-name:var(--font-mono)] text-amber-300/80 hover:text-amber-300 transition-colors"
       >
         <span>🗺️ Jump Back In</span>
-        <span className="text-[10px] opacity-60" aria-hidden="true">{open ? '▲' : '▼'}</span>
+        <span className="text-xs opacity-60" aria-hidden="true">{open ? '▲' : '▼'}</span>
       </button>
       {open && (
         <div className="px-3 pb-3 space-y-2 animate-[fadeIn_150ms_ease-out]">
           {/* Progress estimate */}
           {progressPct !== null && (
             <div className="space-y-1">
-              <div className="flex items-center justify-between text-[11px] font-[family-name:var(--font-mono)]">
+              <div className="flex items-center justify-between text-xs font-[family-name:var(--font-mono)]">
                 <span className="text-text-dim">
                   ~{progressPct}% through ({game.hoursPlayed}h / {game.hltbMain}h)
                 </span>
@@ -73,9 +73,9 @@ function JumpBackIn({ game }: { game: Game }) {
           {/* Genre tips */}
           {genreTips.length > 0 && (
             <div className="space-y-1">
-              <p className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider">Quick reminders</p>
+              <p className="text-xs text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider">Quick reminders</p>
               {genreTips.map((tip, i) => (
-                <p key={i} className="text-[11px] text-text-muted leading-relaxed">
+                <p key={i} className="text-xs text-text-muted leading-relaxed">
                   {tip}
                 </p>
               ))}
@@ -84,19 +84,19 @@ function JumpBackIn({ game }: { game: Game }) {
 
           {/* Progress-based nudge */}
           {progressPct !== null && progressPct >= 75 && game.hltbMain && (
-            <p className="text-[11px] text-green-400/80 font-medium font-[family-name:var(--font-mono)]">
+            <p className="text-xs text-green-400/80 font-medium font-[family-name:var(--font-mono)]">
               ~{Math.max(1, Math.round(game.hltbMain - game.hoursPlayed))}h left. One more session might finish this.
             </p>
           )}
           {progressPct !== null && progressPct >= 40 && progressPct < 75 && game.hltbMain && (
-            <p className="text-[11px] text-amber-300/60 font-[family-name:var(--font-mono)]">
+            <p className="text-xs text-amber-300/60 font-[family-name:var(--font-mono)]">
               ~{Math.round(game.hltbMain - game.hoursPlayed)}h to go. You&apos;re past the halfway mark.
             </p>
           )}
 
           {/* No enrichment data? */}
           {!game.description && !game.hltbMain && (!game.genres || game.genres.length === 0) && (
-            <p className="text-[11px] text-text-faint italic">
+            <p className="text-xs text-text-faint italic">
               No game data available yet. It might still be enriching.
             </p>
           )}
@@ -552,13 +552,13 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
             )}
             {/* Arrow - makes it obvious this is tappable */}
             {nextStatus && (
-              <span className="text-[10px] opacity-60">→</span>
+              <span className="text-xs opacity-60">→</span>
             )}
           </button>
           {/* Hover hint — shows what tapping does (desktop) */}
           {ghostStatus && game.status !== 'played' && game.status !== 'bailed' && (
             <span
-              className="absolute left-full ml-1.5 whitespace-nowrap flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium font-[family-name:var(--font-mono)] opacity-0 animate-[fadeIn_150ms_100ms_forwards] pointer-events-none z-10"
+              className="absolute left-full ml-1.5 whitespace-nowrap flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium font-[family-name:var(--font-mono)] opacity-0 animate-[fadeIn_150ms_100ms_forwards] pointer-events-none z-10"
               style={{
                 backgroundColor: STATUS_CONFIG[ghostStatus].bg,
                 color: STATUS_CONFIG[ghostStatus].color,
@@ -602,7 +602,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
             {tierConfig.icon}
           </span>
           <span
-            className="hidden sm:inline text-[10px] font-bold font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded"
+            className="hidden sm:inline text-xs font-bold font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded"
             style={{
               backgroundColor: SOURCE_COLORS[game.source].bg,
               color: SOURCE_COLORS[game.source].text,
@@ -655,7 +655,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
           {regressAction && (
             <button
               onClick={(e) => { e.stopPropagation(); regressAction.onClick(); }}
-              className="px-3 py-2 text-xs sm:text-[10px] font-medium font-[family-name:var(--font-mono)] rounded-md text-text-dim hover:text-text-muted hover:bg-white/5 transition-all"
+              className="px-3 py-2 text-xs font-medium font-[family-name:var(--font-mono)] rounded-md text-text-dim hover:text-text-muted hover:bg-white/5 transition-all"
             >
               {regressAction.label}
             </button>
@@ -663,7 +663,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
           {progressAction && (
             <button
               onClick={(e) => { e.stopPropagation(); progressAction.onClick(); }}
-              className="px-3 py-2 text-xs sm:text-[10px] font-semibold font-[family-name:var(--font-mono)] rounded-md transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="px-3 py-2 text-xs font-semibold font-[family-name:var(--font-mono)] rounded-md transition-all hover:scale-[1.02] active:scale-[0.98]"
               style={{
                 backgroundColor: 'rgba(167, 139, 250, 0.12)',
                 color: '#a78bfa',
@@ -743,11 +743,11 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                           }}
                         />
                       </div>
-                      <span className="text-[11px] font-bold font-[family-name:var(--font-mono)] shrink-0" style={{ color: isComplete ? '#22c55e' : '#a78bfa' }}>
+                      <span className="text-xs font-bold font-[family-name:var(--font-mono)] shrink-0" style={{ color: isComplete ? '#22c55e' : '#a78bfa' }}>
                         {game.achievements.earned}/{game.achievements.total}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 text-[11px] text-text-dim font-[family-name:var(--font-mono)]">
+                    <div className="flex items-center gap-2 text-xs text-text-dim font-[family-name:var(--font-mono)]">
                       <span>
                         {game.source === 'playstation' ? '🏆 Trophies' : '🏆 Achievements'}
                       </span>
@@ -797,7 +797,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               {(game.hltbMain || (game.moodTags && game.moodTags.length > 0)) && (
                 <div className="flex flex-wrap items-center gap-1.5">
                   {game.hltbMain && (
-                    <span className="text-[11px] font-[family-name:var(--font-mono)] text-text-dim px-1.5 py-0.5 rounded bg-bg-primary border border-border-subtle">
+                    <span className="text-xs font-[family-name:var(--font-mono)] text-text-dim px-1.5 py-0.5 rounded bg-bg-primary border border-border-subtle">
                       🕐 ~{game.hltbMain}h to beat
                     </span>
                   )}
@@ -806,7 +806,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                     return config ? (
                       <span
                         key={mood}
-                        className="text-[11px] font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded"
+                        className="text-xs font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded"
                         style={{
                           backgroundColor: `${config.color}15`,
                           color: config.color,
@@ -829,7 +829,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               {game.hoursPlayed > 0 && (() => {
                 const insight = getPlaytimeRoast(game.name, game.hoursPlayed);
                 return insight ? (
-                  <p className="text-[11px] text-amber-300/70 italic font-[family-name:var(--font-mono)]">
+                  <p className="text-xs text-amber-300/70 italic font-[family-name:var(--font-mono)]">
                     {insight}
                   </p>
                 ) : null;
@@ -850,7 +850,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                   rows={2}
                 />
                 {notesSaved && (
-                  <span className="absolute right-2 bottom-2 text-[10px] text-green-400/70 font-[family-name:var(--font-mono)] animate-[fadeIn_150ms_ease-out]">
+                  <span className="absolute right-2 bottom-2 text-xs text-green-400/70 font-[family-name:var(--font-mono)] animate-[fadeIn_150ms_ease-out]">
                     saved ✓
                   </span>
                 )}
@@ -862,7 +862,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-3">
             <div className="flex gap-2 flex-1 min-w-0">
               <div className="flex-1 min-w-0">
-                <label htmlFor={`shelf-${game.id}`} className="block text-[10px] text-text-faint font-[family-name:var(--font-mono)] mb-0.5 ml-1">Shelf</label>
+                <label htmlFor={`shelf-${game.id}`} className="block text-xs text-text-faint font-[family-name:var(--font-mono)] mb-0.5 ml-1">Shelf</label>
                 <select
                   id={`shelf-${game.id}`}
                   value={game.category}
@@ -875,7 +875,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                 </select>
               </div>
               <div className="min-w-0 shrink-0 sm:shrink-0 max-w-[45%] sm:max-w-none">
-                <label htmlFor={`session-${game.id}`} className="block text-[10px] text-text-faint font-[family-name:var(--font-mono)] mb-0.5 ml-1">Session</label>
+                <label htmlFor={`session-${game.id}`} className="block text-xs text-text-faint font-[family-name:var(--font-mono)] mb-0.5 ml-1">Session</label>
                 <select
                   id={`session-${game.id}`}
                   value={game.timeTier}
@@ -1057,7 +1057,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               </button>
             ) : (
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1.5 sm:gap-2">
-                <span className="text-[11px] sm:text-xs text-text-muted font-[family-name:var(--font-mono)]">Remove forever?</span>
+                <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">Remove forever?</span>
                 <div className="flex gap-1.5">
                   <button
                     onClick={() => {

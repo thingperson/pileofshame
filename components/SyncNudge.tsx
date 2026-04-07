@@ -39,12 +39,12 @@ export default function SyncNudge() {
       }}
     >
       <span className="text-xs shrink-0">☁️</span>
-      <p className="flex-1 text-[11px] text-text-muted font-[family-name:var(--font-mono)]">
+      <p className="flex-1 text-xs text-text-muted font-[family-name:var(--font-mono)]">
         Local only. <span className="text-text-dim">Sign in to sync across devices.</span>
       </p>
       <button
         onClick={handleDismiss}
-        className="text-[10px] text-text-faint hover:text-text-muted transition-colors shrink-0 px-1"
+        className="text-xs text-text-faint hover:text-text-muted transition-colors shrink-0 px-1"
         aria-label="Dismiss sync reminder"
       >
         ✕

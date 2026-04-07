@@ -124,7 +124,7 @@ export default function GridCard({ game }: GridCardProps) {
           >
             <span>{statusConfig.icon}</span>
             <span>{statusConfig.shortLabel || statusConfig.label}</span>
-            {nextStatus && <span className="text-[10px] opacity-60">→</span>}
+            {nextStatus && <span className="text-xs opacity-60">→</span>}
           </button>
 
           {/* Time tier — top right */}
@@ -138,7 +138,7 @@ export default function GridCard({ game }: GridCardProps) {
 
           {/* Platform source — bottom left of cover */}
           <span
-            className="absolute bottom-1.5 left-2 text-[11px] font-bold font-[family-name:var(--font-mono)] px-2 py-0.5 rounded backdrop-blur-sm z-10"
+            className="absolute bottom-1.5 left-2 text-xs font-bold font-[family-name:var(--font-mono)] px-2 py-0.5 rounded backdrop-blur-sm z-10"
             style={{
               backgroundColor: SOURCE_COLORS[game.source].bg,
               color: SOURCE_COLORS[game.source].text,
@@ -152,7 +152,7 @@ export default function GridCard({ game }: GridCardProps) {
           {/* Metacritic badge — bottom right of cover */}
           {game.metacritic && (
             <span
-              className="absolute bottom-1.5 right-2 px-1.5 py-0.5 rounded text-[10px] font-bold font-[family-name:var(--font-mono)] backdrop-blur-sm z-10"
+              className="absolute bottom-1.5 right-2 px-1.5 py-0.5 rounded text-xs font-bold font-[family-name:var(--font-mono)] backdrop-blur-sm z-10"
               style={{
                 backgroundColor: game.metacritic >= 75 ? '#22c55e33' : game.metacritic >= 50 ? '#f59e0b33' : '#ef444433',
                 color: game.metacritic >= 75 ? '#22c55e' : game.metacritic >= 50 ? '#f59e0b' : '#ef4444',
@@ -211,13 +211,13 @@ export default function GridCard({ game }: GridCardProps) {
           {/* Hours played + progress + mood tags row */}
           <div className="flex items-center gap-1.5 flex-wrap">
             {game.hoursPlayed > 0 && (
-              <span className="text-[11px] font-[family-name:var(--font-mono)] text-text-muted">
+              <span className="text-xs font-[family-name:var(--font-mono)] text-text-muted">
                 {game.hoursPlayed}h
               </span>
             )}
             {remainingHours !== null && remainingHours > 0 && remainingHours <= 8 && (
               <span
-                className="text-[10px] font-[family-name:var(--font-mono)] px-1 py-0 rounded"
+                className="text-xs font-[family-name:var(--font-mono)] px-1 py-0 rounded"
                 style={{
                   backgroundColor: progressPct! >= 85 ? 'rgba(34, 197, 94, 0.15)' : 'rgba(251, 191, 36, 0.15)',
                   color: progressPct! >= 85 ? '#4ade80' : '#fcd34d',
@@ -232,7 +232,7 @@ export default function GridCard({ game }: GridCardProps) {
               return config ? (
                 <span
                   key={mood}
-                  className="text-[10px] font-[family-name:var(--font-mono)] px-1 py-0 rounded"
+                  className="text-xs font-[family-name:var(--font-mono)] px-1 py-0 rounded"
                   style={{
                     backgroundColor: `${config.color}15`,
                     color: config.color,

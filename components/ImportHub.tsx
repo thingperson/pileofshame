@@ -130,12 +130,12 @@ export default function ImportHub({ open, onClose }: ImportHubProps) {
                 <p className="text-sm font-medium text-text-primary">
                   {platform.name}
                   {!platform.available && (
-                    <span className="ml-2 text-[10px] text-text-faint font-[family-name:var(--font-mono)]">
+                    <span className="ml-2 text-xs text-text-faint font-[family-name:var(--font-mono)]">
                       MANUAL
                     </span>
                   )}
                 </p>
-                <p className="text-[11px] text-text-dim">{platform.desc}</p>
+                <p className="text-xs text-text-dim">{platform.desc}</p>
               </div>
               {platform.available && (
                 <svg className="w-4 h-4 text-text-dim shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

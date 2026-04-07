@@ -122,7 +122,7 @@ export default function GameSearch({ value, onChange, onSelect }: GameSearchProp
                 <p className="text-sm font-medium text-text-primary truncate">
                   {result.name}
                 </p>
-                <p className="text-[11px] text-text-dim font-[family-name:var(--font-mono)] truncate">
+                <p className="text-xs text-text-dim font-[family-name:var(--font-mono)] truncate">
                   {result.released ? result.released.slice(0, 4) : ''}
                   {result.genres.length > 0 && (result.released ? ' · ' : '') + result.genres.slice(0, 2).join(', ')}
                   {result.metacritic && ` · ${result.metacritic}`}

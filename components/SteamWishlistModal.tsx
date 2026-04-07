@@ -214,7 +214,7 @@ export default function SteamWishlistModal({ open, onClose }: SteamWishlistModal
             )}
 
             <div
-              className="rounded-lg p-3 text-[11px] text-text-dim space-y-1"
+              className="rounded-lg p-3 text-xs text-text-dim space-y-1"
               style={{ backgroundColor: 'var(--color-bg-card)' }}
             >
               <p className="text-text-muted font-medium">Why import your wishlist?</p>
@@ -343,7 +343,7 @@ export default function SteamWishlistModal({ open, onClose }: SteamWishlistModal
 
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-text-primary truncate">{game.name}</p>
-                    <div className="flex gap-2 text-[10px] text-text-faint font-[family-name:var(--font-mono)]">
+                    <div className="flex gap-2 text-xs text-text-faint font-[family-name:var(--font-mono)]">
                       {game.releaseDate && <span>{game.releaseDate}</span>}
                       {game.tags.length > 0 && <span>{game.tags.join(', ')}</span>}
                       {game.isFree && <span className="text-green-400">Free</span>}

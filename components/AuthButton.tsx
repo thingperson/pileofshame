@@ -65,7 +65,7 @@ export default function AuthButton() {
             >
               <div className="px-3 py-2">
                 <p className="text-xs font-medium text-text-primary truncate">{displayName}</p>
-                <p className="text-[10px] text-text-faint truncate">{user.email}</p>
+                <p className="text-xs text-text-faint truncate">{user.email}</p>
               </div>
               <div className="h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
               <button
@@ -134,13 +134,13 @@ export default function AuthButton() {
                   </svg>
                   Google
                 </button>
-                <p className="text-[10px] text-text-faint text-center">
+                <p className="text-xs text-text-faint text-center">
                   One click. No passwords. Instant sync.
                 </p>
 
                 <button
                   onClick={() => setShowEmailInput(true)}
-                  className="w-full text-[11px] text-text-faint hover:text-text-muted transition-colors text-center pt-1"
+                  className="w-full text-xs text-text-faint hover:text-text-muted transition-colors text-center pt-1"
                 >
                   use email instead (opens in default browser)
                 </button>
@@ -164,7 +164,7 @@ export default function AuthButton() {
                   autoFocus
                   className="w-full text-sm bg-bg-card border border-border-subtle rounded-lg px-3 py-2 text-text-primary placeholder-text-faint focus:outline-none focus:border-accent-purple"
                 />
-                {emailError && <p className="text-[11px] text-red-400">{emailError}</p>}
+                {emailError && <p className="text-xs text-red-400">{emailError}</p>}
                 <button
                   type="submit"
                   className="w-full px-3 py-2 text-sm font-bold rounded-xl transition-all hover:scale-[1.01] active:scale-[0.99]"
@@ -172,7 +172,7 @@ export default function AuthButton() {
                 >
                   Send magic link
                 </button>
-                <p className="text-[10px] text-text-faint/60 text-center leading-snug">
+                <p className="text-xs text-text-faint/60 text-center leading-snug">
                   The link will open in your default browser. Discord or Google is easier.
                 </p>
                 <button
@@ -192,7 +192,7 @@ export default function AuthButton() {
                 <p className="text-xs text-text-muted">
                   We sent a link to <span className="text-accent-purple">{email}</span>.
                 </p>
-                <p className="text-[11px] text-amber-400/80 leading-snug px-2">
+                <p className="text-xs text-amber-400/80 leading-snug px-2">
                   Heads up: the link may open in a different browser. If so, come back here after clicking it.
                 </p>
                 <button
@@ -204,7 +204,7 @@ export default function AuthButton() {
               </div>
             )}
 
-            <p className="text-[10px] text-text-faint text-center">
+            <p className="text-xs text-text-faint text-center">
               Your local library stays either way.
             </p>
           </div>

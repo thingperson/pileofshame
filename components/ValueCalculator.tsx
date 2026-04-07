@@ -111,7 +111,7 @@ export default function ValueCalculator({
                   {priceConfidence.known} of {priceConfidence.total} priced
                 </span>
               </div>
-              <div className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">
+              <div className="text-xs text-text-faint font-[family-name:var(--font-mono)]">
                 {confidencePct >= 80
                   ? 'high confidence: most games priced via retail data'
                   : confidencePct >= 40
@@ -163,7 +163,7 @@ export default function ValueCalculator({
                       }}
                     />
                   </div>
-                  <span className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">
+                  <span className="text-xs text-text-faint font-[family-name:var(--font-mono)]">
                     {hltbConfidence.known} of {hltbConfidence.total} timed
                   </span>
                 </div>
@@ -179,7 +179,7 @@ export default function ValueCalculator({
                   : `Actually manageable. You could knock this out in ${plural(Math.round(backlogHours / 2 / 7), 'week')}.`
                 }
               </div>
-              <div className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] mt-0.5 opacity-60">
+              <div className="text-xs text-text-faint font-[family-name:var(--font-mono)] mt-0.5 opacity-60">
                 completion times via HowLongToBeat
               </div>
             </div>
@@ -187,7 +187,7 @@ export default function ValueCalculator({
 
           {/* Enrichment status */}
           {enriching && (
-            <div className="mt-2 text-[11px] text-accent-purple font-[family-name:var(--font-mono)] animate-pulse">
+            <div className="mt-2 text-xs text-accent-purple font-[family-name:var(--font-mono)] animate-pulse">
               🔄 Fetching more data... estimates updating live
             </div>
           )}
@@ -212,7 +212,7 @@ export default function ValueCalculator({
       {/* Share buttons */}
       {calculated && (
         <div className="mt-4 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-          <div className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider mb-2 text-center">
+          <div className="text-xs text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider mb-2 text-center">
             Share your stats
           </div>
           <div className="flex flex-col sm:flex-row gap-2">

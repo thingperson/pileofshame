@@ -86,7 +86,7 @@ export default function TabNav({ activeTab, onTabChange, counts }: TabNavProps) 
             <span className="sm:hidden">{tab.shortLabel}</span>
             {count > 0 && (
               <span
-                className="text-[10px] font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded-full"
+                className="text-xs font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded-full"
                 style={{
                   backgroundColor: active ? `${tab.color}20` : 'rgba(255,255,255,0.06)',
                   color: active ? tab.color : 'var(--color-text-faint)',

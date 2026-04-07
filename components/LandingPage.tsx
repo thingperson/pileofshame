@@ -399,7 +399,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
         {/* Footer */}
         <div className="mt-16 space-y-3">
           <p
-            className="text-[11px] font-[family-name:var(--font-mono)]"
+            className="text-xs font-[family-name:var(--font-mono)]"
             style={{ color: 'var(--color-text-faint)', opacity: 0.5 }}
           >
             and we have a dino theme. come on.
@@ -407,14 +407,14 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           <div className="flex items-center justify-center gap-4">
             <a
               href="/privacy"
-              className="text-[11px] hover:text-text-dim transition-colors font-[family-name:var(--font-mono)]"
+              className="text-xs hover:text-text-dim transition-colors font-[family-name:var(--font-mono)]"
               style={{ color: 'var(--color-text-faint)' }}
             >
               Privacy
             </a>
             <a
               href="/terms"
-              className="text-[11px] hover:text-text-dim transition-colors font-[family-name:var(--font-mono)]"
+              className="text-xs hover:text-text-dim transition-colors font-[family-name:var(--font-mono)]"
               style={{ color: 'var(--color-text-faint)' }}
             >
               Terms

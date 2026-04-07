@@ -316,7 +316,7 @@ export default function PlayniteImportModal({ open, onClose }: PlayniteImportMod
                     />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-text-primary truncate">{game.name}</p>
-                      <p className="text-[11px] text-text-dim font-[family-name:var(--font-mono)]">
+                      <p className="text-xs text-text-dim font-[family-name:var(--font-mono)]">
                         {game.source}
                         {game.playtimeHours > 0 && ` · ${game.playtimeHours}h`}
                         {game.completionStatus && ` · ${game.completionStatus}`}

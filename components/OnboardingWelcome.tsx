@@ -35,7 +35,7 @@ export default function OnboardingWelcome({ onImport, onAddManual, onGamePass }:
           >
             Import My Library
           </button>
-          <p className="text-[10px] text-text-faint font-[family-name:var(--font-mono)]">
+          <p className="text-xs text-text-faint font-[family-name:var(--font-mono)]">
             Steam, PlayStation, Xbox, GOG, Playnite
           </p>
 

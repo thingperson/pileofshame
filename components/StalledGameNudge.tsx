@@ -112,6 +112,7 @@ interface StalledGameNudgeProps {
 
 export default function StalledGameNudge({ games, onTabSwitch }: StalledGameNudgeProps) {
   const [dismissed, setDismissed] = useState(isSessionDismissed);
+  const [expanded, setExpanded] = useState(false);
   const { cycleStatus, showCelebration } = useStore();
   const updateGame = useStore((s) => s.updateGame);
   const { showToast } = useToast();
@@ -171,14 +172,24 @@ export default function StalledGameNudge({ games, onTabSwitch }: StalledGameNudg
       }}
     >
       <div className="px-4 py-3.5">
-        {/* Header row */}
-        <div className="flex items-start justify-between gap-3 mb-2">
-          <div className="flex items-center gap-2">
-            <span className="text-lg">🔄</span>
-            <span className="text-xs font-semibold text-text-primary font-[family-name:var(--font-mono)]">
+        {/* Collapsed header row — always visible */}
+        <div className="flex items-center justify-between gap-3">
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="flex items-center gap-2 min-w-0 flex-1 text-left"
+          >
+            <span className="text-lg shrink-0">🔄</span>
+            <span className="text-sm font-semibold text-text-primary font-[family-name:var(--font-mono)] truncate">
               Pick up where you left off?
+              <span className="text-text-muted font-normal"> — {nudgeGame.name}</span>
             </span>
-          </div>
+            <span
+              className="text-text-dim text-xs shrink-0 transition-transform duration-200"
+              style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
+            >
+              ▾
+            </span>
+          </button>
           <button
             onClick={handleDismiss}
             aria-label="Dismiss suggestion"
@@ -188,66 +199,72 @@ export default function StalledGameNudge({ games, onTabSwitch }: StalledGameNudg
           </button>
         </div>
 
-        {/* Game info */}
-        <div className="flex gap-3 mb-3">
-          {nudgeGame.coverUrl && (
-            <img
-              src={nudgeGame.coverUrl}
-              alt=""
-              className="w-14 h-20 rounded-lg object-cover shrink-0"
-              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-            />
-          )}
-          <div className="min-w-0">
-            <p className="text-sm font-semibold text-text-primary truncate mb-1">
-              {nudgeGame.name}
-            </p>
-            <p className="text-xs text-text-muted leading-relaxed">
-              {getStallMessage(nudgeGame)}
-            </p>
-            {remaining && (
-              <p className="text-[11px] font-[family-name:var(--font-mono)] mt-1" style={{ color: '#fcd34d' }}>
-                ⏳ {remaining}
-              </p>
+        {/* Expanded content */}
+        <div
+          className="overflow-hidden transition-all duration-300 ease-in-out"
+          style={{ maxHeight: expanded ? '400px' : '0px', opacity: expanded ? 1 : 0 }}
+        >
+          {/* Game info */}
+          <div className="flex gap-3 mb-3 mt-3">
+            {nudgeGame.coverUrl && (
+              <img
+                src={nudgeGame.coverUrl}
+                alt=""
+                className="w-14 h-20 rounded-lg object-cover shrink-0"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+              />
             )}
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-text-primary truncate mb-1">
+                {nudgeGame.name}
+              </p>
+              <p className="text-xs text-text-muted leading-relaxed">
+                {getStallMessage(nudgeGame)}
+              </p>
+              {remaining && (
+                <p className="text-xs font-[family-name:var(--font-mono)] mt-1" style={{ color: '#fcd34d' }}>
+                  ⏳ {remaining}
+                </p>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Action label + buttons */}
-        <p className="text-[10px] text-text-dim font-[family-name:var(--font-mono)] uppercase tracking-wider mb-1.5">
-          Move this game to:
-        </p>
-        <div className="flex gap-2">
-          <button
-            onClick={() => handleAction('playing')}
-            className="flex-1 px-3 py-2 rounded-lg text-xs font-semibold font-[family-name:var(--font-mono)] transition-all hover:brightness-110 active:scale-[0.97]"
-            style={{
-              backgroundColor: 'rgba(245, 158, 11, 0.15)',
-              color: '#f59e0b',
-            }}
-          >
-            🔥 Now Playing
-          </button>
-          <button
-            onClick={() => handleAction('on-deck')}
-            className="flex-1 px-3 py-2 rounded-lg text-xs font-semibold font-[family-name:var(--font-mono)] transition-all hover:brightness-110 active:scale-[0.97]"
-            style={{
-              backgroundColor: 'rgba(56, 189, 248, 0.12)',
-              color: '#38bdf8',
-            }}
-          >
-            🎯 Up Next
-          </button>
-          <button
-            onClick={() => handleAction('buried')}
-            className="flex-1 px-3 py-2 rounded-lg text-xs font-semibold font-[family-name:var(--font-mono)] transition-all hover:brightness-110 active:scale-[0.97]"
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
-              color: 'var(--color-text-dim)',
-            }}
-          >
-            Not now
-          </button>
+          {/* Action label + buttons */}
+          <p className="text-xs text-text-dim font-[family-name:var(--font-mono)] uppercase tracking-wider mb-1.5">
+            Move this game to:
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleAction('playing')}
+              className="flex-1 px-3 py-2 rounded-lg text-sm font-semibold font-[family-name:var(--font-mono)] transition-all hover:brightness-110 active:scale-[0.97]"
+              style={{
+                backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                color: '#f59e0b',
+              }}
+            >
+              🔥 Now Playing
+            </button>
+            <button
+              onClick={() => handleAction('on-deck')}
+              className="flex-1 px-3 py-2 rounded-lg text-sm font-semibold font-[family-name:var(--font-mono)] transition-all hover:brightness-110 active:scale-[0.97]"
+              style={{
+                backgroundColor: 'rgba(56, 189, 248, 0.12)',
+                color: '#38bdf8',
+              }}
+            >
+              🎯 Up Next
+            </button>
+            <button
+              onClick={() => handleAction('buried')}
+              className="flex-1 px-3 py-2 rounded-lg text-sm font-semibold font-[family-name:var(--font-mono)] transition-all hover:brightness-110 active:scale-[0.97]"
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                color: 'var(--color-text-dim)',
+              }}
+            >
+              Not now
+            </button>
+          </div>
         </div>
       </div>
     </div>

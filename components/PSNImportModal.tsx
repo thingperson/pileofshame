@@ -201,7 +201,7 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
                   Once logged in, open this URL in the <strong className="text-text-secondary">same browser</strong>:
                   <div className="mt-1.5 flex items-center gap-2">
                     <code
-                      className="flex-1 text-accent-purple text-[11px] font-[family-name:var(--font-mono)] bg-bg-primary rounded px-2 py-1.5 select-all cursor-text break-all"
+                      className="flex-1 text-accent-purple text-xs font-[family-name:var(--font-mono)] bg-bg-primary rounded px-2 py-1.5 select-all cursor-text break-all"
                     >
                       https://ca.account.sony.com/api/v1/ssocookie
                     </code>
@@ -210,7 +210,7 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
                         navigator.clipboard.writeText('https://ca.account.sony.com/api/v1/ssocookie');
                         showToast('URL copied!');
                       }}
-                      className="px-2 py-1.5 text-[10px] text-text-dim hover:text-accent-purple rounded border border-border-subtle transition-colors shrink-0"
+                      className="px-2 py-1.5 text-xs text-text-dim hover:text-accent-purple rounded border border-border-subtle transition-colors shrink-0"
                     >
                       Copy
                     </button>
@@ -218,7 +218,7 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
                 </li>
                 <li>
                   You&apos;ll see a page with something like:
-                  <code className="block mt-1 text-[11px] font-[family-name:var(--font-mono)] text-text-dim bg-bg-primary rounded px-2 py-1">
+                  <code className="block mt-1 text-xs font-[family-name:var(--font-mono)] text-text-dim bg-bg-primary rounded px-2 py-1">
                     {`{"npsso":"abc123def456..."}`}
                   </code>
                 </li>
@@ -247,7 +247,7 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
               </button>
             </div>
 
-            <p className="text-[10px] text-text-faint text-center">
+            <p className="text-xs text-text-faint text-center">
               🔒 Your token is only used once to fetch your game list. We don&apos;t store it.
             </p>
           </div>
@@ -355,7 +355,7 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
                   {/* Game info */}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-text-primary truncate">{game.name}</p>
-                    <p className="text-[11px] text-text-dim font-[family-name:var(--font-mono)]">
+                    <p className="text-xs text-text-dim font-[family-name:var(--font-mono)]">
                       {game.platform}
                       {game.trophiesEarned > 0 && ` · ${game.trophiesEarned}/${game.trophiesTotal} trophies`}
                       {game.earnedPlatinum && ' 🏆'}
@@ -366,7 +366,7 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
                   {/* Progress */}
                   {game.progress > 0 && (
                     <span
-                      className="text-[10px] font-bold font-[family-name:var(--font-mono)] shrink-0 px-1.5 py-0.5 rounded"
+                      className="text-xs font-bold font-[family-name:var(--font-mono)] shrink-0 px-1.5 py-0.5 rounded"
                       style={{
                         backgroundColor: game.progress === 100 ? 'rgba(34,197,94,0.15)' : 'rgba(167,139,250,0.15)',
                         color: game.progress === 100 ? '#22c55e' : '#a78bfa',

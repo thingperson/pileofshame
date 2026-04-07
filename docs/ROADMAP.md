@@ -81,6 +81,12 @@
 - Reroll modal UX: section labels ("How much time?" / "I want something that feels..."), bigger text across all surfaces ✅
 - Comfortable text size toggle in Settings (112.5% root font scale, persisted via localStorage) ✅
 - Favicon transparent background (bag floats on tab bar like other sites) ✅
+- PageSpeed fix: landing page images converted to WebP (5MB → 85KB, 98% reduction) ✅
+- Skip feedback ("Why'd you skip?"): optional pill row after skips (not-in-mood, too-long, played-recently, hit-a-wall, not-interested) ✅
+- Energy matching: Low/Medium/High selector in reroll, replaces time-of-day weights, auto-defaults by clock ✅
+- Decision history recording: every accept/skip logged to localStorage for future behavioral learning ✅
+- Nudge card compact mode: StalledGameNudge + FinishCheckNudge collapsed by default, expandable ✅
+- Typography pass: all text-[10px]/text-[11px] bumped to text-xs minimum across 25+ components ✅
 
 ### Themes
 - Dark (default) ✅
@@ -237,10 +243,11 @@
 - ~~"Almost Done" reroll mode~~ — **SHIPPED** (filters to games within 20% of HLTB completion) ✅
 - ~~Post-recommendation nudge~~ — **SHIPPED** (3s motivational overlay after "Let's Go", with session estimate + Steam launch link) ✅
 - Genre cooldown / fatigue: 0.6x weight penalty for same genre within 7d of completion, 0.8x at 7-14d, tracks last 3 completions ✅
-- Remaining V3 features (specced, not yet built):
-  4. "Why'd you skip?" feedback (3-4h, optional 1-tap reason: too long, not in mood, etc.)
-  5. Energy matching (3-4h, Low/Medium/High selector with time-of-day defaults)
-  6. Behavioral learning (8-12h, decision history, genre affinity, time tier preference)
+- ~~"Why'd you skip?" feedback~~ — **SHIPPED** (optional pill row after skips, feeds back into weights: too-long penalizes marathon, hit-a-wall suppresses 7d, not-interested soft-ignores at 2+) ✅
+- ~~Energy matching~~ — **SHIPPED** (Low/Medium/High selector replaces time-of-day, auto-defaults by clock, multiplicative mood+tier weighting) ✅
+- Decision history recording — **SHIPPED** (logs accept/skip with full context to localStorage, rolling 100 entries, prep for behavioral learning) ✅
+- Remaining V3 feature (specced, not yet built):
+  6. Behavioral learning (8-12h, genre affinity + time tier preference weights from decision history)
 - TypeScript interfaces, localStorage schemas, weight tables, and testing plans in spec doc
 
 ### Jump Back In V3 (MEDIUM)
@@ -302,13 +309,14 @@
 
 | Review | Last Run | Status | Frequency |
 |--------|----------|--------|-----------|
-| Voice/AI lingo sweep | Apr 7, 2026 | Clean — reroll modal labels ("How much time?" / "I want something that feels..."), all new copy reviewed | Every deploy with new copy |
+| Voice/AI lingo sweep | Apr 7, 2026 | Clean — skip feedback pills, energy selector, nudge compact mode, all new copy reviewed | Every deploy with new copy |
 | Accessibility audit | Apr 6, 2026 | All critical/major items resolved. Reroll close btn ✅, mode btn labels ✅, status aria-labels ✅, contrast ✅ | Monthly |
-| Feature creep audit | Apr 7, 2026 | Healthy. Comfortable text size toggle is a user preference, not a feature. Reroll labels are UX clarity, not scope creep. | Quarterly |
-| Mobile responsiveness | Apr 7, 2026 | Reroll modal tested at 375px — mode pills wrap cleanly (3/row), mood pills wrap to 4 rows. Comfortable mode scales proportionally. | Monthly |
+| Feature creep audit | Apr 7, 2026 | Healthy. Skip feedback + energy matching are core decision engine improvements per V3 spec, not scope creep. Typography pass is readability, not features. | Quarterly |
+| Mobile responsiveness | Apr 7, 2026 | Energy pills 3-across works on 375px. Skip feedback pills wrap to 2 rows on narrow screens. Compact nudges save ~60% vertical space. | Monthly |
 | Enrichment accuracy | Apr 7, 2026 | HLTB direct API integration replaced broken npm packages. All test games returning data. RAWG cache + retry still solid. | Quarterly |
-| Legal/privacy compliance | Apr 7, 2026 | Sentry added to Privacy Policy (third-party services + cookies/tracking sections). Genre cooldown is localStorage only. | Before any feature touching user data, deals, or profiling |
-| Info density sweep | Apr 7, 2026 | Flagged: nudge cards too tall (compact by default), import summary should be one-time modal. Logged in IDEAS.md. | Periodic — Brady audits visually, Claude flags code-side |
+| Legal/privacy compliance | Apr 7, 2026 | Skip reasons + decision history are localStorage only, no server/third-party. No Privacy Policy update needed. | Before any feature touching user data, deals, or profiling |
+| Info density sweep | Apr 7, 2026 | Fixed: nudge cards now collapsed by default. Typography: all 10px/11px text bumped to 12px+ across 25 components. Import summary modal still TODO. | Periodic — Brady audits visually, Claude flags code-side |
+| PageSpeed / performance | Apr 7, 2026 | Landing page images converted to WebP (5MB → 85KB). Sentry preconnect + LCP preload added. Retest needed. | After image/asset changes |
 
 ### Legal Guardrails (Locked, April 2026)
 

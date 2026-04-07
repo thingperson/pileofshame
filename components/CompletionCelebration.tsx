@@ -550,7 +550,7 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
                             <span className="text-text-primary font-medium truncate flex-1">
                               {rec.game.name}
                             </span>
-                            <span className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] shrink-0">
+                            <span className="text-xs text-text-faint font-[family-name:var(--font-mono)] shrink-0">
                               {rec.reason}
                             </span>
                           </div>
@@ -561,7 +561,7 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
                     {/* Wishlist recommendations with deal check */}
                     {wishlistRecs.length > 0 && (
                       <div className="pt-2 mt-2 space-y-1.5" style={{ borderTop: '1px solid var(--color-border-subtle)' }}>
-                        <p className="text-[10px] text-text-faint font-[family-name:var(--font-mono)]">
+                        <p className="text-xs text-text-faint font-[family-name:var(--font-mono)]">
                           On your wishlist:
                         </p>
                         {wishlistRecs.map((rec) => (

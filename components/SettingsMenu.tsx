@@ -245,7 +245,7 @@ export default function SettingsMenu() {
               <>
                 {/* Theme Toggle */}
                 <div className="px-3 py-2 space-y-1.5">
-                  <p className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">Theme</p>
+                  <p className="text-sm text-text-faint font-[family-name:var(--font-mono)]">Theme</p>
                   <div className="flex flex-wrap gap-1">
                     {[
                       { value: 'dark', label: '🌙 Dark' },
@@ -271,7 +271,7 @@ export default function SettingsMenu() {
                           trackThemeSession(opt.value);
                           setOpen(false);
                         }}
-                        className={`px-2 py-1 text-[11px] rounded-md font-medium transition-all ${
+                        className={`px-2 py-1 text-xs rounded-md font-medium transition-all ${
                           settings.theme === opt.value
                             ? 'bg-accent-purple/20 text-accent-purple border border-accent-purple/30'
                             : 'text-text-dim hover:text-text-muted border border-transparent'
@@ -285,7 +285,7 @@ export default function SettingsMenu() {
 
                 {/* Text Size */}
                 <div className="px-3 py-2 space-y-1.5">
-                  <p className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">Text size</p>
+                  <p className="text-sm text-text-faint font-[family-name:var(--font-mono)]">Text size</p>
                   <div className="flex gap-1">
                     {[
                       { value: 'default', label: 'Default' },
@@ -305,7 +305,7 @@ export default function SettingsMenu() {
                             }
                             setOpen(false);
                           }}
-                          className={`px-2 py-1 text-[11px] rounded-md font-medium transition-all ${
+                          className={`px-2 py-1 text-xs rounded-md font-medium transition-all ${
                             current === opt.value
                               ? 'bg-accent-purple/20 text-accent-purple border border-accent-purple/30'
                               : 'text-text-dim hover:text-text-muted border border-transparent'
@@ -320,7 +320,7 @@ export default function SettingsMenu() {
 
                 {/* Platform Preference */}
                 <div className="px-3 py-2 space-y-1.5">
-                  <p className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">I play on</p>
+                  <p className="text-sm text-text-faint font-[family-name:var(--font-mono)]">I play on</p>
                   <div className="flex gap-1">
                     {[
                       { value: 'any', label: 'Any' },
@@ -335,7 +335,7 @@ export default function SettingsMenu() {
                             settings: { ...s.settings, platformPreference: opt.value as 'any' | 'pc' | 'mac' | 'console' },
                           }));
                         }}
-                        className={`px-2 py-1 text-[11px] rounded-md font-medium transition-all ${
+                        className={`px-2 py-1 text-xs rounded-md font-medium transition-all ${
                           settings.platformPreference === opt.value
                             ? 'bg-accent-purple/20 text-accent-purple border border-accent-purple/30'
                             : 'text-text-dim hover:text-text-muted border border-transparent'
@@ -350,13 +350,13 @@ export default function SettingsMenu() {
                 {/* Connected Platforms */}
                 {(linkedSteamId || psnGames.length > 0) && (
                   <div className="px-3 py-2 space-y-1.5">
-                    <p className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">Connected Platforms</p>
+                    <p className="text-sm text-text-faint font-[family-name:var(--font-mono)]">Connected Platforms</p>
                     <div className="space-y-1">
                       {linkedSteamId && (
                         <div className="flex items-center gap-2 text-xs text-text-muted">
                           <span className="text-sm">🟢</span>
                           <span className="flex-1">Steam</span>
-                          <span className="text-[10px] text-text-dim font-[family-name:var(--font-mono)]">
+                          <span className="text-xs text-text-dim font-[family-name:var(--font-mono)]">
                             {steamGames.length} games
                           </span>
                         </div>
@@ -365,7 +365,7 @@ export default function SettingsMenu() {
                         <div className="flex items-center gap-2 text-xs text-text-muted">
                           <span className="text-sm">🔵</span>
                           <span className="flex-1">PlayStation</span>
-                          <span className="text-[10px] text-text-dim font-[family-name:var(--font-mono)]">
+                          <span className="text-xs text-text-dim font-[family-name:var(--font-mono)]">
                             {psnGames.length} games
                           </span>
                         </div>

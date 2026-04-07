@@ -29,7 +29,7 @@ export default function StatCard({
         {value}
       </div>
       {sublabel && (
-        <div className="text-[11px] text-text-faint font-[family-name:var(--font-mono)] mt-0.5 truncate">
+        <div className="text-xs text-text-faint font-[family-name:var(--font-mono)] mt-0.5 truncate">
           {sublabel}
         </div>
       )}

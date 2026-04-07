@@ -364,7 +364,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
           <div className="px-5 pb-5 text-center">
             <div className="text-4xl mb-3 animate-bounce">{svc.icon}</div>
             <p className="text-sm text-text-muted">Grabbing the {svc.label} catalog...</p>
-            <p className="text-[10px] text-text-faint mt-1 font-[family-name:var(--font-mono)]">This takes a few seconds the first time. We cache it after.</p>
+            <p className="text-xs text-text-faint mt-1 font-[family-name:var(--font-mono)]">This takes a few seconds the first time. We cache it after.</p>
           </div>
         )}
 
@@ -385,7 +385,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
         {!loading && !error && catalog.length > 0 && !currentPick && (
           <div className="px-5 pb-4">
             {/* Catalog stats */}
-            <p className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] text-center mb-3">
+            <p className="text-xs text-text-faint font-[family-name:var(--font-mono)] text-center mb-3">
               {catalog.length} games in the catalog right now
             </p>
 
@@ -424,14 +424,14 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
                   <div className="text-sm font-medium text-text-primary">
                     {icon} {label}
                   </div>
-                  <div className="text-[10px] text-text-dim mt-0.5">{description}</div>
+                  <div className="text-xs text-text-dim mt-0.5">{description}</div>
                 </button>
               ))}
             </div>
 
             {/* Mood filter pills */}
             <div className="mt-3">
-              <p className="text-[10px] text-text-dim font-[family-name:var(--font-mono)] uppercase tracking-wider mb-1.5">Mood</p>
+              <p className="text-xs text-text-dim font-[family-name:var(--font-mono)] uppercase tracking-wider mb-1.5">Mood</p>
               <div className="flex flex-wrap gap-1.5">
                 {ALL_MOODS.map((mood) => {
                   const config = MOOD_TAG_CONFIG[mood];
@@ -501,7 +501,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
                   <button
                     key={mood}
                     onClick={() => toggleMood(mood)}
-                    className={`px-2 py-1 rounded-full text-[10px] font-medium transition-all ${
+                    className={`px-2 py-1 rounded-full text-xs font-medium transition-all ${
                       active ? 'scale-[1.02]' : 'opacity-50 hover:opacity-80'
                     }`}
                     style={{
@@ -546,14 +546,14 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
                 {/* Game Pass badge + already in library badge */}
                 <div className="flex flex-wrap justify-center gap-2 mb-2">
                   <span
-                    className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider"
+                    className="inline-block px-2 py-0.5 rounded-full text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider"
                     style={{ backgroundColor: svc.badgeColor, color: svc.color }}
                   >
                     {svc.badgeText}
                   </span>
                   {isInLibrary(currentPick.name) && (
                     <span
-                      className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider"
+                      className="inline-block px-2 py-0.5 rounded-full text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider"
                       style={{ backgroundColor: 'rgba(167, 139, 250, 0.15)', color: '#a78bfa' }}
                     >
                       Already in your pile
@@ -601,7 +601,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
                       return (
                         <span
                           key={mood}
-                          className="text-[10px] font-medium px-2 py-0.5 rounded-full"
+                          className="text-xs font-medium px-2 py-0.5 rounded-full"
                           style={{ backgroundColor: `${config.color}15`, color: config.color }}
                         >
                           {config.icon} {config.label}

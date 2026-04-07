@@ -31,7 +31,7 @@ export default function ArchetypeCard({
           <div className="flex items-center gap-2 mb-1">
             <span className="text-base font-bold text-text-primary">{currentArchetype.title}</span>
             <span
-              className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase font-[family-name:var(--font-mono)]"
+              className="px-1.5 py-0.5 rounded text-xs font-bold uppercase font-[family-name:var(--font-mono)]"
               style={{
                 backgroundColor: currentArchetype.tone === 'roast' ? 'rgba(239, 68, 68, 0.15)'
                   : currentArchetype.tone === 'respect' ? 'rgba(34, 197, 94, 0.15)'

@@ -1,6 +1,7 @@
 import { Game, MoodTag, PlatformPreference } from './types';
 import { isSoftIgnored, getSkipWeightMultiplier } from './skipTracking';
 import { getGenreCooldownMultiplier } from './genreCooldown';
+import { isNotInterestedIgnored, isHitAWallSuppressed, getAllSkipReasons } from './skipReasons';
 
 export type RerollMode = 'anything' | 'quick-session' | 'deep-cut' | 'continue' | 'almost-done';
 
@@ -49,6 +50,9 @@ export function getEligibleGames(
     // Exclude soft-ignored games (5+ skips in decision engine)
     if (isSoftIgnored(game.id)) return false;
 
+    // Exclude games the user said "not interested" to 2+ times
+    if (isNotInterestedIgnored(game.id)) return false;
+
     // Exclude played and bailed from all modes
     if (game.status === 'played' || game.status === 'bailed') return false;
 
@@ -83,10 +87,56 @@ export function getEligibleGames(
   });
 }
 
-// ── Time-of-day awareness ──────────────────────────────────────────
-// Evening (after 8pm) → boost chill/wind-down, penalize intense
-// Late night (after 11pm) → strong boost for quick-hit, penalize marathon
-// Morning/afternoon → neutral, slight boost for intense/competitive
+// ── Energy matching ───────────────────────────────────────────────
+// Replaces time-of-day weighting with explicit user energy selection.
+// Default energy is still derived from time-of-day, but users can override.
+
+export type EnergyLevel = 'low' | 'medium' | 'high';
+
+export function getDefaultEnergy(): EnergyLevel {
+  const hour = new Date().getHours();
+  if (hour >= 21 || hour < 6) return 'low';
+  if (hour >= 6 && hour < 11) return 'high';
+  return 'medium';
+}
+
+function getEnergyWeight(game: Game, energy: EnergyLevel): number {
+  const moods = game.moodTags || [];
+  const tier = game.timeTier;
+  let multiplier = 1;
+
+  if (energy === 'low') {
+    if (moods.includes('chill')) multiplier *= 1.8;
+    if (moods.includes('brainless')) multiplier *= 1.8;
+    if (moods.includes('atmospheric')) multiplier *= 1.4;
+    if (moods.includes('story-rich')) multiplier *= 1.2;
+    if (tier === 'quick-hit') multiplier *= 1.6;
+    if (tier === 'wind-down') multiplier *= 1.5;
+    if (moods.includes('intense')) multiplier *= 0.4;
+    if (moods.includes('competitive')) multiplier *= 0.4;
+    if (moods.includes('strategic')) multiplier *= 0.5;
+    if (tier === 'marathon') multiplier *= 0.4;
+    if (tier === 'deep-cut') multiplier *= 0.6;
+  } else if (energy === 'high') {
+    if (moods.includes('intense')) multiplier *= 1.8;
+    if (moods.includes('competitive')) multiplier *= 1.6;
+    if (moods.includes('strategic')) multiplier *= 1.5;
+    if (tier === 'deep-cut') multiplier *= 1.3;
+    if (tier === 'marathon') multiplier *= 1.2;
+    if (moods.includes('brainless')) multiplier *= 0.5;
+    if (moods.includes('chill')) multiplier *= 0.6;
+    if (tier === 'quick-hit') multiplier *= 0.7;
+  } else {
+    // Medium — mostly neutral
+    if (moods.includes('atmospheric')) multiplier *= 1.3;
+    if (moods.includes('story-rich')) multiplier *= 1.3;
+    if (moods.includes('creative')) multiplier *= 1.2;
+  }
+
+  return Math.max(0.2, Math.min(multiplier, 4.0));
+}
+
+// ── Time-of-day (kept for contextual pick reasons only) ──────────
 
 type TimeOfDay = 'morning' | 'afternoon' | 'evening' | 'late-night';
 
@@ -96,38 +146,6 @@ function getTimeOfDay(): TimeOfDay {
   if (hour >= 20) return 'evening';
   if (hour >= 12) return 'afternoon';
   return 'morning';
-}
-
-function getTimeOfDayWeight(game: Game, time: TimeOfDay): number {
-  const moods = game.moodTags || [];
-  const tier = game.timeTier;
-
-  switch (time) {
-    case 'late-night':
-      // Late night: short & chill wins, long & intense loses
-      if (tier === 'quick-hit') return 1.8;
-      if (tier === 'wind-down') return 1.4;
-      if (tier === 'marathon') return 0.4;
-      if (moods.includes('chill') || moods.includes('brainless')) return 1.5;
-      if (moods.includes('intense') || moods.includes('competitive')) return 0.5;
-      return 1;
-
-    case 'evening':
-      // Evening: wind-down games rise, intense drops slightly
-      if (moods.includes('chill') || moods.includes('atmospheric') || moods.includes('story-rich')) return 1.3;
-      if (tier === 'wind-down' || tier === 'quick-hit') return 1.2;
-      if (moods.includes('intense') || moods.includes('competitive')) return 0.7;
-      return 1;
-
-    case 'morning':
-      // Morning: slight boost for energetic picks
-      if (moods.includes('intense') || moods.includes('competitive')) return 1.2;
-      return 1;
-
-    case 'afternoon':
-    default:
-      return 1; // Neutral
-  }
 }
 
 // ── Genre balance ──────────────────────────────────────────────────
@@ -155,6 +173,7 @@ function calculateWeight(
   game: Game,
   skippedIds: Set<string>,
   recentPickGenres: string[] = [],
+  energy: EnergyLevel = 'medium',
 ): number {
   let weight = 1;
 
@@ -187,8 +206,8 @@ function calculateWeight(
     weight *= 0.5; // Probably a comfort game, deprioritize for discovery
   }
 
-  // Time-of-day awareness
-  weight *= getTimeOfDayWeight(game, getTimeOfDay());
+  // Energy matching
+  weight *= getEnergyWeight(game, energy);
 
   // Genre balance: avoid same-genre streaks
   weight *= getGenreBalanceWeight(game, recentPickGenres);
@@ -198,6 +217,25 @@ function calculateWeight(
 
   // Persistent skip tracking: penalize repeatedly skipped games
   weight *= getSkipWeightMultiplier(game.id);
+
+  // Skip reason: "hit a wall" suppression (recent wall = strong deprioritize)
+  if (isHitAWallSuppressed(game.id)) {
+    weight *= 0.1;
+  }
+
+  // Skip reason: global "too long" signal — user pattern across all games
+  // If they keep saying games are too long, deprioritize marathon/deep-cut
+  const allReasons = getAllSkipReasons();
+  const totalTooLong = Object.values(allReasons).reduce(
+    (sum, d) => sum + (d.reasons['too-long'] || 0), 0
+  );
+  if (totalTooLong >= 6) {
+    if (game.timeTier === 'marathon') weight *= 0.5;
+    else if (game.timeTier === 'deep-cut') weight *= 0.7;
+  } else if (totalTooLong >= 3) {
+    if (game.timeTier === 'marathon') weight *= 0.7;
+    else if (game.timeTier === 'deep-cut') weight *= 0.85;
+  }
 
   // Session skips: strongly deprioritize games skipped this session
   if (skippedIds.has(game.id)) {
@@ -263,8 +301,11 @@ export function pickWeighted(
   games: Game[],
   skippedIds: Set<string> = new Set(),
   recentPicks: Game[] = [],
+  energy?: EnergyLevel,
 ): Game | null {
   if (games.length === 0) return null;
+
+  const resolvedEnergy = energy || getDefaultEnergy();
 
   // Collect genres from recent picks for balance scoring
   const recentGenres = recentPicks
@@ -272,7 +313,7 @@ export function pickWeighted(
 
   const weighted = games.map((game) => ({
     game,
-    weight: calculateWeight(game, skippedIds, recentGenres),
+    weight: calculateWeight(game, skippedIds, recentGenres, resolvedEnergy),
   }));
 
   const totalWeight = weighted.reduce((sum, w) => sum + w.weight, 0);

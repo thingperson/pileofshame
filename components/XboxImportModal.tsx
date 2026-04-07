@@ -218,7 +218,7 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
                 {loading ? 'Searching...' : 'Find Profile'}
               </button>
             </div>
-            <p className="text-[11px] text-text-faint">
+            <p className="text-xs text-text-faint">
               Your Xbox profile and game history must be set to public.
             </p>
           </div>
@@ -292,7 +292,7 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-text-primary truncate">{game.name}</p>
-                      <p className="text-[11px] text-text-dim font-[family-name:var(--font-mono)]">
+                      <p className="text-xs text-text-dim font-[family-name:var(--font-mono)]">
                         {game.achievements && `${game.achievements.earned}/${game.achievements.total} achievements`}
                         {game.lastPlayed && ` · Last: ${new Date(game.lastPlayed).toLocaleDateString()}`}
                         {isExisting && ' · already imported'}

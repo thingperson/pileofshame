@@ -83,7 +83,7 @@ export default function PostImportSummary({ breakdown, onDismiss }: PostImportSu
         )}
 
         {breakdown.completed > 0 && (
-          <p className="text-[10px] text-text-faint text-center font-[family-name:var(--font-mono)]">
+          <p className="text-xs text-text-faint text-center font-[family-name:var(--font-mono)]">
             We guessed {breakdown.completed} game{breakdown.completed !== 1 ? 's are' : ' is'} already beaten based on your playtime. Wrong? Move them back anytime.
           </p>
         )}
@@ -113,7 +113,7 @@ function SummaryStat({ label, count, icon, color, sub }: {
       style={{ backgroundColor: `${color}10` }}
     >
       <p className="text-lg font-bold" style={{ color }}>{count}</p>
-      <p className="text-[10px] font-medium text-text-muted">{icon} {label}</p>
+      <p className="text-xs font-medium text-text-muted">{icon} {label}</p>
       {sub && <p className="text-[9px] text-text-faint mt-0.5">{sub}</p>}
     </div>
   );
