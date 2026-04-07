@@ -589,7 +589,7 @@ function AppContent() {
               className="shrink-0 px-3 py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, #6366f1, #818cf8)' }}
             >
-              <CustomIcon src={REROLL_ICONS['quick-session']} fallback="🌙" size={16} /> Quick Session
+              <CustomIcon src={REROLL_ICONS['quick-session']} fallback="🌙" size={22} /> Quick Session
             </button>
             <button
               onClick={() => openReroll('deep-cut')}
@@ -597,7 +597,7 @@ function AppContent() {
               className="shrink-0 px-3 py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, #dc2626, #f87171)' }}
             >
-              <CustomIcon src={REROLL_ICONS['deep-cut']} fallback="🔥" size={16} /> Deep Cut
+              <CustomIcon src={REROLL_ICONS['deep-cut']} fallback="🔥" size={22} /> Deep Cut
             </button>
             <button
               onClick={() => openReroll('continue')}
@@ -605,7 +605,7 @@ function AppContent() {
               className="shrink-0 px-3 py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, #d97706, #fbbf24)' }}
             >
-              <CustomIcon src={REROLL_ICONS['continue']} fallback="▶" size={16} /> Keep Playing
+              <CustomIcon src={REROLL_ICONS['continue']} fallback="▶" size={22} /> Keep Playing
             </button>
             <JustFiveMinutes games={games} />
             <button

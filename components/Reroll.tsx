@@ -323,7 +323,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                   style={{ backgroundColor: 'var(--color-bg-card)' }}
                 >
                   <div className="text-sm font-medium text-text-primary flex items-center gap-1.5">
-                    <CustomIcon src={REROLL_ICONS[m]} fallback={icon} size={20} /> {label}
+                    <CustomIcon src={REROLL_ICONS[m]} fallback={icon} size={28} /> {label}
                   </div>
                   <div className="text-[10px] text-text-dim mt-0.5">{description}</div>
                 </button>
@@ -351,7 +351,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                         border: active ? `1px solid ${config.color}50` : '1px solid transparent',
                       }}
                     >
-                      <CustomIcon src={MOOD_ICONS[mood]} fallback={config.icon} size={16} className="mr-0.5" /> {config.label}
+                      <CustomIcon src={MOOD_ICONS[mood]} fallback={config.icon} size={24} className="mr-0.5" /> {config.label}
                     </button>
                   );
                 })}
@@ -388,7 +388,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                   }`}
                   title={label}
                 >
-                  <CustomIcon src={REROLL_ICONS[m]} fallback={icon} size={14} className="mr-0.5" /> {label}
+                  <CustomIcon src={REROLL_ICONS[m]} fallback={icon} size={20} className="mr-0.5" /> {label}
                 </button>
               ))}
             </div>
@@ -410,7 +410,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                       color: active ? config.color : 'var(--color-text-dim)',
                     }}
                   >
-                    <CustomIcon src={MOOD_ICONS[mood]} fallback={config.icon} size={14} className="mr-0.5" /> {config.label}
+                    <CustomIcon src={MOOD_ICONS[mood]} fallback={config.icon} size={20} className="mr-0.5" /> {config.label}
                   </button>
                 );
 
