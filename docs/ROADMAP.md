@@ -74,8 +74,10 @@
 - PS+ Sub Shuffle: `/api/psplus` fetches 427 games from Sony public GraphQL, unified with Game Pass in service tabs ✅
 - Sentry error monitoring + global error boundary + `/api/health` endpoint ✅
 - Custom 404 page + app-level error boundary with Sentry reporting ✅
-- Favicon cropped to fill Chrome tab (was tiny due to source padding) ✅
+- Favicon: DALL-E red "IF" bag icon, reads clearly at 16px in Chrome tabs ✅
+- PWA icons regenerated from new favicon source (192px, 512px, apple-icon) ✅
 - HLTB direct API integration (replaced broken npm packages with /api/find + token auth + honeypot) ✅
+- Asset cleanup: removed unused concept art, organized icon files, gitignored scratch folders ✅
 
 ### Themes
 - Dark (default) ✅
@@ -113,7 +115,7 @@
 - **PS+ catalog built** — `/api/psplus` route fetches 427 games from Sony public GraphQL ✅
 - **Sub Shuffle unified** — GamePassBrowse now supports both Game Pass and PS+ via service tabs ✅
 - Still needed: test Xbox import flow against real Xbox account (gamertag with public profile)
-- Still needed: verify OPENXBL_API_KEY is in Vercel env vars
+- OPENXBL_API_KEY confirmed in Vercel env vars ✅
 
 ### Landing Page — SHIPPED ✅
 - Hero illustration + bold brand banner with logomark ✅
@@ -129,8 +131,10 @@
 ### Custom Icon Set (HIGH — Priority 2)
 - Colored icon brief finalized: `docs/dalle-prompts/14-icon-colored-final.md`
 - 29 icons total: status (5), mood tags (10), reroll modes (4), time tiers (5), nav (5 optional)
-- DALL-E generation in progress — 8 assets in `public/icons/` so far (mix of SVG/PNG)
-- Drop into `public/icons/` → wire into components replacing emoji placeholders
+- DALL-E generation in progress — 20+ assets in `public/icons/` (all mood + status + 2 reroll modes done)
+- Preview branch `icon-preview` wired into Reroll modal + main page shortcut buttons
+- Using plain `<img>` tags (source files pre-optimized at 128x128, ~7KB each)
+- Still needed: 3 reroll mode icons (deep-cut, continue, almost-done), nav icons
 - Naming convention defined in brief
 
 ### Enrichment Reliability Audit (MEDIUM)
