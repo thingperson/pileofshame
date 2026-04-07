@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Game, GameStatus, LibraryState, FilterState, PlatformPreference } from './types';
 import { DEFAULT_CATEGORIES, STATUS_CYCLE } from './constants';
 import { SEED_GAMES } from './seedData';
+import { recordCompletion } from './genreCooldown';
 
 interface StoreActions {
   // Game CRUD
@@ -116,12 +117,22 @@ export const useStore = create<LibraryState & StoreActions>()(
 
       updateGame: (id, updates) => {
         const now = new Date().toISOString();
-        set((state) => ({
+        const state = get();
+
+        // Record genre cooldown if game is being marked as played
+        if (updates.status === 'played') {
+          const game = state.games.find(g => g.id === id);
+          if (game?.genres && game.genres.length > 0) {
+            recordCompletion(game.id, game.genres);
+          }
+        }
+
+        set({
           games: state.games.map((g) =>
             g.id === id ? { ...g, ...updates, updatedAt: now } : g
           ),
           lastSaved: now,
-        }));
+        });
       },
 
       deleteGame: (id) => {
@@ -167,6 +178,12 @@ export const useStore = create<LibraryState & StoreActions>()(
           ),
           lastSaved: now,
         });
+
+        // Record genre cooldown when a game is completed (not bailed)
+        if (nextStatus === 'played' && game.genres && game.genres.length > 0) {
+          recordCompletion(game.id, game.genres);
+        }
+
         return nextStatus;
       },
 

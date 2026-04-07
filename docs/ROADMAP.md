@@ -229,8 +229,8 @@
 - **Full V3 spec written** — see `docs/decision-engine-v3-spec.md`
 - ~~"Almost Done" reroll mode~~ — **SHIPPED** (filters to games within 20% of HLTB completion) ✅
 - ~~Post-recommendation nudge~~ — **SHIPPED** (3s motivational overlay after "Let's Go", with session estimate + Steam launch link) ✅
+- Genre cooldown / fatigue: 0.6x weight penalty for same genre within 7d of completion, 0.8x at 7-14d, tracks last 3 completions ✅
 - Remaining V3 features (specced, not yet built):
-  3. Cooldown / genre fatigue (1-2h, 7-day same-genre penalty after completion)
   4. "Why'd you skip?" feedback (3-4h, optional 1-tap reason: too long, not in mood, etc.)
   5. Energy matching (3-4h, Low/Medium/High selector with time-of-day defaults)
   6. Behavioral learning (8-12h, decision history, genre affinity, time tier preference)

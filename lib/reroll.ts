@@ -1,5 +1,6 @@
 import { Game, MoodTag, PlatformPreference } from './types';
 import { isSoftIgnored, getSkipWeightMultiplier } from './skipTracking';
+import { getGenreCooldownMultiplier } from './genreCooldown';
 
 export type RerollMode = 'anything' | 'quick-session' | 'deep-cut' | 'continue' | 'almost-done';
 
@@ -191,6 +192,9 @@ function calculateWeight(
 
   // Genre balance: avoid same-genre streaks
   weight *= getGenreBalanceWeight(game, recentPickGenres);
+
+  // Genre cooldown: penalize genres from recent completions (V3)
+  weight *= getGenreCooldownMultiplier(game.genres || []);
 
   // Persistent skip tracking: penalize repeatedly skipped games
   weight *= getSkipWeightMultiplier(game.id);
