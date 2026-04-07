@@ -295,12 +295,12 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
             🎲 {currentPick ? 'Roll Again' : 'What Should I Play?'}
           </h2>
           {currentPick ? (
-            <p className="text-xs text-text-dim mt-1 font-[family-name:var(--font-mono)]">
+            <p className="text-sm text-text-dim mt-1 font-[family-name:var(--font-mono)]">
               Roll {reroll.sessionCount}
             </p>
           ) : (
-            <p className="text-xs text-text-dim mt-1 font-[family-name:var(--font-mono)]">
-              Pick a mode and roll
+            <p className="text-sm text-text-dim mt-1 font-[family-name:var(--font-mono)]">
+              Tell us your session, pick a vibe, roll
             </p>
           )}
         </div>
@@ -308,6 +308,8 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
         {/* Mode Selector (only before first roll, skip if mode pre-selected) */}
         {!currentPick && !showForced && !skipModePicker && (
           <div className="px-5 pb-4">
+            {/* Session type */}
+            <p className="text-xs text-text-dim font-[family-name:var(--font-mono)] uppercase tracking-wider mb-2">How much time do you have?</p>
             <div className="grid grid-cols-2 gap-2">
               {REROLL_MODES.map(({ mode: m, label, icon, description }) => (
                 <button
@@ -320,16 +322,16 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                   }`}
                   style={{ backgroundColor: 'var(--color-bg-card)' }}
                 >
-                  <div className="text-sm font-medium text-text-primary">
+                  <div className="text-base font-medium text-text-primary">
                     {icon} {label}
                   </div>
-                  <div className="text-[10px] text-text-dim mt-0.5">{description}</div>
+                  <div className="text-xs text-text-dim mt-0.5">{description}</div>
                 </button>
               ))}
             </div>
             {/* Mood filter pills */}
-            <div className="mt-3">
-              <p className="text-[10px] text-text-dim font-[family-name:var(--font-mono)] uppercase tracking-wider mb-1.5">Mood</p>
+            <div className="mt-4">
+              <p className="text-xs text-text-dim font-[family-name:var(--font-mono)] uppercase tracking-wider mb-2">I want something that feels...</p>
               <div className="flex flex-wrap gap-1.5">
                 {ALL_MOODS.map((mood) => {
                   const config = MOOD_TAG_CONFIG[mood];
@@ -338,7 +340,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                     <button
                       key={mood}
                       onClick={() => toggleMood(mood)}
-                      className={`px-2.5 py-1.5 rounded-full text-xs font-medium transition-all ${
+                      className={`px-3 py-2 rounded-full text-sm font-medium transition-all ${
                         active
                           ? 'scale-[1.02]'
                           : 'opacity-60 hover:opacity-90'
@@ -379,7 +381,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                 <button
                   key={m}
                   onClick={() => { setMode(m); setShownIds(new Set()); doRoll(m); }}
-                  className={`px-3 py-2 rounded-full text-xs font-medium font-[family-name:var(--font-mono)] transition-all ${
+                  className={`px-3 py-2 rounded-full text-sm font-medium font-[family-name:var(--font-mono)] transition-all ${
                     mode === m
                       ? 'bg-white/10 text-text-primary'
                       : 'text-text-dim hover:text-text-muted hover:bg-white/5'
@@ -392,7 +394,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
             </div>
 
             {/* Mood filter pills (compact, inline) */}
-            <div className="flex flex-wrap justify-center gap-1 mb-4">
+            <div className="flex flex-wrap justify-center gap-1.5 mb-4">
               {ALL_MOODS.map((mood) => {
                 const config = MOOD_TAG_CONFIG[mood];
                 const active = moodFilters.includes(mood);
@@ -400,7 +402,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                   <button
                     key={mood}
                     onClick={() => { toggleMood(mood); }}
-                    className={`px-2 py-1 rounded-full text-[10px] font-medium transition-all ${
+                    className={`px-2.5 py-1.5 rounded-full text-xs font-medium transition-all ${
                       active ? 'scale-[1.02]' : 'opacity-50 hover:opacity-80'
                     }`}
                     style={{

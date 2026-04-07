@@ -208,6 +208,95 @@ Add to review cadence: periodic visual density audit. Flag screens where informa
 
 ---
 
+## Icon Generation Strategy (April 7, 2026)
+
+### Current state
+- DALL-E icons look great at large sizes but are illegible below ~36px
+- Too much illustrated detail for emoji-scale usage (14-32px)
+- Emojis still outperform at small sizes due to bold silhouettes and high contrast
+- Decision: keep emojis on production, continue icon experiments on `icon-preview` branch
+
+### What we need for small-scale icons
+- **Flat, bold silhouettes** — not illustrated scenes
+- **2-3 colors max** — single shape with one accent
+- **No fine detail** — test every icon at 16px before accepting
+- **Think SF Symbols / Material Icons** — geometric, not artistic
+- **Transparent backgrounds** — mandatory
+
+### Tool options to explore
+- **DALL-E (current)**: Great for larger illustrations, struggles with icon constraints. Context drifts, doesn't self-test at target sizes.
+- **Google Gemini / Imagen 3**: Worth testing — may handle geometric/flat constraints better. Free tier available.
+- **Midjourney**: Strong at flat/vector styles with `--style raw` flag. Paid only.
+- **Recraft.ai**: Specifically designed for icon/logo generation. Free tier. Best bet for this use case.
+- **Figma + manual**: Design flat icons manually using geometric primitives. Most control, most effort.
+- **SVG icon libraries (Lucide, Phosphor, Heroicons)**: Free, already optimized for small sizes. Could tint/customize. Fastest path to good small icons.
+
+### Recommendation
+Try Recraft.ai or an SVG icon library (Phosphor/Lucide) as alternatives. If neither hits the brand feel, manual Figma work gives full control. Keep DALL-E icons for larger surfaces (theme banners, celebration screens, marketing).
+
+---
+
+## Native Mobile App Planning (April 7, 2026)
+
+### Current state
+- Web app is responsive and mobile-optimized (375px+ tested)
+- PWA manifest exists with home screen icons
+- Primary use case is already mobile (phone in hand, sitting in front of console)
+
+### Path to native (rough priority order)
+
+#### Phase 1: Enhanced PWA (lowest effort, no app store)
+- Add service worker for offline library access
+- Push notification support (with explicit consent per legal rules)
+- Better install prompt UX
+- Cache game data and cover art for offline browsing
+- This might be "enough" — test with real users first
+
+#### Phase 2: Capacitor/Expo wrapper (medium effort, app store presence)
+- Wrap the existing Next.js app in Capacitor (Ionic) or build with Expo
+- Gets you on App Store and Google Play with minimal rewrite
+- Capacitor: keep the web codebase, add native shell
+- Expo/React Native: more rewrite but better native feel
+- Requires Apple Developer account ($99/yr) and Google Play Console ($25 one-time)
+
+#### Phase 3: Full React Native rewrite (high effort, best experience)
+- Only if Phase 2 feels too janky
+- Share business logic (stores, API calls) but rewrite all UI components
+- Native navigation, haptics, animations
+- 3-6 month project for a solo builder
+
+### Key decisions (not yet made)
+- Is PWA sufficient for the target audience? (gamers tend to prefer native apps)
+- Which platform first? (iOS likely, given the user base and PWA limitations on iOS)
+- Revenue model in app stores? (free with no IAP initially, same as web)
+- Does the app need to work offline? (library browsing yes, import/enrichment no)
+
+### What changes on web that affects native planning
+- Keep state management in Zustand (portable to React Native)
+- Keep API routes as separate endpoints (reusable from native client)
+- Avoid web-only patterns where possible (CSS-heavy animations → consider alternatives)
+- localStorage works in both web and Capacitor; would need AsyncStorage for React Native
+
+---
+
+## Base Font Size Review (April 7, 2026)
+
+Brady reports the app feels better at 110-125% browser zoom. This suggests our base sizing runs small for the target audience (25-40 year old gamers, often on laptops).
+
+### Observations
+- No base font-size set on body (inherits browser 16px default)
+- Heavy use of `text-xs` (12px) and `text-[10px]` throughout — especially in the reroll modal, mood pills, and mono labels
+- Mobile is the primary use case where 12px text is even harder to read on small screens
+- The reroll modal is the most text-dense surface and the most impacted
+
+### Proposed approach
+- Bump smallest text from 10px → 12px and 12px → 13-14px across the app
+- Keep `text-base` (16px) and `text-lg` (18px) as anchors for primary content
+- Do this as a dedicated typography pass, not piecemeal
+- Test on actual mobile device at native zoom before shipping
+
+---
+
 ## Raw Rambles (unsorted, dump here)
 
 (Brady: drop notes here when you're away from desktop. I'll sort them when you're back.)
