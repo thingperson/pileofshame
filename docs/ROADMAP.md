@@ -268,6 +268,13 @@
 - Deal alerts for games in your pile (price drops)
 - See: `.claude/plans/future-notifications-email.md`
 
+### Phase 6: Native Mobile App (FUTURE — not started)
+- Enhanced PWA first (offline library, install prompt, push notifications)
+- Capacitor or Expo wrapper for app store presence if PWA isn't enough
+- Full React Native rewrite only if wrapper feels too janky
+- Apple Developer ($99/yr) + Google Play Console ($25) needed
+- See: `docs/IDEAS.md` → "Native Mobile App Planning" section
+
 ### Research — Decision Paralysis & Choice Architecture
 - Formal study of choice overload interventions (Schwartz, Iyengar)
 - What streaming platforms learned (Netflix browse-to-watch ratio, Spotify Discover Weekly)
