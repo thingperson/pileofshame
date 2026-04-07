@@ -246,8 +246,8 @@
 - ~~"Why'd you skip?" feedback~~ — **SHIPPED** (optional pill row after skips, feeds back into weights: too-long penalizes marathon, hit-a-wall suppresses 7d, not-interested soft-ignores at 2+) ✅
 - ~~Energy matching~~ — **SHIPPED** (Low/Medium/High selector replaces time-of-day, auto-defaults by clock, multiplicative mood+tier weighting) ✅
 - Decision history recording — **SHIPPED** (logs accept/skip with full context to localStorage, rolling 100 entries, prep for behavioral learning) ✅
-- Remaining V3 feature (specced, not yet built):
-  6. Behavioral learning (8-12h, genre affinity + time tier preference weights from decision history)
+- ~~Behavioral learning~~ — **SHIPPED** (genre affinity + time tier preference weights from decision history, Shannon entropy variety factor, cold start dampening, Stats UI with reset) ✅
+- **Decision Engine V3 is COMPLETE.** All 6 features shipped.
 - TypeScript interfaces, localStorage schemas, weight tables, and testing plans in spec doc
 
 ### Jump Back In V3 (MEDIUM)
