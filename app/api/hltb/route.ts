@@ -3,6 +3,13 @@ import { HowLongToBeatService } from 'howlongtobeat';
 
 const hltb = new HowLongToBeatService();
 
+// NOTE: As of April 2026, HLTB moved from /api/search to /api/find with
+// anti-bot fingerprinting (token + IP + UA hash). The howlongtobeat npm
+// package (1.8.0) is broken — all searches return 404. Existing cached
+// HLTB data in users' localStorage is unaffected. This route now gracefully
+// returns found:false instead of 500 until we build a direct integration
+// or the npm package is updated.
+//
 // Simple in-memory cache to avoid hammering HLTB
 const cache = new Map<string, { main: number; extra: number; completionist: number }>();
 
