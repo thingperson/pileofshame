@@ -1,7 +1,5 @@
 'use client';
 
-import Image from 'next/image';
-
 interface CustomIconProps {
   src: string | null;
   fallback: string;  // emoji fallback
@@ -11,8 +9,8 @@ interface CustomIconProps {
 
 /**
  * Renders a custom DALL-E icon image, or falls back to emoji text.
- * Icons are displayed as small circular images with the background
- * cropped to just the icon content.
+ * Uses plain <img> instead of next/image — source files are already
+ * optimized at 128x128 (~7KB each), no need for the optimizer.
  */
 export default function CustomIcon({ src, fallback, size = 18, className = '' }: CustomIconProps) {
   if (!src) {
@@ -20,12 +18,14 @@ export default function CustomIcon({ src, fallback, size = 18, className = '' }:
   }
 
   return (
-    <Image
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
       src={src}
       alt=""
       width={size}
       height={size}
       className={`inline-block rounded-sm object-cover ${className}`}
+      loading="eager"
     />
   );
 }
