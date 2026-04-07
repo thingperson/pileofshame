@@ -23,9 +23,9 @@ export default async function AppleIcon() {
       >
         <img
           src={`data:image/png;base64,${base64}`}
-          width={160}
-          height={160}
-          style={{ objectFit: 'contain' }}
+          width={170}
+          height={170}
+          style={{ objectFit: 'cover' }}
         />
       </div>
     ),

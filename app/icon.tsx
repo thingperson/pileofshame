@@ -23,9 +23,9 @@ export default async function Icon() {
       >
         <img
           src={`data:image/png;base64,${base64}`}
-          width={30}
-          height={30}
-          style={{ objectFit: 'contain' }}
+          width={32}
+          height={32}
+          style={{ objectFit: 'cover' }}
         />
       </div>
     ),
