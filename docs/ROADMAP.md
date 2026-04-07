@@ -78,6 +78,9 @@
 - PWA icons regenerated from new favicon source (192px, 512px, apple-icon) ✅
 - HLTB direct API integration (replaced broken npm packages with /api/find + token auth + honeypot) ✅
 - Asset cleanup: removed unused concept art, organized icon files, gitignored scratch folders ✅
+- Reroll modal UX: section labels ("How much time?" / "I want something that feels..."), bigger text across all surfaces ✅
+- Comfortable text size toggle in Settings (112.5% root font scale, persisted via localStorage) ✅
+- Favicon transparent background (bag floats on tab bar like other sites) ✅
 
 ### Themes
 - Dark (default) ✅
@@ -128,14 +131,14 @@
   - "Celebrating bailing on a game — that's a decision. That's a win."
   - The identity pressure angle: it's not about what's good, it's what you *chose*
 
-### Custom Icon Set (HIGH — Priority 2)
-- Colored icon brief finalized: `docs/dalle-prompts/14-icon-colored-final.md`
-- 29 icons total: status (5), mood tags (10), reroll modes (4), time tiers (5), nav (5 optional)
-- DALL-E generation in progress — 20+ assets in `public/icons/` (all mood + status + 2 reroll modes done)
-- Preview branch `icon-preview` wired into Reroll modal + main page shortcut buttons
-- Using plain `<img>` tags (source files pre-optimized at 128x128, ~7KB each)
-- Still needed: 3 reroll mode icons (deep-cut, continue, almost-done), nav icons
-- Naming convention defined in brief
+### Custom Icon Set (ON HOLD — exploring alternatives)
+- DALL-E icons look great at large sizes but illegible below ~36px (too much illustrated detail)
+- **Current decision: emojis on production, icon experiments on `icon-preview` branch**
+- 20+ DALL-E assets in `public/icons/` on icon-preview branch (all mood + status + 2 reroll modes)
+- Preview branch has full wiring (CustomIcon component, iconMap, Reroll + page.tsx integration)
+- Exploring alternatives: Recraft.ai (icon-specific AI), SVG icon libraries (Phosphor/Lucide), Figma manual
+- See: `docs/IDEAS.md` → "Icon Generation Strategy" for full tool comparison
+- Still needed if pursuing custom icons: flat/bold silhouette style, 2-3 colors max, test at 16px before accepting
 
 ### Enrichment Reliability Audit (MEDIUM)
 - Name normalization shipped ✅
@@ -299,10 +302,10 @@
 
 | Review | Last Run | Status | Frequency |
 |--------|----------|--------|-----------|
-| Voice/AI lingo sweep | Apr 7, 2026 | Clean — 404 page, error pages, post-accept nudge copy, Sub Shuffle quips all reviewed | Every deploy with new copy |
+| Voice/AI lingo sweep | Apr 7, 2026 | Clean — reroll modal labels ("How much time?" / "I want something that feels..."), all new copy reviewed | Every deploy with new copy |
 | Accessibility audit | Apr 6, 2026 | All critical/major items resolved. Reroll close btn ✅, mode btn labels ✅, status aria-labels ✅, contrast ✅ | Monthly |
-| Feature creep audit | Apr 7, 2026 | Healthy. 3 new pages (404, error, global-error) are edge-case only. Genre cooldown is invisible. Zero new happy-path UI elements. 13 themes = maintenance watch. | Quarterly |
-| Mobile responsiveness | Apr 6, 2026 | Tab labels fixed, mode buttons scroll OK, cards render clean at 375px, nudge cards stack cleanly | Monthly |
+| Feature creep audit | Apr 7, 2026 | Healthy. Comfortable text size toggle is a user preference, not a feature. Reroll labels are UX clarity, not scope creep. | Quarterly |
+| Mobile responsiveness | Apr 7, 2026 | Reroll modal tested at 375px — mode pills wrap cleanly (3/row), mood pills wrap to 4 rows. Comfortable mode scales proportionally. | Monthly |
 | Enrichment accuracy | Apr 7, 2026 | HLTB direct API integration replaced broken npm packages. All test games returning data. RAWG cache + retry still solid. | Quarterly |
 | Legal/privacy compliance | Apr 7, 2026 | Sentry added to Privacy Policy (third-party services + cookies/tracking sections). Genre cooldown is localStorage only. | Before any feature touching user data, deals, or profiling |
 | Info density sweep | Apr 7, 2026 | Flagged: nudge cards too tall (compact by default), import summary should be one-time modal. Logged in IDEAS.md. | Periodic — Brady audits visually, Claude flags code-side |
