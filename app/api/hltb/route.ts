@@ -1,17 +1,136 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { HowLongToBeatService } from 'howlongtobeat';
 
-const hltb = new HowLongToBeatService();
+// Direct HLTB integration — April 2026
+// The howlongtobeat npm packages (both 1.8.0 and howlongtobeat-core 1.1.0)
+// are broken. HLTB moved to /api/find with token auth + honeypot fields.
+// This implementation talks to HLTB directly using their current API.
 
-// NOTE: As of April 2026, HLTB moved from /api/search to /api/find with
-// anti-bot fingerprinting (token + IP + UA hash). The howlongtobeat npm
-// package (1.8.0) is broken — all searches return 404. Existing cached
-// HLTB data in users' localStorage is unaffected. This route now gracefully
-// returns found:false instead of 500 until we build a direct integration
-// or the npm package is updated.
-//
-// Simple in-memory cache to avoid hammering HLTB
+const HLTB_BASE = 'https://howlongtobeat.com';
+const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
+
+// Token cache (5 min TTL)
+let tokenCache: { token: string; hpKey: string; hpVal: string; expires: number } | null = null;
+
+// Results cache to avoid hammering HLTB
 const cache = new Map<string, { main: number; extra: number; completionist: number }>();
+
+async function getToken(): Promise<{ token: string; hpKey: string; hpVal: string } | null> {
+  if (tokenCache && Date.now() < tokenCache.expires) {
+    return tokenCache;
+  }
+
+  try {
+    const res = await fetch(`${HLTB_BASE}/api/find/init?t=${Date.now()}`, {
+      headers: { 'User-Agent': UA, 'Referer': HLTB_BASE },
+    });
+
+    if (!res.ok) {
+      console.warn('HLTB token fetch failed:', res.status);
+      return null;
+    }
+
+    const data = await res.json();
+    tokenCache = {
+      token: data.token,
+      hpKey: data.hpKey,
+      hpVal: data.hpVal,
+      expires: Date.now() + 4 * 60 * 1000, // 4 min (conservative)
+    };
+    return tokenCache;
+  } catch (err) {
+    console.warn('HLTB token error:', err);
+    return null;
+  }
+}
+
+interface HltbRawGame {
+  game_name: string;
+  comp_main: number;
+  comp_plus: number;
+  comp_100: number;
+  comp_all: number;
+}
+
+async function searchHltb(title: string): Promise<HltbRawGame[] | null> {
+  const auth = await getToken();
+  if (!auth) return null;
+
+  const body: Record<string, unknown> = {
+    searchType: 'games',
+    searchTerms: title.split(' ').filter((t) => t.length > 0),
+    searchPage: 1,
+    size: 5,
+    searchOptions: {
+      games: {
+        userId: 0, platform: '', sortCategory: 'popular', rangeCategory: 'main',
+        rangeTime: { min: 0, max: 0 },
+        gameplay: { perspective: '', flow: '', genre: '', difficulty: '' },
+        rangeYear: { min: '', max: '' }, modifier: '',
+      },
+      users: { sortCategory: 'postcount' },
+      lists: { sortCategory: 'follows' },
+      filter: '', sort: 0, randomizer: 0,
+    },
+    useCache: true,
+  };
+
+  // Honeypot: must go in BOTH body AND headers
+  if (auth.hpKey) body[auth.hpKey] = auth.hpVal;
+
+  try {
+    const res = await fetch(`${HLTB_BASE}/api/find`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': UA,
+        'Referer': HLTB_BASE,
+        'Origin': HLTB_BASE,
+        'x-auth-token': auth.token,
+        'x-hp-key': auth.hpKey,
+        'x-hp-val': auth.hpVal,
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (res.status === 403) {
+      // Token expired — clear cache and retry once
+      tokenCache = null;
+      const freshAuth = await getToken();
+      if (!freshAuth) return null;
+
+      if (freshAuth.hpKey) body[freshAuth.hpKey] = freshAuth.hpVal;
+
+      const retry = await fetch(`${HLTB_BASE}/api/find`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent': UA,
+          'Referer': HLTB_BASE,
+          'Origin': HLTB_BASE,
+          'x-auth-token': freshAuth.token,
+          'x-hp-key': freshAuth.hpKey,
+          'x-hp-val': freshAuth.hpVal,
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!retry.ok) return null;
+      const retryData = await retry.json();
+      return retryData.data || null;
+    }
+
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.data || null;
+  } catch (err) {
+    console.warn('HLTB search error for', title, ':', err);
+    return null;
+  }
+}
+
+function secsToHrs(secs: number): number {
+  return secs > 0 ? Math.round((secs / 3600) * 10) / 10 : 0;
+}
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -27,32 +146,25 @@ export async function GET(req: NextRequest) {
 
       const key = title.trim().toLowerCase();
       if (cache.has(key)) {
-        return NextResponse.json({ ...cache.get(key), title: title.trim(), cached: true });
+        return NextResponse.json({ ...cache.get(key), title: title.trim(), cached: true, found: true });
       }
 
-      let results;
-      try {
-        results = await hltb.search(title.trim());
-      } catch (searchErr) {
-        console.warn('HLTB search failed for:', title.trim(), searchErr);
-        return NextResponse.json({ title: title.trim(), main: 0, extra: 0, completionist: 0, found: false });
-      }
-
+      const results = await searchHltb(title.trim());
       if (!results || results.length === 0) {
         return NextResponse.json({ title: title.trim(), main: 0, extra: 0, completionist: 0, found: false });
       }
 
       const best = results[0];
       const data = {
-        main: best.gameplayMain || 0,
-        extra: best.gameplayMainExtra || 0,
-        completionist: best.gameplayCompletionist || 0,
+        main: secsToHrs(best.comp_main),
+        extra: secsToHrs(best.comp_plus),
+        completionist: secsToHrs(best.comp_100),
       };
 
       cache.set(key, data);
 
       return NextResponse.json({
-        title: best.name,
+        title: best.game_name,
         ...data,
         found: true,
       });
@@ -77,16 +189,16 @@ export async function GET(req: NextRequest) {
         }
 
         try {
-          const searchResults = await hltb.search(title.trim());
+          const searchResults = await searchHltb(title.trim());
           if (searchResults && searchResults.length > 0) {
             const best = searchResults[0];
-            const main = best.gameplayMain || 0;
+            const main = secsToHrs(best.comp_main);
             cache.set(key, {
               main,
-              extra: best.gameplayMainExtra || 0,
-              completionist: best.gameplayCompletionist || 0,
+              extra: secsToHrs(best.comp_plus),
+              completionist: secsToHrs(best.comp_100),
             });
-            results.push({ title: best.name, main, found: true });
+            results.push({ title: best.game_name, main, found: true });
           } else {
             results.push({ title: title.trim(), main: 0, found: false });
           }
