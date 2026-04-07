@@ -23,7 +23,14 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ ...cache.get(key), title: title.trim(), cached: true });
       }
 
-      const results = await hltb.search(title.trim());
+      let results;
+      try {
+        results = await hltb.search(title.trim());
+      } catch (searchErr) {
+        console.warn('HLTB search failed for:', title.trim(), searchErr);
+        return NextResponse.json({ title: title.trim(), main: 0, extra: 0, completionist: 0, found: false });
+      }
+
       if (!results || results.length === 0) {
         return NextResponse.json({ title: title.trim(), main: 0, extra: 0, completionist: 0, found: false });
       }
