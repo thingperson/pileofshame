@@ -49,15 +49,10 @@ export default function AboutPage() {
 
       {/* ── Hero ── */}
       <section className="relative min-h-[35vh] flex flex-col items-center justify-center px-6 py-8 text-center">
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: 'url(/IF-landing-BG.webp)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            opacity: 0.4,
-          }}
-        />
+        <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ opacity: 0.4 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/IF-landing-BG.webp" alt="" className="w-full h-full object-cover" fetchPriority="high" />
+        </div>
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -76,8 +71,8 @@ export default function AboutPage() {
             <Image
               src="/inventoryfull-hero-transparent.webp"
               alt="A hand rising from a pile of games, holding a controller"
-              width={576}
-              height={384}
+              width={384}
+              height={256}
               className="w-48 h-auto sm:w-64 md:w-72 object-contain"
               style={{ filter: 'drop-shadow(0 0 20px color-mix(in srgb, var(--color-accent-purple) 25%, transparent))' }}
               priority
