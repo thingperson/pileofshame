@@ -26,7 +26,6 @@ export default function CustomIcon({ src, fallback, size = 18, className = '' }:
       width={size}
       height={size}
       className={`inline-block rounded-sm object-cover ${className}`}
-      unoptimized
     />
   );
 }
