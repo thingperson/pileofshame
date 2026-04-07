@@ -11,6 +11,7 @@ import {
   fetchPricesBatch, fetchHltbBatch,
   PRICE_CACHE_KEY, HLTB_CACHE_KEY,
 } from '@/lib/statsHelpers';
+import { getDecisionStats, clearDecisionHistory } from '@/lib/decisionHistory';
 import StatCard from './StatCard';
 import ArchetypeCard from './ArchetypeCard';
 import ValueCalculator from './ValueCalculator';
@@ -42,6 +43,85 @@ function useCountUp(target: number, active: boolean, duration = 1500): number {
   }, [target, active, duration]);
 
   return current;
+}
+
+// --- Decision Engine Section ---
+
+function DecisionEngineSection({ showToast }: { showToast: (msg: string) => void }) {
+  const [decisionStats, setDecisionStats] = useState<ReturnType<typeof getDecisionStats>>(null);
+  const [confirming, setConfirming] = useState(false);
+
+  useEffect(() => {
+    setDecisionStats(getDecisionStats());
+  }, []);
+
+  if (!decisionStats) return null;
+
+  const handleReset = () => {
+    if (!confirming) {
+      setConfirming(true);
+      return;
+    }
+    clearDecisionHistory();
+    setDecisionStats(null);
+    setConfirming(false);
+    showToast('Learned preferences reset. The engine starts fresh.');
+  };
+
+  return (
+    <div
+      className="mt-3 rounded-xl border p-4"
+      style={{
+        backgroundColor: 'var(--color-bg-primary)',
+        borderColor: 'var(--color-border-subtle)',
+      }}
+    >
+      <h3 className="text-sm font-extrabold text-text-primary tracking-tight mb-3">
+        Your Decision Engine
+      </h3>
+      <div className="space-y-2">
+        {decisionStats.topGenres.length > 0 && (
+          <div className="flex items-baseline gap-2">
+            <span className="text-xs text-text-dim font-[family-name:var(--font-mono)] shrink-0">You tend to pick:</span>
+            <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">
+              {decisionStats.topGenres.join(', ')}
+            </span>
+          </div>
+        )}
+        {decisionStats.skipGenres.length > 0 && (
+          <div className="flex items-baseline gap-2">
+            <span className="text-xs text-text-dim font-[family-name:var(--font-mono)] shrink-0">You usually skip:</span>
+            <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">
+              {decisionStats.skipGenres.join(', ')}
+            </span>
+          </div>
+        )}
+        <div className="flex items-baseline gap-2">
+          <span className="text-xs text-text-dim font-[family-name:var(--font-mono)] shrink-0">Your sweet spot:</span>
+          <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">
+            {decisionStats.sweetSpot}
+          </span>
+        </div>
+        <div className="flex items-baseline gap-2">
+          <span className="text-xs text-text-dim font-[family-name:var(--font-mono)] shrink-0">Decisions tracked:</span>
+          <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">
+            {decisionStats.count}
+          </span>
+        </div>
+      </div>
+      <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+        <button
+          onClick={handleReset}
+          className="text-xs font-medium font-[family-name:var(--font-mono)] transition-colors"
+          style={{ color: confirming ? '#ef4444' : 'var(--color-text-dim)' }}
+        >
+          {confirming
+            ? 'Confirm? This resets the engine to factory settings. Your skip counts and library aren\'t affected.'
+            : 'Reset learned preferences'}
+        </button>
+      </div>
+    </div>
+  );
 }
 
 // --- Main Component ---
@@ -447,6 +527,9 @@ export default function StatsPanel({ games }: StatsPanelProps) {
             currentArchetype={currentArchetype}
             showToast={showToast}
           />
+
+          {/* Decision Engine Stats */}
+          <DecisionEngineSection showToast={showToast} />
         </div>
       )}
     </div>

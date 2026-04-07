@@ -2,6 +2,7 @@ import { Game, MoodTag, PlatformPreference } from './types';
 import { isSoftIgnored, getSkipWeightMultiplier } from './skipTracking';
 import { getGenreCooldownMultiplier } from './genreCooldown';
 import { isNotInterestedIgnored, isHitAWallSuppressed, getAllSkipReasons } from './skipReasons';
+import { getBehavioralWeight } from './decisionHistory';
 
 export type RerollMode = 'anything' | 'quick-session' | 'deep-cut' | 'continue' | 'almost-done';
 
@@ -236,6 +237,9 @@ function calculateWeight(
     if (game.timeTier === 'marathon') weight *= 0.7;
     else if (game.timeTier === 'deep-cut') weight *= 0.85;
   }
+
+  // Behavioral learning (V3 #6)
+  weight *= getBehavioralWeight(game);
 
   // Session skips: strongly deprioritize games skipped this session
   if (skippedIds.has(game.id)) {
