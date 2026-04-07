@@ -91,6 +91,12 @@ export default function RootLayout({
           </Script>
         </head>
       <body className="min-h-full flex flex-col relative">
+        {/* Restore text size preference before paint to avoid flash */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem('if-text-size')==='comfortable')document.documentElement.classList.add('comfortable')}catch(e){}`,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

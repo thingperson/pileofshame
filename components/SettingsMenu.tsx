@@ -283,6 +283,41 @@ export default function SettingsMenu() {
                   </div>
                 </div>
 
+                {/* Text Size */}
+                <div className="px-3 py-2 space-y-1.5">
+                  <p className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">Text size</p>
+                  <div className="flex gap-1">
+                    {[
+                      { value: 'default', label: 'Default' },
+                      { value: 'comfortable', label: 'Comfortable' },
+                    ].map((opt) => {
+                      const current = typeof window !== 'undefined' && document.documentElement.classList.contains('comfortable') ? 'comfortable' : 'default';
+                      return (
+                        <button
+                          key={opt.value}
+                          onClick={() => {
+                            if (opt.value === 'comfortable') {
+                              document.documentElement.classList.add('comfortable');
+                              localStorage.setItem('if-text-size', 'comfortable');
+                            } else {
+                              document.documentElement.classList.remove('comfortable');
+                              localStorage.setItem('if-text-size', 'default');
+                            }
+                            setOpen(false);
+                          }}
+                          className={`px-2 py-1 text-[11px] rounded-md font-medium transition-all ${
+                            current === opt.value
+                              ? 'bg-accent-purple/20 text-accent-purple border border-accent-purple/30'
+                              : 'text-text-dim hover:text-text-muted border border-transparent'
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 {/* Platform Preference */}
                 <div className="px-3 py-2 space-y-1.5">
                   <p className="text-[11px] text-text-faint font-[family-name:var(--font-mono)]">I play on</p>
