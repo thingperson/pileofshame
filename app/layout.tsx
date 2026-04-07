@@ -77,6 +77,8 @@ export default function RootLayout({
       className={`${outfit.variable} ${jetbrainsMono.variable} ${nunito.variable} h-full antialiased`}
     >
       <head>
+          <link rel="preconnect" href="https://o4511175748419584.ingest.us.sentry.io" />
+          <link rel="preload" as="image" href="/IF-landing-BG.webp" type="image/webp" />
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
             strategy="afterInteractive"

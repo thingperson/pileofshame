@@ -500,7 +500,7 @@ function DefaultBanner() {
   return (
     <div className="default-banner">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/inventoryfull-logomark.png" alt="" className="default-banner-logo" />
+      <img src="/inventoryfull-logomark.webp" alt="" className="default-banner-logo" />
       <span className="default-banner-text">INVENTORY FULL</span>
     </div>
   );

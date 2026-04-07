@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import AuthButton from '@/components/AuthButton';
 
 interface LandingPageProps {
@@ -72,7 +73,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            backgroundImage: 'url(/IF-landing-BG.png)',
+            backgroundImage: 'url(/IF-landing-BG.webp)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             opacity: 0.4,
@@ -106,11 +107,14 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
         >
           {/* Hero illustration */}
           <div className="mb-4 flex justify-center">
-            <img
-              src="/inventoryfull-hero-transparent.png"
+            <Image
+              src="/inventoryfull-hero-transparent.webp"
               alt="A hand rising from a pile of games, holding a controller"
+              width={576}
+              height={384}
               className="w-48 h-auto sm:w-64 md:w-72 object-contain"
               style={{ filter: 'drop-shadow(0 0 20px color-mix(in srgb, var(--color-accent-purple) 25%, transparent))' }}
+              priority
             />
           </div>
 
