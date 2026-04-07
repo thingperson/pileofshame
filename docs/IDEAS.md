@@ -297,6 +297,52 @@ Brady reports the app feels better at 110-125% browser zoom. This suggests our b
 
 ---
 
+## PageSpeed Performance Fix (April 7, 2026)
+
+**Score: 61 mobile** (98 accessibility, 100 best practices, 100 SEO)
+
+### The problem: 5MB of unoptimized PNGs on the landing page
+
+| Image | File | Current Size | Displayed At | Est. Savings |
+|-------|------|-------------|-------------|-------------|
+| Landing BG | `IF-landing-BG.png` | 1,753 KB | CSS background | ~1,497 KB |
+| Hero illustration | `inventoryfull-hero-transparent.png` | 1,702 KB | 336x224px | ~1,690 KB |
+| Logomark | `inventoryfull-logomark.png` | 1,544 KB | 56x56px | ~1,543 KB |
+
+**LCP is 27 seconds** because `IF-landing-BG.png` is the LCP element — 1.75MB loading over slow 4G.
+
+### Fix list (priority order)
+
+1. **Convert all 3 PNGs to WebP** — ~80% size reduction with no visible quality loss
+   - `sips` can't do WebP, use `cwebp` (install via `brew install webp`) or Python Pillow
+   - Or use Next.js `<Image>` component which auto-converts to WebP
+
+2. **Resize to actual display dimensions**
+   - Hero: source is 1536x1024, displayed at max 288px wide → resize to 576x384 (2x for retina)
+   - Logomark: source is 1024x1024, displayed at 56x56 → resize to 128x128 (2x for retina)
+   - BG: keep larger but compress aggressively (quality 60-70)
+
+3. **Add `fetchpriority="high"` to LCP image** — the BG is loaded via CSS `background-image` which the browser discovers late. Either:
+   - Add a `<link rel="preload" as="image" href="/IF-landing-BG.webp">` in `<head>`
+   - Or switch from CSS background-image to a Next.js `<Image>` with `priority`
+
+4. **Add `width` and `height` to hero image** — prevents CLS (currently flagged)
+
+5. **Add `<link rel="preconnect" href="https://o4511175748419584.ingest.us.sentry.io">` in layout.tsx** — saves ~310ms on Sentry connection
+
+6. **Render-blocking CSS** (300ms savings) — the main CSS chunk blocks render. Consider inlining critical CSS or using `media="print"` trick. Lower priority.
+
+### Expected result
+These fixes should take performance from **61 → 85+** on mobile. The image optimization alone accounts for ~4.7MB savings which fixes LCP, Speed Index, and total payload.
+
+### What's fine (don't touch)
+- TBT: 100ms (good)
+- CLS: 0 (perfect)
+- JS bundle size: reasonable for a React app
+- 3rd party impact: minimal (GA4 153KB, Sentry 1KB)
+
+---
+
 ## Raw Rambles (unsorted, dump here)
 
 (Brady: drop notes here when you're away from desktop. I'll sort them when you're back.)
