@@ -18,14 +18,14 @@ export default async function Icon() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'transparent',
+          background: '#0f0f13',
         }}
       >
         <img
           src={`data:image/png;base64,${base64}`}
-          width={32}
-          height={32}
-          style={{ objectFit: 'cover' }}
+          width={30}
+          height={30}
+          style={{ objectFit: 'contain' }}
         />
       </div>
     ),
