@@ -126,7 +126,7 @@ function AppContent() {
 
   // ── Post-import summary ──
   const [importBreakdown, setImportBreakdown] = useState<{
-    total: number; backlog: number; started: number; upNext: number; completed: number;
+    total: number; backlog: number; started: number; upNext: number; nowPlaying: number; completed: number;
   } | null>(null);
   const prevGameCount = useRef(0);
 
@@ -329,6 +329,7 @@ function AppContent() {
         backlog: games.filter((g) => g.status === 'buried' && g.hoursPlayed === 0).length,
         started: games.filter((g) => g.status === 'buried' && g.hoursPlayed > 0).length,
         upNext: games.filter((g) => g.status === 'on-deck').length,
+        nowPlaying: games.filter((g) => g.status === 'playing').length,
         completed: games.filter((g) => g.status === 'played').length,
       };
       setImportBreakdown(breakdown);

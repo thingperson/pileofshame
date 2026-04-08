@@ -123,7 +123,7 @@
 - **Game Pass catalog endpoint verified** — returns 500+ product IDs ✅
 - **PS+ catalog built** — `/api/psplus` route fetches 427 games from Sony public GraphQL ✅
 - **Sub Shuffle unified** — GamePassBrowse now supports both Game Pass and PS+ via service tabs ✅
-- Still needed: test Xbox import flow against real Xbox account (gamertag with public profile)
+- Xbox import tested against real account (gamertag "Hugstrom") — working ✅
 - OPENXBL_API_KEY confirmed in Vercel env vars ✅
 
 ### Landing Page — SHIPPED ✅
@@ -150,6 +150,8 @@
 - Name normalization shipped ✅
 - Result scoring shipped ✅
 - RAWG in-memory cache (1hr TTL, 500 entries) + Cache-Control headers ✅
+- Supabase `game_metadata` L2 cache (persistent, shared across users, write-through from RAWG) ✅
+- API rate limiting on /api/rawg (60/min), /api/hltb (30/min), /api/deals (40/min) per IP ✅
 - Enrichment retry logic (1 retry with 2s delay on 429/5xx) ✅
 - Broken image fallback (onError → gamepad emoji) ✅
 - 200+ game library working without issues ✅
@@ -254,11 +256,23 @@
 - Story progress estimation from HLTB chapter data (if available)
 - Supabase cache table for game tips (avoid re-fetching)
 - Pre-seed tips for top 200 most-imported games
+- **Verified Re-entry Packs (top 50)**: manually curated controls + story-so-far + last milestone for the most-imported games. Prove the format before automating. (from Gemini review)
+- **Full AI recap pipeline (FUTURE)**: milestone-gated RAG with spoiler safety. Only if verified packs prove value and we have budget. See `docs/IDEAS.md` → Gemini Feedback for architecture notes.
 
-### Mobile Polish (MEDIUM)
-- Mobile Google login testing (real device)
-- Touch target audit pass
-- Swipe gestures for tab switching
+### Mobile Polish (MEDIUM) — SHIPPED ✅
+- Touch target audit pass (44px+ on all interactive elements, responsive padding) ✅
+- Swipe gestures for tab switching (50px threshold, horizontal bias detection) ✅
+- Cozy + Minimal theme WCAG contrast fixes ✅
+- Mobile Google login testing (real device) — still needed
+
+### Share & Polish (MEDIUM — from external feedback review)
+- PWA install prompt in Settings menu (uses beforeinstallprompt API) ✅
+- Bail animation: 300ms scale-down + fade on bail action ✅
+- Auth avatar mobile squish fix (shrink-0 + gap-0 on mobile) ✅
+- ImportHub `role="dialog"` + aria-modal accessibility fix ✅
+- Completion share card ("Loot Receipt"): themed PNG in celebration modal (game, time, $ reclaimed)
+- "Inventory Weight" visual: grid opacity/saturation shifts as cleared-to-total ratio improves
+- Themed share "Postcards": match active theme for social sharing
 
 ---
 
@@ -368,3 +382,7 @@ We do *personalized recommendations* (using a user's own data to help them), not
 |------|--------|------|-------------|--------|
 | Apr 4, 2026 | Discord | Nate (ex-Xbox) | Xbox import broken (no API key), wants "ignore title" + behavioral learning | API key added ✅, ignore title shipped ✅, behavioral learning roadmapped |
 | Apr 5, 2026 | PDF | Brady | 12 issues: em dashes, card spacing, action clarity, hero too big, below fold, Deep Cut label, broken images | Most fixed ✅, Sub Shuffle PS+ and platform logos still pending |
+| Apr 7, 2026 | Text | Gemini | Jump Back In is strongest USP, share cards on completion, PWA install prompt, bail animation, avatar squish bug, "Inventory Weight" viz | Good points extracted → docs/IDEAS.md, quick wins roadmapped |
+| Apr 7, 2026 | Text | ChatGPT | Landing promise vs product shape gap, sample demo underplayed, "Why this pick?" needed (already built), skip training needed (already built), readiness filters, moat is engine not tracking | Strategic points captured → docs/IDEAS.md, confirmed existing features cover most suggestions |
+| Apr 8, 2026 | Text | ChatGPT (R2) | Screenshot-based review. Import summary omits Now Playing count (bug), enrichment messaging unclear, "Zero decisions" overpromises, stats need confidence framing, chip states unclear. "Play initiation engine" positioning. Moat = recommendation trust + voice. | Bugs fixed: import summary ✅, enrichment copy ✅, landing copy ✅. Design items logged. |
+| Apr 8, 2026 | Text | ChatGPT (R3) | Detail page review. Jump Back In tips wrong for Slay the Spire (genre fallback gave RPG advice), action taxonomy fuzzy, "Give up" language too blunt, notes box needs prompts, content quality = trust. "Believable bridge between owning and playing." | Slay the Spire tips added ✅. Trust/content quality items logged → docs/IDEAS.md. |

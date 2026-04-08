@@ -27,7 +27,7 @@ export default function EnrichmentIndicator() {
     >
       <div className="w-3.5 h-3.5 border-2 border-accent-purple border-t-transparent rounded-full animate-spin shrink-0" />
       <span className="text-text-muted">
-        Enriching your library... {progress.done}/{progress.total} games
+        Fetching art, descriptions & play times... {progress.done}/{progress.total} games
       </span>
       <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(167, 139, 250, 0.15)' }}>
         <div

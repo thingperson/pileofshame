@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import AuthButton from '@/components/AuthButton';
+import GetStartedModal from '@/components/GetStartedModal';
 
 interface LandingPageProps {
   onImport: () => void;
@@ -11,6 +12,7 @@ interface LandingPageProps {
 
 export default function LandingPage({ onImport, onLoadSample }: LandingPageProps) {
   const [visible, setVisible] = useState(false);
+  const [showGetStarted, setShowGetStarted] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 50);
@@ -138,7 +140,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           </p>
 
           <button
-            onClick={onImport}
+            onClick={() => setShowGetStarted(true)}
             className="px-8 py-4 text-base sm:text-lg font-bold rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
             style={{
               background: 'linear-gradient(135deg, var(--color-accent-purple) 0%, var(--color-accent-pink) 100%)',
@@ -146,38 +148,18 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
               boxShadow: '0 4px 24px color-mix(in srgb, var(--color-accent-purple) 30%, transparent)',
             }}
           >
-            Import My Library
+            Get Started
           </button>
 
           <p
             className="mt-4 text-xs font-[family-name:var(--font-mono)]"
             style={{ color: 'var(--color-text-faint)' }}
           >
-            Steam / PlayStation / Xbox / GOG / Playnite
+            Free. No account required.
           </p>
 
-          <button
-            onClick={onLoadSample}
-            className="mt-4 px-6 py-3 text-sm font-medium rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
-            style={{
-              background: 'transparent',
-              color: 'var(--color-text-muted)',
-              border: '1px solid var(--color-border-subtle)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-accent-purple)';
-              e.currentTarget.style.color = 'var(--color-text-primary)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-border-subtle)';
-              e.currentTarget.style.color = 'var(--color-text-muted)';
-            }}
-          >
-            No library? Try a sample.
-          </button>
-
           {/* Sign-in affordance for returning users */}
-          <div className="mt-6 flex items-center justify-center gap-2">
+          <div className="mt-5 flex items-center justify-center gap-2">
             <span
               className="text-xs font-[family-name:var(--font-mono)]"
               style={{ color: 'var(--color-text-faint)' }}
@@ -186,6 +168,13 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
             </span>
             <AuthButton />
           </div>
+
+          <GetStartedModal
+            open={showGetStarted}
+            onClose={() => setShowGetStarted(false)}
+            onImport={onImport}
+            onLoadSample={onLoadSample}
+          />
         </div>
 
         {/* Scroll hint */}
@@ -208,7 +197,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
             className="text-2xl sm:text-3xl font-bold text-center mb-4 tracking-tight"
             style={{ color: 'var(--color-text-primary)' }}
           >
-            Three steps. Zero decisions.
+            Three steps. We do the hard part.
           </h2>
           <p
             className="text-center text-sm mb-12 sm:mb-16 font-[family-name:var(--font-mono)]"

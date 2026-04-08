@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit, getClientIP } from '@/lib/rateLimit';
 
 // Direct HLTB integration — April 2026
 // The howlongtobeat npm packages (both 1.8.0 and howlongtobeat-core 1.1.0)
@@ -132,7 +133,20 @@ function secsToHrs(secs: number): number {
   return secs > 0 ? Math.round((secs / 3600) * 10) / 10 : 0;
 }
 
+// Rate limit: 30 requests per minute per IP (HLTB is scraped, be conservative)
+const RATE_LIMIT = 30;
+const RATE_WINDOW = 60_000;
+
 export async function GET(req: NextRequest) {
+  const ip = getClientIP(req.headers);
+  const limited = checkRateLimit(ip, 'hltb', RATE_LIMIT, RATE_WINDOW);
+  if (limited) {
+    return NextResponse.json(
+      { error: 'Too many requests. Try again shortly.' },
+      { status: 429, headers: { 'Retry-After': String(limited.retryAfter) } },
+    );
+  }
+
   const { searchParams } = new URL(req.url);
   const action = searchParams.get('action') || 'single';
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/useAuth';
+import { useStore } from '@/lib/store';
 
 /** Detect if running as installed PWA (Add to Home Screen) */
 function useIsPWA() {
@@ -23,6 +24,7 @@ export default function AuthButton() {
   const [emailSent, setEmailSent] = useState(false);
   const [emailError, setEmailError] = useState('');
   const isPWA = useIsPWA();
+  const hasLocalGames = useStore((s) => s.games.length > 0);
 
   if (loading) {
     return (
@@ -39,12 +41,12 @@ export default function AuthButton() {
       <div className="relative">
         <button
           onClick={() => setShowMenu(!showMenu)}
-          className="flex items-center gap-2 px-2 py-1 rounded-lg hover:bg-white/5 transition-colors"
+          className="flex items-center gap-0 sm:gap-2 px-2 py-1 rounded-lg hover:bg-white/5 transition-colors min-h-[44px] sm:min-h-0"
         >
           {avatarUrl ? (
-            <img src={avatarUrl} alt="" className="w-7 h-7 rounded-full" />
+            <img src={avatarUrl} alt="" className="w-7 h-7 shrink-0 rounded-full" />
           ) : (
-            <div className="w-7 h-7 rounded-full bg-accent-purple flex items-center justify-center text-xs font-bold text-bg-primary">
+            <div className="w-7 h-7 shrink-0 rounded-full bg-accent-purple flex items-center justify-center text-xs font-bold text-bg-primary">
               {displayName[0].toUpperCase()}
             </div>
           )}
@@ -102,14 +104,14 @@ export default function AuthButton() {
             }}
           >
             <p className="text-xs text-text-muted text-center">
-              Sign in to sync your pile across devices
+              Sign in to sync across devices
             </p>
 
             {!showEmailInput && !emailSent && (
               <>
                 <button
                   onClick={() => { signInWithDiscord(); setShowSignIn(false); }}
-                  className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-bold rounded-xl transition-all hover:scale-[1.01] active:scale-[0.99]"
+                  className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-bold rounded-xl transition-all hover:scale-[1.01] active:scale-[0.99]"
                   style={{ backgroundColor: '#5865F2', color: '#ffffff' }}
                 >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -119,7 +121,7 @@ export default function AuthButton() {
                 </button>
                 <button
                   onClick={() => { signInWithGoogle(); setShowSignIn(false); }}
-                  className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-xl border transition-all hover:scale-[1.01] active:scale-[0.99]"
+                  className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-medium rounded-xl border transition-all hover:scale-[1.01] active:scale-[0.99]"
                   style={{
                     borderColor: 'var(--color-border-active)',
                     backgroundColor: 'var(--color-bg-card)',
@@ -134,16 +136,29 @@ export default function AuthButton() {
                   </svg>
                   Google
                 </button>
-                <p className="text-xs text-text-faint text-center">
-                  One click. No passwords. Instant sync.
-                </p>
 
                 <button
                   onClick={() => setShowEmailInput(true)}
-                  className="w-full text-xs text-text-faint hover:text-text-muted transition-colors text-center pt-1"
+                  className="w-full px-3 py-2 text-xs font-medium rounded-xl border transition-all hover:border-accent-purple"
+                  style={{
+                    borderColor: 'var(--color-border-subtle)',
+                    color: 'var(--color-text-muted)',
+                  }}
                 >
-                  use email instead (opens in default browser)
+                  Use email instead
                 </button>
+
+                {hasLocalGames && (
+                  <>
+                    <div className="h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+                    <button
+                      onClick={() => setShowSignIn(false)}
+                      className="w-full text-xs text-text-faint hover:text-text-muted transition-colors text-center"
+                    >
+                      Continue without syncing
+                    </button>
+                  </>
+                )}
               </>
             )}
 
@@ -172,15 +187,12 @@ export default function AuthButton() {
                 >
                   Send magic link
                 </button>
-                <p className="text-xs text-text-faint/60 text-center leading-snug">
-                  The link will open in your default browser. Discord or Google is easier.
-                </p>
                 <button
                   type="button"
                   onClick={() => { setShowEmailInput(false); setEmailError(''); }}
                   className="w-full text-xs text-text-faint hover:text-text-muted transition-colors"
                 >
-                  ← Back to Discord / Google
+                  ← Back
                 </button>
               </form>
             )}
@@ -192,9 +204,6 @@ export default function AuthButton() {
                 <p className="text-xs text-text-muted">
                   We sent a link to <span className="text-accent-purple">{email}</span>.
                 </p>
-                <p className="text-xs text-amber-400/80 leading-snug px-2">
-                  Heads up: the link may open in a different browser. If so, come back here after clicking it.
-                </p>
                 <button
                   onClick={() => { setEmailSent(false); setShowEmailInput(false); setEmail(''); }}
                   className="text-xs text-text-faint hover:text-text-muted transition-colors"
@@ -203,10 +212,6 @@ export default function AuthButton() {
                 </button>
               </div>
             )}
-
-            <p className="text-xs text-text-faint text-center">
-              Your local library stays either way.
-            </p>
           </div>
         </>
       )}

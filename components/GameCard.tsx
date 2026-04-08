@@ -175,6 +175,11 @@ const GAME_SPECIFIC_TIPS: Record<string, string[]> = {
     '🌱 Water your crops first, then decide how to spend the day.',
     '📦 Check the Community Center bundles for what to collect.',
   ],
+  'slay the spire': [
+    '🃏 Start a fresh run or continue your current climb.',
+    '🧠 Check your deck synergies before the next fight.',
+    '💎 Review your relics. They change how you play.',
+  ],
   'hades': [
     '🏛️ Talk to everyone in the House before your next run.',
     '💎 Check the contractor for permanent upgrades.',
@@ -312,6 +317,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
   const [showBailConfirm, setShowBailConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [notesSaved, setNotesSaved] = useState(false);
+  const [bailing, setBailing] = useState(false);
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
   const { cycleStatus, getNextStatus, setBailed, unBail, shelveGame, playAgain, newGamePlus, updateGame, deleteGame, showCelebration, toggleIgnore } = useStore();
   const { showToast } = useToast();
@@ -449,10 +455,15 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
   ];
 
   const handleBail = useCallback(() => {
-    setBailed(game.id);
+    setBailing(true);
     setShowBailConfirm(false);
     const affirmation = bailAffirmations[Math.floor(Math.random() * bailAffirmations.length)];
-    showToast(`${game.name} → Done ✊ ${affirmation}`);
+    // Animate out, then commit the status change
+    setTimeout(() => {
+      setBailed(game.id);
+      showToast(`${game.name} → Done ✊ ${affirmation}`);
+      setBailing(false);
+    }, 300);
   }, [game.id, game.name, setBailed, showToast]);
 
   const handlePlayAgain = useCallback(() => {
@@ -487,7 +498,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
 
   return (
     <div
-      className={`group relative rounded-xl border transition-all duration-150 hover:-translate-y-[2px] hover:shadow-lg hover:shadow-black/20 ${game.status === 'playing' ? 'now-playing-glow' : ''}`}
+      className={`group relative rounded-xl border transition-all duration-300 hover:-translate-y-[2px] hover:shadow-lg hover:shadow-black/20 ${game.status === 'playing' ? 'now-playing-glow' : ''} ${bailing ? 'scale-95 opacity-0' : ''}`}
       style={{
         backgroundColor: 'var(--color-bg-card)',
         borderColor: expanded ? 'var(--color-border-active)' : 'var(--color-border-subtle)',

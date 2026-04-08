@@ -98,6 +98,9 @@ export default function ImportHub({ open, onClose }: ImportHubProps) {
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Import Games"
         className="relative w-full max-w-md max-h-[85vh] rounded-2xl border p-5 space-y-4 animate-[scaleIn_300ms_ease-out] overflow-y-auto"
         style={{
           backgroundColor: 'var(--color-bg-elevated)',

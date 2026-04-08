@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import { useStore } from '@/lib/store';
 import { LibrarySettings } from '@/lib/types';
 import { downloadBackup, readBackupFile } from '@/lib/backup';
@@ -8,8 +8,19 @@ import { enrichBatch } from '@/lib/enrichGame';
 import { trackThemeSession } from '@/lib/archetypes';
 import { useToast } from './Toast';
 
+// Capture the browser's install prompt event globally
+let deferredInstallPrompt: Event & { prompt?: () => Promise<void>; userChoice?: Promise<{ outcome: string }> } | null = null;
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e as typeof deferredInstallPrompt;
+  });
+}
+
 export default function SettingsMenu() {
   const [open, setOpen] = useState(false);
+  const [canInstall, setCanInstall] = useState(false);
   const [confirmImport, setConfirmImport] = useState(false);
   const [pendingImport, setPendingImport] = useState<string | null>(null);
   const [enriching, setEnriching] = useState(false);
@@ -31,6 +42,27 @@ export default function SettingsMenu() {
   const steamGames = useMemo(() => games.filter((g) => g.steamAppId), [games]);
   const psnGames = useMemo(() => games.filter((g) => g.source === 'playstation'), [games]);
   const gamesNeedingEnrichment = useMemo(() => games.filter((g) => !g.enrichedAt || !g.description || !g.moodTags || g.moodTags.length === 0), [games]);
+
+  // Check if PWA install is available
+  useEffect(() => {
+    if (deferredInstallPrompt) setCanInstall(true);
+
+    const handler = () => setCanInstall(true);
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstallPWA = async () => {
+    if (!deferredInstallPrompt?.prompt) return;
+    await deferredInstallPrompt.prompt();
+    const result = await deferredInstallPrompt.userChoice;
+    if (result?.outcome === 'accepted') {
+      showToast('Installed. Now it lives on your home screen.');
+      setCanInstall(false);
+    }
+    deferredInstallPrompt = null;
+    setOpen(false);
+  };
 
   const handleEnrichAll = async () => {
     setEnrichingAll(true);
@@ -376,6 +408,15 @@ export default function SettingsMenu() {
 
                 <div className="h-px mx-3" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
 
+                {canInstall && (
+                  <button
+                    onClick={handleInstallPWA}
+                    className="w-full text-left px-3 py-2 text-sm font-medium rounded-lg hover:bg-bg-card transition-colors"
+                    style={{ color: 'var(--color-accent-purple)' }}
+                  >
+                    📲 Install App
+                  </button>
+                )}
                 <button
                   onClick={handleExport}
                   className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors"

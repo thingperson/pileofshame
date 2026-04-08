@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit, getClientIP } from '@/lib/rateLimit';
 
 // IsThereAnyDeal API — better data, built-in affiliate links
 // Docs: https://docs.isthereanydeal.com/
@@ -91,7 +92,20 @@ async function getPrices(gameIds: string[]): Promise<Record<string, {
   }
 }
 
+// Rate limit: 40 requests per minute per IP
+const RATE_LIMIT = 40;
+const RATE_WINDOW = 60_000;
+
 export async function GET(req: NextRequest) {
+  const ip = getClientIP(req.headers);
+  const limited = checkRateLimit(ip, 'deals', RATE_LIMIT, RATE_WINDOW);
+  if (limited) {
+    return NextResponse.json(
+      { error: 'Too many requests. Try again shortly.' },
+      { status: 429, headers: { 'Retry-After': String(limited.retryAfter) } },
+    );
+  }
+
   const { searchParams } = new URL(req.url);
   const action = searchParams.get('action') || 'search';
 

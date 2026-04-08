@@ -106,7 +106,7 @@ export default function AboutPage() {
             className="text-2xl sm:text-3xl font-bold text-center mb-4 tracking-tight"
             style={{ color: 'var(--color-text-primary)' }}
           >
-            Three steps. Zero decisions.
+            Three steps. We do the hard part.
           </h2>
           <p
             className="text-center text-sm mb-12 sm:mb-16 font-[family-name:var(--font-mono)]"

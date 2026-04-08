@@ -343,6 +343,168 @@ These fixes should take performance from **61 → 85+** on mobile. The image opt
 
 ---
 
+## Gemini Feedback Analysis (April 7, 2026)
+
+External feedback reviewed from `notes/feedback.txt`. Gemini positioned the app as a "gaming companion" vs. a "tracker" and identified the Jump Back In feature as the strongest USP. Key takeaways below, sorted by actionability.
+
+### Take action on (quick wins)
+
+1. **Share card on completion ("Loot Receipt")** — Generate a themed image in the celebration modal: game name, time spent, $ reclaimed. We already have a stripped `/api/share-card` in the codebase. Turn user wins into organic marketing. 2-3 hours.
+
+2. **PWA install prompt** — We have the manifest. Add a nudge in settings or post-first-import. Gets us out of "browser tab" territory. 1 hour.
+
+3. **Bail animation** — Quick 300ms scale-down + fade when someone bails. Makes the "bailing is a win" brand tangible. Tiny effort, nice polish.
+
+4. **User avatar squish on mobile** — Bug report: auth avatar gets squished at small widths. Need to check AuthButton sizing.
+
+### Consider for next sprint
+
+5. **"Inventory Weight" visualization** — Grid subtly shifts (opacity, saturation) as cleared-to-total ratio improves. Low effort, reinforces the "Inventory Full → Inventory Clearing" narrative.
+
+6. **Themed share "Postcards"** — Share cards that match the active theme. The 90s theme card looks different from Void. Medium effort, great marketing.
+
+7. **Jump Back In expansion** — Current static tips work. Next step: manually curate "verified" re-entry packs for top 50 most-imported games (controls, story-so-far, last major milestone). Not AI-generated yet. Build the format, prove the value, then consider automation.
+
+### File for later (not now)
+
+8. **Push notifications** — Already roadmapped in Phase 5. Needs service worker + consent. Not quick.
+
+9. **Full RAG-based recap pipeline** — Gemini's proposed architecture (vector DB + SLM inference + Redis cache + milestone gating) is sound but massively over-scoped for a solo dev. This is a Phase 7+ feature if we get funding or a team. Keep the architecture notes in case we get there.
+
+10. **Community-submitted re-entry tips** — Content moderation nightmare. Way too early.
+
+11. **"Hype Mode" soundscape** — Audio in web apps is almost always annoying. Pass.
+
+### Key framing from Gemini worth keeping
+
+- "No other tool bridges the 30-second hesitation where a user decides to either play or watch Netflix." — Good positioning language for marketing.
+- "Bailing is a victory, not a failure" — They noticed our brand. Good signal.
+- "The app should not become a new backlog item" — They echoed our anti-overgamification stance without us saying it. The brand is landing.
+- Competitors (Backloggd, Stash, Playnite) solve "What do I own?" We solve "What should I play right now?" — Clean differentiator for copy.
+
+---
+
+## ChatGPT Feedback Analysis (April 7, 2026)
+
+External critique from ChatGPT after reviewing the live landing page, privacy/terms pages, and product disclosures. Could not access inner app screens. Sharper on strategy/positioning than feature specifics.
+
+### Already built (ChatGPT didn't know)
+
+- **"Why this pick?" explanation chips** — Already shipped. Every reroll shows pick reasons ("fits your mood," "short enough for tonight," "high metacritic," etc.).
+- **Skip reasons that train the engine** — Already shipped as V3 #4 (skip feedback pills: not-in-mood, too-long, played-recently, hit-a-wall, not-interested). Feeds back into weights.
+- **"Continue mode" / resume suggestions** — Already built: Stalled game nudge, "Pick up where you left off?" cards, "Almost Done" reroll mode.
+- **Ongoing/Endless status** — We handle this via `isNonFinishable` flag. Auto-detected for MMOs, sandboxes, multiplayer-only. These games never show "Did you finish?" nudges.
+
+### Strong strategic points worth keeping
+
+1. **"The promise is clearer than the product shape."** — Landing sells "instant game choice" but the actual product is broader (stats, archetypes, nudges, deals, catalog). The story needs to stay focused on the core wedge even as features grow. Action: keep the "decide what to play now" framing primary in all copy.
+
+2. **"Sample demo should be the star, not the sidekick."** — Sample library is our best activation tool but reads as secondary on the landing page. Action: consider promoting "Try it now" higher in the hero, before sign-in.
+
+3. **"Monetization is fuzzy."** — Fair. Free app + affiliate deals on owned games is thin commercially. No immediate action needed (pre-revenue), but worth thinking about as we grow.
+
+4. **"No sign-up" vs "already have an account?" split-brain** — Valid UX critique. The landing tries to communicate both "no friction" and "sync your data." Action: make the progression clearer: start local → optionally sign in to sync.
+
+5. **"The moat is the engine, not the tracking."** — Direct quote: "the moat has to become: this is the fastest and most trusted way to decide what to play from what I already own." Agree. Everything else is infrastructure for that one moment.
+
+### Ideas worth considering
+
+6. **Readiness filters** — Installed, supports controller, Deck verified, local co-op, low setup friction. Some of this data is available from Steam/RAWG. Would add meaningful signal to reroll without much UI complexity. Good candidate for a future enrichment pass.
+
+7. **Checkpoint notes / "where was I?"** — Simpler than the full AI recap Gemini proposed. Just let users write 1-2 lines ("last goal," "controls reminder") on any game. We already have a notes field on GameCard. Could surface the note in the "Jump Back In" section. Low effort, high value.
+
+8. **Better sample experience** — Make the sample library feel like a showroom, not a spreadsheet. Pre-set moods, pre-loaded reroll, instant "here's why" on the first pick. Could be a guided mini-tour.
+
+### Filed / disagree
+
+9. **"Scope drift" warning** — Partially valid. The feature surface has grown. But most of it (stats, archetypes, nudges) serves the core decision loop. We're not drifting into social/reviews/news territory. The anti-overgamification stance keeps us honest.
+
+10. **Import fragility concerns** — Real risk, but already mitigated (retry logic, error handling, Sentry monitoring). Worth watching but not actionable right now.
+
+11. **"Competitor clonability"** — True of any product at this stage. The defense is velocity + taste + engine quality, not features-as-moat.
+
+---
+
+## ChatGPT Feedback Round 2 (April 8, 2026)
+
+Second review, this time from actual screenshots. Much sharper than the first round. Full product critique across design, strategy, competitor, and investor lenses.
+
+### Bugs to fix
+
+1. **Import summary math omits Now Playing** — Modal shows Backlog + Up Next + Completed but skips the Now Playing bucket. Counts reconcile in the tab bar but the modal breakdown is incomplete. Fix: add Now Playing row to PostImportSummary.
+
+2. **Enrichment progress messaging unclear** — "Enriching 14/99 games" is confusing. Users with 737 games wonder: why 99? which 99? what does enrich mean? Fix: rewrite to "Fetching art and play times for your top games first. The rest load in the background."
+
+3. **Landing page "Zero decisions" is overpromising** — Landing says "Three steps. Zero decisions." but the app has 5+ modes, mood filters, energy, sort. The honest version: "We narrow it to one, fast." or "We do the hard part. You just play."
+
+### Design improvements worth considering
+
+4. **Stats confidence framing** — "$22,018 untapped library value" and "11,822 hours to clear" are engaging headlines but feel fake-precise. Add "estimated" qualifier or confidence note closer to the number, not just in fine print.
+
+5. **Auto-classification review** — When import guesses "completed" or "now playing" from playtime, there's no way to review those guesses after dismissing the import summary. Consider a one-time "Review our guesses" flow or a persistent link in settings.
+
+6. **Chip state clarity** — Selected, hover, inactive, disabled states on mood pills and mode buttons could be more visually distinct. Some look disabled when they're actually selectable.
+
+7. **Enrichment progress context** — Show which batch is being enriched and what it means. "Getting cover art, descriptions, and play times from RAWG and HLTB" is clearer than "Enriching."
+
+### Strategic takeaways (worth remembering)
+
+- **"The moat is trustworthy recommendation behavior plus brand voice."** Both AI reviewers independently arrived at this. The decision engine + tone is the defensible part, not the feature surface.
+- **"Play initiation engine, not backlog app."** Best single-line positioning from either review. Consider adopting this framing.
+- **"Reduce ambiguity, not add surfaces."** Next design phase should tighten the core loop, not expand it.
+- **Default theme = canonical face.** Keep weird/retro themes as unlocks/options, but always demo/screenshot in the default dark theme.
+- **"Product character is rarer than polish."** Nice validation that the voice and attitude are landing.
+
+### Already built (ChatGPT suggested, didn't know we had)
+
+- "Why this pick?" explanation chips — shipped
+- Skip reasons that train engine — shipped (V3 #4)
+- Resume intelligence — stalled game nudge + Almost Done + Keep Playing mode
+- Ongoing/Endless status — isNonFinishable auto-detection
+- Full ranking system — mood, time, metacritic, skip history, genre fatigue, behavioral learning, energy
+
+### Filed for later
+
+- Readiness filters (installed, controller-friendly, Deck verified) — good idea, needs platform data we partially have
+- "Leaving soon" subscription intelligence — neither GP nor PS+ expose departure dates via API
+- Commitment loop with reminders — Phase 5 (push notifications)
+- Status inference provenance system — overkill for current stage, revisit at scale
+
+## ChatGPT Feedback Round 3 — Detail Page (April 8, 2026)
+
+Review of game detail page screenshots. Sharpest feedback yet. Core insight: the detail page is where trust lives or dies.
+
+### Fixed immediately
+
+1. **Slay the Spire Jump Back In tips** — Genre fallback gave RPG advice ("check your quest log") for a roguelike deckbuilder. Added game-specific tips. This is the exact "trust bug" ChatGPT warned about. If users catch one wrong tip, they question everything.
+
+### Worth acting on
+
+2. **Notes box prompts** — Empty "Add notes..." box is a missed opportunity. Should suggest: "Where did you leave off?" / "What should you do next?" / "Controls to remember?" Turns empty furniture into resume utility.
+
+3. **Action taxonomy cleanup** — Too many adjacent actions without a clean mental model: status chip, shelf dropdown, session dropdown, return to pile, give up, ignore, remove. Consider simplifying to fewer, clearer states.
+
+4. **"Give up on this one" softening** — Funny once, emotionally blunt as a repeated action. Consider "Not for me" as default label, keep the punchier version in the toast/affirmation copy.
+
+5. **Content provenance labels** — Tiny labels like "Critic score", "Community rating", "Estimated time", "Auto-tagged" would improve trust. Users should know where data comes from.
+
+6. **Store description too raw** — Game descriptions are raw RAWG paste. Could be shorter, more human. But manual curation doesn't scale. Consider truncating more aggressively (150 chars max?) with "read more" expand.
+
+### Strategic alignment
+
+- **"Never show game-specific guidance unless you can justify it."** A dumber but honest version beats a clever fake one. This applies to all AI/auto-generated content in the app.
+- **"The winning version is the most believable, useful bridge between owning a game and actually playing it."** Third reviewer to independently arrive at "bridge between owning and playing" as the core value prop.
+- **"Trust is a feature."** Content quality directly impacts recommendation credibility. One wrong Jump Back In tip undermines the whole engine.
+
+### Filed
+
+- On Hold / Paused / Archived status nuance — interesting but adds complexity. Current bail + ignore covers the emotional range.
+- User-authored checkpoint templates — already possible via notes field, but structured templates could help
+- Resume friction score — interesting but hard to compute without more data
+- "Leaving soon" subscription alerts — still blocked by API limitations
+
+---
+
 ## Raw Rambles (unsorted, dump here)
 
 (Brady: drop notes here when you're away from desktop. I'll sort them when you're back.)
