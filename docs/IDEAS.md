@@ -479,11 +479,11 @@ Review of game detail page screenshots. Sharpest feedback yet. Core insight: the
 
 ### Worth acting on
 
-2. **Notes box prompts** — Empty "Add notes..." box is a missed opportunity. Should suggest: "Where did you leave off?" / "What should you do next?" / "Controls to remember?" Turns empty furniture into resume utility.
+2. **Notes box prompts** — ✅ SHIPPED (Apr 8). Contextual placeholders by status: "Where did you leave off?" for playing, "Anything to remember before starting?" for on-deck, etc.
 
-3. **Action taxonomy cleanup** — Too many adjacent actions without a clean mental model: status chip, shelf dropdown, session dropdown, return to pile, give up, ignore, remove. Consider simplifying to fewer, clearer states.
+3. **Action taxonomy cleanup** — ✅ SHIPPED (Apr 8). Removed Shelf/Session dropdowns entirely. Renamed "Ignore" → "Don't suggest", "Remove" → "Delete from library". Cleaner mental model: status chip, bail, don't suggest, delete.
 
-4. **"Give up on this one" softening** — Funny once, emotionally blunt as a repeated action. Consider "Not for me" as default label, keep the punchier version in the toast/affirmation copy.
+4. **"Give up on this one" softening** — ✅ SHIPPED (Apr 8). Default label now "Not for me". Toast copy stays punchy.
 
 5. **Content provenance labels** — Tiny labels like "Critic score", "Community rating", "Estimated time", "Auto-tagged" would improve trust. Users should know where data comes from.
 
@@ -595,12 +595,24 @@ Discord bot requires bot application approval for servers with 100+ members. Web
 
 ## Copy Ideas Bank (ongoing)
 
-- **"Less shame. More game."** — Share card CTA headline. Locked.
-- **"Your pile won't clear itself. That's where we come in."** — Share card CTA subhead. Locked.
-- "Stop scrolling your library. Start playing." (current main tagline)
-- "Your pile's not gonna play itself." (current OG image tagline)
-- "Three steps. We do the hard part." (current landing)
+### Locked — shipped and consistent
+
+- **"Stop stalling. Get playing."** — Primary tagline. Everywhere. Locked Apr 8.
+- **"Your backlog's not gonna play itself."** — Subhead / supporting line.
+- **"Less shame. More game."** — Share card / celebration CTA headline.
+- **"Your pile won't clear itself. That's where we come in."** — Share card CTA subhead.
+- "Three steps. We do the hard part." (landing page)
 - "The pile trembles." (completion celebration / share card)
+
+### Banked — good ideas, save for later
+
+- **"Unpause"** — verb/concept for campaigns, feature names, push copy. "Let's unpause that game for you." Strong gaming metaphor. Don't lose this one.
+- **"Playcrastinate"** — portmanteau. Could be a blog post title, a social campaign, a loading screen quip.
+- **"Stop playing your library. Start playing the games."** — Longer form, good for editorial/blog.
+- **"Dodge enemies, not fun."** — Punchy, gaming-native. Good for social posts or merch.
+- **"Stop hesitation for your PlayStation"** — Funny. Internal joke only. Maybe a loading screen easter egg.
+- **"Don't delay the play"** — Clean rhyme. Could work for push notifications.
+- "Stop deciding. Start playing." (close runner-up, good for variety in long-form copy)
 - "Your backlog isn't a failure. It's an inventory."
 - "Avoid backlog shame. Get into your game." (alternate direction)
 

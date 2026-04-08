@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'Inventory Full - Your pile\'s not gonna play itself.';
+export const alt = 'Inventory Full - Stop stalling. Get playing.';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -141,8 +141,8 @@ export default async function Image() {
                 flexDirection: 'column',
               }}
             >
-              <span>Your pile&apos;s not</span>
-              <span>gonna <span style={{ color: '#a78bfa' }}>play itself.</span></span>
+              <span>Stop stalling.</span>
+              <span>Get <span style={{ color: '#a78bfa' }}>playing.</span></span>
             </div>
 
             {/* Subline */}

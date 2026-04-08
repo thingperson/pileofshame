@@ -350,7 +350,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
             className="text-sm mb-8 font-[family-name:var(--font-mono)]"
             style={{ color: 'var(--color-text-faint)' }}
           >
-            stop deciding. start playing.
+            stop stalling. get playing.
           </p>
 
           <button

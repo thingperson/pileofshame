@@ -20,15 +20,21 @@ Always return to these. This is the spine:
 2. **Make ongoing progress on games you already own**
 3. **Recover more value from your collection**
 
+## Primary Tagline (Locked — Apr 8, 2026)
+
+**"Stop stalling. Get playing."**
+
+This is THE tagline. Use it everywhere: page titles, OG metadata, headers, footers, share cards. One message, one voice.
+
+Supporting lines (use as subheads, not alternatives):
+- "Your backlog's not gonna play itself." — subhead
+- "Less shame. More game." — celebration/share context only
+
 ## Core Attitude Lines
 
 - "Your backlog is full. Your time doesn't have to be."
 - "You bought the games. Now let's get something back."
 - "Less browsing your backlog like a warehouse of good intentions. More actually playing it."
-
-## Hero Copy Layer
-
-"Be the hero of your own library." (marketing/copy, not the brand name)
 
 ## Message Hierarchy
 
@@ -37,7 +43,7 @@ Use this order consistently:
 1. **Main promise:** Decide what to play now
 2. **Supporting outcome:** Make ongoing progress on the games you already own
 3. **Differentiator:** Recover more value from your collection
-4. **Tone line:** Less warehouse of good intentions. More actually playing it.
+4. **Tagline:** Stop stalling. Get playing.
 
 Starts with immediate user pain, then moves to richer payoff.
 
