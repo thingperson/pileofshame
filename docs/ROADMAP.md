@@ -108,6 +108,10 @@
 - AuthButton: clean sign-in dropdown (Discord/Google/email, no fluff copy) ✅
 - "Continue without syncing" option for local-storage users ✅
 - GetStartedModal: unified entry point for new users (sign-in or skip) ✅
+- Onboarding tightening (Apr 8): action-first modal, auto-reroll on sample, import-to-play CTA ✅
+  - GetStartedModal flipped: import/sample above the fold, auth below "want to sync?" divider ✅
+  - Sample data auto-opens reroll picker after 800ms (instant core loop) ✅
+  - PostImportSummary "Got it" → "What Should I Play?" primary CTA + "Browse my library" secondary ✅
 
 ### Infrastructure
 - Supabase auth + cloud sync ✅
@@ -261,6 +265,9 @@
 - Supabase cache table for game tips (avoid re-fetching)
 - Pre-seed tips for top 200 most-imported games
 - **Verified Re-entry Packs (top 50)**: manually curated controls + story-so-far + last milestone for the most-imported games. Prove the format before automating. (from Gemini review)
+  - First pack shipped: Clair Obscur: Expedition 33 (4 milestones, `lib/reentryPacks.ts`) ✅
+  - Format proven: milestone-aware tips change based on hours played, falls back to genre tips for games without packs
+  - Next: 9 more packs toward top 10 (covering sample library games first, then AAA, then sleepers)
 - **Full AI recap pipeline (FUTURE)**: milestone-gated RAG with spoiler safety. Only if verified packs prove value and we have budget. See `docs/IDEAS.md` → Gemini Feedback for architecture notes.
 
 ### Mobile Polish (MEDIUM) — SHIPPED ✅
@@ -291,7 +298,7 @@
   - "Ignore" → "Don't suggest" (clearer intent) ✅
   - "Remove" → "Delete from library" (distinct from close, with confirmation) ✅
   - Skip feedback timer 4s → 8s (was disappearing before users could read/click) ✅
-- "Inventory Weight" visual: grid opacity/saturation shifts as cleared-to-total ratio improves
+- ~~"Inventory Weight" visual~~ — SCRAPPED (Apr 8). Persistent progress viz fights readability and changes too slowly to feel rewarding. Replaced by milestone celebrations at 50/75/100% cleared (not yet built).
 - Themed share "Postcards": match active theme for social sharing
 
 ---
@@ -343,13 +350,13 @@
 
 | Review | Last Run | Status | Frequency |
 |--------|----------|--------|-----------|
-| Voice/AI lingo sweep | Apr 8, 2026 | Clean — all changed files swept (GameCard, CompletionCelebration, Reroll, OG pages). No banned patterns. | Every deploy with new copy |
+| Voice/AI lingo sweep | Apr 8, 2026 | Clean — onboarding copy swept (GetStartedModal, PostImportSummary). No banned patterns. | Every deploy with new copy |
 | Accessibility audit | Apr 8, 2026 | ImportHub role="dialog" + aria-modal added. All prior items still resolved. | Monthly |
-| Feature creep audit | Apr 8, 2026 | Healthy. Card detail cleanup removes complexity (fewer dropdowns, clearer labels). Share card polish rounds out existing feature. | Quarterly |
+| Feature creep audit | Apr 8, 2026 | Healthy. Onboarding tightening reduces clicks, not adds features. Core loop reached faster. | Quarterly |
 | Mobile responsiveness | Apr 8, 2026 | Share card builder tested at 375px. Game detail modal tested — Launch button, action row all fit without Shelf/Session dropdowns. | Monthly |
 | Enrichment accuracy | Apr 8, 2026 | Supabase L2 cache live. Three-tier caching (memory → Supabase → API). Rate limiting on all API routes. | Quarterly |
 | Legal/privacy compliance | Apr 8, 2026 | game_metadata table is public game data only (no user data, no RLS needed). Rate limiting is server-side per-IP, no PII stored. No Privacy Policy update needed. | Before any feature touching user data, deals, or profiling |
-| Info density sweep | Apr 7, 2026 | Fixed: nudge cards now collapsed by default. Typography: all 10px/11px text bumped to 12px+ across 25 components. Import summary modal still TODO. | Periodic — Brady audits visually, Claude flags code-side |
+| Info density sweep | Apr 8, 2026 | Fixed: nudge cards collapsed by default. Typography: 10px/11px bumped to 12px+ across 25 components. Import summary modal now drives action (CTA + secondary dismiss). | Periodic — Brady audits visually, Claude flags code-side |
 | PageSpeed / performance | Apr 7, 2026 | Landing page images converted to WebP (5MB → 85KB). Sentry preconnect + LCP preload added. Retest needed. | After image/asset changes |
 
 ### Legal Guardrails (Locked, April 2026)

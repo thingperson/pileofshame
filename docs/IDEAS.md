@@ -398,11 +398,11 @@ External critique from ChatGPT after reviewing the live landing page, privacy/te
 
 1. **"The promise is clearer than the product shape."** — Landing sells "instant game choice" but the actual product is broader (stats, archetypes, nudges, deals, catalog). The story needs to stay focused on the core wedge even as features grow. Action: keep the "decide what to play now" framing primary in all copy.
 
-2. **"Sample demo should be the star, not the sidekick."** — Sample library is our best activation tool but reads as secondary on the landing page. Action: consider promoting "Try it now" higher in the hero, before sign-in.
+2. **"Sample demo should be the star, not the sidekick."** — ✅ ADDRESSED (Apr 8). GetStartedModal flipped: import/sample now above the fold, auth below divider. Sample data auto-opens reroll picker so users hit the core loop instantly.
 
 3. **"Monetization is fuzzy."** — Fair. Free app + affiliate deals on owned games is thin commercially. No immediate action needed (pre-revenue), but worth thinking about as we grow.
 
-4. **"No sign-up" vs "already have an account?" split-brain** — Valid UX critique. The landing tries to communicate both "no friction" and "sync your data." Action: make the progression clearer: start local → optionally sign in to sync.
+4. **"No sign-up" vs "already have an account?" split-brain** — ✅ ADDRESSED (Apr 8). GetStartedModal reordered: action-first (import/sample) above fold, auth below "want to sync across devices?" divider. Clear progression: start local → optionally sync.
 
 5. **"The moat is the engine, not the tracking."** — Direct quote: "the moat has to become: this is the fastest and most trusted way to decide what to play from what I already own." Agree. Everything else is infrastructure for that one moment.
 
@@ -412,7 +412,7 @@ External critique from ChatGPT after reviewing the live landing page, privacy/te
 
 7. **Checkpoint notes / "where was I?"** — Simpler than the full AI recap Gemini proposed. Just let users write 1-2 lines ("last goal," "controls reminder") on any game. We already have a notes field on GameCard. Could surface the note in the "Jump Back In" section. Low effort, high value.
 
-8. **Better sample experience** — Make the sample library feel like a showroom, not a spreadsheet. Pre-set moods, pre-loaded reroll, instant "here's why" on the first pick. Could be a guided mini-tour.
+8. **Better sample experience** — Partially addressed (Apr 8). Sample data now auto-opens reroll picker after 800ms, so users immediately experience mood → pick → game card. Still worth considering: pre-set moods, instant "here's why" on first pick, guided mini-tour.
 
 ### Filed / disagree
 
