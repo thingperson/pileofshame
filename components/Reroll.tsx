@@ -480,9 +480,19 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                   {icon} {label}
                 </button>
               ))}
-              <span className="px-2 py-1 rounded-full text-xs font-medium font-[family-name:var(--font-mono)] bg-white/5 text-text-dim">
-                {energy === 'low' ? '🔋' : energy === 'high' ? '🔥' : '⚡'} {energy}
-              </span>
+              <button
+                onClick={() => {
+                  const levels: EnergyLevel[] = ['low', 'medium', 'high'];
+                  const next = levels[(levels.indexOf(energy) + 1) % levels.length];
+                  setEnergy(next);
+                  setShownIds(new Set());
+                  doRoll(mode);
+                }}
+                className="px-3 py-2 rounded-full text-sm font-medium font-[family-name:var(--font-mono)] text-text-dim hover:text-text-muted hover:bg-white/5 transition-all"
+                title={`Energy: ${energy}. Tap to change.`}
+              >
+                {energy === 'low' ? '🔋 Low' : energy === 'high' ? '🔥 High' : '⚡ Medium'}
+              </button>
             </div>
 
             {/* Mood filter pills (compact, inline) */}
