@@ -274,7 +274,13 @@
 - Bail animation: 300ms scale-down + fade on bail action ✅
 - Auth avatar mobile squish fix (shrink-0 + gap-0 on mobile) ✅
 - ImportHub `role="dialog"` + aria-modal accessibility fix ✅
-- Completion share card ("Loot Receipt"): themed PNG in celebration modal (game, time, $ reclaimed)
+- Composable share cards: dynamic OG images, unique URLs, unfurl in Discord/Slack/Twitter ✅
+  - `/clear/[id]` landing page with "Less shame. More game." CTA ✅
+  - `/clear/[id]/opengraph-image` dynamic 1200x630 PNG with cover art, stats, flavor text ✅
+  - Composable checkboxes in celebration modal (hours, HLTB compare, pile time, stats) ✅
+  - Supabase `share_cards` table with public read RLS ✅
+  - Contextual notes placeholders by game status ✅
+  - "Give up" → "Not for me" bail label softened ✅
 - "Inventory Weight" visual: grid opacity/saturation shifts as cleared-to-total ratio improves
 - Themed share "Postcards": match active theme for social sharing
 
@@ -327,10 +333,10 @@
 
 | Review | Last Run | Status | Frequency |
 |--------|----------|--------|-----------|
-| Voice/AI lingo sweep | Apr 8, 2026 | Clean — GetStartedModal, AuthButton cleanup, landing page copy all reviewed | Every deploy with new copy |
+| Voice/AI lingo sweep | Apr 8, 2026 | Clean — share card copy, CTA, flavor text, bail label, notes placeholders all reviewed | Every deploy with new copy |
 | Accessibility audit | Apr 8, 2026 | ImportHub role="dialog" + aria-modal added. All prior items still resolved. | Monthly |
-| Feature creep audit | Apr 7, 2026 | Healthy. Skip feedback + energy matching are core decision engine improvements per V3 spec, not scope creep. Typography pass is readability, not features. | Quarterly |
-| Mobile responsiveness | Apr 8, 2026 | Avatar squish fixed (shrink-0 + gap-0). 44px min-h touch targets on auth. GetStartedModal bottom-sheet on mobile. | Monthly |
+| Feature creep audit | Apr 8, 2026 | Healthy. Share cards serve organic marketing (core loop: clear → celebrate → share). Notes placeholders and bail label are UX polish, not new features. | Quarterly |
+| Mobile responsiveness | Apr 8, 2026 | Share card builder tested at 375px — checkboxes, flavor text, create button all fit. Celebration modal scrollable. /clear/[id] 404 page centered. | Monthly |
 | Enrichment accuracy | Apr 8, 2026 | Supabase L2 cache live. Three-tier caching (memory → Supabase → API). Rate limiting on all API routes. | Quarterly |
 | Legal/privacy compliance | Apr 8, 2026 | game_metadata table is public game data only (no user data, no RLS needed). Rate limiting is server-side per-IP, no PII stored. No Privacy Policy update needed. | Before any feature touching user data, deals, or profiling |
 | Info density sweep | Apr 7, 2026 | Fixed: nudge cards now collapsed by default. Typography: all 10px/11px text bumped to 12px+ across 25 components. Import summary modal still TODO. | Periodic — Brady audits visually, Claude flags code-side |
