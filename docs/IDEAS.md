@@ -618,6 +618,31 @@ Discord bot requires bot application approval for servers with 100+ members. Web
 
 ---
 
+## Monetization Ideas (April 8, 2026)
+
+### One Game Mode — "voluntary straitjacket"
+$1-2/month. The app picks one game. UI locks to just that game. You don't get your next pick until you clear it or formally bail. A commitment device people pay for because they know their own weakness.
+
+Why this might work:
+- Psychology is sound — commitment devices are proven (personal trainers, website blockers, gym memberships)
+- It's a story that markets itself. "I'm paying an app $1/month to stop me from browsing my own library." People would screenshot and share that.
+- On-brand: the app that solves decision paralysis sells you the ultimate version of that solution
+- Low price = impulse buy, high retention because the constraint IS the product
+- Radiohead "pay what you want" energy — not the same mechanic, but the same "wait, what?" reaction that generates press and word of mouth
+
+Don't build yet. Prove the free product first. But this has legs.
+
+### Premium tier ($15-20/month)
+Advanced stats, themed share postcards, unlimited re-entry packs, priority enrichment, maybe multi-platform sync. The free version stays generous — premium is for power users deep in the ecosystem.
+
+### Affiliate deals on owned/wishlisted games
+Price drop alerts via IsThereAnyDeal. Only for games users already own or wishlisted — never "you might like this." Clean under our legal framework. FTC disclosure required.
+
+### Broader vision (not now, but worth noting)
+The decision paralysis problem isn't gaming-specific. Streaming shows, books, podcasts — same psychology. If Inventory Full proves the approach works for games, the methodology (mood matching, commitment devices, progress celebration, anti-shame voice) could apply to other media verticals. Each would be a separate product, but the user approach and design philosophy is the transferable moat. Worth pitching to investors even if we never build it ourselves.
+
+---
+
 ## Raw Rambles (unsorted, dump here)
 
 (Brady: drop notes here when you're away from desktop. I'll sort them when you're back.)
