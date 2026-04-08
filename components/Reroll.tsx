@@ -432,12 +432,12 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                       className={`px-3 py-2 rounded-full text-sm font-medium transition-all ${
                         active
                           ? 'scale-[1.02]'
-                          : 'opacity-60 hover:opacity-90'
+                          : 'hover:bg-white/10'
                       }`}
                       style={{
                         backgroundColor: active ? `${config.color}25` : 'rgba(255,255,255,0.05)',
-                        color: active ? config.color : 'var(--color-text-dim)',
-                        border: active ? `1px solid ${config.color}50` : '1px solid transparent',
+                        color: active ? config.color : 'var(--color-text-muted)',
+                        border: active ? `1px solid ${config.color}50` : '1px solid rgba(255,255,255,0.08)',
                       }}
                     >
                       {config.icon} {config.label}
@@ -505,11 +505,11 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                     key={mood}
                     onClick={() => { toggleMood(mood); }}
                     className={`px-2.5 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      active ? 'scale-[1.02]' : 'opacity-50 hover:opacity-80'
+                      active ? 'scale-[1.02]' : 'hover:bg-white/10'
                     }`}
                     style={{
-                      backgroundColor: active ? `${config.color}25` : 'transparent',
-                      color: active ? config.color : 'var(--color-text-dim)',
+                      backgroundColor: active ? `${config.color}25` : 'rgba(255,255,255,0.03)',
+                      color: active ? config.color : 'var(--color-text-muted)',
                     }}
                   >
                     {config.icon} {config.label}

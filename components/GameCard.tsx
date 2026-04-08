@@ -715,6 +715,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                       backgroundColor: game.metacritic >= 75 ? 'rgba(34,197,94,0.15)' : game.metacritic >= 50 ? 'rgba(234,179,8,0.15)' : 'rgba(239,68,68,0.15)',
                       color: game.metacritic >= 75 ? '#22c55e' : game.metacritic >= 50 ? '#eab308' : '#ef4444',
                     }}
+                    title="Critic score via Metacritic"
                   >
                     {game.metacritic}
                   </span>
@@ -768,8 +769,11 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
 
               {/* Synopsis — from RAWG */}
               {game.description && (
-                <p className="text-xs text-text-muted leading-relaxed">
-                  {game.description}
+                <p className="text-xs text-text-muted leading-relaxed" title="Description via RAWG">
+                  {game.description.length > 180
+                    ? game.description.slice(0, 180).replace(/\s+\S*$/, '') + '...'
+                    : game.description
+                  }
                 </p>
               )}
 
@@ -791,7 +795,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               {(game.hltbMain || (game.moodTags && game.moodTags.length > 0)) && (
                 <div className="flex flex-wrap items-center gap-1.5">
                   {game.hltbMain && (
-                    <span className="text-xs font-[family-name:var(--font-mono)] text-text-dim px-1.5 py-0.5 rounded bg-bg-primary border border-border-subtle">
+                    <span className="text-xs font-[family-name:var(--font-mono)] text-text-dim px-1.5 py-0.5 rounded bg-bg-primary border border-border-subtle" title="Average completion time via HowLongToBeat">
                       🕐 ~{game.hltbMain}h to beat
                     </span>
                   )}

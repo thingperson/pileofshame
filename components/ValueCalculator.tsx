@@ -85,7 +85,7 @@ export default function ValueCalculator({
           }}
         >
           <div className="text-xs text-text-muted font-[family-name:var(--font-mono)] mb-1">
-            💎 Untapped library value
+            💎 Estimated untapped value
           </div>
           <div
             className="text-3xl sm:text-4xl font-bold font-[family-name:var(--font-mono)] tracking-tight"
@@ -142,7 +142,7 @@ export default function ValueCalculator({
           {calculated && backlogHours !== null && backlogHours > 0 && (
             <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
               <div className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-0.5">
-                ⏳ Time to clear your backlog
+                ⏳ Estimated time to clear
               </div>
               <div
                 className="text-xl font-bold font-[family-name:var(--font-mono)]"
