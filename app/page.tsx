@@ -117,6 +117,7 @@ function AppContent() {
   const [backlogLimit, setBacklogLimit] = useState(10);
   const [backlogSort, setBacklogSort] = useState<'smart' | 'a-z' | 'z-a' | 'newest' | 'oldest' | 'most-playtime' | 'least-playtime' | 'closest-to-done'>('smart');
   const [sampleBannerDismissed, setSampleBannerDismissed] = useState(false);
+  const [pendingSampleReroll, setPendingSampleReroll] = useState(false);
   // GridCard handles its own detail modal internally
 
   const openReroll = (mode?: RerollMode) => {
@@ -385,6 +386,17 @@ function AppContent() {
     }
   }, [activeTab, TAB_ORDER]);
 
+  // Auto-open reroll after sample data loads — core loop immediately
+  useEffect(() => {
+    if (pendingSampleReroll && games.length > 0) {
+      const t = setTimeout(() => {
+        handleOpenReroll('anything');
+        setPendingSampleReroll(false);
+      }, 800);
+      return () => clearTimeout(t);
+    }
+  }, [pendingSampleReroll, games.length]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Reset backlog limit when switching tabs
   useEffect(() => {
     setBacklogLimit(10);
@@ -454,6 +466,7 @@ function AppContent() {
               lastSaved: new Date().toISOString(),
             });
             window.scrollTo({ top: 0 });
+            setPendingSampleReroll(true);
           }}
         />
         <ImportHub open={importHubOpen} onClose={() => setImportHubOpen(false)} />
@@ -700,6 +713,10 @@ function AppContent() {
         <PostImportSummary
           breakdown={importBreakdown}
           onDismiss={() => setImportBreakdown(null)}
+          onPlay={() => {
+            setImportBreakdown(null);
+            handleOpenReroll('anything');
+          }}
         />
       )}
 

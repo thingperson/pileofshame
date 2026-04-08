@@ -14,11 +14,12 @@ interface ImportBreakdown {
 interface PostImportSummaryProps {
   breakdown: ImportBreakdown;
   onDismiss: () => void;
+  onPlay?: () => void;
 }
 
 const SESSION_KEY = 'if-import-summary-dismissed';
 
-export default function PostImportSummary({ breakdown, onDismiss }: PostImportSummaryProps) {
+export default function PostImportSummary({ breakdown, onDismiss, onPlay }: PostImportSummaryProps) {
   const [visible, setVisible] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -127,13 +128,28 @@ export default function PostImportSummary({ breakdown, onDismiss }: PostImportSu
             </p>
           )}
 
-          <button
-            onClick={handleDismiss}
-            className="w-full py-2.5 text-sm font-medium rounded-lg border transition-all hover:bg-white/5 active:scale-[0.98] font-[family-name:var(--font-mono)]"
-            style={{ borderColor: 'rgba(255,255,255,0.1)', color: 'var(--color-text-muted)' }}
-          >
-            Got it
-          </button>
+          <div className="space-y-2">
+            <button
+              onClick={() => {
+                handleDismiss();
+                onPlay?.();
+              }}
+              className="w-full py-3 text-sm font-bold rounded-xl transition-all hover:scale-[1.01] active:scale-[0.98]"
+              style={{
+                background: 'linear-gradient(135deg, #7c3aed, #a78bfa)',
+                color: '#fff',
+              }}
+            >
+              🎲&nbsp; What Should I Play?
+            </button>
+            <button
+              onClick={handleDismiss}
+              className="w-full py-2 text-xs font-medium transition-all hover:text-text-primary font-[family-name:var(--font-mono)]"
+              style={{ color: 'var(--color-text-faint)' }}
+            >
+              Browse my library first
+            </button>
+          </div>
         </div>
       </div>
     </div>
