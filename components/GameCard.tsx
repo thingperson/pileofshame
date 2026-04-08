@@ -855,7 +855,13 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                     setNotesSaved(true);
                     setTimeout(() => setNotesSaved(false), 2000);
                   }}
-                  placeholder="Add notes..."
+                  placeholder={
+                    game.status === 'playing' ? 'Where did you leave off? Controls to remember?'
+                    : game.status === 'on-deck' ? 'Anything to remember before starting?'
+                    : game.status === 'played' ? 'Final thoughts? Rating? Memorable moments?'
+                    : game.status === 'bailed' ? 'Why\'d you stop? Worth revisiting later?'
+                    : 'Notes, reminders, anything...'
+                  }
                   aria-label="Game notes"
                   className="w-full text-sm bg-bg-primary border border-border-subtle rounded-lg px-3 py-2 text-text-secondary placeholder-text-faint resize-none focus:outline-none focus:border-accent-purple"
                   rows={2}
@@ -986,7 +992,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                 }}
                 title="Draw the line on this one"
               >
-                🚪 Give up on this one
+                🚪 Not for me
               </button>
             )}
 
