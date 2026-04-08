@@ -6,7 +6,7 @@ Running list of ideas, rambles, and half-formed thoughts. Gets synthesized into 
 
 ## Active Ideas (ready to spec or build soon)
 
-### HLTB Progress Inference & Nudges
+### ~~HLTB Progress Inference & Nudges~~ — SHIPPED ✅
 The data already exists (hoursPlayed + hltbMain). We just need to tell stories with it.
 
 **Display layer:**
@@ -34,7 +34,7 @@ The data already exists (hoursPlayed + hltbMain). We just need to tell stories w
 - Dismiss 3x for same game: stop nudging about it (not the same as ignoring)
 - Reset available from game detail
 
-### PS+ Sub Shuffle
+### ~~PS+ Sub Shuffle~~ — SHIPPED ✅
 We know:
 - `psn-api` returns `membership: "PS_PLUS"` field on each game
 - Users tell us their tier (Essential / Extra / Premium)
@@ -101,9 +101,8 @@ Anti-pattern: no streak counters, no "don't break your streak" guilt.
 If user owns Dark Souls 1, 2, and 3 — suggest playing in order.
 Requires RAWG series data or manual mapping.
 
-### "Almost Done" Reroll Mode
-New mode in the reroll picker: only shows games where remainingHours < 20% of hltbMain.
-Targeted at clearing the backlog, not just picking something to play.
+### ~~"Almost Done" Reroll Mode~~ — SHIPPED ✅
+Filters to games within 20% of HLTB completion. Live in reroll modal.
 
 ---
 
@@ -351,11 +350,11 @@ External feedback reviewed from `notes/feedback.txt`. Gemini positioned the app 
 
 1. **Share card on completion ("Loot Receipt")** — Generate a themed image in the celebration modal: game name, time spent, $ reclaimed. We already have a stripped `/api/share-card` in the codebase. Turn user wins into organic marketing. 2-3 hours.
 
-2. **PWA install prompt** — We have the manifest. Add a nudge in settings or post-first-import. Gets us out of "browser tab" territory. 1 hour.
+2. **PWA install prompt** — ✅ SHIPPED (Apr 8). Settings menu, uses beforeinstallprompt API.
 
-3. **Bail animation** — Quick 300ms scale-down + fade when someone bails. Makes the "bailing is a win" brand tangible. Tiny effort, nice polish.
+3. **Bail animation** — ✅ SHIPPED (Apr 8). 300ms scale-down + fade.
 
-4. **User avatar squish on mobile** — Bug report: auth avatar gets squished at small widths. Need to check AuthButton sizing.
+4. **User avatar squish on mobile** — ✅ FIXED (Apr 8). shrink-0 + gap-0 + min-h-[44px].
 
 ### Consider for next sprint
 
@@ -431,11 +430,11 @@ Second review, this time from actual screenshots. Much sharper than the first ro
 
 ### Bugs to fix
 
-1. **Import summary math omits Now Playing** — Modal shows Backlog + Up Next + Completed but skips the Now Playing bucket. Counts reconcile in the tab bar but the modal breakdown is incomplete. Fix: add Now Playing row to PostImportSummary.
+1. **Import summary math omits Now Playing** — ✅ FIXED (Apr 8). Added Now Playing row to PostImportSummary.
 
-2. **Enrichment progress messaging unclear** — "Enriching 14/99 games" is confusing. Users with 737 games wonder: why 99? which 99? what does enrich mean? Fix: rewrite to "Fetching art and play times for your top games first. The rest load in the background."
+2. **Enrichment progress messaging unclear** — ✅ FIXED (Apr 8). Now says "Fetching art, descriptions & play times..."
 
-3. **Landing page "Zero decisions" is overpromising** — Landing says "Three steps. Zero decisions." but the app has 5+ modes, mood filters, energy, sort. The honest version: "We narrow it to one, fast." or "We do the hard part. You just play."
+3. **Landing page "Zero decisions" is overpromising** — ✅ FIXED (Apr 8). Changed to "Three steps. We do the hard part."
 
 ### Design improvements worth considering
 

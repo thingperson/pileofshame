@@ -49,6 +49,7 @@
 - Onboarding welcome state ✅
 - Sample library (40+ games for try-before-import onboarding) ✅
 - Landing page with hero illustration, mono brand banner, logomark ✅
+- Landing page "Get Started" modal (sign-in, import, sample data — single entry point) ✅
 - /about page (landing content for returning users, no import CTAs) ✅
 - Landing page sign-in affordance for returning users ✅
 - Bold "Inventory Full" brand header with logomark ✅
@@ -103,6 +104,11 @@
 - 13 themes total across all palettes ✅
 - 12 per-theme DALL-E prompt files for future asset generation ✅
 
+### Auth & Onboarding
+- AuthButton: clean sign-in dropdown (Discord/Google/email, no fluff copy) ✅
+- "Continue without syncing" option for local-storage users ✅
+- GetStartedModal: unified entry point for new users (sign-in or skip) ✅
+
 ### Infrastructure
 - Supabase auth + cloud sync ✅
 - Google + GitHub OAuth ✅
@@ -129,13 +135,11 @@
 ### Landing Page — SHIPPED ✅
 - Hero illustration + bold brand banner with logomark ✅
 - Mono banner, transparent hero, tighter spacing ✅
+- "Get Started" hero CTA → GetStartedModal with all entry paths ✅
+- "Three steps. We do the hard part." (revised from "Zero decisions") ✅
+- "Already have an account?" sign-in affordance for returning users ✅
 - Shows for visitors with empty library, redirects to app when library exists ✅
 - Design doc: `docs/landing-page-plan.md`
-- Key copy discovered in Discord conversation (Apr 4):
-  - "Treat it like a condition that needs healing"
-  - "We nudged you to play. If you don't like it, blame us."
-  - "Celebrating bailing on a game — that's a decision. That's a win."
-  - The identity pressure angle: it's not about what's good, it's what you *chose*
 
 ### Custom Icon Set (ON HOLD — exploring alternatives)
 - DALL-E icons look great at large sizes but illegible below ~36px (too much illustrated detail)
@@ -323,12 +327,12 @@
 
 | Review | Last Run | Status | Frequency |
 |--------|----------|--------|-----------|
-| Voice/AI lingo sweep | Apr 7, 2026 | Clean — skip feedback pills, energy selector, nudge compact mode, all new copy reviewed | Every deploy with new copy |
-| Accessibility audit | Apr 6, 2026 | All critical/major items resolved. Reroll close btn ✅, mode btn labels ✅, status aria-labels ✅, contrast ✅ | Monthly |
+| Voice/AI lingo sweep | Apr 8, 2026 | Clean — GetStartedModal, AuthButton cleanup, landing page copy all reviewed | Every deploy with new copy |
+| Accessibility audit | Apr 8, 2026 | ImportHub role="dialog" + aria-modal added. All prior items still resolved. | Monthly |
 | Feature creep audit | Apr 7, 2026 | Healthy. Skip feedback + energy matching are core decision engine improvements per V3 spec, not scope creep. Typography pass is readability, not features. | Quarterly |
-| Mobile responsiveness | Apr 7, 2026 | Energy pills 3-across works on 375px. Skip feedback pills wrap to 2 rows on narrow screens. Compact nudges save ~60% vertical space. | Monthly |
-| Enrichment accuracy | Apr 7, 2026 | HLTB direct API integration replaced broken npm packages. All test games returning data. RAWG cache + retry still solid. | Quarterly |
-| Legal/privacy compliance | Apr 7, 2026 | Skip reasons + decision history are localStorage only, no server/third-party. No Privacy Policy update needed. | Before any feature touching user data, deals, or profiling |
+| Mobile responsiveness | Apr 8, 2026 | Avatar squish fixed (shrink-0 + gap-0). 44px min-h touch targets on auth. GetStartedModal bottom-sheet on mobile. | Monthly |
+| Enrichment accuracy | Apr 8, 2026 | Supabase L2 cache live. Three-tier caching (memory → Supabase → API). Rate limiting on all API routes. | Quarterly |
+| Legal/privacy compliance | Apr 8, 2026 | game_metadata table is public game data only (no user data, no RLS needed). Rate limiting is server-side per-IP, no PII stored. No Privacy Policy update needed. | Before any feature touching user data, deals, or profiling |
 | Info density sweep | Apr 7, 2026 | Fixed: nudge cards now collapsed by default. Typography: all 10px/11px text bumped to 12px+ across 25 components. Import summary modal still TODO. | Periodic — Brady audits visually, Claude flags code-side |
 | PageSpeed / performance | Apr 7, 2026 | Landing page images converted to WebP (5MB → 85KB). Sentry preconnect + LCP preload added. Retest needed. | After image/asset changes |
 
@@ -361,6 +365,19 @@ We do *personalized recommendations* (using a user's own data to help them), not
 
 ---
 
+## ENVIRONMENT VARIABLES
+
+| Variable | Where | Purpose |
+|----------|-------|---------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Vercel + .env.local | Supabase project URL (public) |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Vercel + .env.local | Supabase anon key (public, client-side auth) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Vercel + .env.local | Supabase service role key (secret, server-side only — powers game_metadata L2 cache) |
+| `RAWG_API_KEY` | Vercel + .env.local | RAWG game data API |
+| `OPENXBL_API_KEY` | Vercel + .env.local | OpenXBL Xbox import API |
+| `SENTRY_DSN` | Vercel | Sentry error monitoring (production only) |
+
+**Finding the Supabase service role key:** Project Settings → API → Project API keys → `service_role` (click Reveal). It's auto-generated with the project — you don't create it.
+
 ## KEY DOCS
 
 - `docs/IDEAS.md` — Running brainstorm dump (raw ideas, rambles, half-formed thoughts)
@@ -370,6 +387,9 @@ We do *personalized recommendations* (using a user's own data to help them), not
 - `docs/landing-page-plan.md` — Landing page design
 - `docs/theme-ideas.md` — Theme specifications
 - `.claude/rules/voice-and-tone.md` — Brand voice guardrails
+- `.claude/rules/brand-messaging.md` — Brand messaging pillars and terminology
+- `.claude/rules/legal-compliance.md` — Legal/privacy feature review framework
+- `.claude/rules/deploy-gates.md` — Mandatory pre-push checks
 - `.claude/plans/brand-social-kit.md` — Social presence plan
 - `.claude/plans/psychology-informed-features.md` — Psychology-backed feature rationale
 - `.claude/plans/future-notifications-email.md` — Email/notification roadmap
