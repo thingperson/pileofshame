@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { Game, GameStatus, TimeTier } from '@/lib/types';
+import { Game, GameStatus } from '@/lib/types';
 import { useStore } from '@/lib/store';
-import { STATUS_CONFIG, TIME_TIER_CONFIG, SOURCE_LABELS, SOURCE_SHORT, SOURCE_COLORS } from '@/lib/constants';
+import { STATUS_CONFIG, SOURCE_LABELS } from '@/lib/constants';
 import { useToast } from './Toast';
 import { getGameDescriptor } from '@/lib/descriptors';
 import { MOOD_TAG_CONFIG, getPlaytimeRoast } from '@/lib/enrichment';
@@ -321,11 +321,8 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
   const { cycleStatus, getNextStatus, setBailed, unBail, shelveGame, playAgain, newGamePlus, updateGame, deleteGame, showCelebration, toggleIgnore } = useStore();
   const { showToast } = useToast();
-  const categories = useStore((s) => s.categories);
-
   const statusConfig = STATUS_CONFIG[game.status];
   const nextStatus = getNextStatus(game.status);
-  const tierConfig = TIME_TIER_CONFIG[game.timeTier];
 
   // Status badge discoverability: show hint until user has tapped one
   const [showBadgeHint, setShowBadgeHint] = useState(false);
@@ -593,7 +590,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
           {game.name}
         </span>
 
-        {/* Achievement mini + Time Tier + Platform Source */}
+        {/* Achievement mini */}
         <div className="flex items-center gap-1 shrink-0 ml-1">
           {game.achievements && game.achievements.total > 0 && (
             <span
@@ -609,20 +606,6 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               {game.achievements.earnedPlatinum ? '🏆' : `${Math.round((game.achievements.earned / game.achievements.total) * 100)}%`}
             </span>
           )}
-          <span className="text-xs" title={tierConfig.label} aria-hidden="true">
-            {tierConfig.icon}
-          </span>
-          <span
-            className="hidden sm:inline text-xs font-bold font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded"
-            style={{
-              backgroundColor: SOURCE_COLORS[game.source].bg,
-              color: SOURCE_COLORS[game.source].text,
-              border: `1px solid ${SOURCE_COLORS[game.source].text}25`,
-            }}
-            title={SOURCE_LABELS[game.source]}
-          >
-            {SOURCE_SHORT[game.source]}
-          </span>
         </div>
 
         {/* Expand indicator — hidden when forced open in modal */}
@@ -875,54 +858,24 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
             </div>
           </div>
 
-          {/* Row 2: Category, Time Tier, Launch — all inline */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-3">
-            <div className="flex gap-2 flex-1 min-w-0">
-              <div className="flex-1 min-w-0">
-                <label htmlFor={`shelf-${game.id}`} className="block text-xs text-text-faint font-[family-name:var(--font-mono)] mb-0.5 ml-1">Shelf</label>
-                <select
-                  id={`shelf-${game.id}`}
-                  value={game.category}
-                  onChange={(e) => updateGame(game.id, { category: e.target.value })}
-                  className="w-full text-xs sm:text-sm bg-bg-primary border border-border-subtle rounded-lg px-2 sm:px-2.5 py-1.5 sm:py-2 text-text-secondary focus:outline-none focus:border-accent-purple"
-                >
-                  {categories.map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="min-w-0 shrink-0 sm:shrink-0 max-w-[45%] sm:max-w-none">
-                <label htmlFor={`session-${game.id}`} className="block text-xs text-text-faint font-[family-name:var(--font-mono)] mb-0.5 ml-1">Session</label>
-                <select
-                  id={`session-${game.id}`}
-                  value={game.timeTier}
-                  onChange={(e) => updateGame(game.id, { timeTier: e.target.value as TimeTier })}
-                  className="w-full text-xs sm:text-sm bg-bg-primary border border-border-subtle rounded-lg px-2 sm:px-2.5 py-1.5 sm:py-2 text-text-secondary font-[family-name:var(--font-mono)] focus:outline-none focus:border-accent-purple"
-                >
-                  {(Object.entries(TIME_TIER_CONFIG) as [TimeTier, typeof TIME_TIER_CONFIG[TimeTier]][]).map(
-                    ([tier, config]) => (
-                      <option key={tier} value={tier}>{config.icon} {config.label}</option>
-                    )
-                  )}
-                </select>
-              </div>
-            </div>
-            {game.steamAppId && (
+          {/* Row 2: Launch button */}
+          {game.steamAppId && (
+            <div className="mt-3">
               <a
                 href={`steam://run/${game.steamAppId}`}
                 onClick={(e) => e.stopPropagation()}
-                className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold rounded-lg shrink-0 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
                 style={{
                   backgroundColor: 'rgba(124, 58, 237, 0.15)',
                   color: '#a78bfa',
                   border: '1px solid rgba(124, 58, 237, 0.3)',
                 }}
-                title="Opens in Steam (or Steam Link on mobile)"
+                title={`Opens in ${SOURCE_LABELS[game.source]} (or Steam Link on mobile)`}
               >
-                🚀 <span className="hidden sm:inline">Launch</span><span className="sm:hidden">Play</span>
+                🚀 Launch in {SOURCE_LABELS[game.source]}
               </a>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Row 4: Status-specific actions + bail + delete */}
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-3 pt-2 border-t" style={{ borderColor: 'var(--color-border-subtle)' }}>
@@ -1020,13 +973,13 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               </div>
             )}
 
-            {/* Ignore toggle */}
+            {/* Don't suggest toggle */}
             <button
               onClick={() => {
                 toggleIgnore(game.id);
                 showToast(game.ignored
                   ? `${game.name} is back in rotation.`
-                  : `${game.name} hidden from recommendations.`
+                  : `${game.name} won't be suggested anymore.`
                 );
               }}
               className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97]"
@@ -1035,9 +988,9 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                 color: game.ignored ? '#a78bfa' : 'var(--color-text-faint)',
                 border: game.ignored ? '1px solid rgba(167, 139, 250, 0.25)' : '1px solid transparent',
               }}
-              title={game.ignored ? 'Show in recommendations again' : 'Hide from recommendations'}
+              title={game.ignored ? 'Include in suggestions again' : 'Won\'t show up in What Should I Play'}
             >
-              {game.ignored ? '👁 Un-ignore' : '🚫 Ignore'}
+              {game.ignored ? '👁 Suggest again' : '🚫 Don\'t suggest'}
             </button>
 
             {/* Skip count reset (only visible when game has been skipped 3+ times) */}
@@ -1063,27 +1016,28 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               );
             })()}
 
-            {/* Delete — pushed to the right */}
+            {/* Delete from library — pushed to the right, subtle */}
             <div className="flex-1" />
             {!showDeleteConfirm ? (
               <button
                 onClick={() => setShowDeleteConfirm(true)}
                 className="text-xs text-text-faint hover:text-red-400 transition-colors font-[family-name:var(--font-mono)]"
+                title="Permanently remove this game from your library"
               >
-                Remove
+                Delete from library
               </button>
             ) : (
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1.5 sm:gap-2">
-                <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">Remove forever?</span>
+                <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">Gone forever?</span>
                 <div className="flex gap-1.5">
                   <button
                     onClick={() => {
                       deleteGame(game.id);
-                      showToast(`${game.name} removed. It was never here.`);
+                      showToast(`${game.name} deleted. It was never here.`);
                     }}
                     className="px-2 py-1 text-xs font-medium rounded-md bg-red-500/15 text-red-400 hover:bg-red-500/25 transition-colors"
                   >
-                    Remove
+                    Delete
                   </button>
                   <button
                     onClick={() => setShowDeleteConfirm(false)}

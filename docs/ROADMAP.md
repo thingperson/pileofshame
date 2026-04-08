@@ -279,8 +279,18 @@
   - `/clear/[id]/opengraph-image` dynamic 1200x630 PNG with cover art, stats, flavor text ✅
   - Composable checkboxes in celebration modal (hours, HLTB compare, pile time, stats) ✅
   - Supabase `share_cards` table with public read RLS ✅
+  - Composable rating toggle (auto-enables on rate, controls star visibility on card) ✅
+  - "What goes in the slot" recommendations removed from celebration modal (too pushy) ✅
+  - Share composer opens by default (no scary "Share" button to click) ✅
   - Contextual notes placeholders by game status ✅
   - "Give up" → "Not for me" bail label softened ✅
+- Game card detail UX cleanup ✅
+  - Removed Shelf/Session dropdowns (less decision paralysis) ✅
+  - Removed time tier icon + platform source badge from card header (noise reduction) ✅
+  - "Launch" → "Launch in Steam" (platform-aware, tells user what click does) ✅
+  - "Ignore" → "Don't suggest" (clearer intent) ✅
+  - "Remove" → "Delete from library" (distinct from close, with confirmation) ✅
+  - Skip feedback timer 4s → 8s (was disappearing before users could read/click) ✅
 - "Inventory Weight" visual: grid opacity/saturation shifts as cleared-to-total ratio improves
 - Themed share "Postcards": match active theme for social sharing
 
@@ -333,10 +343,10 @@
 
 | Review | Last Run | Status | Frequency |
 |--------|----------|--------|-----------|
-| Voice/AI lingo sweep | Apr 8, 2026 | Clean — share card copy, CTA, flavor text, bail label, notes placeholders all reviewed | Every deploy with new copy |
+| Voice/AI lingo sweep | Apr 8, 2026 | Clean — all changed files swept (GameCard, CompletionCelebration, Reroll, OG pages). No banned patterns. | Every deploy with new copy |
 | Accessibility audit | Apr 8, 2026 | ImportHub role="dialog" + aria-modal added. All prior items still resolved. | Monthly |
-| Feature creep audit | Apr 8, 2026 | Healthy. Share cards serve organic marketing (core loop: clear → celebrate → share). Notes placeholders and bail label are UX polish, not new features. | Quarterly |
-| Mobile responsiveness | Apr 8, 2026 | Share card builder tested at 375px — checkboxes, flavor text, create button all fit. Celebration modal scrollable. /clear/[id] 404 page centered. | Monthly |
+| Feature creep audit | Apr 8, 2026 | Healthy. Card detail cleanup removes complexity (fewer dropdowns, clearer labels). Share card polish rounds out existing feature. | Quarterly |
+| Mobile responsiveness | Apr 8, 2026 | Share card builder tested at 375px. Game detail modal tested — Launch button, action row all fit without Shelf/Session dropdowns. | Monthly |
 | Enrichment accuracy | Apr 8, 2026 | Supabase L2 cache live. Three-tier caching (memory → Supabase → API). Rate limiting on all API routes. | Quarterly |
 | Legal/privacy compliance | Apr 8, 2026 | game_metadata table is public game data only (no user data, no RLS needed). Rate limiting is server-side per-IP, no PII stored. No Privacy Policy update needed. | Before any feature touching user data, deals, or profiling |
 | Info density sweep | Apr 7, 2026 | Fixed: nudge cards now collapsed by default. Typography: all 10px/11px text bumped to 12px+ across 25 components. Import summary modal still TODO. | Periodic — Brady audits visually, Claude flags code-side |

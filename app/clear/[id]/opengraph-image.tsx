@@ -251,9 +251,12 @@ export default async function Image({ params }: { params: Promise<{ id: string }
 
         {/* Bottom bar */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 56px 24px', position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <div style={{ fontSize: '14px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '3px', display: 'flex' }}>
               INVENTORY FULL
+            </div>
+            <div style={{ fontSize: '14px', color: '#94a3b8', display: 'flex' }}>
+              Less shame. More game.
             </div>
           </div>
           <div style={{ fontSize: '13px', fontFamily: 'JetBrains Mono, monospace', color: '#475569', display: 'flex' }}>

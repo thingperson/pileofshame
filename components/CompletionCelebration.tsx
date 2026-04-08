@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { Game } from '@/lib/types';
 import { useStore } from '@/lib/store';
-import { getCompletionRecommendations, getWishlistRecommendations } from '@/lib/recommendations';
 import { useToast } from './Toast';
 import { trackGameCleared, trackShareClear } from '@/lib/analytics';
 
@@ -151,7 +150,6 @@ function GameClearShare({
   hoursOnGame: number;
   showToast: (msg: string) => void;
 }) {
-  const [expanded, setExpanded] = useState(false);
   const [creating, setCreating] = useState(false);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
 
@@ -160,6 +158,12 @@ function GameClearShare({
   const [showHltb, setShowHltb] = useState(!!(game.hltbMain && hoursOnGame > 0));
   const [showPileTime, setShowPileTime] = useState(true);
   const [showStats, setShowStats] = useState(true);
+  const [showRating, setShowRating] = useState(false);
+
+  // Update rating toggle when user rates
+  useEffect(() => {
+    if (rating > 0) setShowRating(true);
+  }, [rating]);
 
   const timeInPileDays = useMemo(() => {
     if (!game.addedAt) return null;
@@ -173,11 +177,22 @@ function GameClearShare({
     return fn(game.name, timeInPileDays);
   }, [game.name, timeInPileDays]);
 
+  // HLTB comparison: percentage faster/slower
+  const hltbLabel = useMemo(() => {
+    if (!game.hltbMain || !hoursOnGame || game.hltbMain <= 0) return '';
+    const diff = game.hltbMain - hoursOnGame;
+    const pct = Math.round(Math.abs(diff) / game.hltbMain * 100);
+    if (diff > 0) return `${pct}% faster than average (${Math.round(game.hltbMain)}h)`;
+    if (diff < 0) return `${pct}% more thorough than average`;
+    return 'Right on the average completion time';
+  }, [game.hltbMain, hoursOnGame]);
+
   const toggles: ShareToggle[] = [
     { key: 'hours', label: `${hoursOnGame}h invested`, available: hoursOnGame > 0, enabled: showHours },
-    { key: 'hltb', label: game.hltbMain ? `vs ${Math.round(game.hltbMain)}h average` : 'vs average time', available: !!(game.hltbMain && hoursOnGame > 0), enabled: showHltb },
+    { key: 'hltb', label: hltbLabel, available: !!(game.hltbMain && hoursOnGame > 0 && hltbLabel), enabled: showHltb },
     { key: 'pile', label: timeInPileDays ? `${timeInPileDays > 365 ? Math.floor(timeInPileDays / 365) + 'y' : timeInPileDays > 30 ? Math.floor(timeInPileDays / 30) + 'mo' : timeInPileDays + 'd'} in the pile` : 'Time in pile', available: !!timeInPileDays, enabled: showPileTime },
-    { key: 'stats', label: `Game #${gamesCleared + 1}, ${backlogSize} left`, available: true, enabled: showStats },
+    { key: 'stats', label: `Game #${gamesCleared + 1}, ${backlogSize} left in the pile`, available: true, enabled: showStats },
+    { key: 'rating', label: rating > 0 ? `${rating}/5 stars` : 'My rating', available: rating > 0, enabled: showRating },
   ];
 
   const handleToggle = (key: string) => {
@@ -186,6 +201,7 @@ function GameClearShare({
       case 'hltb': setShowHltb(v => !v); break;
       case 'pile': setShowPileTime(v => !v); break;
       case 'stats': setShowStats(v => !v); break;
+      case 'rating': setShowRating(v => !v); break;
     }
   };
 
@@ -198,7 +214,7 @@ function GameClearShare({
         body: JSON.stringify({
           gameName: game.name,
           coverUrl: game.coverUrl || null,
-          rating,
+          rating: showRating ? rating : 0,
           hoursPlayed: hoursOnGame || null,
           hltbMain: game.hltbMain || null,
           timeInPileDays: timeInPileDays,
@@ -230,22 +246,6 @@ function GameClearShare({
       showToast('Link copied! Paste it anywhere and it unfurls.');
     }
   };
-
-  if (!expanded) {
-    return (
-      <button
-        onClick={() => setExpanded(true)}
-        className="w-full mb-4 px-4 py-2.5 rounded-xl text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.98]"
-        style={{
-          backgroundColor: 'rgba(167, 139, 250, 0.1)',
-          border: '1px solid rgba(167, 139, 250, 0.25)',
-          color: '#a78bfa',
-        }}
-      >
-        📣 Share this clear
-      </button>
-    );
-  }
 
   return (
     <div
@@ -614,69 +614,6 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
                 hoursOnGame={hoursOnGame}
                 showToast={showToast}
               />
-
-              {/* What's Next — recommendations from their own library + wishlist */}
-              {(() => {
-                const backlogRecs = getCompletionRecommendations(game, games, 3);
-                const wishlistRecs = getWishlistRecommendations(game, games, 2);
-                const hasRecs = backlogRecs.length > 0 || wishlistRecs.length > 0;
-
-                return hasRecs ? (
-                  <div
-                    className="rounded-xl p-4 mb-5 text-left"
-                    style={{
-                      backgroundColor: 'var(--color-bg-elevated)',
-                      border: '1px solid var(--color-border-subtle)',
-                    }}
-                  >
-                    <p className="text-xs text-text-faint font-[family-name:var(--font-mono)] mb-2.5">
-                      You cleared a slot. What goes in it?
-                    </p>
-
-                    {/* Backlog recommendations */}
-                    {backlogRecs.length > 0 && (
-                      <div className="space-y-1.5 mb-2">
-                        {backlogRecs.map((rec) => (
-                          <div
-                            key={rec.game.id}
-                            className="flex items-center gap-2 text-sm"
-                          >
-                            <span className="text-text-primary font-medium truncate flex-1">
-                              {rec.game.name}
-                            </span>
-                            <span className="text-xs text-text-faint font-[family-name:var(--font-mono)] shrink-0">
-                              {rec.reason}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Wishlist recommendations with deal check */}
-                    {wishlistRecs.length > 0 && (
-                      <div className="pt-2 mt-2 space-y-1.5" style={{ borderTop: '1px solid var(--color-border-subtle)' }}>
-                        <p className="text-xs text-text-faint font-[family-name:var(--font-mono)]">
-                          On your wishlist:
-                        </p>
-                        {wishlistRecs.map((rec) => (
-                          <div key={rec.game.id} className="space-y-1">
-                            <div className="flex items-center gap-2 text-sm">
-                              <span className="text-yellow-400">⭐</span>
-                              <span className="text-text-primary font-medium truncate flex-1">
-                                {rec.game.name}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <p className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-5">
-                    Got DLC or want to New Game+? Queue it up from your Cleared list anytime.
-                  </p>
-                );
-              })()}
 
               {/* CTAs */}
               <div className="flex flex-col gap-2.5">

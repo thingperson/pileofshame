@@ -126,7 +126,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
       skipFeedbackTimer.current = setTimeout(() => {
         setSkipFeedbackVisible(false);
         setTimeout(() => setSkipFeedbackGame(null), 300);
-      }, 4000);
+      }, 8000);
     }
 
     // Track shown game to prevent repetition
