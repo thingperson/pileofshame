@@ -44,7 +44,7 @@ export default function SyncNudge() {
       </p>
       <button
         onClick={handleDismiss}
-        className="text-xs text-text-faint hover:text-text-muted transition-colors shrink-0 px-1"
+        className="text-xs text-text-faint hover:text-text-muted transition-colors shrink-0 px-1 min-h-[44px] min-w-[44px] flex items-center justify-center"
         aria-label="Dismiss sync reminder"
       >
         ✕

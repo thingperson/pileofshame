@@ -114,7 +114,7 @@ export default function GridCard({ game }: GridCardProps) {
           <button
             onClick={handleStatusClick}
             aria-label={nextStatus ? `${statusConfig.label}. Move to ${STATUS_CONFIG[nextStatus].label}` : statusConfig.label}
-            className={`absolute top-2 left-2 flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] backdrop-blur-sm transition-all ${
+            className={`absolute top-2 left-2 flex items-center gap-1 px-2 py-1.5 min-h-[44px] rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] backdrop-blur-sm transition-all ${
               game.status !== 'played' && game.status !== 'bailed' ? 'hover:scale-105 active:scale-95 ring-1 ring-white/15' : ''
             }`}
             style={{
@@ -169,7 +169,7 @@ export default function GridCard({ game }: GridCardProps) {
                 e.stopPropagation();
                 setDetailOpen(true);
               }}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold font-[family-name:var(--font-mono)] backdrop-blur-sm transition-all hover:scale-105 active:scale-95"
+              className="px-3 py-3 sm:py-1.5 rounded-lg text-xs font-semibold font-[family-name:var(--font-mono)] backdrop-blur-sm transition-all hover:scale-105 active:scale-95"
               style={{
                 backgroundColor: 'rgba(124, 58, 237, 0.6)',
                 color: '#e9d5ff',

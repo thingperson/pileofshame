@@ -15,7 +15,7 @@ export default function ViewToggle() {
     <div className="flex rounded-lg border overflow-hidden" style={{ borderColor: 'var(--color-border-subtle)' }}>
       <button
         onClick={() => setViewMode('list')}
-        className={`px-2.5 py-1.5 text-xs transition-colors ${
+        className={`px-3 py-2.5 sm:px-2.5 sm:py-1.5 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center text-xs transition-colors ${
           viewMode === 'list' ? 'text-text-primary bg-white/5' : 'text-text-dim hover:text-text-muted'
         }`}
         title="List view"
@@ -26,7 +26,7 @@ export default function ViewToggle() {
       </button>
       <button
         onClick={() => setViewMode('grid')}
-        className={`px-2.5 py-1.5 text-xs transition-colors ${
+        className={`px-3 py-2.5 sm:px-2.5 sm:py-1.5 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center text-xs transition-colors ${
           viewMode === 'grid' ? 'text-text-primary bg-white/5' : 'text-text-dim hover:text-text-muted'
         }`}
         title="Grid view"

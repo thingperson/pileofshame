@@ -86,7 +86,7 @@ export default function AuthButton() {
     <div className="relative">
       <button
         onClick={() => setShowSignIn(!showSignIn)}
-        className="px-3 py-1.5 text-xs font-medium rounded-lg border border-border-subtle text-text-muted hover:border-accent-purple hover:text-text-primary transition-all"
+        className="px-3 py-2.5 sm:py-1.5 text-xs font-medium rounded-lg border border-border-subtle text-text-muted hover:border-accent-purple hover:text-text-primary transition-all"
       >
         Sign in
       </button>

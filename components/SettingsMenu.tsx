@@ -178,7 +178,7 @@ export default function SettingsMenu() {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="p-2 rounded-lg text-text-dim hover:text-text-muted transition-colors"
+        className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-text-dim hover:text-text-muted transition-colors"
         title="Settings"
       >
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

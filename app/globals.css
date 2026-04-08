@@ -1778,8 +1778,8 @@ button:active:not(:disabled) {
   --color-text-secondary: #5C4F3D !important;
   --color-text-muted: #7A6B55 !important;
   --color-text-dim: #8C7D68 !important;
-  --color-text-faint: #A89880 !important;
-  --color-accent-purple: #D4A373 !important;
+  --color-text-faint: #8A7A62 !important;
+  --color-accent-purple: #B8884A !important;
   --color-accent-pink: #E26D5C !important;
 }
 
@@ -1829,15 +1829,15 @@ body.theme-cozy {
 
 /* Cozy: status colors — warm, earthy, soft */
 .theme-cozy {
-  --color-status-buried: #A89880 !important;
+  --color-status-buried: #7A6B55 !important;
   --color-status-buried-bg: #FAEDCD !important;
-  --color-status-on-deck: #CCD5AE !important;
+  --color-status-on-deck: #7A8A5E !important;
   --color-status-on-deck-bg: #E9EDC9 !important;
-  --color-status-playing: #D4A373 !important;
+  --color-status-playing: #B8884A !important;
   --color-status-playing-bg: #FAEDCD !important;
-  --color-status-played: #A7C4A0 !important;
+  --color-status-played: #5E8A55 !important;
   --color-status-played-bg: #E4EDDC !important;
-  --color-status-bailed: #B8A898 !important;
+  --color-status-bailed: #7A6B58 !important;
   --color-status-bailed-bg: #F2E8D8 !important;
 }
 
@@ -1907,9 +1907,9 @@ body.theme-cozy {
   --color-border-active: rgba(239, 35, 60, 0.3) !important;
   --color-text-primary: #e8e8e8 !important;
   --color-text-secondary: #a0a0a0 !important;
-  --color-text-muted: #707070 !important;
-  --color-text-dim: #555555 !important;
-  --color-text-faint: #404040 !important;
+  --color-text-muted: #909090 !important;
+  --color-text-dim: #6a6a6a !important;
+  --color-text-faint: #606060 !important;
   --color-accent-purple: #EF233C !important;
   --color-accent-pink: #D90429 !important;
 }
@@ -2005,7 +2005,7 @@ body.theme-minimal {
 
 /* Minimal: status colors — gunmetal with red accent for active */
 .theme-minimal {
-  --color-status-buried: #525E72 !important;
+  --color-status-buried: #6E7A8E !important;
   --color-status-buried-bg: transparent !important;
   --color-status-on-deck: #8D99AE !important;
   --color-status-on-deck-bg: transparent !important;
@@ -2013,7 +2013,7 @@ body.theme-minimal {
   --color-status-playing-bg: rgba(239, 35, 60, 0.08) !important;
   --color-status-played: #8D99AE !important;
   --color-status-played-bg: transparent !important;
-  --color-status-bailed: #525E72 !important;
+  --color-status-bailed: #6E7A8E !important;
   --color-status-bailed-bg: transparent !important;
 }
 

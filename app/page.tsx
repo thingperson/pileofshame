@@ -85,7 +85,7 @@ function InlineSearch({ onAddManual }: { onAddManual: () => void }) {
       ) : (
         <button
           onClick={handleToggle}
-          className="w-9 h-9 flex items-center justify-center rounded-lg border border-border-subtle text-text-dim hover:border-accent-purple hover:text-text-secondary transition-all"
+          className="w-11 h-11 flex items-center justify-center rounded-lg border border-border-subtle text-text-dim hover:border-accent-purple hover:text-text-secondary transition-all"
           title="Search games"
           aria-label="Search games"
         >
@@ -356,6 +356,34 @@ function AppContent() {
   const isSampleLibrary = games.length > 0 && games.every(g => g.id.startsWith('sample-'));
   const isVoid = currentTheme === 'void' && !isEmpty;
 
+  // ── Swipe gesture for tab switching ──
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const touchEnd = useRef<{ x: number; y: number } | null>(null);
+  const TAB_ORDER: TabId[] = useMemo(() => TABS.map((t) => t.id), []);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchEnd.current = null;
+    touchStart.current = { x: e.targetTouches[0].clientX, y: e.targetTouches[0].clientY };
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    touchEnd.current = { x: e.targetTouches[0].clientX, y: e.targetTouches[0].clientY };
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (!touchStart.current || !touchEnd.current) return;
+    const dx = touchStart.current.x - touchEnd.current.x;
+    const dy = touchStart.current.y - touchEnd.current.y;
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+
+    const currentIndex = TAB_ORDER.indexOf(activeTab);
+    if (dx > 0 && currentIndex < TAB_ORDER.length - 1) {
+      setActiveTab(TAB_ORDER[currentIndex + 1]);
+    } else if (dx < 0 && currentIndex > 0) {
+      setActiveTab(TAB_ORDER[currentIndex - 1]);
+    }
+  }, [activeTab, TAB_ORDER]);
+
   // Reset backlog limit when switching tabs
   useEffect(() => {
     setBacklogLimit(10);
@@ -465,7 +493,7 @@ function AppContent() {
             <InlineSearch onAddManual={() => { setAddModalInitialName(''); setAddModalOpen(true); }} />
             <button
               onClick={() => setImportHubOpen(true)}
-              className="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+              className="flex items-center gap-1 px-2.5 py-2.5 sm:px-2.5 sm:py-2 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
               title="Import games"
             >
               <span className="text-sm sm:text-base">📥</span>
@@ -473,7 +501,7 @@ function AppContent() {
             </button>
             <a
               href="/stats"
-              className="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+              className="flex items-center gap-1 px-2.5 py-2.5 sm:px-2.5 sm:py-2 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
               title="Stats"
             >
               <span className="text-sm sm:text-base">📊</span>
@@ -584,7 +612,7 @@ function AppContent() {
             <button
               onClick={() => openReroll('quick-session')}
               aria-label="Quick Session: pick a game you can finish in one sitting"
-              className="shrink-0 px-3 py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
+              className="shrink-0 px-3 py-3 sm:py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, #6366f1, #818cf8)' }}
             >
               🌙 Quick Session
@@ -592,7 +620,7 @@ function AppContent() {
             <button
               onClick={() => openReroll('deep-cut')}
               aria-label="Deep Cut: a game buried in your backlog you may have forgotten about"
-              className="shrink-0 px-3 py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
+              className="shrink-0 px-3 py-3 sm:py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, #dc2626, #f87171)' }}
             >
               🔥 Deep Cut
@@ -600,7 +628,7 @@ function AppContent() {
             <button
               onClick={() => openReroll('continue')}
               aria-label="Keep Playing: pick from games you've already started"
-              className="shrink-0 px-3 py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
+              className="shrink-0 px-3 py-3 sm:py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, #d97706, #fbbf24)' }}
             >
               ▶ Keep Playing
@@ -608,7 +636,7 @@ function AppContent() {
             <JustFiveMinutes games={games} />
             <button
               onClick={() => setGamePassOpen(true)}
-              className="shrink-0 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap flex items-center gap-1.5"
+              className="shrink-0 px-3 sm:px-4 py-3 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap flex items-center gap-1.5"
               style={{ background: 'linear-gradient(135deg, #107c10 0%, #1a8a1a 50%, #0070d1 100%)' }}
               title="Pick a game from Game Pass or PS+ catalog"
             >
@@ -640,7 +668,7 @@ function AppContent() {
                 id="backlog-sort"
                 value={backlogSort}
                 onChange={(e) => { setBacklogSort(e.target.value as typeof backlogSort); setBacklogLimit(10); }}
-                className="text-xs bg-bg-card border border-border-subtle rounded-lg px-2 py-1 text-text-muted focus:outline-none focus:border-accent-purple transition-all cursor-pointer font-[family-name:var(--font-mono)]"
+                className="text-xs bg-bg-card border border-border-subtle rounded-lg px-2 py-2.5 sm:py-1 min-h-[44px] sm:min-h-0 text-text-muted focus:outline-none focus:border-accent-purple transition-all cursor-pointer font-[family-name:var(--font-mono)]"
               >
                 <option value="smart">✨ Best for You</option>
                 <option value="a-z">A → Z</option>
@@ -674,9 +702,14 @@ function AppContent() {
         />
       )}
 
-      {/* ── Tab Content ── */}
+      {/* ── Tab Content (swipe left/right to switch tabs) ── */}
       {!isEmpty && (
-        <div className="min-h-[200px]">
+        <div
+          className="min-h-[200px]"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           {/* Search active indicator */}
           {filters.search && (
             <div className="mb-3">
@@ -839,13 +872,13 @@ function AppContent() {
           <div className="flex items-center gap-3">
             <a
               href="/about"
-              className="text-xs text-text-faint hover:text-text-muted transition-colors font-[family-name:var(--font-mono)]"
+              className="text-xs text-text-faint hover:text-text-muted transition-colors font-[family-name:var(--font-mono)] py-3 sm:py-1"
             >
               About
             </a>
             <button
               onClick={() => setHelpOpen(true)}
-              className="text-xs text-text-faint hover:text-text-muted transition-colors font-[family-name:var(--font-mono)]"
+              className="text-xs text-text-faint hover:text-text-muted transition-colors font-[family-name:var(--font-mono)] py-3 sm:py-1"
             >
               ? Help
             </button>
@@ -884,8 +917,8 @@ function AppContent() {
           ❤️ Free forever. Tips keep the servers running and new features coming.
         </p>
         <div className="flex items-center justify-center gap-4 mt-3">
-          <a href="/privacy" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)]">Privacy</a>
-          <a href="/terms" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)]">Terms</a>
+          <a href="/privacy" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] py-3 sm:py-1">Privacy</a>
+          <a href="/terms" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] py-3 sm:py-1">Terms</a>
         </div>
       </footer>
     </div>

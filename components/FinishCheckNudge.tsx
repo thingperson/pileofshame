@@ -190,7 +190,7 @@ export default function FinishCheckNudge({ games, onTabSwitch }: FinishCheckNudg
           <button
             onClick={handleDismiss}
             aria-label="Dismiss suggestion"
-            className="shrink-0 text-text-faint hover:text-text-muted transition-colors text-sm"
+            className="shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center text-text-faint hover:text-text-muted transition-colors text-sm"
           >
             ✕
           </button>
@@ -228,7 +228,7 @@ export default function FinishCheckNudge({ games, onTabSwitch }: FinishCheckNudg
           <div className="flex gap-2">
             <button
               onClick={handleYesFinished}
-              className="flex-1 px-3 py-2 rounded-lg text-sm font-semibold font-[family-name:var(--font-mono)] transition-all hover:brightness-110 active:scale-[0.97]"
+              className="flex-1 px-3 py-3 sm:py-2 rounded-lg text-sm font-semibold font-[family-name:var(--font-mono)] transition-all hover:brightness-110 active:scale-[0.97]"
               style={{
                 backgroundColor: 'rgba(34, 197, 94, 0.15)',
                 color: '#4ade80',
@@ -238,7 +238,7 @@ export default function FinishCheckNudge({ games, onTabSwitch }: FinishCheckNudg
             </button>
             <button
               onClick={handleNotYet}
-              className="flex-1 px-3 py-2 rounded-lg text-sm font-semibold font-[family-name:var(--font-mono)] transition-all hover:brightness-110 active:scale-[0.97]"
+              className="flex-1 px-3 py-3 sm:py-2 rounded-lg text-sm font-semibold font-[family-name:var(--font-mono)] transition-all hover:brightness-110 active:scale-[0.97]"
               style={{
                 backgroundColor: 'rgba(245, 158, 11, 0.15)',
                 color: '#fcd34d',
@@ -248,7 +248,7 @@ export default function FinishCheckNudge({ games, onTabSwitch }: FinishCheckNudg
             </button>
             <button
               onClick={handleDismiss}
-              className="flex-1 px-3 py-2 rounded-lg text-sm font-semibold font-[family-name:var(--font-mono)] transition-all hover:brightness-110 active:scale-[0.97]"
+              className="flex-1 px-3 py-3 sm:py-2 rounded-lg text-sm font-semibold font-[family-name:var(--font-mono)] transition-all hover:brightness-110 active:scale-[0.97]"
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.05)',
                 color: 'var(--color-text-dim)',
