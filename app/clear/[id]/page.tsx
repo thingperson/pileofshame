@@ -167,7 +167,8 @@ export default async function ClearPage({ params }: { params: Promise<{ id: stri
 
         {/* CTA */}
         <div className="text-center mt-8 space-y-4">
-          <p className="text-lg text-text-muted font-medium">What&apos;s in your pile?</p>
+          <p className="text-xl text-text-primary font-bold">Less shame. More game.</p>
+          <p className="text-sm text-text-muted">Your pile won&apos;t clear itself. That&apos;s where we come in.</p>
           <Link
             href="/"
             className="inline-block px-8 py-3 rounded-xl font-bold text-base transition-all hover:scale-[1.02]"

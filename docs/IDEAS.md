@@ -595,11 +595,14 @@ Discord bot requires bot application approval for servers with 100+ members. Web
 
 ## Copy Ideas Bank (ongoing)
 
-- "Avoid backlog shame. Get into your game."
-- "Stop scrolling your library. Start playing." (current tagline)
-- "Your backlog isn't a failure. It's an inventory."
+- **"Less shame. More game."** — Share card CTA headline. Locked.
+- **"Your pile won't clear itself. That's where we come in."** — Share card CTA subhead. Locked.
+- "Stop scrolling your library. Start playing." (current main tagline)
+- "Your pile's not gonna play itself." (current OG image tagline)
 - "Three steps. We do the hard part." (current landing)
 - "The pile trembles." (completion celebration / share card)
+- "Your backlog isn't a failure. It's an inventory."
+- "Avoid backlog shame. Get into your game." (alternate direction)
 
 ---
 
