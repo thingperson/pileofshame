@@ -504,6 +504,105 @@ Review of game detail page screenshots. Sharpest feedback yet. Core insight: the
 
 ---
 
+## Smart Re-Entry System (April 8, 2026 — strategic thinking)
+
+The Jump Back In tips are static and genre-based. The next evolution is **personalized re-entry intelligence** that actually knows where the user is in a game.
+
+### The tension with user notes
+Personal notes help US know where they are, but our target user won't do it. Writing "I just beat the fire boss" after a session is friction. If the app requires homework to stay useful, the rational move is to never use the app. Notes should exist (they do) but can't be load-bearing.
+
+### Notes as community data (crowdsourced enrichment)
+The fraction of users who DO write notes could inform everyone else. "Last thing I remember: the fire temple" from 50 users at ~20 hours of playtime tells us something about where ~20h players are in that game. This creates a **network effect**: app gets richer the more people use it.
+
+**Data quality challenges:**
+- Pollution: bad/joke/spoiler notes overwriting good data
+- Conflicting info: different users at same playtime in different places (multiple paths, DLC, etc.)
+- Provenance: need to weight quality (notes from users who completed > notes from users who bailed)
+- Output safety: never surface spoilers or wrong-game info
+
+### Smart re-entry prompts (minimum viable questions)
+Instead of asking users to journal, ask the **least number of questions** to determine where they are:
+
+1. Look at their playtime vs HLTB data to estimate rough progression
+2. Ask one question: **"What's the last thing you remember happening?"** (free text or multiple choice from known milestones)
+3. Use that to output the most useful advice: controls reminder, next objective hint, "you were about to..."
+
+This could work for the verified top-50 titles first. Each game gets a **milestone map**: key story beats at approximate hour marks. User's playtime + one answer = localized tips.
+
+### What this ISN'T
+- Not a wiki. Not GameFAQs. Not a walkthrough.
+- It's a **30-second re-orientation**: "Oh right, I was in the fire temple and I need the hookshot. Left trigger to aim."
+- The goal is removing the friction of "I don't remember where I was" that keeps people from reopening a game.
+
+---
+
+## Share Card Strategy (April 8, 2026 — strategic thinking)
+
+### The problem with static share cards
+We built share cards before and shelved them. Static PNGs are generic, look the same for every user, and don't convert. Nobody runs to Discord to paste a card that looks like everyone else's.
+
+### What makes someone actually share
+- **Self-expression, not reporting.** The card should feel like the user is saying something about themselves, not filing a status update.
+- **Novelty and whimsy.** Voice and personality in the card copy. Not "Game Completed" but "Finally done after 3 years in the pile."
+- **Composable / user-curated.** The user CHOOSES what to show. Composing the card makes it precious. Checkboxes for what to include, not a fixed template.
+- **Unique enough to not feel duplicative.** If everyone's card looks the same, sharing fatigue hits fast (Spotify Wrapped problem).
+
+### What makes the VIEWER click through
+- The card should make the viewer think about THEIR pile. "I've been meaning to play that too."
+- Clean CTA on the landing page: "What's in YOUR pile?"
+- The URL itself should be clean and tweetable: `inventoryfull.gg/clear/abc123`
+
+### Data points users might want to share (all opt-in via checkboxes)
+- **Time in the pile**: "Finally cleared after 3 years" (purchase/add date vs completion date)
+- **Dollar value reclaimed**: "$70 of value recovered, $324 total reclaimed" — makes the pile tangible
+- **HLTB comparison**: "Cleared Elden Ring in 10 fewer hours than average (I probably missed some good items)"
+- **HLTB exceeded**: "Took 20 more hours than most — I explored every corner"
+- **Backlog remaining**: "47 games left. The pile trembles."
+- **Comfort game departure**: "Stopped playing Stardew Valley for 3 weeks because I was exploring new games" — measuring behavioral change
+- **Total cleared count**: "Game #12 cleared this year"
+- **Game cover art** as card background (blurred/tinted)
+- **Display name** (opt-in, default anonymous)
+
+### Implementation: Dynamic OG images
+Not a static PNG. A **unique URL per completion** (`/share/clear/[id]`) with a dynamic `opengraph-image` route. When pasted into Discord/Slack/Twitter, the platform fetches the OG image and unfurls a rich card. The page itself is a lightweight landing page with the card content + app CTA.
+
+The user composes what to include (checkboxes in the celebration modal), we generate the unique URL, they copy/paste it. The unfurl IS the share.
+
+### Copy direction for cards
+- "Avoid backlog shame. Get into your game." (tagline candidate)
+- "Finally got [Game] out of my pile. That's $70 I actually used."
+- "[Game] → Cleared. 3 years in the pile. No regrets."
+- "I just cleared [Game] in 10 fewer hours than most people take. (I definitely missed some good items on the way.)"
+- Tone: warm, slightly braggy, self-deprecating where it fits. Never corporate.
+
+---
+
+## Discord Integration Strategy (April 8, 2026)
+
+### Login privacy
+Discord OAuth (`identify` scope) is read-only: email, username, avatar. Does NOT join servers, post anything, or expose activity status. Server members won't know the user has the app unless they share.
+
+### Integration ideas (ranked by impact/effort)
+1. **Webhook-based share** — Users paste a Discord webhook URL in settings. On completion, we POST a rich embed to their channel. No bot hosting, no approval process, users control the channel. Best first step.
+2. **Bot: `/whatshouldiplay` slash command** — Returns a pick from the user's linked library using the decision engine. Requires full engine running server-side. Medium effort.
+3. **Bot: completion announcements** — "Brady just cleared Hollow Knight (47h). The pile trembles." Opt-in per user.
+4. **Rich Presence** — "Playing via Inventory Full" in Discord status. Niche value.
+
+### Parking for now
+Discord bot requires bot application approval for servers with 100+ members. Webhooks don't. Start with webhooks.
+
+---
+
+## Copy Ideas Bank (ongoing)
+
+- "Avoid backlog shame. Get into your game."
+- "Stop scrolling your library. Start playing." (current tagline)
+- "Your backlog isn't a failure. It's an inventory."
+- "Three steps. We do the hard part." (current landing)
+- "The pile trembles." (completion celebration / share card)
+
+---
+
 ## Raw Rambles (unsorted, dump here)
 
 (Brady: drop notes here when you're away from desktop. I'll sort them when you're back.)

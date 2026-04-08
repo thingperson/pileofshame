@@ -119,68 +119,117 @@ function ConfettiCanvas() {
   );
 }
 
-// --- Share a specific clear ---
+// --- Composable share card builder ---
 
 const CLEAR_FLAVORS = [
-  (name: string) => `Just cleared ${name} off my backlog.`,
+  (name: string, days: number | null) => days && days > 365 ? `Finally cleared ${name} after ${Math.floor(days / 365)}+ years in the pile.` : `${name}: cleared. The pile gets lighter.`,
   (name: string) => `${name}: done. One less game haunting the pile.`,
   (name: string) => `Finished ${name}. Actually played something I own.`,
-  (name: string) => `${name}: cleared. The pile gets smaller.`,
   (name: string) => `Knocked out ${name}. Feels good.`,
+  (name: string, days: number | null) => days && days > 180 ? `${name} spent ${Math.floor(days / 30)} months in my backlog. Not anymore.` : `${name}: off the pile. Next.`,
 ];
 
-function composeClearText(
-  game: Game,
-  rating: number,
-  gamesCleared: number,
-  hoursOnGame: number,
-  platform: 'twitter' | 'reddit' | 'copy',
-): string {
-  // First line: flavor + stars + hours (short, reads as one thought)
-  const parts: string[] = [CLEAR_FLAVORS[Math.floor(Math.random() * CLEAR_FLAVORS.length)](game.name)];
-  if (rating > 0) parts.push('⭐'.repeat(rating));
-  if (hoursOnGame > 0) parts.push(`${hoursOnGame}h invested.`);
-  const mainLine = parts.join(' ');
-
-  const lines: string[] = [mainLine];
-  if (gamesCleared > 1) lines.push(`That's ${gamesCleared} cleared total.`);
-
-  switch (platform) {
-    case 'twitter':
-      lines.push('\ninventoryfull.gg');
-      break;
-    case 'reddit':
-      lines.push('\n[inventoryfull.gg](https://inventoryfull.gg)');
-      break;
-    case 'copy':
-      lines.push('\nhttps://inventoryfull.gg');
-      break;
-  }
-
-  return lines.join('\n');
+interface ShareToggle {
+  key: string;
+  label: string;
+  available: boolean;
+  enabled: boolean;
 }
 
 function GameClearShare({
   game,
   rating,
   gamesCleared,
+  backlogSize,
   hoursOnGame,
   showToast,
 }: {
   game: Game;
   rating: number;
   gamesCleared: number;
+  backlogSize: number;
   hoursOnGame: number;
   showToast: (msg: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
 
-  // Stable flavor — pick once per render cycle
-  const preview = useMemo(
-    () => composeClearText(game, rating, gamesCleared, hoursOnGame, 'copy')
-      .replace('\nhttps://inventoryfull.gg', '').trim(),
-    [game, rating, gamesCleared, hoursOnGame],
-  );
+  // Toggle states for composable card
+  const [showHours, setShowHours] = useState(hoursOnGame > 0);
+  const [showHltb, setShowHltb] = useState(!!(game.hltbMain && hoursOnGame > 0));
+  const [showPileTime, setShowPileTime] = useState(true);
+  const [showStats, setShowStats] = useState(true);
+
+  const timeInPileDays = useMemo(() => {
+    if (!game.addedAt) return null;
+    const added = new Date(game.addedAt).getTime();
+    const now = Date.now();
+    return Math.floor((now - added) / (1000 * 60 * 60 * 24));
+  }, [game.addedAt]);
+
+  const flavorText = useMemo(() => {
+    const fn = CLEAR_FLAVORS[Math.floor(Math.random() * CLEAR_FLAVORS.length)];
+    return fn(game.name, timeInPileDays);
+  }, [game.name, timeInPileDays]);
+
+  const toggles: ShareToggle[] = [
+    { key: 'hours', label: `${hoursOnGame}h invested`, available: hoursOnGame > 0, enabled: showHours },
+    { key: 'hltb', label: game.hltbMain ? `vs ${Math.round(game.hltbMain)}h average` : 'vs average time', available: !!(game.hltbMain && hoursOnGame > 0), enabled: showHltb },
+    { key: 'pile', label: timeInPileDays ? `${timeInPileDays > 365 ? Math.floor(timeInPileDays / 365) + 'y' : timeInPileDays > 30 ? Math.floor(timeInPileDays / 30) + 'mo' : timeInPileDays + 'd'} in the pile` : 'Time in pile', available: !!timeInPileDays, enabled: showPileTime },
+    { key: 'stats', label: `Game #${gamesCleared + 1}, ${backlogSize} left`, available: true, enabled: showStats },
+  ];
+
+  const handleToggle = (key: string) => {
+    switch (key) {
+      case 'hours': setShowHours(v => !v); break;
+      case 'hltb': setShowHltb(v => !v); break;
+      case 'pile': setShowPileTime(v => !v); break;
+      case 'stats': setShowStats(v => !v); break;
+    }
+  };
+
+  const handleCreateCard = async () => {
+    setCreating(true);
+    try {
+      const res = await fetch('/api/share', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          gameName: game.name,
+          coverUrl: game.coverUrl || null,
+          rating,
+          hoursPlayed: hoursOnGame || null,
+          hltbMain: game.hltbMain || null,
+          timeInPileDays: timeInPileDays,
+          totalCleared: gamesCleared + 1,
+          backlogRemaining: backlogSize,
+          showHours,
+          showHltbCompare: showHltb,
+          showPileTime,
+          showStats,
+          flavorText,
+        }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        setShareUrl(data.url);
+        trackShareClear('card_created', game.name);
+      }
+    } catch {
+      showToast('Could not create share card. Try copying instead.');
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const handleCopyLink = () => {
+    if (shareUrl) {
+      navigator.clipboard.writeText(shareUrl);
+      trackShareClear('copy_link', game.name);
+      showToast('Link copied! Paste it anywhere and it unfurls.');
+    }
+  };
 
   if (!expanded) {
     return (
@@ -200,76 +249,120 @@ function GameClearShare({
 
   return (
     <div
-      className="mb-4 rounded-xl p-3.5 space-y-2.5"
+      className="mb-4 rounded-xl p-3.5 space-y-3"
       style={{
         backgroundColor: 'var(--color-bg-elevated)',
         border: '1px solid rgba(167, 139, 250, 0.2)',
       }}
     >
-      {/* Preview */}
+      <p className="text-xs text-text-faint font-[family-name:var(--font-mono)]">
+        Pick what to include. This creates a link that unfurls with a card when pasted.
+      </p>
+
+      {/* Flavor text preview */}
       <div
-        className="rounded-lg p-2.5 text-xs text-text-muted leading-relaxed font-[family-name:var(--font-mono)]"
-        style={{ backgroundColor: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)' }}
+        className="rounded-lg p-2.5 text-sm text-text-muted italic leading-relaxed"
+        style={{ backgroundColor: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.04)' }}
       >
-        {preview}
+        {flavorText}
       </div>
 
-      {/* Share buttons */}
-      <div className="flex gap-2">
-        <button
-          onClick={() => {
-            trackShareClear('twitter', game.name);
-            const text = composeClearText(game, rating, gamesCleared, hoursOnGame, 'twitter');
-            window.open(
-              `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
-              '_blank',
-              'width=550,height=420',
-            );
-          }}
-          className="flex-1 flex items-center justify-center gap-1 px-2 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-          style={{
-            backgroundColor: 'rgba(29, 161, 242, 0.1)',
-            border: '1px solid rgba(29, 161, 242, 0.2)',
-            color: '#1da1f2',
-          }}
-        >
-          𝕏 Post
-        </button>
-        <button
-          onClick={() => {
-            trackShareClear('reddit', game.name);
-            const text = composeClearText(game, rating, gamesCleared, hoursOnGame, 'reddit');
-            window.open(
-              `https://reddit.com/submit?selftext=true&title=${encodeURIComponent(`Just cleared ${game.name} off my backlog`)}&text=${encodeURIComponent(text)}`,
-              '_blank',
-            );
-          }}
-          className="flex-1 flex items-center justify-center gap-1 px-2 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-          style={{
-            backgroundColor: 'rgba(255, 69, 0, 0.1)',
-            border: '1px solid rgba(255, 69, 0, 0.2)',
-            color: '#ff4500',
-          }}
-        >
-          📮 Reddit
-        </button>
-        <button
-          onClick={() => {
-            trackShareClear('copy', game.name);
-            const text = composeClearText(game, rating, gamesCleared, hoursOnGame, 'copy');
-            navigator.clipboard.writeText(text);
-            showToast('Copied! Show off that clear.');
-          }}
-          className="flex-1 flex items-center justify-center gap-1 px-2 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-          style={{
-            backgroundColor: 'rgba(88, 101, 242, 0.1)',
-            border: '1px solid rgba(88, 101, 242, 0.2)',
-            color: '#5865f2',
-          }}
-        >
-          📋 Copy
-        </button>
+      {/* Toggle checkboxes */}
+      <div className="space-y-1.5">
+        {toggles.filter(t => t.available).map((t) => (
+          <label
+            key={t.key}
+            className="flex items-center gap-2.5 cursor-pointer group"
+          >
+            <input
+              type="checkbox"
+              checked={t.enabled}
+              onChange={() => handleToggle(t.key)}
+              className="w-4 h-4 rounded accent-purple-500"
+            />
+            <span className={`text-xs font-[family-name:var(--font-mono)] ${t.enabled ? 'text-text-secondary' : 'text-text-faint'} group-hover:text-text-muted transition-colors`}>
+              {t.label}
+            </span>
+          </label>
+        ))}
       </div>
+
+      {/* Action buttons */}
+      {!shareUrl ? (
+        <button
+          onClick={handleCreateCard}
+          disabled={creating}
+          className="w-full px-4 py-2.5 rounded-lg text-sm font-bold font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.98] disabled:opacity-50"
+          style={{
+            backgroundColor: 'rgba(167, 139, 250, 0.15)',
+            border: '1px solid rgba(167, 139, 250, 0.3)',
+            color: '#a78bfa',
+          }}
+        >
+          {creating ? 'Creating...' : '🔗 Create share link'}
+        </button>
+      ) : (
+        <div className="space-y-2">
+          {/* Generated URL */}
+          <div
+            className="rounded-lg px-3 py-2 text-xs font-[family-name:var(--font-mono)] text-accent-purple truncate cursor-pointer hover:bg-white/5 transition-colors"
+            style={{ backgroundColor: 'rgba(0,0,0,0.3)', border: '1px solid rgba(167, 139, 250, 0.2)' }}
+            onClick={handleCopyLink}
+            title="Click to copy"
+          >
+            {shareUrl}
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              onClick={handleCopyLink}
+              className="flex-1 flex items-center justify-center gap-1 px-2 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+              style={{
+                backgroundColor: 'rgba(88, 101, 242, 0.1)',
+                border: '1px solid rgba(88, 101, 242, 0.2)',
+                color: '#5865f2',
+              }}
+            >
+              📋 Copy link
+            </button>
+            <button
+              onClick={() => {
+                trackShareClear('twitter', game.name);
+                window.open(
+                  `https://twitter.com/intent/tweet?text=${encodeURIComponent(flavorText)}&url=${encodeURIComponent(shareUrl)}`,
+                  '_blank',
+                  'width=550,height=420',
+                );
+              }}
+              className="flex-1 flex items-center justify-center gap-1 px-2 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+              style={{
+                backgroundColor: 'rgba(29, 161, 242, 0.1)',
+                border: '1px solid rgba(29, 161, 242, 0.2)',
+                color: '#1da1f2',
+              }}
+            >
+              𝕏 Post
+            </button>
+            <button
+              onClick={() => {
+                trackShareClear('reddit', game.name);
+                window.open(
+                  `https://reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(`Just cleared ${game.name} off my backlog`)}`,
+                  '_blank',
+                );
+              }}
+              className="flex-1 flex items-center justify-center gap-1 px-2 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+              style={{
+                backgroundColor: 'rgba(255, 69, 0, 0.1)',
+                border: '1px solid rgba(255, 69, 0, 0.2)',
+                color: '#ff4500',
+              }}
+            >
+              📮 Reddit
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -516,7 +609,8 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
               <GameClearShare
                 game={game}
                 rating={rating}
-                gamesCleared={gamesCleared + 1}
+                gamesCleared={gamesCleared}
+                backlogSize={backlogSize}
                 hoursOnGame={hoursOnGame}
                 showToast={showToast}
               />
