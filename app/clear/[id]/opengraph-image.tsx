@@ -150,12 +150,13 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               <img
                 src={card.cover_url}
                 alt=""
-                width={200}
-                height={280}
+                width={240}
+                height={240}
                 style={{
-                  width: '200px',
-                  height: '280px',
+                  width: '240px',
+                  height: '240px',
                   objectFit: 'cover',
+                  objectPosition: 'center top',
                   borderRadius: '12px',
                   border: '2px solid rgba(167, 139, 250, 0.3)',
                   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
@@ -255,8 +256,8 @@ export default async function Image({ params }: { params: Promise<{ id: string }
             <div style={{ fontSize: '14px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '3px', display: 'flex' }}>
               INVENTORY FULL
             </div>
-            <div style={{ fontSize: '14px', color: '#94a3b8', display: 'flex' }}>
-              Less shame. More game.
+            <div style={{ fontSize: '14px', color: '#94a3b8', display: 'flex', padding: '4px 14px', borderRadius: '8px', backgroundColor: 'rgba(167, 139, 250, 0.1)', border: '1px solid rgba(167, 139, 250, 0.2)' }}>
+              Less shame. More game. →
             </div>
           </div>
           <div style={{ fontSize: '13px', fontFamily: 'JetBrains Mono, monospace', color: '#475569', display: 'flex' }}>

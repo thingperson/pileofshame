@@ -46,10 +46,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     return { title: 'Inventory Full' };
   }
 
-  const title = `I cleared ${card.game_name} from my backlog | Inventory Full`;
+  const title = `I cleared ${card.game_name} off my backlog — Less shame, more game`;
   const description = card.flavor_text
-    ? `${card.flavor_text} Track your gaming backlog and celebrate every clear with Inventory Full.`
-    : `${card.game_name} has been cleared from the pile. Less shame, more game. Track your backlog and start playing at inventoryfull.gg.`;
+    ? `${card.flavor_text} Your pile won't clear itself. Track your gaming backlog, decide what to play, and celebrate every clear with Inventory Full.`
+    : `${card.game_name} has been cleared from the pile. Your backlog won't clear itself — that's where Inventory Full comes in. Track your games, decide what to play, and start clearing.`;
 
   return {
     title,
