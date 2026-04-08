@@ -9,6 +9,7 @@ import { getGameDescriptor } from '@/lib/descriptors';
 import { MOOD_TAG_CONFIG, getPlaytimeRoast } from '@/lib/enrichment';
 import { trackStatusChange } from '@/lib/analytics';
 import { getSkipCount, resetSkipCount, isSoftIgnored } from '@/lib/skipTracking';
+import { getReentryTips } from '@/lib/reentryPacks';
 
 // ── Jump Back In Cheat Sheet ──────────────────────────────────────
 
@@ -20,23 +21,27 @@ function JumpBackIn({ game }: { game: Game }) {
     ? Math.min(Math.round((game.hoursPlayed / game.hltbMain) * 100), 100)
     : null;
 
-  // Genre-aware or game-specific context tips
-  const genreTips = getGenreTips(game.genres || [], game.name);
+  // Check for verified re-entry pack first, then fall back to genre tips
+  const reentry = getReentryTips(game.name, game.hoursPlayed || 0);
+  const genreTips = reentry ? [] : getGenreTips(game.genres || [], game.name);
+  const hasVerifiedPack = !!reentry;
 
   return (
     <div
       className="rounded-lg border overflow-hidden"
       style={{
-        backgroundColor: 'rgba(245, 158, 11, 0.04)',
-        borderColor: 'rgba(245, 158, 11, 0.15)',
+        backgroundColor: hasVerifiedPack ? 'rgba(167, 139, 250, 0.04)' : 'rgba(245, 158, 11, 0.04)',
+        borderColor: hasVerifiedPack ? 'rgba(167, 139, 250, 0.15)' : 'rgba(245, 158, 11, 0.15)',
       }}
     >
       <button
         onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
         aria-expanded={open}
-        className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium font-[family-name:var(--font-mono)] text-amber-300/80 hover:text-amber-300 transition-colors"
+        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium font-[family-name:var(--font-mono)] transition-colors ${
+          hasVerifiedPack ? 'text-accent-purple/80 hover:text-accent-purple' : 'text-amber-300/80 hover:text-amber-300'
+        }`}
       >
-        <span>🗺️ Jump Back In</span>
+        <span>{hasVerifiedPack ? '🗺️ Jump Back In' : '🗺️ Jump Back In'}</span>
         <span className="text-xs opacity-60" aria-hidden="true">{open ? '▲' : '▼'}</span>
       </button>
       {open && (
@@ -70,8 +75,53 @@ function JumpBackIn({ game }: { game: Game }) {
             </div>
           )}
 
-          {/* Genre tips */}
-          {genreTips.length > 0 && (
+          {/* Verified re-entry pack */}
+          {reentry && (
+            <>
+              {/* Where you probably are */}
+              <div className="rounded-md px-2.5 py-2" style={{ backgroundColor: 'rgba(167, 139, 250, 0.08)', border: '1px solid rgba(167, 139, 250, 0.12)' }}>
+                <p className="text-xs text-accent-purple/90 font-[family-name:var(--font-mono)] leading-relaxed">
+                  📍 {reentry.whereYouAre}
+                </p>
+              </div>
+
+              {/* Controls reminder */}
+              {reentry.controls.length > 0 && (
+                <div className="space-y-1">
+                  <p className="text-xs text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider">Controls</p>
+                  {reentry.controls.slice(0, 3).map((ctrl, i) => (
+                    <p key={i} className="text-xs text-text-muted leading-relaxed">
+                      {ctrl}
+                    </p>
+                  ))}
+                </div>
+              )}
+
+              {/* Stage-specific tips */}
+              <div className="space-y-1">
+                <p className="text-xs text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider">Tips for where you are</p>
+                {reentry.tips.slice(0, 3).map((tip, i) => (
+                  <p key={i} className="text-xs text-text-muted leading-relaxed">
+                    {tip}
+                  </p>
+                ))}
+              </div>
+
+              {/* Always-relevant tips */}
+              {reentry.alwaysTips.length > 0 && (
+                <div className="space-y-1">
+                  {reentry.alwaysTips.map((tip, i) => (
+                    <p key={i} className="text-xs text-text-dim leading-relaxed">
+                      {tip}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Genre tips (fallback when no verified pack) */}
+          {!reentry && genreTips.length > 0 && (
             <div className="space-y-1">
               <p className="text-xs text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider">Quick reminders</p>
               {genreTips.map((tip, i) => (
