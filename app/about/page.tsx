@@ -92,9 +92,7 @@ export default function AboutPage() {
             className="text-sm sm:text-base md:text-lg leading-relaxed max-w-md mx-auto"
             style={{ color: 'var(--color-text-muted)' }}
           >
-            Import your library. Tell us your mood.
-            <br className="hidden sm:block" />
-            We pick the game. You hit play.
+            Can&apos;t decide what to play? Yeah, we know.
           </p>
         </div>
       </section>
@@ -106,7 +104,7 @@ export default function AboutPage() {
             className="text-2xl sm:text-3xl font-bold text-center mb-4 tracking-tight"
             style={{ color: 'var(--color-text-primary)' }}
           >
-            Three steps. We do the hard part.
+            It&apos;s really just three things:
           </h2>
           <p
             className="text-center text-sm mb-12 sm:mb-16 font-[family-name:var(--font-mono)]"
@@ -118,7 +116,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
             <StepCard number="01" title="Import" description="Connect Steam, PlayStation, Xbox, or paste a CSV. We grab everything. You do nothing." />
             <StepCard number="02" title="Vibe Check" description="Tell us your mood and how much time you've got. We match you to a game that fits right now." />
-            <StepCard number="03" title="Play" description="We pick it. You play it. Clear it? Confetti. Bail on it? No judgment. That's a decision too." />
+            <StepCard number="03" title="Play" description="We pick, you play. Clear it, drop it, or just move on? No judgement. Moving on is deciding too." />
           </div>
         </div>
       </section>
@@ -151,9 +149,6 @@ export default function AboutPage() {
               You scroll for 20 minutes, pick nothing, open YouTube.
               <br />
               Inventory Full fixes that.
-            </p>
-            <p className="text-sm leading-relaxed font-[family-name:var(--font-mono)]" style={{ color: 'var(--color-text-dim)' }}>
-              We nudge you to play. If you don&apos;t like the game, blame us and keep going.
             </p>
           </div>
         </div>
