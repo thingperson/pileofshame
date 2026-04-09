@@ -173,7 +173,7 @@ export default function AboutPage() {
             <FeatureCard title="Mood matching" description="Cozy, intense, brain-off, narrative - match your energy to a game." />
             <FeatureCard title="Time-aware picks" description="Got 20 minutes or a whole evening? We know the difference." />
             <FeatureCard title="5-minute try timer" description="Not sure about a game? Give it five minutes. Timer says stop, you decide." />
-            <FeatureCard title="Completion celebrations" description="Finished a game? You earned the confetti. Bailed? That counts too." />
+            <FeatureCard title="Completion celebrations" description="Finished a game? You earned the confetti. Moved on? That counts too." />
             <FeatureCard title="Free. No sign-up." description="No email, no account required. Open it, use it. Done." />
             <FeatureCard title="Your data stays yours" description="Everything lives in your browser. Export anytime. We don't sell anything." />
           </div>

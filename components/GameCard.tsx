@@ -407,28 +407,28 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
       trackStatusChange(game.status, newStatus);
       const cfg = STATUS_CONFIG[newStatus];
       if (newStatus === 'on-deck') {
-        // Play Next celebrations
+        // Up Next celebrations
         if (!localStorage.getItem('pos-first-playnext')) {
           localStorage.setItem('pos-first-playnext', '1');
-          showToast(`${game.name} → Play Next 🎯 Nice. You just committed. That's the hard part.`);
+          showToast(`${game.name} → Up Next 🎯 Nice. You just committed. That's the hard part.`);
         } else {
-          const playNextToasts = [
+          const upNextToasts = [
             `${game.name} just made the list. Good pick. 🎯`,
-            `${game.name} → Play Next. The pile is shrinking. 🎯`,
+            `${game.name} → Up Next. The pile is shrinking. 🎯`,
             `Locked in: ${game.name}. No more scrolling. 🎯`,
             `${game.name} queued up. One step closer. 🎯`,
             `${game.name} earned a spot on the list. Let's go. 🎯`,
           ];
-          showToast(playNextToasts[Math.floor(Math.random() * playNextToasts.length)]);
+          showToast(upNextToasts[Math.floor(Math.random() * upNextToasts.length)]);
         }
       } else if (newStatus === 'playing') {
-        const nowPlayingToasts = [
-          `${game.name} is live. Go play. 🔥`,
-          `Let's go. ${game.name} isn't going to play itself. 🔥`,
-          `${game.name} → Now Playing. This is happening. 🔥`,
-          `You're in. ${game.name} is loaded up. 🔥`,
+        const playingNowToasts = [
+          `${game.name} is live. Go play. ▶️`,
+          `Let's go. ${game.name} isn't going to play itself. ▶️`,
+          `${game.name} → Playing Now. This is happening. ▶️`,
+          `You're in. ${game.name} is loaded up. ▶️`,
         ];
-        showToast(nowPlayingToasts[Math.floor(Math.random() * nowPlayingToasts.length)]);
+        showToast(playingNowToasts[Math.floor(Math.random() * playingNowToasts.length)]);
       } else {
         showToast(`${game.name} → ${cfg.label} ${cfg.icon}`);
       }
@@ -508,7 +508,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
     // Animate out, then commit the status change
     setTimeout(() => {
       setBailed(game.id);
-      showToast(`${game.name} → Done ✊ ${affirmation}`);
+      showToast(`${game.name} → Moved On 👋 ${affirmation}`);
       setBailing(false);
     }, 300);
   }, [game.id, game.name, setBailed, showToast]);
@@ -517,7 +517,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
     const { games } = useStore.getState();
     const nowPlayingCount = games.filter((g) => g.status === 'playing').length;
     if (nowPlayingCount >= 3) {
-      showToast('Now Playing is capped at 3. Finish or shelve something first.');
+      showToast('Playing Now is capped at 3. Finish or shelve something first.');
       return;
     }
     playAgain(game.id);
@@ -896,7 +896,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                     game.status === 'playing' ? 'Where did you leave off? Controls to remember?'
                     : game.status === 'on-deck' ? 'Anything to remember before starting?'
                     : game.status === 'played' ? 'Final thoughts? Rating? Memorable moments?'
-                    : game.status === 'bailed' ? 'Why\'d you stop? Worth revisiting later?'
+                    : game.status === 'bailed' ? 'Why\'d you move on? Worth revisiting later?'
                     : 'Notes, reminders, anything...'
                   }
                   aria-label="Game notes"

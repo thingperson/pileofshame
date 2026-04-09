@@ -38,24 +38,24 @@ const SECTIONS = [
         a: 'The default. These are games you own (or want to play) but haven\'t started yet. Your pile. The whole point of being here.',
       },
       {
-        q: '🎯 Play Next',
-        a: 'Your numbered queue. Games you\'ve earmarked to play soon, in order. Click a game\'s status badge to move it from Backlog → Play Next. They show up as 1. 2. 3. so you always know what\'s next.',
+        q: '🎯 Up Next',
+        a: 'Your numbered queue. Games you\'ve earmarked to play soon, in order. Click a game\'s status badge to move it from Backlog → Up Next. They show up as 1. 2. 3. so you always know what\'s next.',
       },
       {
-        q: '🔥 Now Playing',
+        q: '▶️ Playing Now',
         a: 'You\'re actively playing this one. These games get a special glow so they stand out. You can have multiple games here. We don\'t judge. When "What Should I Play?" picks a game and you hit "Let\'s go," it moves here automatically.',
       },
       {
-        q: '✅ Played',
-        a: 'Done. Finished. Credits rolled (or you decided you\'re done). No more status cycling. You can still "Play Again" or start a "New Game+" from the expanded card.',
+        q: '✅ Completed',
+        a: 'Done. Credits rolled (or you decided you\'re done). No more status cycling. You can still "Play Again" or start a "New Game+" from the expanded card.',
       },
       {
-        q: '🚪 Bailed',
-        a: 'Not for you. Long-press any status badge to bail on a game. No shame. Life\'s too short. You can always "Give it another shot" later.',
+        q: '👋 Moved On',
+        a: 'Not for you. Long-press any status badge, or hit "Not for me" on the expanded card, to move a game on. No shame. Life\'s too short. You can always "Give it another shot" later.',
       },
       {
         q: 'How do I change a game\'s status?',
-        a: 'Click the colored status badge on any game card. It cycles forward: Backlog → Play Next → Now Playing → Played. Long-press the badge to bail. Hover to preview the next status.',
+        a: 'Click the colored status badge on any game card. It cycles forward: Backlog → Up Next → Playing Now → Completed. Long-press the badge to move a game on. Hover to preview the next status.',
       },
     ],
   },
@@ -108,7 +108,7 @@ const SECTIONS = [
       },
       {
         q: 'Why can\'t I see some games?',
-        a: 'Played and Bailed games are hidden by default. Toggle "Show played" or "Show bailed" in the filter bar to reveal them.',
+        a: 'Completed and Moved On games live in the Completed tab by default so they don\'t clutter your Backlog. Switch tabs to see them.',
       },
       {
         q: 'What does the platform preference do?',

@@ -7,7 +7,7 @@ interface ImportBreakdown {
   backlog: number;    // 0 hours, pure backlog
   started: number;    // 1+ hours, still backlog but flagged
   upNext: number;     // 5+ hours, auto-moved to Up Next
-  nowPlaying: number; // auto-moved to Now Playing
+  nowPlaying: number; // auto-moved to Playing Now
   completed: number;  // hours >= HLTB threshold, auto-completed
 }
 
@@ -114,7 +114,7 @@ export default function PostImportSummary({ breakdown, onDismiss, onPlay }: Post
                 <SummaryStat label="Up Next" count={breakdown.upNext} icon="🎯" color="#38bdf8" sub="jump back in" />
               )}
               {breakdown.nowPlaying > 0 && (
-                <SummaryStat label="Now Playing" count={breakdown.nowPlaying} icon="🔥" color="#f59e0b" sub="in progress" />
+                <SummaryStat label="Playing Now" count={breakdown.nowPlaying} icon="▶️" color="#f59e0b" sub="in progress" />
               )}
               {breakdown.completed > 0 && (
                 <SummaryStat label="Completed" count={breakdown.completed} icon="✅" color="#22c55e" sub="already behind you" />

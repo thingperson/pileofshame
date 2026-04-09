@@ -138,15 +138,15 @@ export default function StalledGameNudge({ games, onTabSwitch }: StalledGameNudg
     if (!nudgeGame) return;
 
     if (action === 'playing') {
-      // Now Playing cap check
+      // Playing Now cap check
       const { games } = useStore.getState();
       const nowPlayingCount = games.filter((g) => g.status === 'playing').length;
       if (nowPlayingCount >= 3) {
-        showToast('Now Playing is capped at 3. Finish or shelve something first.');
+        showToast('Playing Now is capped at 3. Finish or shelve something first.');
         return;
       }
       updateGame(nudgeGame.id, { status: 'playing', updatedAt: new Date().toISOString() });
-      showToast(`${nudgeGame.name} → Now Playing 🔥`);
+      showToast(`${nudgeGame.name} → Playing Now ▶️`);
       onTabSwitch?.('now-playing');
     } else if (action === 'on-deck') {
       updateGame(nudgeGame.id, { status: 'on-deck', updatedAt: new Date().toISOString() });
@@ -242,7 +242,7 @@ export default function StalledGameNudge({ games, onTabSwitch }: StalledGameNudg
                 color: '#f59e0b',
               }}
             >
-              🔥 Now Playing
+              ▶️ Playing Now
             </button>
             <button
               onClick={() => handleAction('on-deck')}

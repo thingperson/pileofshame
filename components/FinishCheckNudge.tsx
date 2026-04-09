@@ -138,19 +138,19 @@ export default function FinishCheckNudge({ games, onTabSwitch }: FinishCheckNudg
 
   const handleNotYet = useCallback(() => {
     if (!nudgeGame) return;
-    // Now Playing cap check
+    // Playing Now cap check
     const { games } = useStore.getState();
     const nowPlayingCount = games.filter((g) => g.status === 'playing').length;
     if (nowPlayingCount >= 3) {
-      showToast('Now Playing is capped at 3. Finish or shelve something first.');
+      showToast('Playing Now is capped at 3. Finish or shelve something first.');
       return;
     }
-    // Move to Now Playing to encourage finishing
+    // Move to Playing Now to encourage finishing
     updateGame(nudgeGame.id, {
       status: 'playing',
       updatedAt: new Date().toISOString(),
     });
-    showToast(`${nudgeGame.name} -> Now Playing. You're so close.`);
+    showToast(`${nudgeGame.name} → Playing Now. You're so close.`);
     onTabSwitch?.('now-playing');
     setSessionDismissed();
     setDismissed(true);

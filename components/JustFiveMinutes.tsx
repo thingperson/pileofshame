@@ -104,23 +104,23 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
         const { games: allGames } = useStore.getState();
         const nowPlayingCount = allGames.filter((g) => g.status === 'playing').length;
         if (nowPlayingCount >= 3) {
-          showToast('Now Playing is capped at 3. Finish or shelve something first.');
+          showToast('Playing Now is capped at 3. Finish or shelve something first.');
           return;
         }
         updateGame(game.id, { status: 'playing' as GameStatus });
-        showToast(`🙌 ${game.name} → Now Playing. You tried it, you liked it, you're in.`);
+        showToast(`🙌 ${game.name} → Playing Now. You tried it, you liked it, you're in.`);
       }
         break;
       case 'on-deck':
         updateGame(game.id, { status: 'on-deck' as GameStatus });
-        showToast(`🙌 ${game.name} → Play Next. Tried it, shelved it, you know exactly when you'll want it.`);
+        showToast(`🙌 ${game.name} → Up Next. Tried it, shelved it, you know exactly when you'll want it.`);
         break;
       case 'pile':
         showToast(`🙌 ${game.name} stays in The Pile. You tried it. Now you know what it feels like. That's not nothing.`);
         break;
       case 'bail':
         setBailed(game.id);
-        showToast(`🙌 ${game.name} → Not for you. 5 minutes saved you hours. That's a win.`);
+        showToast(`🙌 ${game.name} → Moved On. 5 minutes saved you hours. That's a win.`);
         break;
     }
     handleClose();

@@ -310,7 +310,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
             <FeatureCard
               icon={<PartyIcon />}
               title="Completion celebrations"
-              description="Finished a game? You earned the confetti. Bailed? That counts too."
+              description="Finished a game? You earned the confetti. Moved on? That counts too."
             />
             <FeatureCard
               icon={<FreeIcon />}

@@ -98,7 +98,7 @@ function renderDefaultCard(d: CardData) {
         <div style={{ display: 'flex', gap: '20px', marginBottom: '32px', flexWrap: 'wrap' }}>
           <StatBox label="Backlog" value={d.backlog.toString()} color="#64748b" />
           <StatBox label="Cleared" value={d.cleared.toString()} color="#22c55e" />
-          {d.bailed > 0 && <StatBox label="Bailed" value={d.bailed.toString()} color="#ef4444" />}
+          {d.bailed > 0 && <StatBox label="Moved On" value={d.bailed.toString()} color="#ef4444" />}
           {d.hours > 0 && <StatBox label="Hours" value={d.hours.toLocaleString()} color="#38bdf8" />}
         </div>
 

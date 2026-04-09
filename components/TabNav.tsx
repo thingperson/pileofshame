@@ -17,7 +17,7 @@ export interface TabDef {
 export const TABS: TabDef[] = [
   { id: 'backlog', label: 'Backlog', shortLabel: 'Backlog', statuses: ['buried'], icon: '📚', color: '#64748b' },
   { id: 'up-next', label: 'Up Next', shortLabel: 'Next', statuses: ['on-deck'], icon: '🎯', color: '#38bdf8' },
-  { id: 'now-playing', label: 'Now Playing', shortLabel: 'Now', statuses: ['playing'], icon: '🔥', color: '#f59e0b' },
+  { id: 'now-playing', label: 'Playing Now', shortLabel: 'Now', statuses: ['playing'], icon: '▶️', color: '#f59e0b' },
   { id: 'completed', label: 'Completed', shortLabel: 'Done', statuses: ['played', 'bailed'], icon: '✅', color: '#22c55e' },
 ];
 

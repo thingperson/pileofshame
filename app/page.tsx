@@ -238,7 +238,7 @@ function AppContent() {
         return new Date(b.completedAt || b.updatedAt).getTime() - new Date(a.completedAt || a.updatedAt).getTime();
       });
     }
-    // Up Next: by priority. Now Playing: by most recently updated.
+    // Up Next: by priority. Playing Now: by most recently updated.
     return [...inTab].sort((a, b) => {
       if (activeTab === 'up-next') return a.priority - b.priority;
       return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
@@ -275,11 +275,11 @@ function AppContent() {
       }
     }
 
-    // Now Playing cap check
+    // Playing Now cap check
     if (next.status === 'playing') {
       const nowPlayingCount = games.filter((g) => g.status === 'playing').length;
       if (nowPlayingCount >= NOW_PLAYING_CAP) {
-        showToast(`Now Playing is capped at ${NOW_PLAYING_CAP}. Finish or shelve something first.`);
+        showToast(`Playing Now is capped at ${NOW_PLAYING_CAP}. Finish or shelve something first.`);
         return;
       }
     }
@@ -478,13 +478,13 @@ function AppContent() {
 
   // ── Next tab action label for game cards ──
   const nextTabLabel = activeTab === 'backlog' ? 'Up Next'
-    : activeTab === 'up-next' ? 'Now Playing'
+    : activeTab === 'up-next' ? 'Playing Now'
     : activeTab === 'now-playing' ? 'Completed'
     : null;
 
   const prevTabLabel = activeTab === 'up-next' ? 'Backlog'
     : activeTab === 'now-playing' ? 'Up Next'
-    : activeTab === 'completed' ? 'Now Playing'
+    : activeTab === 'completed' ? 'Playing Now'
     : null;
 
   return (
@@ -787,10 +787,10 @@ function AppContent() {
             </div>
           )}
 
-          {/* Now Playing cap message */}
+          {/* Playing Now cap message */}
           {activeTab === 'now-playing' && tabGames.length >= NOW_PLAYING_CAP && (
             <div className="mb-3 px-3 py-2 rounded-lg text-xs text-text-muted font-[family-name:var(--font-mono)]" style={{ backgroundColor: 'rgba(245, 158, 11, 0.06)' }}>
-              Now Playing is capped at {NOW_PLAYING_CAP}. The constraint is the feature. Finish or shelve something to make room.
+              Playing Now is capped at {NOW_PLAYING_CAP}. The constraint is the feature. Finish or shelve something to make room.
             </div>
           )}
 
