@@ -43,7 +43,7 @@ export const STATUS_CONFIG: Record<GameStatus, {
 }> = {
   buried: { label: 'Backlog', icon: '📚', asciiIcon: '[=]', color: '#64748b', bg: '#1e293b' },
   'on-deck': { label: 'Up Next', shortLabel: 'Next', icon: '🎯', asciiIcon: '>>>', color: '#38bdf8', bg: '#082f49' },
-  playing: { label: 'Now Playing', shortLabel: 'Playing', icon: '🔥', asciiIcon: '(~)', color: '#f59e0b', bg: '#422006' },
+  playing: { label: 'Playing Now', shortLabel: 'Playing', icon: '▶️', asciiIcon: '(~)', color: '#f59e0b', bg: '#422006' },
   played: { label: 'Completed', icon: '✅', asciiIcon: '[x]', color: '#22c55e', bg: '#052e16' },
   bailed: { label: 'Moved On', icon: '👋', asciiIcon: '[!]', color: '#94a3b8', bg: '#1e293b' },
 };

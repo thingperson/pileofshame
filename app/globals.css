@@ -1653,6 +1653,22 @@ button:active:not(:disabled) {
   border-color: #444444 !important;
 }
 
+/* Void: the settings gear is the exit hatch. Keep it high-contrast so users
+   can always find their way back out. "Do not let the abyss stare back."   */
+.theme-void header button[data-settings-trigger="true"],
+.theme-void button[data-settings-trigger="true"] {
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+  opacity: 0.95 !important;
+}
+.theme-void header button[data-settings-trigger="true"]:hover,
+.theme-void button[data-settings-trigger="true"]:hover {
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  opacity: 1 !important;
+}
+
 /* Void: everything fades except the action */
 .theme-void h1 {
   color: #666666 !important;

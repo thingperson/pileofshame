@@ -210,6 +210,7 @@ export default function SettingsMenu() {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
+        data-settings-trigger="true"
         className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-text-dim hover:text-text-muted transition-colors"
         title="Settings"
       >
@@ -280,19 +281,23 @@ export default function SettingsMenu() {
                   <p className="text-sm text-text-faint font-[family-name:var(--font-mono)]">Theme</p>
                   <div className="flex flex-wrap gap-1">
                     {[
+                      // Active theme roster. CSS for hidden themes still lives
+                      // in globals.css — stashed for later, not deleted. When
+                      // bringing one back, add it here and it's live again.
                       { value: 'dark', label: '🌙 Dark' },
                       { value: 'light', label: '☀️ Light' },
                       { value: '80s', label: '🌆 80s' },
                       { value: '90s', label: '🚧 90s' },
                       { value: 'future', label: '🔮 Future' },
                       { value: 'dino', label: '🦕 Dino' },
-                      { value: 'weird', label: '👁️ Weird' },
-                      { value: 'ultra', label: '⚡ ULTRA' },
-                      { value: 'void', label: '🫥 Void' },
                       { value: 'cozy', label: '☕ Cozy' },
-                      { value: 'minimal', label: '- Minimal' },
-                      { value: 'tropical', label: '🌴 Tropical' },
-                      { value: 'campfire', label: '🔥 Campfire' },
+                      { value: 'void', label: '🫥 Void' },
+                      // Hidden for now (CSS retained in globals.css):
+                      //   { value: 'weird', label: '👁️ Weird' },
+                      //   { value: 'ultra', label: '⚡ ULTRA' },       // stashed — Brady likes it, bring back later
+                      //   { value: 'minimal', label: '- Minimal' },
+                      //   { value: 'tropical', label: '🌴 Tropical' },
+                      //   { value: 'campfire', label: '🔥 Campfire' },
                     ].map((opt) => (
                       <button
                         key={opt.value}
