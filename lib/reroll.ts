@@ -280,12 +280,16 @@ export function getPickReasons(game: Game): PickReason[] {
     reasons.push({ label: `Beatable in ~${game.hltbMain}h`, icon: '⏱️' });
   }
 
-  // Time-of-day contextual reason
+  // Time-of-day contextual reason.
+  // Guard: never surface a "wind-down" framing if the game's own mood tags
+  // contradict it (intense / competitive / hot). A short intense game is fine,
+  // but calling it a wind-down is the trust-breaking contradiction.
   const time = getTimeOfDay();
   const moods = game.moodTags || [];
-  if (time === 'late-night' && (moods.includes('chill') || moods.includes('brainless') || game.timeTier === 'quick-hit')) {
+  const isHighEnergy = moods.includes('intense') || moods.includes('competitive');
+  if (time === 'late-night' && !isHighEnergy && (moods.includes('chill') || moods.includes('brainless') || game.timeTier === 'quick-hit')) {
     reasons.push({ label: 'Good pick for a late session', icon: '🌙' });
-  } else if (time === 'evening' && (moods.includes('chill') || moods.includes('story-rich') || moods.includes('atmospheric'))) {
+  } else if (time === 'evening' && !isHighEnergy && (moods.includes('chill') || moods.includes('story-rich') || moods.includes('atmospheric'))) {
     reasons.push({ label: 'Fits an evening wind-down', icon: '🌆' });
   }
 

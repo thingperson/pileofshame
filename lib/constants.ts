@@ -94,7 +94,7 @@ export const SOURCE_LABELS: Record<GameSource, string> = {
 
 export const TIME_TIER_CONFIG: Record<TimeTier, { label: string; icon: string; description: string }> = {
   'quick-hit': { label: 'Quick Hit', icon: '⚡', description: '20 min brain-off session' },
-  'wind-down': { label: 'Wind-Down', icon: '🌙', description: '30–60 min, unwind mode' },
+  'wind-down': { label: 'Wind-Down', icon: '🌙', description: '30–60 min session' },
   'deep-cut': { label: 'Deep Cut', icon: '🔥', description: 'Clear the schedule, 2–3 hrs' },
   'marathon': { label: 'Marathon', icon: '🏔️', description: 'This IS the plan tonight' },
 };

@@ -1070,15 +1070,23 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               );
             })()}
 
-            {/* Delete from library — pushed to the right, subtle */}
+            {/* Delete from library — contained, pushed right. Subtle but
+                distinctly a destructive action. Matches row button shape so it
+                doesn't read as footer text, red tint signals danger without
+                shouting. */}
             <div className="flex-1" />
             {!showDeleteConfirm ? (
               <button
                 onClick={() => setShowDeleteConfirm(true)}
-                className="text-xs text-text-faint hover:text-red-400 transition-colors font-[family-name:var(--font-mono)]"
+                className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97]"
+                style={{
+                  backgroundColor: 'rgba(239, 68, 68, 0.06)',
+                  color: '#f87171',
+                  border: '1px solid rgba(239, 68, 68, 0.2)',
+                }}
                 title="Permanently remove this game from your library"
               >
-                Delete from library
+                🗑 Delete from library
               </button>
             ) : (
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1.5 sm:gap-2">
