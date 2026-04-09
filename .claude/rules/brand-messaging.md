@@ -49,6 +49,15 @@ Starts with immediate user pain, then moves to richer payoff.
 
 ## In-App Terminology (Locked)
 
+### Status cycle (Apr 9, 2026 — locked)
+**Backlog > Up Next > Playing Now > Completed > Moved On**
+
+The order reads as a natural sentence: a game sits in the Backlog, moves Up Next, becomes Playing Now, ends at Completed or Moved On. Use these exact terms everywhere a user sees them.
+
+- "Not for me" is the action label that moves a game into Moved On.
+- "Bail" / "Cleared" / "Play Next" are retired from user-facing copy (internal IDs may still say `bailed`, `played`, `on-deck` — the type keys are fine, labels are not).
+
+### Feature vocabulary
 - **Backlog Payback** = recovered value feature
 - **Clear Space** = main CTA
 - **Overflow** = backlog pressure indicator

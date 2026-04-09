@@ -106,20 +106,26 @@ Read the copy aloud. If you can read it in a steady metronomic voice without spe
 
 ## Terminology (Use Consistently)
 
+Locked Apr 9, 2026. The user-facing status cycle is: **Backlog > Up Next > Playing Now > Completed > Moved On**. That order reads the most natural in plain English and is the one users see everywhere. Older versions of this guide said "Play Next / Cleared / Bailed" — those are retired.
+
 | Concept | Term | NOT |
 |---------|------|-----|
 | Default game collection | The Pile / Your Library | Backlog (as a proper noun) |
 | Status: unplayed | Backlog | Buried, Pile |
-| Status: queued to play | Play Next | Up Next, On Deck, Queue |
-| Status: currently playing | Now Playing | Playing, Active |
-| Status: finished | Cleared / Played | Completed, Done, Beaten |
-| Status: gave up | Bailed | Dropped, Abandoned, Quit |
-| Ordered play queue | Play Next (shelf) | Up Next, Queue |
+| Status: queued to play | Up Next | Play Next, On Deck, Queue |
+| Status: currently playing | Playing Now | Now Playing, Active, Playing |
+| Status: finished | Completed | Cleared, Done, Beaten |
+| Status: gave up | Moved On | Bailed, Dropped, Abandoned, Quit |
+| Action: decline a pick | Not for me | Bail, Give up, Ignore |
 | Genre labels | Tags / Genres | Categories, Labels |
 | Mood descriptors | Moods | Vibes, Tags |
 | Time commitment | Session length | Time tier, Time commitment |
 | The randomizer/picker | What Should I Play? | Reroll (internal code only) |
 | Game list/collection | Shelf | Playlist, List |
+
+### The Not-for-me / Moved On flow
+
+"Not for me" is the button the user presses. "Moved On" is the status the game lands in. These are not competing labels — one is the verb, one is the state. "Bail" is retired from user-facing copy.
 
 ## Personality Copy Examples
 
