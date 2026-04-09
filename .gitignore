@@ -36,9 +36,15 @@ yarn-error.log*
 # vercel
 .vercel
 
-# scratch / reference images (not deployed)
-public/_slop/
-public/dino theme images/
+# scratch / reference images (not deployed, not served)
+# _archive/ holds superseded assets and exploratory work. Lives outside
+# public/ so Next.js never serves it. Keep on disk for audit, off the site
+# and off the git tree.
+/_archive/
+
+# local session notes and feedback triage (personal, not tracked)
+/notes/
+/analytics/
 
 # typescript
 *.tsbuildinfo
