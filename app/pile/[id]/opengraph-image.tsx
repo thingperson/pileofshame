@@ -67,43 +67,39 @@ export default async function Image({ params }: { params: Promise<{ id: string }
 
   const { outfitBold, outfitRegular, jetbrainsMono } = await loadFonts();
 
-  // Build stat pills for the main grid
-  const mainStats: { label: string; value: string; emoji: string; color: string }[] = [
-    { label: 'Cleared', value: card.games_cleared.toString(), emoji: '✅', color: '#22c55e' },
-    { label: 'In Motion', value: card.games_in_motion.toString(), emoji: '🚀', color: '#f59e0b' },
-    { label: 'Backlog', value: card.backlog_size.toString(), emoji: '📚', color: '#64748b' },
-    { label: 'Streak', value: card.streak.toString(), emoji: '⚡', color: '#a78bfa' },
-  ];
-
-  if (card.show_hours && card.hours_logged > 0) {
-    mainStats.push({ label: 'Hours', value: Math.round(card.hours_logged).toLocaleString(), emoji: '⏱️', color: '#38bdf8' });
-  }
-
-  if (card.lines_drawn > 0) {
-    mainStats.push({ label: 'Lines Drawn', value: card.lines_drawn.toString(), emoji: '✊', color: '#94a3b8' });
-  }
-
-  // Extra detail pills
-  const details: { label: string; value: string; color: string }[] = [];
+  // Build the highlighted data points (checked values + flavor text)
+  const highlights: { label: string; value: string; color: string }[] = [];
 
   if (card.show_value && card.unplayed_value) {
-    details.push({ label: 'Untapped value', value: `~$${card.unplayed_value.toLocaleString()}`, color: '#a78bfa' });
+    highlights.push({ label: 'Untapped value', value: `~$${card.unplayed_value.toLocaleString()}`, color: '#a78bfa' });
   }
   if (card.show_value && card.played_value) {
-    details.push({ label: 'Value unlocked', value: `$${card.played_value.toLocaleString()}`, color: '#22c55e' });
+    highlights.push({ label: 'Value unlocked', value: `$${card.played_value.toLocaleString()}`, color: '#22c55e' });
   }
   if (card.show_value && card.backlog_hours) {
-    details.push({ label: 'Time to clear', value: `~${card.backlog_hours.toLocaleString()}h`, color: '#f59e0b' });
+    highlights.push({ label: 'Time to clear', value: `~${card.backlog_hours.toLocaleString()}h`, color: '#f59e0b' });
+  }
+  if (card.show_hours && card.hours_logged > 0) {
+    highlights.push({ label: 'Hours logged', value: Math.round(card.hours_logged).toLocaleString(), color: '#38bdf8' });
   }
   if (card.show_trophies && card.trophies_earned) {
-    details.push({ label: 'Trophies', value: `${card.trophies_earned.toLocaleString()}${card.trophies_total ? ` / ${card.trophies_total.toLocaleString()}` : ''}`, color: '#f59e0b' });
+    highlights.push({ label: 'Trophies', value: card.trophies_earned.toLocaleString(), color: '#f59e0b' });
   }
   if (card.show_trophies && card.platinums && card.platinums > 0) {
-    details.push({ label: 'Platinums', value: card.platinums.toString(), color: '#e2e8f0' });
+    highlights.push({ label: 'Platinums', value: card.platinums.toString(), color: '#e2e8f0' });
   }
   if (card.show_trophies && card.gamerscore && card.gamerscore > 0) {
-    details.push({ label: 'Gamerscore', value: card.gamerscore.toLocaleString(), color: '#22c55e' });
+    highlights.push({ label: 'Gamerscore', value: card.gamerscore.toLocaleString(), color: '#22c55e' });
   }
+
+  // Compact stats line
+  const statParts = [
+    `${card.games_cleared} cleared`,
+    `${card.games_in_motion} in motion`,
+    `${card.backlog_size} in the pile`,
+  ];
+  if (card.streak > 1) statParts.push(`${card.streak} streak`);
+  if (card.lines_drawn > 0) statParts.push(`${card.lines_drawn} moved on`);
 
   return new ImageResponse(
     (
@@ -119,155 +115,102 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           overflow: 'hidden',
         }}
       >
-        {/* Purple glow */}
-        <div style={{ position: 'absolute', top: '-80px', left: '50%', width: '900px', height: '600px', background: 'radial-gradient(ellipse, rgba(124, 58, 237, 0.18), transparent 65%)', transform: 'translateX(-50%)', display: 'flex' }} />
+        {/* Purple glow from top */}
+        <div style={{ position: 'absolute', top: '-100px', left: '30%', width: '800px', height: '500px', background: 'radial-gradient(ellipse, rgba(124, 58, 237, 0.2), transparent 65%)', display: 'flex' }} />
 
-        {/* Secondary glow */}
-        <div style={{ position: 'absolute', bottom: '-60px', right: '-40px', width: '500px', height: '400px', background: 'radial-gradient(ellipse, rgba(167, 139, 250, 0.1), transparent 70%)', display: 'flex' }} />
+        {/* Secondary glow bottom right */}
+        <div style={{ position: 'absolute', bottom: '-80px', right: '-60px', width: '500px', height: '400px', background: 'radial-gradient(ellipse, rgba(167, 139, 250, 0.1), transparent 70%)', display: 'flex' }} />
 
         {/* Grid pattern */}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)', backgroundSize: '60px 60px', display: 'flex' }} />
 
-        {/* Main content */}
-        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, padding: '40px 56px 0', position: 'relative', zIndex: 1 }}>
-
-          {/* Header row: badge + exploration bar */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div
-                style={{
-                  padding: '4px 14px',
-                  borderRadius: '9999px',
-                  backgroundColor: 'rgba(167, 139, 250, 0.15)',
-                  color: '#a78bfa',
-                  fontSize: '14px',
-                  fontFamily: 'JetBrains Mono, monospace',
-                  fontWeight: 500,
-                  border: '1px solid rgba(167, 139, 250, 0.3)',
-                  letterSpacing: '2px',
-                  display: 'flex',
-                }}
-              >
-                MY PILE
-              </div>
-              <div style={{ fontSize: '16px', color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>
-                {card.total_games} games tracked
-              </div>
+        {/* === TOP: Logomark + Brand Name === */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '36px 56px 0', position: 'relative', zIndex: 1 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://inventoryfull.gg/icon-192.png"
+            alt=""
+            width={80}
+            height={80}
+            style={{ width: '80px', height: '80px', borderRadius: '16px' }}
+          />
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ fontSize: '22px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '4px', display: 'flex' }}>
+              INVENTORY FULL
             </div>
-            {/* Exploration % */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '100px', height: '8px', borderRadius: '4px', overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.08)', display: 'flex' }}>
-                <div style={{ width: `${card.exploration_pct}%`, height: '100%', borderRadius: '4px', backgroundColor: '#a78bfa', display: 'flex' }} />
-              </div>
-              <span style={{ fontSize: '18px', fontWeight: 700, color: '#a78bfa', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>
-                {card.exploration_pct}%
-              </span>
+            <div style={{ fontSize: '14px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', display: 'flex', marginTop: '4px' }}>
+              {card.total_games} games tracked
+              {card.show_display_name && card.display_name ? ` · ${card.display_name}` : ''}
             </div>
           </div>
+          {/* Exploration % - right side */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginLeft: 'auto' }}>
+            <div style={{ width: '80px', height: '8px', borderRadius: '4px', overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.08)', display: 'flex' }}>
+              <div style={{ width: `${card.exploration_pct}%`, height: '100%', borderRadius: '4px', backgroundColor: '#a78bfa', display: 'flex' }} />
+            </div>
+            <span style={{ fontSize: '20px', fontWeight: 700, color: '#a78bfa', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>
+              {card.exploration_pct}%
+            </span>
+          </div>
+        </div>
 
-          {/* Archetype (if shown) */}
+        {/* === MIDDLE: Archetype + Descriptor + Flavor Text === */}
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, padding: '24px 56px', position: 'relative', zIndex: 1, justifyContent: 'center' }}>
+
+          {/* Archetype name */}
           {card.show_archetype && card.archetype_name && (
-            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px' }}>
-              <div style={{ fontSize: '36px', fontWeight: 800, color: '#f8fafc', letterSpacing: '-1px', lineHeight: 1.1, display: 'flex' }}>
-                {card.archetype_name}
-              </div>
-              {card.archetype_descriptor && (
-                <div style={{ fontSize: '16px', color: '#94a3b8', fontStyle: 'italic', marginTop: '6px', lineHeight: 1.4, display: 'flex' }}>
-                  {card.archetype_descriptor.length > 120 ? card.archetype_descriptor.slice(0, 117) + '...' : card.archetype_descriptor}
-                </div>
-              )}
+            <div style={{ fontSize: '44px', fontWeight: 800, color: '#f8fafc', letterSpacing: '-1.5px', lineHeight: 1.1, display: 'flex', marginBottom: '12px' }}>
+              {card.archetype_name}
             </div>
           )}
 
-          {/* Flavor text (if no archetype shown) */}
-          {(!card.show_archetype || !card.archetype_name) && card.flavor_text && (
-            <div style={{ fontSize: '28px', fontWeight: 800, color: '#f8fafc', letterSpacing: '-1px', lineHeight: 1.2, marginBottom: '20px', display: 'flex' }}>
-              {card.flavor_text}
+          {/* Archetype descriptor */}
+          {card.show_archetype && card.archetype_descriptor && (
+            <div style={{ fontSize: '20px', color: '#c4b5fd', lineHeight: 1.5, display: 'flex', marginBottom: '16px', maxWidth: '900px' }}>
+              {card.archetype_descriptor.length > 160 ? card.archetype_descriptor.slice(0, 157) + '...' : card.archetype_descriptor}
             </div>
           )}
 
-          {/* Main stats grid */}
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '16px' }}>
-            {mainStats.map((s) => (
-              <div
-                key={s.label}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  padding: '14px 20px',
-                  borderRadius: '12px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.06)',
-                  minWidth: '120px',
-                }}
-              >
-                <div style={{ fontSize: '14px', display: 'flex', marginBottom: '4px' }}>{s.emoji}</div>
-                <div style={{ fontSize: '28px', fontWeight: 700, color: s.color, fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{s.value}</div>
-                <div style={{ fontSize: '11px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', display: 'flex', marginTop: '2px' }}>{s.label}</div>
-              </div>
-            ))}
-          </div>
+          {/* Flavor text (always shown if present) */}
+          {card.flavor_text && (
+            <div style={{ fontSize: '18px', color: '#94a3b8', fontStyle: 'italic', lineHeight: 1.4, display: 'flex', marginBottom: '20px' }}>
+              {`"${card.flavor_text}"`}
+            </div>
+          )}
 
-          {/* Detail pills row */}
-          {details.length > 0 && (
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              {details.map((d) => (
+          {/* Highlighted values the user checked */}
+          {highlights.length > 0 && (
+            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
+              {highlights.map((h) => (
                 <div
-                  key={d.label}
+                  key={h.label}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
-                    padding: '8px 14px',
-                    borderRadius: '10px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                    border: '1px solid rgba(255, 255, 255, 0.05)',
+                    padding: '10px 18px',
+                    borderRadius: '12px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
                   }}
                 >
-                  <div style={{ fontSize: '11px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{d.label}</div>
-                  <div style={{ fontSize: '18px', fontWeight: 700, color: d.color, display: 'flex' }}>{d.value}</div>
+                  <div style={{ fontSize: '12px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{h.label}</div>
+                  <div style={{ fontSize: '22px', fontWeight: 700, color: h.color, fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{h.value}</div>
                 </div>
               ))}
             </div>
           )}
-
-          {/* Display name */}
-          {card.show_display_name && card.display_name && (
-            <div style={{ fontSize: '14px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', marginTop: '16px', display: 'flex' }}>
-              {card.display_name}{"'s pile"}
-            </div>
-          )}
         </div>
 
-        {/* Bottom brand bar with logomark */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 56px 32px', position: 'relative', zIndex: 1, marginTop: 'auto' }}>
-          {/* Left: branding + tagline */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="https://inventoryfull.gg/icon-192.png"
-                alt=""
-                width={48}
-                height={48}
-                style={{ width: '48px', height: '48px', borderRadius: '10px' }}
-              />
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <div style={{ fontSize: '18px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '3px', display: 'flex' }}>
-                  INVENTORY FULL
-                </div>
-                <div style={{ fontSize: '14px', color: '#94a3b8', display: 'flex', marginTop: '2px' }}>
-                  {"Your pile's not gonna play itself."}
-                </div>
-              </div>
-            </div>
+        {/* === BOTTOM: Compact stats line + CTA === */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 56px 28px', position: 'relative', zIndex: 1 }}>
+          <div style={{ fontSize: '13px', fontFamily: 'JetBrains Mono, monospace', color: '#475569', display: 'flex', gap: '6px' }}>
+            {statParts.join(' · ')}
           </div>
-          {/* Right: URL + CTA pill */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
-            <div style={{ fontSize: '14px', color: '#94a3b8', display: 'flex', padding: '6px 16px', borderRadius: '8px', backgroundColor: 'rgba(167, 139, 250, 0.1)', border: '1px solid rgba(167, 139, 250, 0.2)' }}>
-              Stop stalling. Get playing. →
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ fontSize: '14px', color: '#94a3b8', display: 'flex', padding: '5px 14px', borderRadius: '8px', backgroundColor: 'rgba(167, 139, 250, 0.1)', border: '1px solid rgba(167, 139, 250, 0.2)' }}>
+              {"Your pile's not gonna play itself. →"}
             </div>
-            <div style={{ fontSize: '13px', fontFamily: 'JetBrains Mono, monospace', color: '#475569', display: 'flex' }}>
+            <div style={{ fontSize: '13px', fontFamily: 'JetBrains Mono, monospace', color: '#64748b', display: 'flex' }}>
               inventoryfull.gg
             </div>
           </div>

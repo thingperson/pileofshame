@@ -22,6 +22,16 @@ const PILE_FLAVORS = [
   () => `Future civilizations will study this library.`,
   (_: number, _c: number, hours: number) => hours > 500 ? `${Math.round(hours).toLocaleString()} hours logged. Time well spent.` : `Building something here. One game at a time.`,
   (backlog: number, cleared: number) => cleared > 0 ? `${cleared} cleared, ${backlog} to go. The math is fine.` : `${backlog} games waiting. Challenge accepted.`,
+  () => `I don't have a problem. I have a collection.`,
+  (backlog: number) => backlog > 30 ? `${backlog} games deep. Send help. Or don't.` : `A curated pile, if you will.`,
+  (_: number, cleared: number) => cleared > 5 ? `${cleared} games finished. That's ${cleared} decisions made.` : `Deciding is the hardest part. I'm getting better at it.`,
+  () => `Every game in here was a good idea at the time.`,
+  (_: number, _c: number, hours: number) => hours > 1000 ? `${Math.round(hours).toLocaleString()} hours. Not wasted. Invested.` : `The pile is my personality at this point.`,
+  (backlog: number) => `${backlog} unplayed. But I know exactly which one I'm playing tonight.`,
+  () => `My library is a promise to my future self.`,
+  () => `Bought during a sale. Played during a mood. That's the system.`,
+  (_: number, cleared: number) => cleared > 0 ? `Clearing games like it's my job. It's not, but still.` : `The journey of a thousand games starts with one clear.`,
+  () => `I play games the way some people collect vinyl. Passionately and incompletely.`,
 ];
 
 interface StatsShareComposerProps {
@@ -80,6 +90,11 @@ export default function StatsShareComposer({
 
   const [flavorText, setFlavorText] = useState(() => pickFlavor());
 
+  // Invalidate the share URL when any card content changes
+  const invalidateUrl = useCallback(() => {
+    if (shareUrl) setShareUrl(null);
+  }, [shareUrl]);
+
   const handleRerollFlavor = useCallback(() => {
     let next = flavorText;
     let attempts = 0;
@@ -88,17 +103,11 @@ export default function StatsShareComposer({
       attempts++;
     }
     setFlavorText(next);
-  }, [flavorText, pickFlavor]);
-
-  const toggles: ShareToggle[] = [
-    { key: 'archetype', label: currentArchetype?.title || 'Player Archetype', available: !!currentArchetype, enabled: showArchetype },
-    { key: 'value', label: `Library worth ~$${unplayedValue.toLocaleString()}`, available: calculated && unplayedValue > 0, enabled: showValue },
-    { key: 'trophies', label: `${stats.totalAchievementsEarned.toLocaleString()} trophies earned`, available: stats.hasAchievementData, enabled: showTrophies },
-    { key: 'hours', label: `${Math.round(stats.totalHours).toLocaleString()}h logged`, available: stats.totalHours > 0, enabled: showHours },
-    { key: 'displayName', label: 'Show my name', available: true, enabled: showDisplayName },
-  ];
+    invalidateUrl();
+  }, [flavorText, pickFlavor, invalidateUrl]);
 
   const handleToggle = (key: string) => {
+    invalidateUrl();
     switch (key) {
       case 'archetype': setShowArchetype(v => !v); break;
       case 'value': setShowValue(v => !v); break;
@@ -107,6 +116,14 @@ export default function StatsShareComposer({
       case 'displayName': setShowDisplayName(v => !v); break;
     }
   };
+
+  const toggles: ShareToggle[] = [
+    { key: 'archetype', label: currentArchetype?.title || 'Player Archetype', available: !!currentArchetype, enabled: showArchetype },
+    { key: 'value', label: `Library worth ~$${unplayedValue.toLocaleString()}`, available: calculated && unplayedValue > 0, enabled: showValue },
+    { key: 'trophies', label: `${stats.totalAchievementsEarned.toLocaleString()} trophies earned`, available: stats.hasAchievementData, enabled: showTrophies },
+    { key: 'hours', label: `${Math.round(stats.totalHours).toLocaleString()}h logged`, available: stats.totalHours > 0, enabled: showHours },
+    { key: 'displayName', label: 'Show my name', available: true, enabled: showDisplayName },
+  ];
 
   const handleCreateCard = async () => {
     setCreating(true);
@@ -245,7 +262,7 @@ export default function StatsShareComposer({
         <input
           type="text"
           value={displayName}
-          onChange={(e) => setDisplayName(e.target.value.slice(0, 50))}
+          onChange={(e) => { setDisplayName(e.target.value.slice(0, 50)); invalidateUrl(); }}
           placeholder="Your name or tag"
           className="w-full px-3 py-2 rounded-lg text-sm text-text-primary font-[family-name:var(--font-mono)] placeholder:text-text-faint"
           style={{
