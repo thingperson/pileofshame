@@ -54,10 +54,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
 
   const who = card.show_display_name && card.display_name ? card.display_name : 'Someone';
-  const title = `${who} has ${card.total_games} games tracked | Inventory Full`;
+  const title = `${who} has ${card.total_games} games tracked, ${card.games_cleared} cleared | Inventory Full`;
   const description = card.show_archetype && card.archetype_name
-    ? `${card.archetype_name}. ${card.games_cleared} cleared, ${card.backlog_size} in the pile. Your backlog won't clear itself.`
-    : `${card.games_cleared} cleared, ${card.games_in_motion} in motion, ${card.backlog_size} in the pile. Your backlog won't clear itself.`;
+    ? `${card.archetype_name}. ${card.games_cleared} cleared, ${card.backlog_size} in the pile, ${card.exploration_pct}% explored. Your pile won't clear itself. Track your backlog and start playing with Inventory Full.`
+    : `${card.games_cleared} cleared, ${card.games_in_motion} in motion, ${card.backlog_size} in the pile, ${card.exploration_pct}% explored. Your pile won't clear itself. Track your backlog and start playing with Inventory Full.`;
 
   return {
     title,

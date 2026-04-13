@@ -239,18 +239,37 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           )}
         </div>
 
-        {/* Bottom bar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 56px 24px', position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ fontSize: '14px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '3px', display: 'flex' }}>
-              INVENTORY FULL
-            </div>
-            <div style={{ fontSize: '14px', color: '#94a3b8', display: 'flex', padding: '4px 14px', borderRadius: '8px', backgroundColor: 'rgba(167, 139, 250, 0.1)', border: '1px solid rgba(167, 139, 250, 0.2)' }}>
-              Stop stalling. Get playing. →
+        {/* Bottom brand bar with logomark */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 56px 32px', position: 'relative', zIndex: 1, marginTop: 'auto' }}>
+          {/* Left: branding + tagline */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="https://inventoryfull.gg/icon-192.png"
+                alt=""
+                width={48}
+                height={48}
+                style={{ width: '48px', height: '48px', borderRadius: '10px' }}
+              />
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div style={{ fontSize: '18px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '3px', display: 'flex' }}>
+                  INVENTORY FULL
+                </div>
+                <div style={{ fontSize: '14px', color: '#94a3b8', display: 'flex', marginTop: '2px' }}>
+                  {"Your pile's not gonna play itself."}
+                </div>
+              </div>
             </div>
           </div>
-          <div style={{ fontSize: '13px', fontFamily: 'JetBrains Mono, monospace', color: '#475569', display: 'flex' }}>
-            inventoryfull.gg
+          {/* Right: URL + CTA pill */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+            <div style={{ fontSize: '14px', color: '#94a3b8', display: 'flex', padding: '6px 16px', borderRadius: '8px', backgroundColor: 'rgba(167, 139, 250, 0.1)', border: '1px solid rgba(167, 139, 250, 0.2)' }}>
+              Stop stalling. Get playing. →
+            </div>
+            <div style={{ fontSize: '13px', fontFamily: 'JetBrains Mono, monospace', color: '#475569', display: 'flex' }}>
+              inventoryfull.gg
+            </div>
           </div>
         </div>
       </div>

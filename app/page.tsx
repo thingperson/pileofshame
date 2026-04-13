@@ -131,7 +131,7 @@ function AppContent() {
   const [importBreakdown, setImportBreakdown] = useState<{
     total: number; backlog: number; started: number; upNext: number; nowPlaying: number; completed: number;
   } | null>(null);
-  const prevGameCount = useRef(0);
+  const prevGameCount = useRef<number | null>(null);
 
   const games = useStore((s) => s.games);
   const filters = useStore((s) => s.filters);
@@ -325,8 +325,13 @@ function AppContent() {
   useAutoEnrich();
 
   // Detect post-import transition (0 → N games) and compute breakdown
-  // Skip for sample data — sample users don't need an import summary
+  // Skip for: (1) Zustand rehydration on page load, (2) sample data loads
   useEffect(() => {
+    // First run: capture initial count (may be 0 or already hydrated). Never show summary.
+    if (prevGameCount.current === null) {
+      prevGameCount.current = games.length;
+      return;
+    }
     if (prevGameCount.current === 0 && games.length > 0) {
       if (isSampleLoad.current) {
         isSampleLoad.current = false;
