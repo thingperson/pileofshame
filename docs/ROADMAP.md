@@ -38,7 +38,7 @@
 - Result scoring (picks best RAWG match, not just first result) ✅
 
 ### UI / UX
-- Tab navigation (Backlog, Up Next, Now Playing, Completed) with ARIA tabs ✅
+- Tab navigation (Backlog, Up Next, Playing Now, Completed, Moved On) with ARIA tabs ✅
 - List + grid view toggle (grid default for new users) ✅
 - Backlog sort picker (Best for You, A-Z, newest, oldest, playtime) ✅
 - Auto tab-switch when game status changes ✅
@@ -77,6 +77,8 @@
 - Custom 404 page + app-level error boundary with Sentry reporting ✅
 - Favicon: DALL-E red "IF" bag icon, reads clearly at 16px in Chrome tabs ✅
 - PWA icons regenerated from new favicon source (192px, 512px, apple-icon) ✅
+- Sparkle icon variant saved as `icon-*-sparkle.png` (intentional second render, not wired to manifest) ✅
+- Safari SVG fix: explicit width/height on FeatureCard icons (Safari collapses className-only SVGs in flex) ✅
 - HLTB direct API integration (replaced broken npm packages with /api/find + token auth + honeypot) ✅
 - Asset cleanup: removed unused concept art, organized icon files, gitignored scratch folders ✅
 - Reroll modal UX: section labels ("How much time?" / "I want something that feels..."), bigger text across all surfaces ✅
@@ -140,7 +142,8 @@
 - Hero illustration + bold brand banner with logomark ✅
 - Mono banner, transparent hero, tighter spacing ✅
 - "Get Started" hero CTA → GetStartedModal with all entry paths ✅
-- "Three steps. We do the hard part." (revised from "Zero decisions") ✅
+- "It's really just three things:" H2 (revised from "Three steps. We do the hard part.") ✅
+- Hero subhead: "Can't decide what to play? Yeah, we know." ✅
 - "Already have an account?" sign-in affordance for returning users ✅
 - Shows for visitors with empty library, redirects to app when library exists ✅
 - Design doc: `docs/landing-page-plan.md`
@@ -183,7 +186,7 @@
 - "Did you finish this?" nudge for 85%+ HLTB games ✅
   - Detects games at 85%+ completion, asks if they finished
   - YES: auto-mark Cleared + trigger celebration
-  - NO: move to Now Playing with encouragement
+  - NO: move to Playing Now with encouragement
   - Separate from stalled nudge, backs off after 3 dismissals
 - See: `docs/IDEAS.md` + `docs/behavioral-learning-framework.md`
 
@@ -198,7 +201,7 @@
 
 ### UX Feedback Sweep (April 6 PDF) — SHIPPED ✅
 - All 16 items from Brady's UX review addressed
-- Now Playing cap (3 games, enforced across all entry points) ✅
+- Playing Now cap (3 games, enforced across all entry points) ✅
 - Tab auto-follow on game move + nudge actions ✅
 - Nudge cards restricted to Backlog tab only ✅
 - "Move this game to:" label on stalled nudge buttons ✅
@@ -290,7 +293,10 @@
   - "What goes in the slot" recommendations removed from celebration modal (too pushy) ✅
   - Share composer opens by default (no scary "Share" button to click) ✅
   - Contextual notes placeholders by game status ✅
-  - "Give up" → "Not for me" bail label softened ✅
+  - Status cycle locked: Backlog → Up Next → Playing Now → Completed → Moved On ✅
+  - "bail" retired from all user-facing copy; action verb = "Not for me", destination state = "Moved On" ✅
+  - Component sweep: all toasts, labels, help modal, tabs unified to locked vocabulary ✅
+  - Internal identifiers (`canBail`, `setBailed`, `showBailed`) left as-is (refactor deferred) ✅
 - Game card detail UX cleanup ✅
   - Removed Shelf/Session dropdowns (less decision paralysis) ✅
   - Removed time tier icon + platform source badge from card header (noise reduction) ✅
@@ -350,9 +356,9 @@
 
 | Review | Last Run | Status | Frequency |
 |--------|----------|--------|-----------|
-| Voice/AI lingo sweep | Apr 8, 2026 | Clean — onboarding copy swept (GetStartedModal, PostImportSummary). No banned patterns. | Every deploy with new copy |
+| Voice/AI lingo sweep | Apr 9, 2026 | Clean — landing hero, H2, Step 3 rewrite, about page mirror all swept. "bail" retired, em-dash rule enforced. | Every deploy with new copy |
 | Accessibility audit | Apr 8, 2026 | ImportHub role="dialog" + aria-modal added. All prior items still resolved. | Monthly |
-| Feature creep audit | Apr 8, 2026 | Healthy. Onboarding tightening reduces clicks, not adds features. Core loop reached faster. | Quarterly |
+| Feature creep audit | Apr 9, 2026 | Healthy. Semantic audit + component sweep are vocabulary cleanup, not new features. Core loop unchanged. | Quarterly |
 | Mobile responsiveness | Apr 8, 2026 | Share card builder tested at 375px. Game detail modal tested — Launch button, action row all fit without Shelf/Session dropdowns. | Monthly |
 | Enrichment accuracy | Apr 8, 2026 | Supabase L2 cache live. Three-tier caching (memory → Supabase → API). Rate limiting on all API routes. | Quarterly |
 | Legal/privacy compliance | Apr 8, 2026 | game_metadata table is public game data only (no user data, no RLS needed). Rate limiting is server-side per-IP, no PII stored. No Privacy Policy update needed. | Before any feature touching user data, deals, or profiling |
@@ -417,6 +423,7 @@ We do *personalized recommendations* (using a user's own data to help them), not
 - `.claude/plans/psychology-informed-features.md` — Psychology-backed feature rationale
 - `.claude/plans/future-notifications-email.md` — Email/notification roadmap
 - `docs/scale-up-plan.md` — Infrastructure scaling playbook + emergency viral plan
+- `docs/DECISIONS.md` — Why decisions were made (the "hit by a bus" doc)
 - `docs/marketing-prep.md` — Channel strategy, email scaffold, pre-launch checklist
 
 ## USER FEEDBACK LOG

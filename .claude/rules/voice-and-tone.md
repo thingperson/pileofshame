@@ -134,9 +134,10 @@ Locked Apr 9, 2026. The user-facing status cycle is: **Backlog > Up Next > Playi
 - "Your Play Next list is empty. How about throwing [Game] on there? Can't go wrong."
 
 ### Status Changes
-- Backlog → Play Next: "[Game] just made the list. Good pick."
-- Play Next → Now Playing: "Let's go. [Game] isn't going to play itself."
-- Now Playing → Cleared: Full celebration modal. Confetti. Stats. Rating. The works.
+- Backlog → Up Next: "[Game] just made the list. Good pick."
+- Up Next → Playing Now: "Let's go. [Game] isn't going to play itself."
+- Playing Now → Completed: Full celebration modal. Confetti. Stats. Rating. The works.
+- Playing Now → Moved On: "Moving on is deciding too. [Game] isn't going anywhere."
 
 ### Shame / Motivation
 - "The pile trembles. It knows what's coming."
