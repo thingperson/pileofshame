@@ -128,11 +128,11 @@ export default async function Image({ params }: { params: Promise<{ id: string }
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '36px 56px 0', position: 'relative', zIndex: 1 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="https://inventoryfull.gg/icon-192.png"
+            src="https://inventoryfull.gg/icon-512.png"
             alt=""
-            width={80}
-            height={80}
-            style={{ width: '80px', height: '80px', borderRadius: '16px' }}
+            width={160}
+            height={160}
+            style={{ width: '160px', height: '160px', borderRadius: '24px' }}
           />
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ fontSize: '22px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '4px', display: 'flex' }}>
