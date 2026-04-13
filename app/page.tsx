@@ -118,6 +118,8 @@ function AppContent() {
   const [backlogSort, setBacklogSort] = useState<'smart' | 'a-z' | 'z-a' | 'newest' | 'oldest' | 'most-playtime' | 'least-playtime' | 'closest-to-done'>('smart');
   const [sampleBannerDismissed, setSampleBannerDismissed] = useState(false);
   const [pendingSampleReroll, setPendingSampleReroll] = useState(false);
+  const isSampleLoad = useRef(false);
+  const [pulseReroll, setPulseReroll] = useState(false);
   // GridCard handles its own detail modal internally
 
   const openReroll = (mode?: RerollMode) => {
@@ -323,17 +325,22 @@ function AppContent() {
   useAutoEnrich();
 
   // Detect post-import transition (0 → N games) and compute breakdown
+  // Skip for sample data — sample users don't need an import summary
   useEffect(() => {
     if (prevGameCount.current === 0 && games.length > 0) {
-      const breakdown = {
-        total: games.length,
-        backlog: games.filter((g) => g.status === 'buried' && g.hoursPlayed === 0).length,
-        started: games.filter((g) => g.status === 'buried' && g.hoursPlayed > 0).length,
-        upNext: games.filter((g) => g.status === 'on-deck').length,
-        nowPlaying: games.filter((g) => g.status === 'playing').length,
-        completed: games.filter((g) => g.status === 'played').length,
-      };
-      setImportBreakdown(breakdown);
+      if (isSampleLoad.current) {
+        isSampleLoad.current = false;
+      } else {
+        const breakdown = {
+          total: games.length,
+          backlog: games.filter((g) => g.status === 'buried' && g.hoursPlayed === 0).length,
+          started: games.filter((g) => g.status === 'buried' && g.hoursPlayed > 0).length,
+          upNext: games.filter((g) => g.status === 'on-deck').length,
+          nowPlaying: games.filter((g) => g.status === 'playing').length,
+          completed: games.filter((g) => g.status === 'played').length,
+        };
+        setImportBreakdown(breakdown);
+      }
     }
     prevGameCount.current = games.length;
   }, [games]);
@@ -386,16 +393,16 @@ function AppContent() {
     }
   }, [activeTab, TAB_ORDER]);
 
-  // Auto-open reroll after sample data loads — core loop immediately
+  // After sample data loads, pulse the "What Should I Play?" button to guide the user
   useEffect(() => {
     if (pendingSampleReroll && games.length > 0) {
       const t = setTimeout(() => {
-        handleOpenReroll('anything');
+        setPulseReroll(true);
         setPendingSampleReroll(false);
-      }, 800);
+      }, 600);
       return () => clearTimeout(t);
     }
-  }, [pendingSampleReroll, games.length]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pendingSampleReroll, games.length]);
 
   // Reset backlog limit when switching tabs
   useEffect(() => {
@@ -460,6 +467,7 @@ function AppContent() {
         <LandingPage
           onImport={() => setImportHubOpen(true)}
           onLoadSample={() => {
+            isSampleLoad.current = true;
             useStore.setState({
               games: SAMPLE_GAMES,
               settings: { ...useStore.getState().settings, viewMode: 'grid' },
@@ -611,17 +619,17 @@ function AppContent() {
       {/* ── Hero CTA ── */}
       <div className="mb-3 space-y-2">
           <button
-            onClick={() => handleOpenReroll('anything')}
-            className={`w-full px-4 sm:px-6 py-4 sm:py-3.5 text-lg sm:text-lg font-bold rounded-xl text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98] ${mounted && !hasUsedReroll ? 'animate-[pulse_2s_ease-in-out_infinite]' : ''}`}
+            onClick={() => { setPulseReroll(false); handleOpenReroll('anything'); }}
+            className={`w-full px-4 sm:px-6 py-4 sm:py-3.5 text-lg sm:text-lg font-bold rounded-xl text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98] ${(mounted && !hasUsedReroll) || pulseReroll ? 'animate-[pulse_2s_ease-in-out_infinite]' : ''}`}
             style={{ background: 'linear-gradient(135deg, #7c3aed, #a78bfa)' }}
           >
             🎲&nbsp; What Should I Play?
           </button>
-          {mounted && !hasUsedReroll && (
+          {(mounted && !hasUsedReroll) || pulseReroll ? (
             <p className="text-center text-xs text-text-dim mt-1 font-[family-name:var(--font-mono)] animate-[fadeIn_500ms_ease-out]">
               ↑ Tell us your mood. We&apos;ll find your game.
             </p>
-          )}
+          ) : null}
           <div className="flex gap-1.5 sm:gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
             <button
               onClick={() => openReroll('quick-session')}
