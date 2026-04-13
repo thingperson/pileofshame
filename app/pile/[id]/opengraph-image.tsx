@@ -128,20 +128,20 @@ export default async function Image({ params }: { params: Promise<{ id: string }
         <div style={{ display: 'flex', flex: 1, padding: '36px 48px 0 48px', position: 'relative', zIndex: 1, gap: '40px' }}>
 
           {/* LEFT: Hero logomark + brand name + tagline underneath */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0, gap: '16px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0, gap: '14px' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="https://inventoryfull.gg/icon-512.png"
               alt=""
-              width={320}
-              height={320}
-              style={{ width: '320px', height: '320px', borderRadius: '32px' }}
+              width={280}
+              height={280}
+              style={{ width: '280px', height: '280px', borderRadius: '28px' }}
             />
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-              <div style={{ fontSize: '28px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '5px', display: 'flex' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+              <div style={{ fontSize: '26px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '4px', display: 'flex' }}>
                 INVENTORY FULL
               </div>
-              <div style={{ fontSize: '18px', color: '#64748b', fontFamily: 'Outfit, sans-serif', display: 'flex' }}>
+              <div style={{ fontSize: '24px', color: '#94a3b8', fontFamily: 'Outfit, sans-serif', fontWeight: 400, display: 'flex' }}>
                 Stop stalling. Get playing.
               </div>
             </div>
@@ -151,16 +151,16 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center', gap: '0px' }}>
 
             {/* Top-right: games tracked + exploration */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-              <div style={{ fontSize: '14px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+              <div style={{ fontSize: '18px', color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>
                 {card.total_games} games tracked
                 {card.show_display_name && card.display_name ? ` · ${card.display_name}` : ''}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div style={{ width: '60px', height: '6px', borderRadius: '3px', overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.08)', display: 'flex' }}>
-                  <div style={{ width: `${card.exploration_pct}%`, height: '100%', borderRadius: '3px', backgroundColor: '#a78bfa', display: 'flex' }} />
+                <div style={{ width: '70px', height: '8px', borderRadius: '4px', overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.08)', display: 'flex' }}>
+                  <div style={{ width: `${card.exploration_pct}%`, height: '100%', borderRadius: '4px', backgroundColor: '#a78bfa', display: 'flex' }} />
                 </div>
-                <span style={{ fontSize: '16px', fontWeight: 700, color: '#a78bfa', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>
+                <span style={{ fontSize: '20px', fontWeight: 700, color: '#a78bfa', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>
                   {card.exploration_pct}%
                 </span>
               </div>
@@ -168,42 +168,42 @@ export default async function Image({ params }: { params: Promise<{ id: string }
 
             {/* Archetype name */}
             {card.show_archetype && card.archetype_name && (
-              <div style={{ fontSize: '36px', fontWeight: 800, color: '#f8fafc', letterSpacing: '-1px', lineHeight: 1.1, display: 'flex', marginBottom: '10px' }}>
+              <div style={{ fontSize: '48px', fontWeight: 800, color: '#f8fafc', letterSpacing: '-1.5px', lineHeight: 1.1, display: 'flex', marginBottom: '10px' }}>
                 {card.archetype_name}
               </div>
             )}
 
             {/* Archetype descriptor */}
             {card.show_archetype && card.archetype_descriptor && (
-              <div style={{ fontSize: '22px', color: '#c4b5fd', lineHeight: 1.4, display: 'flex', marginBottom: '12px' }}>
-                {card.archetype_descriptor.length > 120 ? card.archetype_descriptor.slice(0, 117) + '...' : card.archetype_descriptor}
+              <div style={{ fontSize: '26px', color: '#c4b5fd', lineHeight: 1.35, display: 'flex', marginBottom: '12px' }}>
+                {card.archetype_descriptor.length > 100 ? card.archetype_descriptor.slice(0, 97) + '...' : card.archetype_descriptor}
               </div>
             )}
 
             {/* Flavor text */}
             {card.flavor_text && (
-              <div style={{ fontSize: '20px', color: '#94a3b8', fontStyle: 'italic', lineHeight: 1.3, display: 'flex', marginBottom: '16px' }}>
+              <div style={{ fontSize: '24px', color: '#94a3b8', fontStyle: 'italic', lineHeight: 1.3, display: 'flex', marginBottom: '16px' }}>
                 {`"${card.flavor_text}"`}
               </div>
             )}
 
             {/* Highlighted values */}
             {highlights.length > 0 && (
-              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                 {highlights.map((h) => (
                   <div
                     key={h.label}
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
-                      padding: '6px 12px',
+                      padding: '8px 14px',
                       borderRadius: '10px',
-                      backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
                     }}
                   >
-                    <div style={{ fontSize: '10px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{h.label}</div>
-                    <div style={{ fontSize: '18px', fontWeight: 700, color: h.color, fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{h.value}</div>
+                    <div style={{ fontSize: '13px', color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{h.label}</div>
+                    <div style={{ fontSize: '22px', fontWeight: 700, color: h.color, fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{h.value}</div>
                   </div>
                 ))}
               </div>
@@ -212,15 +212,15 @@ export default async function Image({ params }: { params: Promise<{ id: string }
         </div>
 
         {/* === BOTTOM: Compact stats line + CTA === */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 48px 24px', position: 'relative', zIndex: 1 }}>
-          <div style={{ fontSize: '12px', fontFamily: 'JetBrains Mono, monospace', color: '#475569', display: 'flex', gap: '6px' }}>
-            {statParts.join(' · ')}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 48px 26px', position: 'relative', zIndex: 1 }}>
+          <div style={{ fontSize: '16px', fontFamily: 'JetBrains Mono, monospace', color: '#64748b', display: 'flex', gap: '6px' }}>
+            {statParts.join(' \u00b7 ')}
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ fontSize: '13px', color: '#94a3b8', display: 'flex', padding: '4px 12px', borderRadius: '8px', backgroundColor: 'rgba(167, 139, 250, 0.1)', border: '1px solid rgba(167, 139, 250, 0.2)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ fontSize: '16px', color: '#c4b5fd', display: 'flex', padding: '6px 16px', borderRadius: '8px', backgroundColor: 'rgba(167, 139, 250, 0.12)', border: '1px solid rgba(167, 139, 250, 0.25)' }}>
               {"Your pile's not gonna play itself. \u2192"}
             </div>
-            <div style={{ fontSize: '12px', fontFamily: 'JetBrains Mono, monospace', color: '#64748b', display: 'flex' }}>
+            <div style={{ fontSize: '15px', fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8', display: 'flex' }}>
               inventoryfull.gg
             </div>
           </div>
