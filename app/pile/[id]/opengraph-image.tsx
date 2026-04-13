@@ -124,93 +124,100 @@ export default async function Image({ params }: { params: Promise<{ id: string }
         {/* Grid pattern */}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)', backgroundSize: '60px 60px', display: 'flex' }} />
 
-        {/* === TOP: Logomark + Brand Name === */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '36px 56px 0', position: 'relative', zIndex: 1 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="https://inventoryfull.gg/icon-512.png"
-            alt=""
-            width={160}
-            height={160}
-            style={{ width: '160px', height: '160px', borderRadius: '24px' }}
-          />
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ fontSize: '22px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '4px', display: 'flex' }}>
-              INVENTORY FULL
-            </div>
-            <div style={{ fontSize: '14px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', display: 'flex', marginTop: '4px' }}>
-              {card.total_games} games tracked
-              {card.show_display_name && card.display_name ? ` · ${card.display_name}` : ''}
-            </div>
+        {/* === TWO-COLUMN LAYOUT: Logo left, content right === */}
+        <div style={{ display: 'flex', flex: 1, padding: '36px 48px 0 48px', position: 'relative', zIndex: 1, gap: '36px' }}>
+
+          {/* LEFT: Hero logomark */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://inventoryfull.gg/icon-512.png"
+              alt=""
+              width={320}
+              height={320}
+              style={{ width: '320px', height: '320px', borderRadius: '32px' }}
+            />
           </div>
-          {/* Exploration % - right side */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginLeft: 'auto' }}>
-            <div style={{ width: '80px', height: '8px', borderRadius: '4px', overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.08)', display: 'flex' }}>
-              <div style={{ width: `${card.exploration_pct}%`, height: '100%', borderRadius: '4px', backgroundColor: '#a78bfa', display: 'flex' }} />
-            </div>
-            <span style={{ fontSize: '20px', fontWeight: 700, color: '#a78bfa', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>
-              {card.exploration_pct}%
-            </span>
-          </div>
-        </div>
 
-        {/* === MIDDLE: Archetype + Descriptor + Flavor Text === */}
-        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, padding: '24px 56px', position: 'relative', zIndex: 1, justifyContent: 'center' }}>
+          {/* RIGHT: All content stacked */}
+          <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center', gap: '0px' }}>
 
-          {/* Archetype name */}
-          {card.show_archetype && card.archetype_name && (
-            <div style={{ fontSize: '44px', fontWeight: 800, color: '#f8fafc', letterSpacing: '-1.5px', lineHeight: 1.1, display: 'flex', marginBottom: '12px' }}>
-              {card.archetype_name}
-            </div>
-          )}
-
-          {/* Archetype descriptor */}
-          {card.show_archetype && card.archetype_descriptor && (
-            <div style={{ fontSize: '20px', color: '#c4b5fd', lineHeight: 1.5, display: 'flex', marginBottom: '16px', maxWidth: '900px' }}>
-              {card.archetype_descriptor.length > 160 ? card.archetype_descriptor.slice(0, 157) + '...' : card.archetype_descriptor}
-            </div>
-          )}
-
-          {/* Flavor text (always shown if present) */}
-          {card.flavor_text && (
-            <div style={{ fontSize: '18px', color: '#94a3b8', fontStyle: 'italic', lineHeight: 1.4, display: 'flex', marginBottom: '20px' }}>
-              {`"${card.flavor_text}"`}
-            </div>
-          )}
-
-          {/* Highlighted values the user checked */}
-          {highlights.length > 0 && (
-            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
-              {highlights.map((h) => (
-                <div
-                  key={h.label}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    padding: '10px 18px',
-                    borderRadius: '12px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                  }}
-                >
-                  <div style={{ fontSize: '12px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{h.label}</div>
-                  <div style={{ fontSize: '22px', fontWeight: 700, color: h.color, fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{h.value}</div>
+            {/* Brand + exploration */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div style={{ fontSize: '20px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '4px', display: 'flex' }}>
+                  INVENTORY FULL
                 </div>
-              ))}
+                <div style={{ fontSize: '13px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', display: 'flex', marginTop: '3px' }}>
+                  {card.total_games} games tracked
+                  {card.show_display_name && card.display_name ? ` · ${card.display_name}` : ''}
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '60px', height: '6px', borderRadius: '3px', overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.08)', display: 'flex' }}>
+                  <div style={{ width: `${card.exploration_pct}%`, height: '100%', borderRadius: '3px', backgroundColor: '#a78bfa', display: 'flex' }} />
+                </div>
+                <span style={{ fontSize: '16px', fontWeight: 700, color: '#a78bfa', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>
+                  {card.exploration_pct}%
+                </span>
+              </div>
             </div>
-          )}
+
+            {/* Archetype name */}
+            {card.show_archetype && card.archetype_name && (
+              <div style={{ fontSize: '36px', fontWeight: 800, color: '#f8fafc', letterSpacing: '-1px', lineHeight: 1.1, display: 'flex', marginBottom: '8px' }}>
+                {card.archetype_name}
+              </div>
+            )}
+
+            {/* Archetype descriptor */}
+            {card.show_archetype && card.archetype_descriptor && (
+              <div style={{ fontSize: '16px', color: '#c4b5fd', lineHeight: 1.4, display: 'flex', marginBottom: '10px' }}>
+                {card.archetype_descriptor.length > 120 ? card.archetype_descriptor.slice(0, 117) + '...' : card.archetype_descriptor}
+              </div>
+            )}
+
+            {/* Flavor text */}
+            {card.flavor_text && (
+              <div style={{ fontSize: '15px', color: '#94a3b8', fontStyle: 'italic', lineHeight: 1.3, display: 'flex', marginBottom: '14px' }}>
+                {`"${card.flavor_text}"`}
+              </div>
+            )}
+
+            {/* Highlighted values */}
+            {highlights.length > 0 && (
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                {highlights.map((h) => (
+                  <div
+                    key={h.label}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      padding: '6px 12px',
+                      borderRadius: '10px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                    }}
+                  >
+                    <div style={{ fontSize: '10px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{h.label}</div>
+                    <div style={{ fontSize: '18px', fontWeight: 700, color: h.color, fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{h.value}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* === BOTTOM: Compact stats line + CTA === */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 56px 28px', position: 'relative', zIndex: 1 }}>
-          <div style={{ fontSize: '13px', fontFamily: 'JetBrains Mono, monospace', color: '#475569', display: 'flex', gap: '6px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 48px 24px', position: 'relative', zIndex: 1 }}>
+          <div style={{ fontSize: '12px', fontFamily: 'JetBrains Mono, monospace', color: '#475569', display: 'flex', gap: '6px' }}>
             {statParts.join(' · ')}
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ fontSize: '14px', color: '#94a3b8', display: 'flex', padding: '5px 14px', borderRadius: '8px', backgroundColor: 'rgba(167, 139, 250, 0.1)', border: '1px solid rgba(167, 139, 250, 0.2)' }}>
-              {"Your pile's not gonna play itself. →"}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ fontSize: '13px', color: '#94a3b8', display: 'flex', padding: '4px 12px', borderRadius: '8px', backgroundColor: 'rgba(167, 139, 250, 0.1)', border: '1px solid rgba(167, 139, 250, 0.2)' }}>
+              {"Your pile's not gonna play itself. \u2192"}
             </div>
-            <div style={{ fontSize: '13px', fontFamily: 'JetBrains Mono, monospace', color: '#64748b', display: 'flex' }}>
+            <div style={{ fontSize: '12px', fontFamily: 'JetBrains Mono, monospace', color: '#64748b', display: 'flex' }}>
               inventoryfull.gg
             </div>
           </div>
