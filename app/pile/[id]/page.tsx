@@ -54,10 +54,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
 
   const who = card.show_display_name && card.display_name ? card.display_name : 'Someone';
-  const title = `${who} has ${card.total_games} games tracked, ${card.games_cleared} cleared | Inventory Full`;
+  const title = `${who} has ${card.total_games} games tracked, ${card.games_cleared} completed | Inventory Full`;
   const description = card.show_archetype && card.archetype_name
-    ? `${card.archetype_name}. ${card.games_cleared} cleared, ${card.backlog_size} in the pile, ${card.exploration_pct}% explored. Your pile won't clear itself. Track your backlog and start playing with Inventory Full.`
-    : `${card.games_cleared} cleared, ${card.games_in_motion} in motion, ${card.backlog_size} in the pile, ${card.exploration_pct}% explored. Your pile won't clear itself. Track your backlog and start playing with Inventory Full.`;
+    ? `${card.archetype_name}. ${card.games_cleared} completed, ${card.backlog_size} in the pile, ${card.exploration_pct}% explored. Your pile won't play itself. Track your backlog and start playing with Inventory Full.`
+    : `${card.games_cleared} completed, ${card.games_in_motion} in motion, ${card.backlog_size} in the pile, ${card.exploration_pct}% explored. Your pile won't play itself. Track your backlog and start playing with Inventory Full.`;
 
   return {
     title,
@@ -98,7 +98,7 @@ export default async function PilePage({ params }: { params: Promise<{ id: strin
 
   // Build stat items for display
   const mainStats: { label: string; value: string; emoji: string }[] = [
-    { label: 'Cleared', value: card.games_cleared.toString(), emoji: '✅' },
+    { label: 'Completed', value: card.games_cleared.toString(), emoji: '✅' },
     { label: 'In Motion', value: card.games_in_motion.toString(), emoji: '🚀' },
     { label: 'Backlog', value: card.backlog_size.toString(), emoji: '📚' },
     { label: 'Streak', value: card.streak.toString(), emoji: '⚡' },
@@ -109,7 +109,7 @@ export default async function PilePage({ params }: { params: Promise<{ id: strin
   }
 
   if (card.lines_drawn > 0) {
-    mainStats.push({ label: 'Lines Drawn', value: card.lines_drawn.toString(), emoji: '✊' });
+    mainStats.push({ label: 'Moved On', value: card.lines_drawn.toString(), emoji: '✊' });
   }
 
   return (
@@ -177,7 +177,7 @@ export default async function PilePage({ params }: { params: Promise<{ id: strin
                   )}
                   {card.backlog_hours && (
                     <div>
-                      <div className="text-xs text-text-dim font-mono">Time to clear</div>
+                      <div className="text-xs text-text-dim font-mono">Time to complete</div>
                       <div className="text-lg font-bold font-mono" style={{ color: '#f59e0b' }}>~{card.backlog_hours.toLocaleString()}h</div>
                     </div>
                   )}

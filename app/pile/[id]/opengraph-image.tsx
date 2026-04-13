@@ -77,7 +77,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
     highlights.push({ label: 'Value unlocked', value: `$${card.played_value.toLocaleString()}`, color: '#22c55e' });
   }
   if (card.show_value && card.backlog_hours) {
-    highlights.push({ label: 'Time to clear', value: `~${card.backlog_hours.toLocaleString()}h`, color: '#f59e0b' });
+    highlights.push({ label: 'Time to complete', value: `~${card.backlog_hours.toLocaleString()}h`, color: '#f59e0b' });
   }
   if (card.show_hours && card.hours_logged > 0) {
     highlights.push({ label: 'Hours logged', value: Math.round(card.hours_logged).toLocaleString(), color: '#38bdf8' });
@@ -94,7 +94,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
 
   // Compact stats line
   const statParts = [
-    `${card.games_cleared} cleared`,
+    `${card.games_cleared} completed`,
     `${card.games_in_motion} in motion`,
     `${card.backlog_size} in the pile`,
   ];
