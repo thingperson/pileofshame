@@ -124,11 +124,11 @@ export default async function Image({ params }: { params: Promise<{ id: string }
         {/* Grid pattern */}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)', backgroundSize: '60px 60px', display: 'flex' }} />
 
-        {/* === TWO-COLUMN LAYOUT: Logo left, content right === */}
-        <div style={{ display: 'flex', flex: 1, padding: '36px 48px 0 48px', position: 'relative', zIndex: 1, gap: '36px' }}>
+        {/* === TWO-COLUMN LAYOUT: Logo+brand left, content right === */}
+        <div style={{ display: 'flex', flex: 1, padding: '36px 48px 0 48px', position: 'relative', zIndex: 1, gap: '40px' }}>
 
-          {/* LEFT: Hero logomark */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          {/* LEFT: Hero logomark + brand name + tagline underneath */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0, gap: '16px' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="https://inventoryfull.gg/icon-512.png"
@@ -137,21 +137,24 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               height={320}
               style={{ width: '320px', height: '320px', borderRadius: '32px' }}
             />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+              <div style={{ fontSize: '28px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '5px', display: 'flex' }}>
+                INVENTORY FULL
+              </div>
+              <div style={{ fontSize: '18px', color: '#64748b', fontFamily: 'Outfit, sans-serif', display: 'flex' }}>
+                Stop stalling. Get playing.
+              </div>
+            </div>
           </div>
 
           {/* RIGHT: All content stacked */}
           <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center', gap: '0px' }}>
 
-            {/* Brand + exploration */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <div style={{ fontSize: '20px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '4px', display: 'flex' }}>
-                  INVENTORY FULL
-                </div>
-                <div style={{ fontSize: '13px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', display: 'flex', marginTop: '3px' }}>
-                  {card.total_games} games tracked
-                  {card.show_display_name && card.display_name ? ` · ${card.display_name}` : ''}
-                </div>
+            {/* Top-right: games tracked + exploration */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+              <div style={{ fontSize: '14px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>
+                {card.total_games} games tracked
+                {card.show_display_name && card.display_name ? ` · ${card.display_name}` : ''}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <div style={{ width: '60px', height: '6px', borderRadius: '3px', overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.08)', display: 'flex' }}>
@@ -165,21 +168,21 @@ export default async function Image({ params }: { params: Promise<{ id: string }
 
             {/* Archetype name */}
             {card.show_archetype && card.archetype_name && (
-              <div style={{ fontSize: '36px', fontWeight: 800, color: '#f8fafc', letterSpacing: '-1px', lineHeight: 1.1, display: 'flex', marginBottom: '8px' }}>
+              <div style={{ fontSize: '36px', fontWeight: 800, color: '#f8fafc', letterSpacing: '-1px', lineHeight: 1.1, display: 'flex', marginBottom: '10px' }}>
                 {card.archetype_name}
               </div>
             )}
 
             {/* Archetype descriptor */}
             {card.show_archetype && card.archetype_descriptor && (
-              <div style={{ fontSize: '16px', color: '#c4b5fd', lineHeight: 1.4, display: 'flex', marginBottom: '10px' }}>
+              <div style={{ fontSize: '22px', color: '#c4b5fd', lineHeight: 1.4, display: 'flex', marginBottom: '12px' }}>
                 {card.archetype_descriptor.length > 120 ? card.archetype_descriptor.slice(0, 117) + '...' : card.archetype_descriptor}
               </div>
             )}
 
             {/* Flavor text */}
             {card.flavor_text && (
-              <div style={{ fontSize: '15px', color: '#94a3b8', fontStyle: 'italic', lineHeight: 1.3, display: 'flex', marginBottom: '14px' }}>
+              <div style={{ fontSize: '20px', color: '#94a3b8', fontStyle: 'italic', lineHeight: 1.3, display: 'flex', marginBottom: '16px' }}>
                 {`"${card.flavor_text}"`}
               </div>
             )}
