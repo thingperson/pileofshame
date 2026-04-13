@@ -1,6 +1,7 @@
 import { PlayerArchetype } from '@/lib/archetypes';
 import { plural, shareToTwitter, shareToReddit, generateShareText, getDiscordText } from '@/lib/statsHelpers';
 import { trackShareStats } from '@/lib/analytics';
+import StatsShareComposer from './StatsShareComposer';
 
 interface ValueCalculatorProps {
   calculating: boolean;
@@ -25,6 +26,7 @@ interface ValueCalculatorProps {
     totalHours: number;
     streak: number;
     oldest: { name: string; days: number } | null;
+    inMotion: number;
     totalAchievementsEarned: number;
     totalAchievements: number;
     platinumsEarned: number;
@@ -32,6 +34,7 @@ interface ValueCalculatorProps {
     totalGamerscore: number;
     hasAchievementData: boolean;
   };
+  totalGames: number;
   explorationPct: number;
   currentArchetype: PlayerArchetype;
   showToast: (msg: string) => void;
@@ -53,6 +56,7 @@ export default function ValueCalculator({
   handleCalculate,
   handleRecalculate,
   stats,
+  totalGames,
   explorationPct,
   currentArchetype,
   showToast,
@@ -292,6 +296,21 @@ export default function ValueCalculator({
             >
               📋 Copy
             </button>
+          </div>
+
+          {/* Share as OG card */}
+          <div className="mt-3">
+            <StatsShareComposer
+              stats={stats}
+              totalGames={totalGames}
+              explorationPct={explorationPct}
+              currentArchetype={currentArchetype}
+              unplayedValue={countedUnplayed}
+              playedValue={countedPlayed}
+              backlogHours={backlogHours}
+              calculated={calculated}
+              showToast={showToast}
+            />
           </div>
         </div>
       )}

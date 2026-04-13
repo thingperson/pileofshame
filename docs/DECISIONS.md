@@ -15,6 +15,50 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-12 — Stats share cards mirror clear card architecture at /pile/[id]
+
+**Decision.** Stats share cards use the same architecture as completion share cards: Supabase table (`share_stats`), service-role API writes, 8-char nanoid URLs, server-rendered Satori OG images, public landing page. The route is `/pile/[id]` not `/stats/[id]`.
+
+**Why.** The architecture is proven (clear cards have been live since Apr 8 with no issues). Reusing the same patterns means no new infrastructure, the same RLS model, and the same mental model for maintainability. `/pile/[id]` was chosen over `/stats/[id]` because "pile" is the brand term for a user's library and the card shows their pile's state, not abstract statistics.
+
+**Rejected.**
+- **Client-side only (screenshot approach).** Would not generate OG images for unfurls. The whole point is that pasting the link into Discord/Twitter/Slack shows a rich preview.
+- **Encode stats in URL params.** Same rejection as clear cards: ugly URLs, leaky, breaks on Twitter's shortener.
+- **`/stats/[id]`** — "stats" is generic. "pile" is the brand word.
+
+**Evidence.** `supabase/migrations/004_share_stats.sql`, `app/api/share-stats/route.ts`, `app/pile/[id]/page.tsx`, `app/pile/[id]/opengraph-image.tsx`, `components/StatsShareComposer.tsx`.
+
+---
+
+## 2026-04-12 — Sample data onboarding: pulse CTA instead of auto-reroll
+
+**Decision.** When users load sample data, the import summary modal is skipped entirely. Instead of auto-opening the reroll picker after 800ms (the Apr 8 behavior), the "What Should I Play?" button gets a pulse animation to draw attention without forcing the user into an interaction.
+
+**Why.** Two separate problems. First: sample users don't care how many games were imported or what platforms they came from, so the import summary modal was noise. Second: the 800ms auto-reroll was too aggressive for sample users who haven't oriented themselves yet. They haven't built any ownership of the library, so launching the picker felt disorienting. The pulse splits the difference: it says "this is the main thing" without taking control away.
+
+**Rejected.**
+- **Keep import summary for sample users.** Zero value. They didn't import anything real.
+- **Keep 800ms auto-reroll.** Too aggressive for users who haven't even looked at the app yet.
+- **No highlighting at all.** Users wouldn't know what to do next. The button needs to stand out.
+
+**Evidence.** `app/page.tsx` (isSampleLoad ref, pulseReroll state). Commit `2e20801`.
+
+---
+
+## 2026-04-12 — Celebration modal gets overflow-y-auto and close X button
+
+**Decision.** The completion celebration modal changed from `overflow-hidden` to `overflow-y-auto` with `max-h-[85dvh]`, and a close X button was added at top right.
+
+**Why.** On mobile, the modal content (rating stars, flavor text, share composer, action buttons) exceeded the viewport height. With `overflow-hidden`, the bottom buttons were clipped with no way to reach them or dismiss the modal. The X button is defense-in-depth: even if scrolling somehow fails, users have a clear escape. `85dvh` leaves room for the system UI chrome on mobile browsers.
+
+**Rejected.**
+- **Reduce content to fit.** The share composer is the main new feature and can't be cut.
+- **Full-screen modal on mobile.** Loses the "card floating over the page" feel that makes the celebration feel like a moment.
+
+**Evidence.** `components/CompletionCelebration.tsx`. Commit `7999878`.
+
+---
+
 ## 2026-04-09 — Security posture: user-level deny-list only, no tooling overhead
 
 **Decision.** Created `~/.claude/settings.json` with a narrow Read-deny list for credential files (`~/.ssh/**`, `~/.aws/**`, `~/.gnupg/**`, `~/.azure/**`, `~/.kube/**`, `~/.npmrc`, `~/.git-credentials`, `~/.config/gh/**`, `~/.netrc`, `~/.pypirc`, `.env` / `.env.*` at any depth). Nothing else.

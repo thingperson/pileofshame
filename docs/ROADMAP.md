@@ -114,6 +114,7 @@
   - GetStartedModal flipped: import/sample above the fold, auth below "want to sync?" divider ✅
   - Sample data auto-opens reroll picker after 800ms (instant core loop) ✅
   - PostImportSummary "Got it" → "What Should I Play?" primary CTA + "Browse my library" secondary ✅
+- Onboarding refinement (Apr 12): sample data skips import summary, "What Should I Play?" button pulses instead of auto-reroll ✅
 
 ### Infrastructure
 - Supabase auth + cloud sync ✅
@@ -202,7 +203,7 @@
 ### UX Feedback Sweep (April 6 PDF) — SHIPPED ✅
 - All 16 items from Brady's UX review addressed
 - Playing Now cap (3 games, enforced across all entry points) ✅
-- Tab auto-follow on game move + nudge actions ✅
+- Tab auto-follow on game move + nudge actions + bail ✅
 - Nudge cards restricted to Backlog tab only ✅
 - "Move this game to:" label on stalled nudge buttons ✅
 - List view: platform badge hidden on mobile for title space ✅
@@ -293,6 +294,13 @@
   - "What goes in the slot" recommendations removed from celebration modal (too pushy) ✅
   - Share composer opens by default (no scary "Share" button to click) ✅
   - Contextual notes placeholders by game status ✅
+  - Celebration modal mobile fix: overflow-y-auto + max-h-[85dvh] + close X button (Apr 12) ✅
+  - Post-celebration tab switch to Completed (Apr 12) ✅
+- Stats share cards: composable OG image for library stats, same architecture as clear cards ✅
+  - `/pile/[id]` landing page with archetype, stats grid, value section, trophy case ✅
+  - `/pile/[id]/opengraph-image` dynamic 1200x630 PNG via Satori ✅
+  - StatsShareComposer with toggle checkboxes (archetype, value, trophies, hours, display name) ✅
+  - Supabase `share_stats` table with public read RLS ✅
   - Status cycle locked: Backlog → Up Next → Playing Now → Completed → Moved On ✅
   - "bail" retired from all user-facing copy; action verb = "Not for me", destination state = "Moved On" ✅
   - Component sweep: all toasts, labels, help modal, tabs unified to locked vocabulary ✅

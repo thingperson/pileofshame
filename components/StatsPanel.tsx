@@ -523,6 +523,7 @@ export default function StatsPanel({ games }: StatsPanelProps) {
             handleCalculate={handleCalculate}
             handleRecalculate={handleRecalculate}
             stats={stats}
+            totalGames={totalGames}
             explorationPct={explorationPct}
             currentArchetype={currentArchetype}
             showToast={showToast}
