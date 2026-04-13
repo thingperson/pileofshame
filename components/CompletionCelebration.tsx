@@ -477,7 +477,7 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
         role="dialog"
         aria-modal="true"
         aria-label="Game completion celebration"
-        className="relative w-full max-w-md rounded-2xl border overflow-hidden"
+        className="relative w-full max-w-md max-h-[85dvh] rounded-2xl border overflow-y-auto"
         style={{
           backgroundColor: 'var(--color-bg-card)',
           borderColor: stage === 'celebrate' ? '#22c55e' : 'var(--color-border-active)',
@@ -488,6 +488,13 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative z-20 p-6 sm:p-8 text-center">
+          <button
+            onClick={handleClose}
+            className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-text-dim hover:text-text-muted hover:bg-white/10 transition-all"
+            aria-label="Close"
+          >
+            ✕
+          </button>
           {stage === 'confirm' && (
             <>
               <div className="text-5xl mb-4">🏆</div>

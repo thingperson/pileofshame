@@ -447,7 +447,7 @@ function AppContent() {
           <p className="text-xs text-[#222] font-[family-name:var(--font-mono)] mt-4">less deciding. more playing.</p>
         </div>
         <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} />
-        <CompletionCelebration game={celebrationGame} onClose={closeCelebration} onConfirm={() => { if (celebrationGame) cycleStatus(celebrationGame.id); }} />
+        <CompletionCelebration game={celebrationGame} onClose={() => { closeCelebration(); setActiveTab('completed'); }} onConfirm={() => { if (celebrationGame) cycleStatus(celebrationGame.id); }} />
         <CloudSync />
       </div>
     );
@@ -913,7 +913,10 @@ function AppContent() {
       {/* GridCard handles its own detail modal */}
       <CompletionCelebration
         game={celebrationGame}
-        onClose={closeCelebration}
+        onClose={() => {
+          closeCelebration();
+          setActiveTab('completed');
+        }}
         onConfirm={() => {
           if (celebrationGame) cycleStatus(celebrationGame.id);
         }}

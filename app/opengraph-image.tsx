@@ -157,7 +157,7 @@ export default async function Image() {
                 display: 'flex',
               }}
             >
-              Import your library. Tell us your mood. We pick the game.
+              {"Can't decide what to play? Yeah, we know."}
             </div>
 
             {/* Key feature pills — mono font */}

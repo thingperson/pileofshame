@@ -510,8 +510,9 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
       setBailed(game.id);
       showToast(`${game.name} → Moved On 👋 ${affirmation}`);
       setBailing(false);
+      onStatusChange?.('bailed');
     }, 300);
-  }, [game.id, game.name, setBailed, showToast]);
+  }, [game.id, game.name, setBailed, showToast, onStatusChange]);
 
   const handlePlayAgain = useCallback(() => {
     const { games } = useStore.getState();
