@@ -1,11 +1,9 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { Game } from '@/lib/types';
-import { useStore } from '@/lib/store';
-import { STATUS_CONFIG, TIME_TIER_CONFIG, SOURCE_LABELS, SOURCE_SHORT, SOURCE_COLORS } from '@/lib/constants';
+import { TIME_TIER_CONFIG, SOURCE_LABELS, SOURCE_SHORT, SOURCE_COLORS } from '@/lib/constants';
 import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
-import { useToast } from './Toast';
 import GameDetailModal from './GameDetailModal';
 import { isSoftIgnored } from '@/lib/skipTracking';
 
@@ -37,11 +35,7 @@ interface GridCardProps {
 
 export default function GridCard({ game }: GridCardProps) {
   const [detailOpen, setDetailOpen] = useState(false);
-  const { cycleStatus, getNextStatus, showCelebration } = useStore();
-  const { showToast } = useToast();
 
-  const statusConfig = STATUS_CONFIG[game.status];
-  const nextStatus = getNextStatus(game.status);
   const tierConfig = TIME_TIER_CONFIG[game.timeTier];
 
   // HLTB progress inference
@@ -55,23 +49,6 @@ export default function GridCard({ game }: GridCardProps) {
     ? Math.round((game.achievements!.earned / game.achievements!.total) * 100)
     : 0;
   const achievementsComplete = hasAchievements && game.achievements!.earned === game.achievements!.total;
-
-  const handleStatusClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (game.status === 'played' || game.status === 'bailed') return;
-
-    const next = getNextStatus(game.status);
-    if (next === 'played') {
-      showCelebration(game);
-      return;
-    }
-
-    const newStatus = cycleStatus(game.id);
-    if (newStatus) {
-      const cfg = STATUS_CONFIG[newStatus];
-      showToast(`${game.name} → ${cfg.label} ${cfg.icon}`);
-    }
-  }, [game, cycleStatus, getNextStatus, showToast, showCelebration]);
 
   return (
     <>
@@ -109,23 +86,6 @@ export default function GridCard({ game }: GridCardProps) {
               background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)',
             }}
           />
-
-          {/* Status badge overlay — top left */}
-          <button
-            onClick={handleStatusClick}
-            aria-label={nextStatus ? `${statusConfig.label}. Move to ${STATUS_CONFIG[nextStatus].label}` : statusConfig.label}
-            className={`absolute top-2 left-2 flex items-center gap-1 px-2 py-1.5 min-h-[44px] rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] backdrop-blur-sm transition-all ${
-              game.status !== 'played' && game.status !== 'bailed' ? 'hover:scale-105 active:scale-95 ring-1 ring-white/15' : ''
-            }`}
-            style={{
-              backgroundColor: `${statusConfig.bg}dd`,
-              color: statusConfig.color,
-            }}
-          >
-            <span>{statusConfig.icon}</span>
-            <span>{statusConfig.shortLabel || statusConfig.label}</span>
-            {nextStatus && <span className="text-xs opacity-60">→</span>}
-          </button>
 
           {/* Time tier — top right */}
           <span
