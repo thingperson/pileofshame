@@ -301,6 +301,8 @@
   - `/pile/[id]/opengraph-image` dynamic 1200x630 PNG via Satori ✅
   - StatsShareComposer with toggle checkboxes (archetype, value, trophies, hours, display name) ✅
   - Supabase `share_stats` table with public read RLS ✅
+  - OG card redesign Apr 13: two-column layout, 280px hero logomark on left with brand + tagline, archetype-forward content on right, all text sized for legibility at share scale ✅
+  - Voice sweep Apr 13: "cleared" retired, "Lines Drawn" → "Moved On" on landing page, "won't clear itself" → "won't play itself" in meta ✅
   - Status cycle locked: Backlog → Up Next → Playing Now → Completed → Moved On ✅
   - "bail" retired from all user-facing copy; action verb = "Not for me", destination state = "Moved On" ✅
   - Component sweep: all toasts, labels, help modal, tabs unified to locked vocabulary ✅

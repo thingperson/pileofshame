@@ -15,6 +15,21 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-13 — OG stats card: two-column layout, logo as hero, archetype-forward
+
+**Decision.** The stats OG card (`app/pile/[id]/opengraph-image.tsx`) uses a two-column layout: 280px logomark + brand name + tagline stacked on the left (takes roughly half the card), archetype name/descriptor/flavor text/value pills stacked on the right. Peripheral chrome (games tracked, exploration %, compact stats line, CTA, URL) sits small at the edges. All user-selected content (archetype, flavor text, checked values) renders large and legibly.
+
+**Why.** First pass had an 80px logo and dense 4-stat grid that nobody could read at share-card scale. Brady's feedback over 5 iterations drove the final sizing: the logo needed to be a hero element (320px → 280px after content sizing), the tagline "Stop stalling. Get playing." had to be legible (24px), and the user's selected content (archetype 48px, descriptor 26px, flavor 24px) should dominate over the peripheral stats (which people won't read at share size anyway).
+
+**Rejected.**
+- **Stats grid with 4 pill cards in a row.** Too small to read, wasted space on labels nobody scans in a thumbnail.
+- **Logo in top-left corner at 80px.** Invisible. The logo has to function as the brand signal when someone glances at a Twitter/Discord unfurl.
+- **Fit-everything-in-top-header layout.** Crammed the brand, exploration bar, and games count into a single header row — the brand got lost.
+
+**Evidence.** Commits `9b90dd7`, `5abadf4`, `517ea90`, `e305ac6`. Iteration was rapid (5 pushes in one session) because OG images can't be tested in browser preview — each size change required a commit + deploy + unfurl check.
+
+---
+
 ## 2026-04-12 — Stats share cards mirror clear card architecture at /pile/[id]
 
 **Decision.** Stats share cards use the same architecture as completion share cards: Supabase table (`share_stats`), service-role API writes, 8-char nanoid URLs, server-rendered Satori OG images, public landing page. The route is `/pile/[id]` not `/stats/[id]`.
