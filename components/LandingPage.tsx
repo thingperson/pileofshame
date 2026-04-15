@@ -400,6 +400,16 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
             >
               Terms
             </a>
+            <button
+              type="button"
+              onClick={() => {
+                import('./CookieBanner').then((m) => m.reopenCookieBanner());
+              }}
+              className="text-xs hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] cursor-pointer"
+              style={{ color: 'var(--color-text-faint)' }}
+            >
+              Cookies
+            </button>
           </div>
         </div>
       </section>

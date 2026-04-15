@@ -30,13 +30,13 @@ This doc is the single source of truth while the sprint is in flight. Updated as
 ### 2. Smoke test in CI — 🔜
 **Outcome:** One Playwright file covering sample → roll → reroll. Runs on push via GitHub Actions. If it fails, you don't ship.
 
-### 3. Cookie banner (privacy-first, fast reject) — 🔜
+### 3. Cookie banner (privacy-first, fast reject) — ✅
 **Outcome:** Banner appears on first load, two equal buttons (Accept / Decline). Decline blocks GA4 via `window['ga-disable-...']`. Choice persisted in localStorage. Auth cookies excluded (strictly necessary). EU/UK compliance covered.
 
 ### 4. GA4 conversion events — Brady's side in dashboard
 **Outcome:** Code fires the funnel events (sample_started, sample_completed, import_completed, first_roll, first_commit, first_completion, share_card_created, signup_completed). Brady marks them as Key Events in GA4 UI.
 
-### 5. Branded magic-link HTML email prototype — 🔜
+### 5. Branded magic-link HTML email prototype — ✅ (awaiting Brady review)
 **Outcome:** `docs/email-templates/magic-link.html` — hero logomark, brand voice, single CTA button, plain-text fallback. Brady reviews → wires into Supabase + Resend SMTP.
 
 ### 6. Feedback mechanism — 🔜
@@ -96,3 +96,5 @@ Five items still pending:
 ## Progress log
 
 - **Apr 14 7:47pm** — Sprint kicked off. Items defined. Item 1 in flight.
+- **Apr 14 8:15pm** — Item 1 shipped (cron + ntfy + sprint doc, commit `c76c912`, pushed to main). Awaiting Brady's Vercel env vars + Supabase migration.
+- **Apr 14 8:30pm** — Item 5 drafted (`docs/email-templates/magic-link.html`). Item 3 shipped (CookieBanner — GA only loads after consent, footer "Cookies" link reopens banner).

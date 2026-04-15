@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit, JetBrains_Mono, Nunito } from "next/font/google";
-import Script from "next/script";
+import CookieBanner from "@/components/CookieBanner";
 import "./globals.css";
-
-const GA_ID = 'G-98B24MRQZS';
 
 const outfit = Outfit({
   variable: "--font-display",
@@ -78,18 +76,6 @@ export default function RootLayout({
     >
       <head>
           <link rel="preload" as="image" href="/IF-landing-BG.webp" type="image/webp" />
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-            strategy="afterInteractive"
-          />
-          <Script id="gtag-init" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${GA_ID}');
-            `}
-          </Script>
         </head>
       <body className="min-h-full flex flex-col relative">
         {/* Restore text size preference before paint to avoid flash */}
@@ -133,6 +119,7 @@ export default function RootLayout({
           }}
         />
         {children}
+        <CookieBanner />
       </body>
     </html>
   );
