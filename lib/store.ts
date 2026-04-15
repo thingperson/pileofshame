@@ -98,6 +98,18 @@ export const useStore = create<LibraryState & StoreActions>()(
       addGame: (gameData) => {
         const now = new Date().toISOString();
         const state = get();
+
+        // Hard cap to protect against runaway imports + localStorage bloat.
+        // 5000 is generous (largest known Steam libraries hover around 3-4k);
+        // anyone hitting this is either a power user or a corrupt import.
+        const MAX_LIBRARY_SIZE = 5000;
+        if (state.games.length >= MAX_LIBRARY_SIZE) {
+          if (typeof window !== 'undefined') {
+            console.warn(`Library at cap (${MAX_LIBRARY_SIZE}); skipping add: ${gameData.name}`);
+          }
+          return;
+        }
+
         const categoryGames = state.games.filter(g => g.category === gameData.category);
         const newGame: Game = {
           ...gameData,

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { checkRateLimit, getClientIP } from '@/lib/rateLimit';
+import { fetchWithTimeout } from '@/lib/fetchWithTimeout';
 
 // IsThereAnyDeal API — better data, built-in affiliate links
 // Docs: https://docs.isthereanydeal.com/
@@ -22,7 +24,7 @@ async function lookupGameId(title: string): Promise<string | null> {
   if (idCache.has(key)) return idCache.get(key) || null;
 
   try {
-    const res = await fetch(
+    const res = await fetchWithTimeout(
       `${ITAD_BASE}/games/search/v1?key=${ITAD_KEY}&title=${encodeURIComponent(title.trim())}&results=1`,
       FETCH_OPTS,
     );
@@ -51,7 +53,7 @@ async function getPrices(gameIds: string[]): Promise<Record<string, {
   if (gameIds.length === 0) return {};
 
   try {
-    const res = await fetch(
+    const res = await fetchWithTimeout(
       `${ITAD_BASE}/games/prices/v3?key=${ITAD_KEY}&country=US&capacity=5&nondeals=true`,
       {
         method: 'POST',
@@ -247,6 +249,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
   } catch (err) {
     console.error('Deals API error:', err);
+    Sentry.captureException(err, { tags: { route: 'deals' } });
     return NextResponse.json({ error: 'Internal error' }, { status: 500 });
   }
 }

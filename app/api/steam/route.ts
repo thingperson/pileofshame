@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
+import { fetchWithTimeout } from '@/lib/fetchWithTimeout';
 
 const STEAM_API_KEY = process.env.STEAM_API_KEY;
 
@@ -21,7 +23,7 @@ async function resolveSteamId(input: string): Promise<{ steamId: string } | { er
     return { steamId: lookup };
   }
 
-  const vanityRes = await fetch(
+  const vanityRes = await fetchWithTimeout(
     `https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=${STEAM_API_KEY}&vanityurl=${encodeURIComponent(lookup)}`
   );
   const vanityData = await vanityRes.json();
@@ -32,7 +34,7 @@ async function resolveSteamId(input: string): Promise<{ steamId: string } | { er
 }
 
 async function getPlayerSummary(steamId: string) {
-  const res = await fetch(
+  const res = await fetchWithTimeout(
     `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${STEAM_API_KEY}&steamids=${steamId}`
   );
   const data = await res.json();
@@ -73,7 +75,7 @@ export async function GET(request: NextRequest) {
       let hasMore = true;
 
       while (hasMore && page < 10) {
-        const wishRes = await fetch(
+        const wishRes = await fetchWithTimeout(
           `https://store.steampowered.com/wishlist/profiles/${steamId}/wishlistdata/?p=${page}`
         );
 
@@ -130,7 +132,7 @@ export async function GET(request: NextRequest) {
 
     // Action: playtime — refresh hours for specific appIds
     if (action === 'playtime') {
-      const gamesRes = await fetch(
+      const gamesRes = await fetchWithTimeout(
         `https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${STEAM_API_KEY}&steamid=${steamId}&include_appinfo=true&include_played_free_games=true&format=json`
       );
       const gamesData = await gamesRes.json();
@@ -148,7 +150,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Action: games — fetch owned games
-    const gamesRes = await fetch(
+    const gamesRes = await fetchWithTimeout(
       `https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${STEAM_API_KEY}&steamid=${steamId}&include_appinfo=true&include_played_free_games=true&format=json`
     );
     const gamesData = await gamesRes.json();
@@ -177,6 +179,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (err) {
     console.error('Steam API error:', err);
+    Sentry.captureException(err, { tags: { route: 'steam' } });
     return NextResponse.json({ error: 'Failed to fetch Steam data' }, { status: 500 });
   }
 }

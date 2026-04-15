@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { checkRateLimit, getClientIP } from '@/lib/rateLimit';
+import { fetchWithTimeout } from '@/lib/fetchWithTimeout';
 
 const RAWG_API_KEY = process.env.RAWG_API_KEY;
 
@@ -124,7 +126,7 @@ export async function GET(request: NextRequest) {
       }
 
       // L3: RAWG API
-      const res = await fetch(
+      const res = await fetchWithTimeout(
         `https://api.rawg.io/api/games/${encodeURIComponent(slug)}?key=${RAWG_API_KEY}`
       );
       if (!res.ok) {
@@ -172,7 +174,7 @@ export async function GET(request: NextRequest) {
         });
       }
 
-      const res = await fetch(
+      const res = await fetchWithTimeout(
         `https://api.rawg.io/api/games?key=${RAWG_API_KEY}&search=${encodeURIComponent(search)}&page_size=8&search_precise=true`
       );
       if (!res.ok) {
@@ -202,6 +204,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Provide search or slug parameter' }, { status: 400 });
   } catch (err) {
     console.error('RAWG API error:', err);
+    Sentry.captureException(err, { tags: { route: 'rawg' } });
     return NextResponse.json({ error: 'Failed to fetch RAWG data' }, { status: 500 });
   }
 }

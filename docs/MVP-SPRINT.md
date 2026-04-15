@@ -53,14 +53,13 @@ This doc is the single source of truth while the sprint is in flight. Updated as
 
 ### 10. Brady TODOs — captured in TickTick ✅
 
-### 11. Engineering hard blockers (was Day-1 of original plan) — 🔜
-Five items still pending:
-- Fetch timeouts (`withTimeout` helper, wrap all external API calls)
-- Sentry.captureException in every API route catch block
-- Cap PSN trophy pagination at 5 pages
-- NPSSO scrubbing in `instrumentation.ts` `beforeSend`
-- `/api/health` actually probes Supabase + returns 503 on failure
-- Cap library import at 5000 games (friendly error)
+### 11. Engineering hard blockers — ✅
+- ✅ `lib/fetchWithTimeout.ts` helper. Wraps RAWG, HLTB, ITAD, Steam, Xbox, Game Pass, PS+ fetches at 8s default.
+- ✅ Sentry.captureException added to every API route catch (psn, deals, share, share-stats, hltb, rawg, steam, xbox, gamepass, psplus, feedback, milestone-check).
+- ✅ PSN trophy + purchased pagination capped at 5 pages each.
+- ✅ NPSSO/credential scrubbing in `sentry.server.config.ts` `beforeSend` (npsso, token, access_token, authorization, password, api_key all redacted).
+- ✅ `/api/health` actually probes Supabase + returns 503 with diagnostic JSON on failure. UptimeRobot will now alert on real downtime.
+- ✅ Library cap at 5000 games in `addGame` action (silent skip + console warn).
 
 ### 12. Trust + legal (was Day-2) — 🔜
 - Cookie banner (item 3 covers)
@@ -99,3 +98,4 @@ Five items still pending:
 - **Apr 14 8:15pm** — Item 1 shipped (cron + ntfy + sprint doc, commit `c76c912`, pushed to main). Awaiting Brady's Vercel env vars + Supabase migration.
 - **Apr 14 8:30pm** — Item 5 drafted (`docs/email-templates/magic-link.html`). Item 3 shipped (CookieBanner — GA only loads after consent, footer "Cookies" link reopens banner).
 - **Apr 14 8:50pm** — Items 6, 7, 8, 9 shipped. Feedback widget + table + API live. Mood multi-select shelved (single-select preserves UI, kills the zero-result trap). Email strategy doc + scale-up reconciliation written.
+- **Apr 14 9:15pm** — Item 11 shipped. All 6 engineering hard blockers landed. Fetch timeouts on every external API. Sentry coverage on every route catch. PSN page cap. NPSSO scrubbing. Health endpoint probes Supabase. Library cap at 5000.

@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
+import { fetchWithTimeout } from '@/lib/fetchWithTimeout';
 
 /**
  * Game Pass Catalog API
@@ -37,7 +39,7 @@ export interface GamePassGame {
 /** Fetch product IDs from a Game Pass catalog list */
 async function fetchListIds(listId: string): Promise<string[]> {
   const url = `https://catalog.gamepass.com/sigls/v2?id=${listId}&language=en-us&market=US`;
-  const res = await fetch(url, {
+  const res = await fetchWithTimeout(url, {
     headers: { 'Accept': 'application/json' },
   });
 
@@ -66,7 +68,7 @@ async function fetchProductDetails(productIds: string[]): Promise<Map<string, Ga
     const url = `https://displaycatalog.mp.microsoft.com/v7.0/products?bigIds=${ids}&market=US&languages=en-us&MS-CV=DGU1mcuYo0WMMp`;
 
     try {
-      const res = await fetch(url, {
+      const res = await fetchWithTimeout(url, {
         headers: { 'Accept': 'application/json' },
       });
 
@@ -214,6 +216,7 @@ export async function GET() {
     });
   } catch (err) {
     console.error('Game Pass API error:', err);
+    Sentry.captureException(err, { tags: { route: 'gamepass' } });
     return NextResponse.json(
       { error: 'Failed to fetch Game Pass catalog' },
       { status: 500 }

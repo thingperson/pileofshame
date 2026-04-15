@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import {
   exchangeNpssoForCode,
   exchangeCodeForAccessToken,
   getUserTitles,
   getPurchasedGames,
 } from 'psn-api';
+
+// Cap pagination to fit within Vercel Hobby's 10s function timeout. PSN users
+// with massive trophy lists were timing out on first import; cap at 5 pages
+// (500 trophy titles, 500 purchased games) which covers ~99% of users.
+const MAX_PAGES = 5;
 
 interface PSNTitle {
   trophyTitleName: string;
@@ -54,8 +60,10 @@ export async function POST(request: NextRequest) {
       let start = 0;
       const size = 100;
       let hasMore = true;
+      let pages = 0;
 
-      while (hasMore && start < 2000) {
+      while (hasMore && pages < MAX_PAGES) {
+        pages++;
         const response = await getPurchasedGames(authorization, {
           size,
           start,
@@ -89,8 +97,10 @@ export async function POST(request: NextRequest) {
       let offset = 0;
       const limit = 100;
       let totalItemCount = Infinity;
+      let pages = 0;
 
-      while (offset < totalItemCount && offset < 2000) {
+      while (offset < totalItemCount && pages < MAX_PAGES) {
+        pages++;
         const response = await getUserTitles(authorization, 'me', { limit, offset });
         totalItemCount = response.totalItemCount;
         for (const t of response.trophyTitles as PSNTitle[]) {
@@ -171,6 +181,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (err) {
     console.error('PSN API error:', err);
+    Sentry.captureException(err, { tags: { route: 'psn' } });
     return NextResponse.json({ error: 'Failed to fetch PlayStation data' }, { status: 500 });
   }
 }

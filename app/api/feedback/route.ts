@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { checkRateLimit, getClientIP } from '@/lib/rateLimit';
 
@@ -51,11 +52,13 @@ export async function POST(req: NextRequest) {
 
     if (error) {
       console.error('feedback insert error:', error);
+      Sentry.captureException(error, { tags: { route: 'feedback' } });
       return NextResponse.json({ error: 'Failed to save feedback' }, { status: 500 });
     }
 
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (err) {
+    Sentry.captureException(err, { tags: { route: 'feedback' } });
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
   }
 }

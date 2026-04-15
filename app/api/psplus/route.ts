@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
+import { fetchWithTimeout } from '@/lib/fetchWithTimeout';
 
 /**
  * PS+ Catalog API
@@ -109,7 +111,7 @@ async function fetchPage(offset: number): Promise<{
 
   const url = `${PSN_GRAPHQL_URL}?${params.toString()}`;
 
-  const res = await fetch(url, {
+  const res = await fetchWithTimeout(url, {
     headers: {
       'x-psn-store-locale-override': 'en-US',
       'content-type': 'application/json',
@@ -276,6 +278,7 @@ export async function GET() {
     }
 
     console.error('PS+ API error:', err);
+    Sentry.captureException(err, { tags: { route: 'psplus' } });
     return NextResponse.json(
       { error: 'Failed to fetch PS+ catalog' },
       { status: 500 }

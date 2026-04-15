@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { supabaseServer } from '@/lib/supabaseServer';
 
 // Daily cron: counts users + share cards, pushes ntfy notification on milestone crossings.
@@ -133,6 +134,7 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error('milestone-check error:', msg);
+    Sentry.captureException(err, { tags: { route: 'milestone-check' } });
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

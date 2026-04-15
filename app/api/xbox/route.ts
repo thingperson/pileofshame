@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
+import { fetchWithTimeout } from '@/lib/fetchWithTimeout';
 
 const OPENXBL_API_KEY = process.env.OPENXBL_API_KEY;
 
@@ -25,7 +27,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: 'gamertag parameter required' }, { status: 400 });
       }
 
-      const res = await fetch(
+      const res = await fetchWithTimeout(
         `https://xbl.io/api/v2/search/${encodeURIComponent(gamertag)}`,
         { headers }
       );
@@ -59,7 +61,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'xuid parameter required' }, { status: 400 });
     }
 
-    const res = await fetch(
+    const res = await fetchWithTimeout(
       `https://xbl.io/api/v2/player/titleHistory/${xuid}`,
       { headers }
     );
@@ -107,6 +109,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (err) {
     console.error('Xbox API error:', err);
+    Sentry.captureException(err, { tags: { route: 'xbox' } });
     return NextResponse.json({ error: 'Failed to fetch Xbox data' }, { status: 500 });
   }
 }

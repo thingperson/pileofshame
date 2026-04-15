@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { checkRateLimit, getClientIP } from '@/lib/rateLimit';
+import { fetchWithTimeout } from '@/lib/fetchWithTimeout';
 
 // Direct HLTB integration — April 2026
 // The howlongtobeat npm packages (both 1.8.0 and howlongtobeat-core 1.1.0)
@@ -21,7 +23,7 @@ async function getToken(): Promise<{ token: string; hpKey: string; hpVal: string
   }
 
   try {
-    const res = await fetch(`${HLTB_BASE}/api/find/init?t=${Date.now()}`, {
+    const res = await fetchWithTimeout(`${HLTB_BASE}/api/find/init?t=${Date.now()}`, {
       headers: { 'User-Agent': UA, 'Referer': HLTB_BASE },
     });
 
@@ -79,7 +81,7 @@ async function searchHltb(title: string): Promise<HltbRawGame[] | null> {
   if (auth.hpKey) body[auth.hpKey] = auth.hpVal;
 
   try {
-    const res = await fetch(`${HLTB_BASE}/api/find`, {
+    const res = await fetchWithTimeout(`${HLTB_BASE}/api/find`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -101,7 +103,7 @@ async function searchHltb(title: string): Promise<HltbRawGame[] | null> {
 
       if (freshAuth.hpKey) body[freshAuth.hpKey] = freshAuth.hpVal;
 
-      const retry = await fetch(`${HLTB_BASE}/api/find`, {
+      const retry = await fetchWithTimeout(`${HLTB_BASE}/api/find`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -242,6 +244,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
   } catch (err) {
     console.error('HLTB API error:', err);
+    Sentry.captureException(err, { tags: { route: 'hltb' } });
     return NextResponse.json({ error: 'Internal error' }, { status: 500 });
   }
 }

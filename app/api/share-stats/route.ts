@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { supabaseServer } from '@/lib/supabaseServer';
 
 // Generate 8-char alphanumeric ID (URL-safe, no ambiguous chars)
@@ -62,11 +63,13 @@ export async function POST(req: NextRequest) {
 
     if (error) {
       console.error('Stats share card insert error:', error);
+      Sentry.captureException(error, { tags: { route: 'share-stats' } });
       return NextResponse.json({ error: 'Failed to create stats card' }, { status: 500 });
     }
 
     return NextResponse.json({ id, url: `https://inventoryfull.gg/pile/${id}` });
-  } catch {
+  } catch (err) {
+    Sentry.captureException(err, { tags: { route: 'share-stats' } });
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
   }
 }
