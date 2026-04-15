@@ -18,7 +18,7 @@ This doc is the single source of truth while the sprint is in flight. Updated as
 
 ## Sprint items
 
-### 1. Monitoring + phone alerts (ntfy.sh) — ⏳
+### 1. Monitoring + phone alerts (ntfy.sh) — ✅
 **Outcome:** Daily cron checks user count + share-card volume. Pushes to ntfy when a milestone is crossed (100, 300, 1k, 3k, 5k, 10k users; 1k / 5k / 10k share cards). Brady's iPhone gets the push, no dashboard needed.
 
 **Wiring:**
@@ -27,8 +27,8 @@ This doc is the single source of truth while the sprint is in flight. Updated as
 - `vercel.json` — daily cron schedule
 - Env: `NTFY_TOPIC_URL`, `CRON_SECRET`
 
-### 2. Smoke test in CI — 🔜
-**Outcome:** One Playwright file covering sample → roll → reroll. Runs on push via GitHub Actions. If it fails, you don't ship.
+### 2. Smoke test in CI — ✅
+**Shipped:** `@playwright/test` installed, `playwright.config.ts` targets port 3100 (avoids collision with local `next dev`) and runs against `next start` production bundle. `e2e/smoke.spec.ts` covers landing → sample load → "What Should I Play?" modal open/close. `.github/workflows/ci.yml` runs build + smoke on push to main and on PRs. Failing run blocks merge; Playwright HTML report uploaded as artifact on failure.
 
 ### 3. Cookie banner (privacy-first, fast reject) — ✅
 **Outcome:** Banner appears on first load, two equal buttons (Accept / Decline). Decline blocks GA4 via `window['ga-disable-...']`. Choice persisted in localStorage. Auth cookies excluded (strictly necessary). EU/UK compliance covered.
@@ -61,11 +61,11 @@ This doc is the single source of truth while the sprint is in flight. Updated as
 - ✅ `/api/health` actually probes Supabase + returns 503 with diagnostic JSON on failure. UptimeRobot will now alert on real downtime.
 - ✅ Library cap at 5000 games in `addGame` action (silent skip + console warn).
 
-### 12. Trust + legal (was Day-2) — 🔜
-- Cookie banner (item 3 covers)
-- Inline FTC affiliate disclosure on every deal card
-- Branded magic link (item 5 covers)
-- Privacy policy refresh covering: cookie banner, marketing-consent flag, feedback table
+### 12. Trust + legal (was Day-2) — ✅
+- Cookie banner (item 3 covers) ✅
+- Branded magic link (item 5 covers) ✅
+- Privacy policy refresh covering cookie banner, marketing-consent flag, feedback table, FTC affiliate language ✅ (shipped Apr 14)
+- Inline FTC affiliate disclosure — `components/AffiliateDisclosure.tsx` built and ready. No deal-link UI exists yet (`/api/deals` is only consumed by stats valuation, no user-facing affiliate click surface). **Gate:** when deal UI ships, `<AffiliateDisclosure>` must render at the point of click. Covered by the legal-compliance rule and pre-push review skill.
 
 ---
 
@@ -99,3 +99,4 @@ This doc is the single source of truth while the sprint is in flight. Updated as
 - **Apr 14 8:30pm** — Item 5 drafted (`docs/email-templates/magic-link.html`). Item 3 shipped (CookieBanner — GA only loads after consent, footer "Cookies" link reopens banner).
 - **Apr 14 8:50pm** — Items 6, 7, 8, 9 shipped. Feedback widget + table + API live. Mood multi-select shelved (single-select preserves UI, kills the zero-result trap). Email strategy doc + scale-up reconciliation written.
 - **Apr 14 9:15pm** — Item 11 shipped. All 6 engineering hard blockers landed. Fetch timeouts on every external API. Sentry coverage on every route catch. PSN page cap. NPSSO scrubbing. Health endpoint probes Supabase. Library cap at 5000.
+- **Apr 14 later** — Items 1, 2, 12 closed. ntfy confirmed live (curl → phone buzz). Playwright smoke test green locally, CI workflow wired. AffiliateDisclosure component built and gated by legal-compliance rule.
