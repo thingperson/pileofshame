@@ -18,7 +18,7 @@ export default function PrivacyPage() {
 
         <h1 className="text-3xl font-bold mb-2">Privacy Policy</h1>
         <p className="text-sm text-text-dim font-[family-name:var(--font-mono)] mb-8">
-          Last updated: April 7, 2026
+          Last updated: April 14, 2026
         </p>
 
         <div className="space-y-8 text-text-secondary text-[15px] leading-relaxed">
@@ -98,6 +98,17 @@ export default function PrivacyPage() {
                   in your browser&apos;s localStorage (or in your synced account if you&apos;re signed in).
                 </p>
               </div>
+              <div>
+                <h3 className="text-sm font-semibold text-text-primary mb-1">If you send feedback</h3>
+                <p>
+                  When you submit through the Feedback widget, we store your message, the page URL
+                  you sent it from, and your browser user-agent string. Email is optional. If you
+                  provide an email, we use it only to reply to your specific feedback unless you
+                  explicitly check the &ldquo;Hear from us about updates&rdquo; box at the time of
+                  submission. That checkbox is the only way you can be added to a future marketing list.
+                  We currently send no marketing email at all.
+                </p>
+              </div>
             </div>
           </section>
 
@@ -121,11 +132,12 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">Affiliate links</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">Affiliate disclosure</h2>
             <p>
-              When we show game deals via IsThereAnyDeal, some links may include affiliate parameters.
-              If you purchase a game through one of these links, we may receive a small commission at
-              no extra cost to you. This is how we keep the app free.
+              When we show game deals via IsThereAnyDeal, some links include affiliate parameters.
+              If you buy a game through one of those links, we may earn a small commission at no
+              extra cost to you. We disclose this in line on every deal surface so the affiliation
+              is visible at the point of click, per FTC endorsement guidelines.
             </p>
             <p className="mt-2">
               We never recommend games to buy. We only show deals on games you already own or have
@@ -136,17 +148,31 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-bold text-text-primary mb-3">Cookies and tracking</h2>
             <p>
-              We use Google Analytics to understand how people use the app (page views, feature usage,
-              general traffic patterns). Google Analytics may set cookies to distinguish users. We do
-              not use this data to identify individuals or build advertising profiles. We also use
-              Sentry for error monitoring: when the app crashes or encounters an error, an anonymous
-              error report is sent to Sentry so we can fix bugs. These reports contain the error
-              message and browser type but no personally identifiable information (PII is explicitly
-              disabled). We do not use pixel trackers, fingerprinting, or any form of cross-site tracking.
+              On your first visit, we ask whether to enable analytics cookies. Google Analytics
+              only loads if you accept. If you decline, no analytics scripts are loaded and no
+              tracking cookies are set. You can change your choice anytime via the &ldquo;Cookies&rdquo;
+              link in the footer.
+            </p>
+            <p className="mt-2">
+              <strong>Strictly necessary cookies (no consent required):</strong> sign-in session
+              cookies set by Supabase when you choose to create an account. These are required to
+              keep you logged in and cannot be disabled while you remain signed in.
+            </p>
+            <p className="mt-2">
+              <strong>Analytics cookies (consent-based):</strong> Google Analytics 4 to understand
+              page views, feature usage, and general traffic patterns. We do not use this data to
+              identify individuals or build advertising profiles. No pixel trackers, no fingerprinting,
+              no cross-site tracking.
+            </p>
+            <p className="mt-2">
+              <strong>Error monitoring (no cookies):</strong> Sentry receives anonymous error reports
+              when the app crashes. Reports include the error message and browser type. No personally
+              identifiable information is sent. Authentication tokens and other credentials are
+              automatically scrubbed before any report leaves your browser or our servers.
             </p>
             <p className="mt-2">
               We use localStorage (a browser storage mechanism) to save your app state locally.
-              This is not a cookie and cannot be used for tracking.
+              This is not a cookie and cannot be used for cross-site tracking.
             </p>
             <p className="mt-2">
               When you click deal links to third-party stores, those sites may set their own cookies

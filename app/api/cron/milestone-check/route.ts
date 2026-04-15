@@ -12,6 +12,11 @@ import { supabaseServer } from '@/lib/supabaseServer';
 const USER_MILESTONES = [100, 300, 1000, 3000, 5000, 10000, 25000, 50000];
 const SHARE_MILESTONES = [100, 1000, 5000, 10000, 50000];
 
+// Feedback alerting: ping on every Nth unread feedback item and on any
+// single submission that has marketing_consent = true (those are warm leads
+// that may deserve a personal follow-up).
+const FEEDBACK_PING_EVERY = 5;
+
 const NTFY_URL = process.env.NTFY_TOPIC_URL || '';
 const CRON_SECRET = process.env.CRON_SECRET || '';
 
@@ -74,10 +79,15 @@ export async function GET(req: NextRequest) {
 
     if (shareErr) throw new Error(`share_cards count failed: ${shareErr.message}`);
 
-    // Read current milestone state
+    // Count feedback (lifetime) and check for marketing-consent submissions
+    const { count: feedbackCount } = await supabaseServer
+      .from('feedback')
+      .select('id', { count: 'exact', head: true });
+
+    // Read current state
     const { data: meta, error: metaErr } = await supabaseServer
       .from('app_meta')
-      .select('last_user_milestone, last_share_milestone')
+      .select('last_user_milestone, last_share_milestone, last_feedback_count, last_checked_at')
       .eq('id', 1)
       .single();
 
@@ -85,8 +95,10 @@ export async function GET(req: NextRequest) {
 
     const users = userCount ?? 0;
     const shares = shareCount ?? 0;
+    const feedback = feedbackCount ?? 0;
     const lastUser = meta?.last_user_milestone ?? 0;
     const lastShare = meta?.last_share_milestone ?? 0;
+    const lastFeedback = meta?.last_feedback_count ?? 0;
 
     const crossedUser = nextCrossedMilestone(users, lastUser, USER_MILESTONES);
     const crossedShare = nextCrossedMilestone(shares, lastShare, SHARE_MILESTONES);
@@ -105,30 +117,63 @@ export async function GET(req: NextRequest) {
       notifications.push(`share:${crossedShare}`);
     }
 
-    // Update state if anything changed
-    if (crossedUser !== null || crossedShare !== null) {
-      await supabaseServer
-        .from('app_meta')
-        .update({
-          last_user_milestone: crossedUser ?? lastUser,
-          last_share_milestone: crossedShare ?? lastShare,
-          last_checked_at: new Date().toISOString(),
-        })
-        .eq('id', 1);
-    } else {
-      // Just bump the timestamp so we know cron is alive
-      await supabaseServer
-        .from('app_meta')
-        .update({ last_checked_at: new Date().toISOString() })
-        .eq('id', 1);
+    // Feedback ping: every Nth new submission, plus immediate ping on any
+    // marketing-consent opt-in (warm lead, may want a personal reply).
+    const newFeedback = feedback - lastFeedback;
+    if (newFeedback > 0) {
+      // Check if any of the new submissions opted into marketing
+      const { data: warmLeads } = await supabaseServer
+        .from('feedback')
+        .select('id, email, message, created_at')
+        .eq('marketing_consent', true)
+        .order('created_at', { ascending: false })
+        .limit(newFeedback);
+
+      const newWarmLeads = warmLeads?.filter((f) => {
+        const created = new Date(f.created_at).getTime();
+        const lastChecked = meta ? new Date(meta.last_checked_at || 0).getTime() : 0;
+        return created > lastChecked;
+      }) || [];
+
+      if (newWarmLeads.length > 0) {
+        const lead = newWarmLeads[0];
+        const preview = (lead.message || '').slice(0, 80);
+        await pushNtfy(
+          `Warm lead: ${lead.email}`,
+          `${preview}${preview.length >= 80 ? '…' : ''}`,
+          'high',
+        );
+        notifications.push(`warm-lead:${lead.id}`);
+      } else if (Math.floor(feedback / FEEDBACK_PING_EVERY) > Math.floor(lastFeedback / FEEDBACK_PING_EVERY)) {
+        // Crossed a multiple of FEEDBACK_PING_EVERY — batch ping
+        await pushNtfy(
+          `${newFeedback} new feedback`,
+          `${feedback} total. Check Supabase → feedback table.`,
+          'default',
+        );
+        notifications.push(`feedback:${feedback}`);
+      }
     }
+
+    // Always update state
+    await supabaseServer
+      .from('app_meta')
+      .update({
+        last_user_milestone: crossedUser ?? lastUser,
+        last_share_milestone: crossedShare ?? lastShare,
+        last_feedback_count: feedback,
+        last_checked_at: new Date().toISOString(),
+      })
+      .eq('id', 1);
 
     return NextResponse.json({
       ok: true,
       users,
       shares,
+      feedback,
       lastUser,
       lastShare,
+      lastFeedback,
       crossed: notifications,
     });
   } catch (err) {

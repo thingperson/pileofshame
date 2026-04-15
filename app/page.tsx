@@ -326,6 +326,9 @@ function AppContent() {
 
   // Detect post-import transition (0 → N games) and compute breakdown
   // Skip for: (1) Zustand rehydration on page load, (2) sample data loads
+  // Sample loads are flagged in localStorage so the detection survives any
+  // render race with the Zustand setState (the previous useRef approach
+  // could miss the flag if effects re-ordered).
   useEffect(() => {
     // First run: capture initial count (may be 0 or already hydrated). Never show summary.
     if (prevGameCount.current === null) {
@@ -333,8 +336,10 @@ function AppContent() {
       return;
     }
     if (prevGameCount.current === 0 && games.length > 0) {
-      if (isSampleLoad.current) {
+      const isSample = isSampleLoad.current || (typeof window !== 'undefined' && localStorage.getItem('if-sample-active') === '1');
+      if (isSample) {
         isSampleLoad.current = false;
+        try { localStorage.removeItem('if-sample-active'); } catch {}
       } else {
         const breakdown = {
           total: games.length,
@@ -473,6 +478,7 @@ function AppContent() {
           onImport={() => setImportHubOpen(true)}
           onLoadSample={() => {
             isSampleLoad.current = true;
+            try { localStorage.setItem('if-sample-active', '1'); } catch {}
             useStore.setState({
               games: SAMPLE_GAMES,
               settings: { ...useStore.getState().settings, viewMode: 'grid' },
