@@ -325,13 +325,28 @@ function AppContent() {
   // Auto-enrich games in background after import
   useAutoEnrich();
 
-  // Detect post-import transition (0 → N games) and compute breakdown
-  // Skip for: (1) Zustand rehydration on page load, (2) sample data loads
-  // Sample loads are flagged in localStorage so the detection survives any
-  // render race with the Zustand setState (the previous useRef approach
-  // could miss the flag if effects re-ordered).
+  // Track Zustand persist hydration so import detection only starts
+  // AFTER localStorage has been read. Without this, the 0 -> N transition
+  // from Zustand's async rehydrate is misread as a fresh import and the
+  // PostImportSummary modal wrongly appears on every page load for users
+  // with existing libraries.
+  const [hasHydrated, setHasHydrated] = useState(false);
   useEffect(() => {
-    // First run: capture initial count (may be 0 or already hydrated). Never show summary.
+    setHasHydrated(useStore.persist.hasHydrated());
+    const unsub = useStore.persist.onFinishHydration(() => setHasHydrated(true));
+    return () => { unsub(); };
+  }, []);
+
+  // Detect post-import transition (0 → N games) and compute breakdown.
+  // Guards:
+  //   (1) Hydration must finish first — otherwise the async 0 → N rehydrate
+  //       looks like an import.
+  //   (2) Sample loads are flagged in localStorage so the detection
+  //       survives any render race with the Zustand setState.
+  useEffect(() => {
+    if (!hasHydrated) return;
+
+    // First run after hydration: capture real count. Never show summary.
     if (prevGameCount.current === null) {
       prevGameCount.current = games.length;
       return;
@@ -358,7 +373,7 @@ function AppContent() {
       }
     }
     prevGameCount.current = games.length;
-  }, [games]);
+  }, [games, hasHydrated]);
 
   // First-time experience: track if user has ever used the reroll
   const [mounted, setMounted] = useState(false);
