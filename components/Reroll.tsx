@@ -72,10 +72,12 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   const updateGame = useStore((s) => s.updateGame);
   const { showToast } = useToast();
 
+  // SHELVED Apr 14 2026: multi-select mood filtering caused too many zero-result rolls
+  // (e.g. "cozy" + "no-brainer" returned nothing for medium libraries → users bounce).
+  // Single-select keeps the feature visible with the friction removed. Re-enable
+  // multi-select once we ship a closest-match fallback. See ROADMAP.md.
   const toggleMood = useCallback((mood: MoodTag) => {
-    setMoodFilters((prev) =>
-      prev.includes(mood) ? prev.filter((m) => m !== mood) : [...prev, mood]
-    );
+    setMoodFilters((prev) => (prev.includes(mood) ? [] : [mood]));
   }, []);
 
   const doRoll = useCallback((overrideMode?: RerollMode) => {
@@ -96,7 +98,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
     const pick = pickWeighted(unseenEligible.length > 0 ? unseenEligible : eligible, skippedIds, reroll.lastThreePicks, energy);
     if (!pick) {
       showToast(moodFilters.length > 0
-        ? 'No games match that mood. Try removing a filter.'
+        ? 'No games match that mood. Try a different one.'
         : 'No games match this mode. Add some games first.');
       return;
     }
@@ -204,7 +206,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
     const eligible = getEligibleGames(games, mode, platformPreference, moodFilters);
     if (eligible.length === 0) {
       showToast(moodFilters.length > 0
-        ? 'No games match that mood. Try removing a filter.'
+        ? 'No games match that mood. Try a different one.'
         : 'No games match this mode.');
       return;
     }

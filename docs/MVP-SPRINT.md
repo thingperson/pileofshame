@@ -39,16 +39,16 @@ This doc is the single source of truth while the sprint is in flight. Updated as
 ### 5. Branded magic-link HTML email prototype — ✅ (awaiting Brady review)
 **Outcome:** `docs/email-templates/magic-link.html` — hero logomark, brand voice, single CTA button, plain-text fallback. Brady reviews → wires into Supabase + Resend SMTP.
 
-### 6. Feedback mechanism — 🔜
+### 6. Feedback mechanism — ✅
 **Outcome:** Floating "Feedback" button → modal with textarea + optional email + checkbox "Hear from us about updates" → POST `/api/feedback` → `feedback` table. Migration `006_feedback.sql`. Footer "Found a bug?" link wires to same modal.
 
-### 7. Mood-filter friction — DEFER (shelve, not delete) — 💤
-**Decision:** Filter combos returning zero games is a kill-switch for first-timers. Shelving the multi-filter UI for MVP. Single mood pick allowed; "Advanced filters" hidden behind a settings flag. Logged in IDEAS.md and ROADMAP.md as "needs UX rethink — likely needs a 'closest match' fallback before re-enabling."
+### 7. Mood-filter friction — ✅ (shelved as single-select)
+**Shipped:** `toggleMood` in `Reroll.tsx` now acts as single-select (click a mood = sets it as the only one; click again = clears). UI unchanged. Multi-select friction (zero-result rolls killing first-time users) eliminated. Code comment + ROADMAP entry note: re-enable multi-select once we ship a closest-match fallback.
 
-### 8. Email capture strategy + scale-up doc — 🔜
+### 8. Email capture strategy + scale-up doc — ✅
 **Outcome:** New `docs/email-strategy.md`. Covers: capture moments (post-sample archetype save, share-card "make yours" CTA, future Year-in-Review), required marketing-consent checkbox now even if no flows exist yet, service progression (no service → ConvertKit/Resend Audiences free → Customer.io when >10k), starter flows for when we're ready, and a "do not start until X" gate to avoid premature email work.
 
-### 9. Audit + reconcile scale-up-plan.md — 🔜
+### 9. Audit + reconcile scale-up-plan.md — ✅
 **Outcome:** Read it line-by-line, mark stale claims, add the new pieces (Sentry coverage, ntfy alerts, in-memory rate-limit gap, ITAD cache gap, NPSSO scrubbing). Sync with this sprint doc.
 
 ### 10. Brady TODOs — captured in TickTick ✅
@@ -98,3 +98,4 @@ Five items still pending:
 - **Apr 14 7:47pm** — Sprint kicked off. Items defined. Item 1 in flight.
 - **Apr 14 8:15pm** — Item 1 shipped (cron + ntfy + sprint doc, commit `c76c912`, pushed to main). Awaiting Brady's Vercel env vars + Supabase migration.
 - **Apr 14 8:30pm** — Item 5 drafted (`docs/email-templates/magic-link.html`). Item 3 shipped (CookieBanner — GA only loads after consent, footer "Cookies" link reopens banner).
+- **Apr 14 8:50pm** — Items 6, 7, 8, 9 shipped. Feedback widget + table + API live. Mood multi-select shelved (single-select preserves UI, kills the zero-result trap). Email strategy doc + scale-up reconciliation written.

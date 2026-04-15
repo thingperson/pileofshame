@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit, JetBrains_Mono, Nunito } from "next/font/google";
 import CookieBanner from "@/components/CookieBanner";
+import FeedbackWidget from "@/components/FeedbackWidget";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -119,6 +120,7 @@ export default function RootLayout({
           }}
         />
         {children}
+        <FeedbackWidget />
         <CookieBanner />
       </body>
     </html>
