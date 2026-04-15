@@ -8,7 +8,7 @@ import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
 import { getGameDescriptor } from '@/lib/descriptors';
 import { REROLL_MODES, RerollMode, EnergyLevel, getDefaultEnergy, getEligibleGames, pickWeighted, getPickReasons } from '@/lib/reroll';
 import { useToast } from './Toast';
-import { trackReroll, trackRerollCommit } from '@/lib/analytics';
+import { trackReroll, trackRerollCommit, trackFirstRoll, trackFirstCommit, trackSampleCompleted } from '@/lib/analytics';
 import { recordSkip } from '@/lib/skipTracking';
 import { recordSkipReason, SkipReasonKey } from '@/lib/skipReasons';
 import { recordDecision } from '@/lib/decisionHistory';
@@ -151,6 +151,8 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
       setCurrentPick(pick);
       setRolling(false);
       setRevealed(true);
+      // Funnel: first-ever roll reveal (once per browser)
+      trackFirstRoll();
 
       // Check if forced choice at roll 10
       if (newCount >= 10) {
@@ -168,6 +170,19 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
     }
     updateGame(game.id, { status: 'playing' });
     trackRerollCommit();
+    // Funnel: first-ever commit (once per browser)
+    trackFirstCommit();
+    // Funnel: if this commit came out of the sample onboarding flow, count
+    // the sample as completed. Flag is set on sample load and cleared once
+    // here so later commits don't re-fire.
+    try {
+      if (typeof window !== 'undefined' && localStorage.getItem('if-sample-pending') === '1') {
+        trackSampleCompleted();
+        localStorage.removeItem('if-sample-pending');
+      }
+    } catch {
+      // ignore storage errors
+    }
     recordDecision({
       gameId: game.id,
       gameName: game.name,

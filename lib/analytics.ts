@@ -38,3 +38,37 @@ export const trackShareClear = (platform: string, game: string) => gtag('share_c
 // Discovery
 export const trackStatsExpand = () => gtag('stats_expand');
 export const trackHelpOpen = () => gtag('help_open');
+
+// ── Funnel / Key Event milestones ──────────────────────────────────────
+// These are the events to mark as "Key Events" in GA4 Admin → Events.
+// They fire in addition to (not instead of) the granular events above, so
+// existing detail reporting is preserved.
+//
+// "first_*" events use a localStorage guard so each browser fires them at
+// most once. That makes them clean conversion signals.
+
+function fireOnce(flagKey: string, fn: () => void): void {
+  if (typeof window === 'undefined') return;
+  try {
+    if (localStorage.getItem(flagKey) === '1') return;
+    localStorage.setItem(flagKey, '1');
+  } catch {
+    // If storage is unavailable, fall through — fire anyway.
+  }
+  fn();
+}
+
+// Onboarding funnel
+export const trackSampleStarted = () => gtag('sample_started');
+export const trackSampleCompleted = () => fireOnce('if-ga-sample-completed', () => gtag('sample_completed'));
+export const trackImportCompleted = (source: string, count: number) =>
+  gtag('import_completed', { source, game_count: count });
+
+// First-action milestones (once per browser)
+export const trackFirstRoll = () => fireOnce('if-ga-first-roll', () => gtag('first_roll'));
+export const trackFirstCommit = () => fireOnce('if-ga-first-commit', () => gtag('first_commit'));
+export const trackFirstCompletion = () => fireOnce('if-ga-first-completion', () => gtag('first_completion'));
+
+// Share + auth conversion
+export const trackShareCardCreated = (game: string) => gtag('share_card_created', { game_name: game });
+export const trackSignupCompleted = () => gtag('signup_completed');

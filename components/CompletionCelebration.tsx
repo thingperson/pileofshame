@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { Game } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
-import { trackGameCleared, trackShareClear } from '@/lib/analytics';
+import { trackGameCleared, trackShareClear, trackFirstCompletion, trackShareCardCreated } from '@/lib/analytics';
 
 interface CompletionCelebrationProps {
   game: Game | null;
@@ -231,6 +231,8 @@ function GameClearShare({
       if (data.url) {
         setShareUrl(data.url);
         trackShareClear('card_created', game.name);
+        // Funnel: share card successfully generated
+        trackShareCardCreated(game.name);
       }
     } catch {
       showToast('Could not create share card. Try copying instead.');
@@ -388,6 +390,8 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
   const handleConfirm = useCallback(() => {
     onConfirm();
     trackGameCleared();
+    // Funnel: first-ever completion (once per browser)
+    trackFirstCompletion();
     setStage('celebrate');
   }, [onConfirm]);
 

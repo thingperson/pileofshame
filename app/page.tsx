@@ -33,6 +33,7 @@ import GamePassBrowse from '@/components/GamePassBrowse';
 import StalledGameNudge from '@/components/StalledGameNudge';
 import FinishCheckNudge from '@/components/FinishCheckNudge';
 import { trackThemeSession } from '@/lib/archetypes';
+import { trackSampleStarted, trackImportCompleted, trackSignupCompleted } from '@/lib/analytics';
 import { useAuth } from '@/lib/useAuth';
 
 // ── Inline Search ──────────────────────────────────────────────────
@@ -350,6 +351,10 @@ function AppContent() {
           completed: games.filter((g) => g.status === 'played').length,
         };
         setImportBreakdown(breakdown);
+        // We don't know the exact source here (Steam/Xbox/PSN/manual) so we
+        // fire a generic "any" source — the breakdown already tells GA4
+        // everything about the resulting library shape.
+        trackImportCompleted('any', games.length);
       }
     }
     prevGameCount.current = games.length;
@@ -361,6 +366,21 @@ function AppContent() {
   useEffect(() => {
     setMounted(true);
     setHasUsedReroll(!!localStorage.getItem('pos-reroll-used'));
+
+    // Auth callback lands on /?auth=ok — fire GA4 signup_completed once,
+    // then strip the flag so a reload doesn't re-fire it.
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('auth') === 'ok') {
+        trackSignupCompleted();
+        params.delete('auth');
+        const newSearch = params.toString();
+        const newUrl = window.location.pathname + (newSearch ? `?${newSearch}` : '') + window.location.hash;
+        window.history.replaceState({}, '', newUrl);
+      }
+    } catch {
+      // URL manipulation is best-effort
+    }
   }, []);
 
   const handleOpenReroll = (mode?: RerollMode) => {
@@ -478,7 +498,14 @@ function AppContent() {
           onImport={() => setImportHubOpen(true)}
           onLoadSample={() => {
             isSampleLoad.current = true;
-            try { localStorage.setItem('if-sample-active', '1'); } catch {}
+            try {
+              localStorage.setItem('if-sample-active', '1');
+              // Separate flag that persists until sample_completed fires
+              // (the above is cleared on first render). Used to attribute
+              // the user's first real commit back to sample onboarding.
+              localStorage.setItem('if-sample-pending', '1');
+            } catch {}
+            trackSampleStarted();
             useStore.setState({
               games: SAMPLE_GAMES,
               settings: { ...useStore.getState().settings, viewMode: 'grid' },

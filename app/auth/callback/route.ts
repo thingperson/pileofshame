@@ -13,6 +13,7 @@ export async function GET(request: NextRequest) {
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  // Redirect back to the app
-  return NextResponse.redirect(new URL('/', request.url));
+  // Redirect back to the app with a flag so the client can fire a one-time
+  // GA4 signup_completed event. The flag is stripped from the URL on mount.
+  return NextResponse.redirect(new URL('/?auth=ok', request.url));
 }
