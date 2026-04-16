@@ -107,7 +107,7 @@ function renderDefaultCard(d: CardData) {
           <div style={{ display: 'flex', gap: '32px', marginBottom: '24px' }}>
             {d.value > 0 && (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <div style={{ fontSize: '14px', color: '#64748b', display: 'flex' }}>Unplayed value</div>
+                <div style={{ fontSize: '14px', color: '#64748b', display: 'flex' }}>Waiting to be reclaimed</div>
                 <div style={{ fontSize: '28px', fontWeight: 800, color: '#f59e0b', display: 'flex' }}>
                   ${d.value.toLocaleString()}
                 </div>
@@ -115,7 +115,7 @@ function renderDefaultCard(d: CardData) {
             )}
             {d.playedValue > 0 && (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <div style={{ fontSize: '14px', color: '#64748b', display: 'flex' }}>Value recovered</div>
+                <div style={{ fontSize: '14px', color: '#64748b', display: 'flex' }}>Value reclaimed</div>
                 <div style={{ fontSize: '28px', fontWeight: 800, color: '#22c55e', display: 'flex' }}>
                   ${d.playedValue.toLocaleString()}
                 </div>
@@ -173,8 +173,8 @@ function renderReceiptCard(d: CardData) {
     ...(d.hours > 0 ? [`HOURS LOGGED ............ ${d.hours.toLocaleString()}`] : []),
     '',
     '--------------------------------',
-    ...(d.value > 0 ? [`UNPLAYED VALUE    $${d.value.toLocaleString()}`] : []),
-    ...(d.playedValue > 0 ? [`VALUE RECOVERED   $${d.playedValue.toLocaleString()}`] : []),
+    ...(d.value > 0 ? [`WAITING TO RECLAIM $${d.value.toLocaleString()}`] : []),
+    ...(d.playedValue > 0 ? [`VALUE RECLAIMED   $${d.playedValue.toLocaleString()}`] : []),
     ...(d.backlogHours > 0 ? [`TIME TO CLEAR     ~${d.backlogHours.toLocaleString()}h`] : []),
     '--------------------------------',
     '',
@@ -286,7 +286,7 @@ function renderPolaroidCard(d: CardData) {
             </div>
             {d.value > 0 && (
               <div style={{ fontSize: '20px', color: '#fbbf24', fontWeight: 700, marginTop: '8px', display: 'flex' }}>
-                ${d.value.toLocaleString()} sitting unplayed
+                ${d.value.toLocaleString()} waiting to be reclaimed
               </div>
             )}
             {/* Mini progress */}
@@ -378,7 +378,7 @@ function renderPixelCard(d: CardData) {
 
           {d.value > 0 && (
             <div style={{ fontSize: '22px', fontWeight: 700, color: '#ffcc00', marginTop: '8px', display: 'flex' }}>
-              UNPLAYED VALUE: ${d.value.toLocaleString()}
+              WAITING TO RECLAIM: ${d.value.toLocaleString()}
             </div>
           )}
 
@@ -454,7 +454,7 @@ function renderUltraCard(d: CardData) {
               ${d.value.toLocaleString()}
             </div>
             <div style={{ fontSize: '16px', color: '#555555', letterSpacing: '1px', display: 'flex' }}>
-              UNPLAYED
+              TO RECLAIM
             </div>
           </div>
         )}

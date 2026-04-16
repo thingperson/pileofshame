@@ -53,11 +53,23 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     return { title: 'Inventory Full' };
   }
 
-  const who = card.show_display_name && card.display_name ? card.display_name : 'Someone';
-  const title = `${who} has ${card.total_games} games tracked, ${card.games_cleared} completed | Inventory Full`;
-  const description = card.show_archetype && card.archetype_name
-    ? `${card.archetype_name}. ${card.games_cleared} completed, ${card.backlog_size} in the pile, ${card.exploration_pct}% explored. Your pile won't play itself. Track your backlog and start playing with Inventory Full.`
-    : `${card.games_cleared} completed, ${card.games_in_motion} in motion, ${card.backlog_size} in the pile, ${card.exploration_pct}% explored. Your pile won't play itself. Track your backlog and start playing with Inventory Full.`;
+  const who = card.show_display_name && card.display_name ? card.display_name : null;
+  // Archetype-led title when available: "[Name] is an Archaeologist with 39 games waiting to be played"
+  // Fallback without name: "The Archaeologist has 39 games waiting to be played"
+  // Fallback without archetype: "[Name] has 39 games tracked, 5 completed"
+  const archetypeClean = card.show_archetype && card.archetype_name
+    ? card.archetype_name.replace(/^[^\w\s]+\s*/, '') // strip leading emoji
+    : null;
+  const title = archetypeClean
+    ? who
+      ? `${who} is a${/^[aeiou]/i.test(archetypeClean) ? 'n' : ''} ${archetypeClean} with ${card.total_games} games waiting to be played | Inventory Full`
+      : `The ${archetypeClean} has ${card.total_games} games waiting to be played | Inventory Full`
+    : who
+      ? `${who} has ${card.total_games} games tracked, ${card.games_cleared} completed | Inventory Full`
+      : `Someone has ${card.total_games} games tracked, ${card.games_cleared} completed | Inventory Full`;
+  const description = archetypeClean
+    ? `${card.games_cleared} completed, ${card.backlog_size} in the pile, ${card.exploration_pct}% explored.${card.show_value && card.unplayed_value ? ` $${card.unplayed_value.toLocaleString()} waiting to be reclaimed.` : ''} Less shame. More game.`
+    : `${card.games_cleared} completed, ${card.games_in_motion} in motion, ${card.backlog_size} in the pile, ${card.exploration_pct}% explored. Less shame. More game.`;
 
   return {
     title,
@@ -165,13 +177,13 @@ export default async function PilePage({ params }: { params: Promise<{ id: strin
                 <div className="grid grid-cols-2 gap-2">
                   {card.unplayed_value && (
                     <div>
-                      <div className="text-xs text-text-dim font-mono">Untapped</div>
+                      <div className="text-xs text-text-dim font-mono">Waiting to reclaim</div>
                       <div className="text-lg font-bold font-mono" style={{ color: '#a78bfa' }}>~${card.unplayed_value.toLocaleString()}</div>
                     </div>
                   )}
                   {card.played_value && (
                     <div>
-                      <div className="text-xs text-text-dim font-mono">Unlocked</div>
+                      <div className="text-xs text-text-dim font-mono">Reclaimed</div>
                       <div className="text-lg font-bold font-mono" style={{ color: '#22c55e' }}>${card.played_value.toLocaleString()}</div>
                     </div>
                   )}

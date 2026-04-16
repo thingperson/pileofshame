@@ -126,7 +126,7 @@ export function generateShareText(stats: {
   }
 
   if (stats.gamesCleared > 0) {
-    lines.push(`${stats.gamesCleared} cleared${stats.playedValue > 0 ? ` ($${stats.playedValue.toLocaleString()} worth of value unlocked)` : ''}.`);
+    lines.push(`${stats.gamesCleared} cleared${stats.playedValue > 0 ? ` ($${stats.playedValue.toLocaleString()} reclaimed from the backlog)` : ''}.`);
   }
 
   if (stats.bailedCount > 0) {

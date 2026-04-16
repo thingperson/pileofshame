@@ -47,9 +47,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
 
   const title = `I cleared ${card.game_name} off my backlog | Inventory Full`;
+  const valueStr = card.show_dollar_value && card.dollar_value ? ` $${Math.round(card.dollar_value)} reclaimed.` : '';
   const description = card.flavor_text
-    ? `${card.flavor_text} Your pile won't clear itself. Track your gaming backlog, decide what to play, and celebrate every clear with Inventory Full.`
-    : `${card.game_name} has been cleared from the pile. Your backlog won't clear itself — that's where Inventory Full comes in. Track your games, decide what to play, and start clearing.`;
+    ? `${card.flavor_text}${valueStr} Less shame. More game.`
+    : `${card.game_name} has been cleared from the pile.${valueStr} Less shame. More game.`;
 
   return {
     title,
@@ -108,7 +109,7 @@ export default async function ClearPage({ params }: { params: Promise<{ id: stri
     details.push({ label: 'Time in the pile', value: timeStr });
   }
   if (card.show_dollar_value && card.dollar_value) {
-    details.push({ label: 'Value recovered', value: `$${Math.round(card.dollar_value)}` });
+    details.push({ label: 'Value reclaimed', value: `$${Math.round(card.dollar_value)}` });
   }
   if (card.show_stats && card.total_cleared) {
     details.push({ label: 'Games cleared', value: `#${card.total_cleared}` });

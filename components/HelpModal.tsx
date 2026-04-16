@@ -117,6 +117,21 @@ const SECTIONS = [
     ],
   },
   {
+    id: 'icons',
+    title: 'Card Icons',
+    icon: '🏷️',
+    items: [
+      {
+        q: 'On a game card, you\'ll see:',
+        a: '⭐ Wishlisted — you want to buy this someday\n🚫 Ignored — hidden from recommendations\n💤 Soft-ignored — skipped too many times, hidden automatically\n🏆 Platinum — you earned every achievement',
+      },
+      {
+        q: 'Status icons',
+        a: '📚 Backlog — haven\'t started yet\n🎯 Up Next — queued to play soon\n▶️ Playing Now — actively playing\n✅ Completed — done, credits rolled\n👋 Moved On — not for you, no shame',
+      },
+    ],
+  },
+  {
     id: 'deals',
     title: 'Deals & Prices',
     icon: '💰',

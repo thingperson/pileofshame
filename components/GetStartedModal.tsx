@@ -6,11 +6,13 @@ import { useAuth } from '@/lib/useAuth';
 interface GetStartedModalProps {
   open: boolean;
   onClose: () => void;
-  onImport: () => void;
-  onLoadSample: () => void;
+  /** @deprecated No longer used — modal is sign-in only. Kept for backward compat. */
+  onImport?: () => void;
+  /** @deprecated No longer used — modal is sign-in only. Kept for backward compat. */
+  onLoadSample?: () => void;
 }
 
-export default function GetStartedModal({ open, onClose, onImport, onLoadSample }: GetStartedModalProps) {
+export default function GetStartedModal({ open, onClose }: GetStartedModalProps) {
   const { signInWithDiscord, signInWithGoogle, signInWithEmail } = useAuth();
   const [showEmailInput, setShowEmailInput] = useState(false);
   const [email, setEmail] = useState('');
@@ -48,7 +50,7 @@ export default function GetStartedModal({ open, onClose, onImport, onLoadSample 
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Get Started"
+        aria-label="Sign in to sync"
         className={`relative w-full sm:max-w-sm rounded-t-2xl sm:rounded-2xl border overflow-hidden transition-all duration-300 ${
           visible ? 'translate-y-0 scale-100' : 'translate-y-8 scale-95'
         }`}
@@ -68,49 +70,14 @@ export default function GetStartedModal({ open, onClose, onImport, onLoadSample 
 
         <div className="px-5 pt-6 pb-5 space-y-4">
           <div className="text-center">
-            <h2 className="text-lg font-bold text-text-primary">Get Started</h2>
+            <h2 className="text-lg font-bold text-text-primary">Sign in to sync</h2>
             <p className="text-xs text-text-muted mt-1">
-              Import your games. We&apos;ll pick what to play.
+              Keep your library across devices. Free forever.
             </p>
           </div>
 
           {!showEmailInput && !emailSent && (
             <>
-              {/* Jump straight in — no account needed */}
-              <div className="space-y-2">
-                <button
-                  onClick={() => { onImport(); handleClose(); }}
-                  className="w-full px-3 py-3 text-sm font-bold rounded-xl transition-all hover:scale-[1.01] active:scale-[0.99]"
-                  style={{
-                    background: 'linear-gradient(135deg, var(--color-accent-purple) 0%, var(--color-accent-pink) 100%)',
-                    color: '#fff',
-                  }}
-                >
-                  Import my library
-                </button>
-                <button
-                  onClick={() => { onLoadSample(); handleClose(); }}
-                  className="w-full px-3 py-2.5 text-xs font-medium rounded-xl border transition-all hover:border-accent-purple hover:bg-white/5"
-                  style={{
-                    borderColor: 'var(--color-border-subtle)',
-                    color: 'var(--color-text-muted)',
-                  }}
-                >
-                  Try with sample data first
-                </button>
-              </div>
-
-              <p className="text-xs text-text-faint/60 text-center font-[family-name:var(--font-mono)]">
-                No account needed. Takes 30 seconds.
-              </p>
-
-              {/* Divider */}
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
-                <span className="text-xs text-text-faint font-[family-name:var(--font-mono)]">want to sync across devices?</span>
-                <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
-              </div>
-
               {/* Sign in options */}
               <div className="space-y-2">
                 <button

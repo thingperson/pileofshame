@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import AuthButton from '@/components/AuthButton';
-import GetStartedModal from '@/components/GetStartedModal';
 
 interface LandingPageProps {
   onImport: () => void;
@@ -12,7 +11,6 @@ interface LandingPageProps {
 
 export default function LandingPage({ onImport, onLoadSample }: LandingPageProps) {
   const [visible, setVisible] = useState(false);
-  const [showGetStarted, setShowGetStarted] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 50);
@@ -66,6 +64,13 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="currentColor" strokeWidth="1" style={{ color: 'var(--color-accent-purple)' }} />
         </svg>
       </div>
+
+      {/* ═══════════════════════════════════════════
+          TOP NAV — sign-in only, minimal
+          ═══════════════════════════════════════════ */}
+      <nav className="relative z-20 flex items-center justify-end px-6 py-4">
+        <AuthButton />
+      </nav>
 
       {/* ═══════════════════════════════════════════
           HERO
@@ -131,23 +136,44 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           </h1>
 
           <p
-            className="text-sm sm:text-base md:text-lg leading-relaxed max-w-md mx-auto mb-5"
+            className="text-base sm:text-lg md:text-xl leading-relaxed max-w-md mx-auto mb-6"
             style={{ color: 'var(--color-text-muted)' }}
           >
-            Can&apos;t decide what to play? Yeah, we know.
+            We&apos;ll pick the game. You do the playing.
           </p>
 
-          <button
-            onClick={() => setShowGetStarted(true)}
-            className="px-8 py-4 text-base sm:text-lg font-bold rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
-            style={{
-              background: 'linear-gradient(135deg, var(--color-accent-purple) 0%, var(--color-accent-pink) 100%)',
-              color: '#fff',
-              boxShadow: '0 4px 24px color-mix(in srgb, var(--color-accent-purple) 30%, transparent)',
-            }}
-          >
-            Get Started
-          </button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button
+              onClick={onImport}
+              className="w-full sm:w-auto px-8 py-4 text-base sm:text-lg font-bold rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
+              style={{
+                background: 'linear-gradient(135deg, var(--color-accent-purple) 0%, var(--color-accent-pink) 100%)',
+                color: '#fff',
+                boxShadow: '0 4px 24px color-mix(in srgb, var(--color-accent-purple) 30%, transparent)',
+              }}
+            >
+              Import My Library
+            </button>
+            <button
+              onClick={onLoadSample}
+              className="w-full sm:w-auto px-6 py-3.5 text-sm sm:text-base font-medium rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              style={{
+                background: 'transparent',
+                color: 'var(--color-text-muted)',
+                border: '1px solid var(--color-border-subtle)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--color-accent-purple)';
+                e.currentTarget.style.color = 'var(--color-text-primary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--color-border-subtle)';
+                e.currentTarget.style.color = 'var(--color-text-muted)';
+              }}
+            >
+              Try a sample first
+            </button>
+          </div>
 
           <p
             className="mt-4 text-xs font-[family-name:var(--font-mono)]"
@@ -155,24 +181,6 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           >
             Free. No account required.
           </p>
-
-          {/* Sign-in affordance for returning users */}
-          <div className="mt-5 flex items-center justify-center gap-2">
-            <span
-              className="text-xs font-[family-name:var(--font-mono)]"
-              style={{ color: 'var(--color-text-faint)' }}
-            >
-              Already have an account?
-            </span>
-            <AuthButton />
-          </div>
-
-          <GetStartedModal
-            open={showGetStarted}
-            onClose={() => setShowGetStarted(false)}
-            onImport={onImport}
-            onLoadSample={onLoadSample}
-          />
         </div>
 
         {/* Scroll hint */}
@@ -213,7 +221,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
             />
             <StepCard
               number="02"
-              title="Vibe Check"
+              title="Match today's vibe"
               description="Tell us your mood and how much time you've got. We match you to a game that fits right now."
               icon={<VibeStepIcon />}
             />
@@ -253,19 +261,36 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
               className="text-base sm:text-lg leading-relaxed"
               style={{ color: 'var(--color-text-muted)' }}
             >
-              Every other app wants you to catalogue and organize.
+              Backloggd is more library to manage.
               <br />
-              We want you to <strong style={{ color: 'var(--color-text-primary)' }}>close the app and go play.</strong>
+              Managing isn&apos;t playing.
+              <br />
+              <strong style={{ color: 'var(--color-text-primary)' }}>We pick. You play.</strong>
             </p>
+          </div>
+        </div>
+      </section>
 
-            <p
-              className="text-base sm:text-lg leading-relaxed"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              You scroll for 20 minutes, pick nothing, open YouTube.
-              <br />
-              Inventory Full fixes that.
-            </p>
+      {/* ═══════════════════════════════════════════
+          PULL QUOTE
+          ═══════════════════════════════════════════ */}
+      <section className="relative px-6 py-8 sm:py-12">
+        <div className="max-w-xl mx-auto text-center">
+          <div className="max-w-xs mx-auto mb-6 flex items-center gap-4">
+            <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+            <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+          </div>
+          <p
+            className="text-base sm:text-lg leading-relaxed italic"
+            style={{ color: 'var(--color-text-muted)', opacity: 0.7 }}
+          >
+            Your backlog should feel exciting.
+            <br />
+            Not a warehouse of good intentions.
+          </p>
+          <div className="max-w-xs mx-auto mt-6 flex items-center gap-4">
+            <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+            <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
           </div>
         </div>
       </section>
@@ -353,8 +378,15 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
               boxShadow: '0 4px 24px color-mix(in srgb, var(--color-accent-purple) 30%, transparent)',
             }}
           >
-            Import My Library - It&apos;s Free
+            Import My Library
           </button>
+
+          <p
+            className="mt-3 text-xs font-[family-name:var(--font-mono)]"
+            style={{ color: 'var(--color-text-faint)' }}
+          >
+            Free. No account required.
+          </p>
 
           <button
             onClick={onLoadSample}

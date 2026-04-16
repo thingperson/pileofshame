@@ -89,7 +89,7 @@ export default function ValueCalculator({
           }}
         >
           <div className="text-xs text-text-muted font-[family-name:var(--font-mono)] mb-1">
-            💎 Estimated untapped value
+            💎 Waiting to be reclaimed
           </div>
           <div
             className="text-3xl sm:text-4xl font-bold font-[family-name:var(--font-mono)] tracking-tight"
@@ -131,7 +131,7 @@ export default function ValueCalculator({
           {calculated && playedValue > 0 && (
             <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
               <div className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-0.5">
-                💰 Value unlocked by playing
+                💰 Value reclaimed from the backlog
               </div>
               <div
                 className="text-xl font-bold font-[family-name:var(--font-mono)]"

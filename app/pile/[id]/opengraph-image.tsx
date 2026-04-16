@@ -2,7 +2,9 @@ import { ImageResponse } from 'next/og';
 import { createClient } from '@supabase/supabase-js';
 
 export const runtime = 'edge';
-export const alt = 'My Gaming Stats - Inventory Full';
+// Dynamic alt text — generated per-card in the Image function below.
+// Fallback alt is set as a const but overridden at render time.
+export const alt = 'Gaming Stats - Inventory Full';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -71,10 +73,10 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   const highlights: { label: string; value: string; color: string }[] = [];
 
   if (card.show_value && card.unplayed_value) {
-    highlights.push({ label: 'Untapped value', value: `~$${card.unplayed_value.toLocaleString()}`, color: '#a78bfa' });
+    highlights.push({ label: 'Waiting to be reclaimed', value: `~$${card.unplayed_value.toLocaleString()}`, color: '#a78bfa' });
   }
   if (card.show_value && card.played_value) {
-    highlights.push({ label: 'Value unlocked', value: `$${card.played_value.toLocaleString()}`, color: '#22c55e' });
+    highlights.push({ label: 'Value reclaimed', value: `$${card.played_value.toLocaleString()}`, color: '#22c55e' });
   }
   if (card.show_value && card.backlog_hours) {
     highlights.push({ label: 'Time to complete', value: `~${card.backlog_hours.toLocaleString()}h`, color: '#f59e0b' });
