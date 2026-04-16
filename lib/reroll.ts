@@ -8,8 +8,10 @@ export type RerollMode = 'anything' | 'quick-session' | 'deep-cut' | 'continue' 
 
 export const REROLL_MODES: { mode: RerollMode; label: string; icon: string; description: string }[] = [
   { mode: 'anything', label: 'Anything', icon: '🎲', description: 'Random from all games' },
-  { mode: 'quick-session', label: 'Quick Session', icon: '🌙', description: 'Wind-down tier only' },
-  { mode: 'deep-cut', label: 'Deep Cut', icon: '🔥', description: 'A game buried in your backlog you may have forgotten about' },
+  { mode: 'quick-session', label: 'Quick Session', icon: '🌙', description: 'A short session tonight' },
+  // Deep Cut semantic: a PERSONAL deep cut backed by evidence (real hours played). You lived in
+  // this world and stepped away — not a curator's obscure gem pick. Filter reflects that below.
+  { mode: 'deep-cut', label: 'Deep Cut', icon: '🔥', description: 'A world you lived in. The hours prove it.' },
   { mode: 'continue', label: 'Keep Playing', icon: '▶', description: 'Games you already started' },
   { mode: 'almost-done', label: 'Almost Done', icon: '🏁', description: 'Games you\'re close to finishing' },
 ];
@@ -69,12 +71,34 @@ export function getEligibleGames(
     switch (mode) {
       case 'anything':
         return true;
-      case 'quick-session':
-        return game.timeTier === 'quick-hit' || game.timeTier === 'wind-down';
-      case 'deep-cut':
-        return game.timeTier === 'deep-cut' || game.timeTier === 'marathon';
-      case 'continue':
-        return game.status === 'playing';
+      case 'quick-session': {
+        // Tier is the primary gate, but cross-check against hltbMain so a 52-hour sim
+        // tagged 'wind-down' doesn't leak into "short session tonight." Drop-in games
+        // (isNonFinishable) are exempt — Vampire Survivors and Stardew are legitimately
+        // short-session friendly regardless of total length.
+        if (game.timeTier !== 'quick-hit' && game.timeTier !== 'wind-down') return false;
+        if (game.isNonFinishable) return true;
+        if (game.hltbMain && game.hltbMain > 12) return false;
+        return true;
+      }
+      case 'deep-cut': {
+        // "Personal deep cut with evidence": you sank real hours into this world and
+        // stepped away from it. Not a curator's obscure gem — yours, backed by your own
+        // playtime. Threshold: 5+ hours demonstrates genuine engagement (not a trial),
+        // and the game must be in a stepped-away state (on-deck or buried, never actively
+        // playing and never already cleared/bailed).
+        if (game.hoursPlayed < 5) return false;
+        if (game.status === 'playing') return false;
+        return game.status === 'on-deck' || game.status === 'buried';
+      }
+      case 'continue': {
+        // Keep Playing = any started game you haven't finished or given up on.
+        // Previous filter required status === 'playing' (manual promotion only),
+        // which excluded the realistic case of started-then-paused games.
+        // Landing copy: "You started five games. We'll tell you which one to finish."
+        // (played/bailed already excluded above — TS has narrowed status accordingly.)
+        return game.hoursPlayed >= 1;
+      }
       case 'almost-done': {
         if (game.isNonFinishable) return false;
         if (!game.hltbMain || game.hltbMain <= 0 || game.hoursPlayed <= 0) return false;

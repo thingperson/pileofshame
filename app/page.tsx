@@ -707,7 +707,7 @@ function AppContent() {
             </button>
             <button
               onClick={() => openReroll('deep-cut')}
-              aria-label="Deep Cut: a game buried in your backlog you may have forgotten about"
+              aria-label="Deep Cut: a game you already sank real hours into and stepped away from"
               className="shrink-0 px-3 py-3 sm:py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
               style={{ background: 'linear-gradient(135deg, #dc2626, #f87171)' }}
             >

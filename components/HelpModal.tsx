@@ -70,7 +70,7 @@ const SECTIONS = [
       },
       {
         q: 'What are the different modes?',
-        a: '🎲 What Should I Play? Random from everything.\n🌙 Quick Session: picks shorter games (Quick Hit + Wind-Down).\n🔥 Deep Cut: picks longer games (Deep Cut + Marathon).\n▶ Keep Playing: only picks from games you\'re already playing, for when you can\'t decide which one to continue.',
+        a: '🎲 Anything: random from everything.\n🌙 Quick Session: a short game you can wrap tonight.\n🔥 Deep Cut: a game you sank real hours into and stepped away from. Your save\'s still there.\n▶ Keep Playing: a game you already started but haven\'t finished.\n🏁 Almost Done: a game you\'re close to the credits on.',
       },
       {
         q: 'What if I keep rerolling?',

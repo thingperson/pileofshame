@@ -62,12 +62,10 @@ export default async function Image({ params }: { params: Promise<{ id: string }
 
   const { outfitBold, outfitRegular, jetbrainsMono } = await loadFonts();
 
-  // Build detail lines based on what the user chose to show
+  // Build detail lines based on what the user chose to show.
+  // NOTE: time_in_pile_days intentionally omitted — not reliably accurate and
+  // doesn't carry emotional weight for the share moment.
   const details: { label: string; value: string; color: string }[] = [];
-
-  if (card.show_hours && card.hours_played) {
-    details.push({ label: 'Time invested', value: `${Math.round(card.hours_played)}h`, color: '#38bdf8' });
-  }
 
   if (card.show_hltb_compare && card.hours_played && card.hltb_main && card.hltb_main > 0) {
     const diff = Math.round(card.hltb_main - card.hours_played);
@@ -78,15 +76,8 @@ export default async function Image({ params }: { params: Promise<{ id: string }
     }
   }
 
-  if (card.show_pile_time && card.time_in_pile_days) {
-    const years = Math.floor(card.time_in_pile_days / 365);
-    const months = Math.floor((card.time_in_pile_days % 365) / 30);
-    const timeStr = years > 0
-      ? `${years}y ${months > 0 ? `${months}mo` : ''} in the pile`.trim()
-      : months > 0
-        ? `${months} months in the pile`
-        : `${card.time_in_pile_days} days in the pile`;
-    details.push({ label: 'Time in pile', value: timeStr, color: '#a78bfa' });
+  if (card.show_hours && card.hours_played) {
+    details.push({ label: 'Time invested', value: `${Math.round(card.hours_played)}h`, color: '#38bdf8' });
   }
 
   if (card.show_dollar_value && card.dollar_value) {
@@ -117,7 +108,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           overflow: 'hidden',
         }}
       >
-        {/* Background: game cover art, blurred and tinted */}
+        {/* Background: game cover art, blurred and heavily dimmed so brand frame dominates */}
         {card.cover_url && (
           <div style={{ position: 'absolute', inset: 0, display: 'flex' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -126,37 +117,52 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               alt=""
               width={1200}
               height={630}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(40px) brightness(0.3) saturate(0.6)' }}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(48px) brightness(0.22) saturate(0.55)' }}
             />
           </div>
         )}
 
         {/* Dark overlay for readability */}
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(10, 10, 15, 0.7)', display: 'flex' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(10, 10, 15, 0.78)', display: 'flex' }} />
 
-        {/* Purple glow */}
-        <div style={{ position: 'absolute', top: '-60px', left: '50%', width: '800px', height: '500px', background: 'radial-gradient(ellipse, rgba(124, 58, 237, 0.15), transparent 65%)', transform: 'translateX(-50%)', display: 'flex' }} />
+        {/* Purple glow from top */}
+        <div style={{ position: 'absolute', top: '-80px', left: '50%', width: '900px', height: '500px', background: 'radial-gradient(ellipse, rgba(124, 58, 237, 0.22), transparent 65%)', transform: 'translateX(-50%)', display: 'flex' }} />
 
         {/* Grid pattern */}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)', backgroundSize: '60px 60px', display: 'flex' }} />
 
-        {/* Main content */}
-        <div style={{ display: 'flex', flex: 1, padding: '48px 56px', gap: '40px', position: 'relative', zIndex: 1 }}>
+        {/* === TOP HEADER: logomark + INVENTORY FULL, the brand anchor === */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '22px', padding: '32px 56px 0 56px', position: 'relative', zIndex: 1 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://inventoryfull.gg/icon-512.png"
+            alt=""
+            width={88}
+            height={88}
+            style={{ width: '88px', height: '88px', borderRadius: '16px' }}
+          />
+          <div style={{ fontSize: '40px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '6px', display: 'flex' }}>
+            INVENTORY FULL
+          </div>
+        </div>
 
-          {/* Left: Game cover */}
+        {/* === MAIN CONTENT: game art + hero copy === */}
+        <div style={{ display: 'flex', flex: 1, padding: '20px 56px 12px 56px', gap: '40px', position: 'relative', zIndex: 1 }}>
+
+          {/* Left: Game cover — portrait ratio (5:7) so covers render in their natural aspect instead of cropped square */}
           {card.cover_url && (
             <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={card.cover_url}
                 alt=""
-                width={240}
-                height={240}
+                width={200}
+                height={280}
                 style={{
-                  width: '240px',
-                  height: '240px',
+                  width: '200px',
+                  height: '280px',
                   objectFit: 'cover',
-                  objectPosition: 'center top',
+                  objectPosition: 'center',
                   borderRadius: '12px',
                   border: '2px solid rgba(167, 139, 250, 0.3)',
                   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
@@ -165,102 +171,97 @@ export default async function Image({ params }: { params: Promise<{ id: string }
             </div>
           )}
 
-          {/* Right: Content */}
+          {/* Right: Content — CLEARED, game name, flavor, small detail pills */}
           <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center' }}>
-            {/* CLEARED badge */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+            {/* CLEARED badge + stars — both bumped, this is the emotional punchline */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '14px' }}>
               <div
                 style={{
-                  padding: '4px 14px',
+                  padding: '6px 20px',
                   borderRadius: '9999px',
-                  backgroundColor: 'rgba(34, 197, 94, 0.15)',
+                  backgroundColor: 'rgba(34, 197, 94, 0.18)',
                   color: '#22c55e',
-                  fontSize: '14px',
+                  fontSize: '22px',
                   fontFamily: 'JetBrains Mono, monospace',
                   fontWeight: 500,
-                  border: '1px solid rgba(34, 197, 94, 0.3)',
-                  letterSpacing: '2px',
+                  border: '1px solid rgba(34, 197, 94, 0.4)',
+                  letterSpacing: '4px',
                   display: 'flex',
                 }}
               >
                 CLEARED
               </div>
-              {stars && <div style={{ fontSize: '20px', display: 'flex' }}>{stars}</div>}
+              {stars && <div style={{ fontSize: '30px', display: 'flex' }}>{stars}</div>}
             </div>
 
-            {/* Game name */}
+            {/* Game name — hero type */}
             <div
               style={{
-                fontSize: card.game_name.length > 30 ? '36px' : '44px',
+                fontSize: card.game_name.length > 34 ? '44px' : card.game_name.length > 22 ? '54px' : '62px',
                 fontWeight: 800,
                 color: '#f8fafc',
-                letterSpacing: '-1.5px',
-                lineHeight: 1.1,
+                letterSpacing: '-2px',
+                lineHeight: 1.05,
                 display: 'flex',
-                marginBottom: '8px',
+                marginBottom: '12px',
               }}
             >
               {card.game_name}
             </div>
 
-            {/* Flavor text */}
+            {/* Flavor text — bumped prominence under the title */}
             {card.flavor_text && (
               <div
                 style={{
-                  fontSize: '18px',
-                  color: '#94a3b8',
+                  fontSize: '24px',
+                  color: '#cbd5e1',
                   fontStyle: 'italic',
-                  lineHeight: 1.4,
+                  lineHeight: 1.35,
                   display: 'flex',
-                  marginBottom: '20px',
+                  marginBottom: '16px',
                 }}
               >
                 {card.flavor_text}
               </div>
             )}
 
-            {/* Detail pills */}
+            {/* Detail pills — barely visible, secondary */}
             {details.length > 0 && (
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                 {details.map((d) => (
                   <div
                     key={d.label}
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
-                      padding: '10px 16px',
-                      borderRadius: '10px',
+                      padding: '6px 12px',
+                      borderRadius: '8px',
                       backgroundColor: 'rgba(255, 255, 255, 0.04)',
                       border: '1px solid rgba(255, 255, 255, 0.06)',
                     }}
                   >
-                    <div style={{ fontSize: '12px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{d.label}</div>
-                    <div style={{ fontSize: '20px', fontWeight: 700, color: d.color, display: 'flex' }}>{d.value}</div>
+                    <div style={{ fontSize: '11px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{d.label}</div>
+                    <div style={{ fontSize: '16px', fontWeight: 700, color: d.color, fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{d.value}</div>
                   </div>
                 ))}
               </div>
             )}
 
-            {/* Display name */}
+            {/* Display name attribution */}
             {card.show_display_name && card.display_name && (
-              <div style={{ fontSize: '14px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', marginTop: '16px', display: 'flex' }}>
+              <div style={{ fontSize: '13px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', marginTop: '12px', display: 'flex' }}>
                 cleared by {card.display_name}
               </div>
             )}
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 56px 24px', position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ fontSize: '14px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '3px', display: 'flex' }}>
-              INVENTORY FULL
-            </div>
-            <div style={{ fontSize: '14px', color: '#94a3b8', display: 'flex', padding: '4px 14px', borderRadius: '8px', backgroundColor: 'rgba(167, 139, 250, 0.1)', border: '1px solid rgba(167, 139, 250, 0.2)' }}>
-              Less shame. More game. →
-            </div>
+        {/* === FOOTER: centered tagline sell + domain === */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px', padding: '0 56px 26px 56px', position: 'relative', zIndex: 1 }}>
+          <div style={{ fontSize: '22px', fontWeight: 700, color: '#e2e8f0', letterSpacing: '-0.3px', display: 'flex' }}>
+            Stop stalling. Get playing.
           </div>
-          <div style={{ fontSize: '13px', fontFamily: 'JetBrains Mono, monospace', color: '#475569', display: 'flex' }}>
+          <div style={{ fontSize: '17px', fontFamily: 'JetBrains Mono, monospace', color: '#a78bfa', letterSpacing: '2px', display: 'flex' }}>
             inventoryfull.gg
           </div>
         </div>

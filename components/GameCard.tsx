@@ -961,6 +961,26 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               </>
             )}
 
+            {/* I beat it — explicit completion affordance for Playing Now games.
+                Parallels the status-badge cycle path; both route through showCelebration. */}
+            {game.status === 'playing' && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  showCelebration(game);
+                }}
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer"
+                style={{
+                  backgroundColor: 'rgba(34, 197, 94, 0.12)',
+                  color: '#22c55e',
+                  border: '1px solid rgba(34, 197, 94, 0.35)',
+                }}
+                title="Mark this game as cleared. Bring on the confetti."
+              >
+                🏁 I beat it
+              </button>
+            )}
+
             {(game.status === 'playing' || game.status === 'on-deck') && (
               <button
                 onClick={handleShelve}

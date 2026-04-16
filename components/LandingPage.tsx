@@ -113,21 +113,21 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
             transform: visible ? 'translateY(0)' : 'translateY(24px)',
           }}
         >
-          {/* Hero illustration */}
-          <div className="mb-4 flex justify-center">
+          {/* Hero illustration — 2× asset (768×512) so desktop/retina renders crisp at larger sizes */}
+          <div className="mb-5 flex justify-center">
             <Image
-              src="/inventoryfull-hero-transparent.webp"
+              src="/inventoryfull-hero-transparent@2x.webp"
               alt="A hand rising from a pile of games, holding a controller"
-              width={384}
-              height={256}
-              className="w-48 h-auto sm:w-64 md:w-72 object-contain"
+              width={768}
+              height={512}
+              className="w-56 h-auto sm:w-72 md:w-80 lg:w-96 object-contain"
               style={{ filter: 'drop-shadow(0 0 20px color-mix(in srgb, var(--color-accent-purple) 25%, transparent))' }}
               priority
             />
           </div>
 
           <h1
-            className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] mb-4"
+            className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.05] mb-5"
             style={{ color: 'var(--color-text-primary)' }}
           >
             Your pile&apos;s not gonna
@@ -136,10 +136,10 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           </h1>
 
           <p
-            className="text-base sm:text-lg md:text-xl leading-relaxed max-w-md mx-auto mb-6"
+            className="text-lg sm:text-xl md:text-2xl leading-relaxed max-w-md mx-auto mb-6"
             style={{ color: 'var(--color-text-muted)' }}
           >
-            We&apos;ll pick the game. You do the playing.
+            We&apos;ll help you pick. You do the playing.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -197,17 +197,17 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
       {/* ═══════════════════════════════════════════
           HOW IT WORKS
           ═══════════════════════════════════════════ */}
-      <section className="relative px-6 py-16 sm:py-24">
+      <section className="relative px-6 py-12 sm:py-16">
         <div className="max-w-4xl mx-auto">
           <Reveal>
             <h2
-              className="text-2xl sm:text-3xl font-bold text-center mb-4 tracking-tight"
+              className="text-3xl sm:text-4xl font-bold text-center mb-4 tracking-tight"
               style={{ color: 'var(--color-text-primary)' }}
             >
               It&apos;s really just three things:
             </h2>
             <p
-              className="text-center text-sm mb-12 sm:mb-16 font-[family-name:var(--font-mono)]"
+              className="text-center text-sm sm:text-base mb-10 sm:mb-14 font-[family-name:var(--font-mono)]"
               style={{ color: 'var(--color-text-faint)' }}
             >
               from &quot;I own 300 games&quot; to &quot;I&apos;m playing one&quot;
@@ -246,7 +246,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
       {/* ═══════════════════════════════════════════
           THE PITCH — WHY THIS IS DIFFERENT
           ═══════════════════════════════════════════ */}
-      <section className="relative px-6 py-16 sm:py-24">
+      <section className="relative px-6 py-12 sm:py-16">
         {/* Decorative divider line */}
         <div className="max-w-xs mx-auto mb-16 flex items-center gap-4">
           <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
@@ -259,7 +259,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
         <Reveal>
           <div className="max-w-2xl mx-auto text-center">
             <h2
-              className="text-2xl sm:text-3xl font-bold tracking-tight mb-6"
+              className="text-3xl sm:text-4xl font-bold tracking-tight mb-6"
               style={{ color: 'var(--color-text-primary)' }}
             >
               Not another backlog tracker.
@@ -267,14 +267,12 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
 
             <div className="space-y-5">
               <p
-                className="text-base sm:text-lg leading-relaxed"
+                className="text-lg sm:text-xl leading-relaxed"
                 style={{ color: 'var(--color-text-muted)' }}
               >
-                Backloggd is more library to manage.
+                More library managing = less playing.
                 <br />
-                Managing isn&apos;t playing.
-                <br />
-                <strong style={{ color: 'var(--color-text-primary)' }}>We pick. You play.</strong>
+                <strong style={{ color: 'var(--color-text-primary)' }}>We help you pick. You get playing.</strong>
               </p>
             </div>
           </div>
@@ -284,7 +282,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
       {/* ═══════════════════════════════════════════
           PULL QUOTE
           ═══════════════════════════════════════════ */}
-      <section className="relative px-6 py-8 sm:py-12">
+      <section className="relative px-6 py-6 sm:py-10">
         <Reveal>
           <div className="max-w-xl mx-auto text-center">
             <div className="max-w-xs mx-auto mb-6 flex items-center gap-4">
@@ -292,12 +290,12 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
               <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
             </div>
             <p
-              className="text-base sm:text-lg leading-relaxed italic"
+              className="text-lg sm:text-xl leading-relaxed italic"
               style={{ color: 'var(--color-text-muted)', opacity: 0.7 }}
             >
               Your backlog should feel exciting.
               <br />
-              Not a warehouse of good intentions.
+              Not an abandoned warehouse of good intentions.
             </p>
             <div className="max-w-xs mx-auto mt-6 flex items-center gap-4">
               <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
@@ -310,17 +308,17 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
       {/* ═══════════════════════════════════════════
           5 WAYS TO PICK TONIGHT'S GAME
           ═══════════════════════════════════════════ */}
-      <section className="relative px-6 py-16 sm:py-24">
+      <section className="relative px-6 py-12 sm:py-16">
         <div className="max-w-3xl mx-auto">
           <Reveal>
             <h2
-              className="text-2xl sm:text-3xl font-bold text-center mb-3 tracking-tight"
+              className="text-3xl sm:text-4xl font-bold text-center mb-3 tracking-tight"
               style={{ color: 'var(--color-text-primary)' }}
             >
               5 ways to pick tonight&apos;s game.
             </h2>
             <p
-              className="text-center text-sm mb-12 font-[family-name:var(--font-mono)]"
+              className="text-center text-sm sm:text-base mb-10 font-[family-name:var(--font-mono)]"
               style={{ color: 'var(--color-text-faint)' }}
             >
               tap one. we do the rest.
@@ -339,14 +337,14 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
               <PickModeCard
                 icon="🌙"
                 title="Quick Session"
-                description="20 minutes before bed? We know which games are built for that."
+                description="Short session tonight? We know which games are built for that."
               />
             </Reveal>
             <Reveal delay={160}>
               <PickModeCard
                 icon="🔥"
                 title="Deep Cut"
-                description="Something you forgot you owned. The pile's full of them."
+                description="A world you lived in. Your save's still there."
               />
             </Reveal>
             <Reveal delay={240}>
@@ -378,7 +376,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
       {/* ═══════════════════════════════════════════
           BOTTOM CTA
           ═══════════════════════════════════════════ */}
-      <section className="relative px-6 py-20 sm:py-28 text-center">
+      <section className="relative px-6 py-14 sm:py-20 text-center">
         {/* Decorative divider */}
         <div className="max-w-xs mx-auto mb-16 flex items-center gap-4">
           <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
@@ -390,57 +388,53 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
 
         <Reveal>
           <div className="max-w-lg mx-auto">
-          <h2
-            className="text-2xl sm:text-3xl font-bold tracking-tight mb-4"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            Your pile&apos;s not getting any smaller.
-          </h2>
-          <p
-            className="text-sm mb-8 font-[family-name:var(--font-mono)]"
-            style={{ color: 'var(--color-text-faint)' }}
-          >
-            stop stalling. get playing.
-          </p>
+            <h2
+              className="text-3xl sm:text-4xl font-bold tracking-tight mb-8"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Stop stalling. Get playing.
+            </h2>
 
-          <button
-            onClick={onImport}
-            className="px-8 py-4 text-base sm:text-lg font-bold rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
-            style={{
-              background: 'linear-gradient(135deg, var(--color-accent-purple) 0%, var(--color-accent-pink) 100%)',
-              color: '#fff',
-              boxShadow: '0 4px 24px color-mix(in srgb, var(--color-accent-purple) 30%, transparent)',
-            }}
-          >
-            Import My Library
-          </button>
+            {/* Side-by-side CTAs — mirrors the hero layout so users get consistent affordances */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <button
+                onClick={onImport}
+                className="w-full sm:w-auto px-8 py-4 text-base sm:text-lg font-bold rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
+                style={{
+                  background: 'linear-gradient(135deg, var(--color-accent-purple) 0%, var(--color-accent-pink) 100%)',
+                  color: '#fff',
+                  boxShadow: '0 4px 24px color-mix(in srgb, var(--color-accent-purple) 30%, transparent)',
+                }}
+              >
+                Import My Library
+              </button>
+              <button
+                onClick={onLoadSample}
+                className="w-full sm:w-auto px-6 py-3.5 text-sm sm:text-base font-medium rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                style={{
+                  background: 'transparent',
+                  color: 'var(--color-text-muted)',
+                  border: '1px solid var(--color-border-subtle)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-accent-purple)';
+                  e.currentTarget.style.color = 'var(--color-text-primary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-border-subtle)';
+                  e.currentTarget.style.color = 'var(--color-text-muted)';
+                }}
+              >
+                Try a sample first
+              </button>
+            </div>
 
-          <p
-            className="mt-3 text-xs font-[family-name:var(--font-mono)]"
-            style={{ color: 'var(--color-text-faint)' }}
-          >
-            Free. No account required.
-          </p>
-
-          <button
-            onClick={onLoadSample}
-            className="mt-4 px-6 py-3 text-sm font-medium rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer block mx-auto"
-            style={{
-              background: 'transparent',
-              color: 'var(--color-text-muted)',
-              border: '1px solid var(--color-border-subtle)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-accent-purple)';
-              e.currentTarget.style.color = 'var(--color-text-primary)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-border-subtle)';
-              e.currentTarget.style.color = 'var(--color-text-muted)';
-            }}
-          >
-            Or try a sample library
-          </button>
+            <p
+              className="mt-4 text-xs font-[family-name:var(--font-mono)]"
+              style={{ color: 'var(--color-text-faint)' }}
+            >
+              Free. No account required.
+            </p>
           </div>
         </Reveal>
 
@@ -538,8 +532,10 @@ function Reveal({ children, delay = 0, className }: { children: React.ReactNode;
       className={className}
       style={{
         opacity: shown ? 1 : 0,
-        transform: shown ? 'translateY(0)' : 'translateY(24px)',
-        transition: `opacity 700ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 700ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
+        // Option A: larger vertical travel + a hint of scale-up on entry — reads more
+        // clearly as "new content arriving" on mobile without feeling gimmicky
+        transform: shown ? 'translateY(0) scale(1)' : 'translateY(40px) scale(0.985)',
+        transition: `opacity 800ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 800ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
         willChange: shown ? 'auto' : 'opacity, transform',
       }}
     >
@@ -569,13 +565,13 @@ function StepCard({ number, title, description, icon }: { number: string; title:
         </div>
       </div>
       <h3
-        className="text-lg font-bold mb-2"
+        className="text-xl font-bold mb-2"
         style={{ color: 'var(--color-text-primary)' }}
       >
         {title}
       </h3>
       <p
-        className="text-sm leading-relaxed"
+        className="text-base leading-relaxed"
         style={{ color: 'var(--color-text-muted)' }}
       >
         {description}
@@ -613,13 +609,13 @@ function PickModeCard({
       </div>
       <div>
         <h3
-          className="text-sm font-bold mb-1"
+          className="text-base font-bold mb-1"
           style={{ color: 'var(--color-text-primary)' }}
         >
           {title}
         </h3>
         <p
-          className="text-xs leading-relaxed"
+          className="text-sm leading-relaxed"
           style={{ color: 'var(--color-text-muted)' }}
         >
           {description}

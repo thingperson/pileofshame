@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 export default function AboutPage() {
@@ -67,20 +67,20 @@ export default function AboutPage() {
             transform: visible ? 'translateY(0)' : 'translateY(24px)',
           }}
         >
-          <div className="mb-4 flex justify-center">
+          <div className="mb-5 flex justify-center">
             <Image
-              src="/inventoryfull-hero-transparent.webp"
+              src="/inventoryfull-hero-transparent@2x.webp"
               alt="A hand rising from a pile of games, holding a controller"
-              width={384}
-              height={256}
-              className="w-48 h-auto sm:w-64 md:w-72 object-contain"
+              width={768}
+              height={512}
+              className="w-56 h-auto sm:w-72 md:w-80 lg:w-96 object-contain"
               style={{ filter: 'drop-shadow(0 0 20px color-mix(in srgb, var(--color-accent-purple) 25%, transparent))' }}
               priority
             />
           </div>
 
           <h1
-            className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] mb-4"
+            className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.05] mb-5"
             style={{ color: 'var(--color-text-primary)' }}
           >
             Your pile&apos;s not gonna
@@ -89,40 +89,60 @@ export default function AboutPage() {
           </h1>
 
           <p
-            className="text-sm sm:text-base md:text-lg leading-relaxed max-w-md mx-auto"
+            className="text-lg sm:text-xl md:text-2xl leading-relaxed max-w-md mx-auto"
             style={{ color: 'var(--color-text-muted)' }}
           >
-            Can&apos;t decide what to play? Yeah, we know.
+            We&apos;ll help you pick. You do the playing.
           </p>
         </div>
       </section>
 
       {/* ── How it works ── */}
-      <section className="relative px-6 py-16 sm:py-24">
+      <section className="relative px-6 py-12 sm:py-16">
         <div className="max-w-4xl mx-auto">
-          <h2
-            className="text-2xl sm:text-3xl font-bold text-center mb-4 tracking-tight"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            It&apos;s really just three things:
-          </h2>
-          <p
-            className="text-center text-sm mb-12 sm:mb-16 font-[family-name:var(--font-mono)]"
-            style={{ color: 'var(--color-text-faint)' }}
-          >
-            from &quot;I own 300 games&quot; to &quot;I&apos;m playing one&quot;
-          </p>
+          <Reveal>
+            <h2
+              className="text-3xl sm:text-4xl font-bold text-center mb-4 tracking-tight"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              It&apos;s really just three things:
+            </h2>
+            <p
+              className="text-center text-sm sm:text-base mb-10 sm:mb-14 font-[family-name:var(--font-mono)]"
+              style={{ color: 'var(--color-text-faint)' }}
+            >
+              from &quot;I own 300 games&quot; to &quot;I&apos;m playing one&quot;
+            </p>
+          </Reveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
-            <StepCard number="01" title="Import" description="Connect Steam, PlayStation, Xbox, or paste a CSV. We grab everything. You do nothing." />
-            <StepCard number="02" title="Vibe Check" description="Tell us your mood and how much time you've got. We match you to a game that fits right now." />
-            <StepCard number="03" title="Play" description="We pick, you play. Clear it, drop it, or just move on? No judgement. Moving on is deciding too." />
+            <Reveal delay={0}>
+              <StepCard
+                number="01"
+                title="Import"
+                description="Connect Steam, PlayStation, Xbox, or paste a CSV. We grab everything while you do nothing."
+              />
+            </Reveal>
+            <Reveal delay={120}>
+              <StepCard
+                number="02"
+                title="Match today's vibe"
+                description="Tell us your mood and how much time you've got, and we'll match you to a game that fits right now."
+              />
+            </Reveal>
+            <Reveal delay={240}>
+              <StepCard
+                number="03"
+                title="Play"
+                description="We pick, you play. Clear it, drop it, or just move on without guilt. Moving on is deciding too."
+              />
+            </Reveal>
           </div>
         </div>
       </section>
 
       {/* ── The pitch ── */}
-      <section className="relative px-6 py-16 sm:py-24">
+      <section className="relative px-6 py-12 sm:py-16">
         <div className="max-w-xs mx-auto mb-16 flex items-center gap-4">
           <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
           <svg className="w-4 h-4 opacity-30" viewBox="0 0 20 20" style={{ color: 'var(--color-accent-purple)' }}>
@@ -131,51 +151,92 @@ export default function AboutPage() {
           <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
         </div>
 
-        <div className="max-w-2xl mx-auto text-center">
-          <h2
-            className="text-2xl sm:text-3xl font-bold tracking-tight mb-6"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            Not another backlog tracker.
-          </h2>
+        <Reveal>
+          <div className="max-w-2xl mx-auto text-center">
+            <h2
+              className="text-3xl sm:text-4xl font-bold tracking-tight mb-6"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Not another backlog tracker.
+            </h2>
 
-          <div className="space-y-5">
-            <p className="text-base sm:text-lg leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-              Every other app wants you to catalogue and organize.
-              <br />
-              We want you to <strong style={{ color: 'var(--color-text-primary)' }}>close the app and go play.</strong>
-            </p>
-            <p className="text-base sm:text-lg leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-              You scroll for 20 minutes, pick nothing, open YouTube.
-              <br />
-              Inventory Full fixes that.
-            </p>
+            <div className="space-y-5">
+              <p className="text-lg sm:text-xl leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+                More library managing = less playing.
+                <br />
+                <strong style={{ color: 'var(--color-text-primary)' }}>We help you pick. You get playing.</strong>
+              </p>
+            </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
-      {/* ── Features ── */}
-      <section className="relative px-6 py-16 sm:py-24">
+      {/* ── Pull quote ── */}
+      <section className="relative px-6 py-6 sm:py-10">
+        <Reveal>
+          <div className="max-w-xl mx-auto text-center">
+            <div className="max-w-xs mx-auto mb-6 flex items-center gap-4">
+              <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+              <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+            </div>
+            <p
+              className="text-lg sm:text-xl leading-relaxed italic"
+              style={{ color: 'var(--color-text-muted)', opacity: 0.7 }}
+            >
+              Your backlog should feel exciting.
+              <br />
+              Not an abandoned warehouse of good intentions.
+            </p>
+            <div className="max-w-xs mx-auto mt-6 flex items-center gap-4">
+              <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+              <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* ── 5 ways to pick ── */}
+      <section className="relative px-6 py-12 sm:py-16">
         <div className="max-w-3xl mx-auto">
-          <h2
-            className="text-2xl sm:text-3xl font-bold text-center mb-12 tracking-tight"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            What you get.
-          </h2>
+          <Reveal>
+            <h2
+              className="text-3xl sm:text-4xl font-bold text-center mb-3 tracking-tight"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              5 ways to pick tonight&apos;s game.
+            </h2>
+            <p
+              className="text-center text-sm sm:text-base mb-10 font-[family-name:var(--font-mono)]"
+              style={{ color: 'var(--color-text-faint)' }}
+            >
+              tap one. we do the rest.
+            </p>
+          </Reveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FeatureCard title="Mood matching" description="Cozy, intense, brain-off, narrative - match your energy to a game." />
-            <FeatureCard title="Time-aware picks" description="Got 20 minutes or a whole evening? We know the difference." />
-            <FeatureCard title="5-minute try timer" description="Not sure about a game? Give it five minutes. Timer says stop, you decide." />
-            <FeatureCard title="Completion celebrations" description="Finished a game? You earned the confetti. Moved on? That counts too." />
-            <FeatureCard title="Free. No sign-up." description="No email, no account required. Open it, use it. Done." />
-            <FeatureCard title="Your data stays yours" description="Everything lives in your browser. Export anytime. We don't sell anything." />
+            <Reveal delay={0}>
+              <PickModeCard icon="🎲" title="Anything" description="Just pick something. We'll figure out what fits right now." />
+            </Reveal>
+            <Reveal delay={80}>
+              <PickModeCard icon="🌙" title="Quick Session" description="Short session tonight? We know which games are built for that." />
+            </Reveal>
+            <Reveal delay={160}>
+              <PickModeCard icon="🔥" title="Deep Cut" description="A world you lived in. Your save's still there." />
+            </Reveal>
+            <Reveal delay={240}>
+              <PickModeCard icon="▶" title="Keep Playing" description="You started five games. We'll tell you which one to finish." />
+            </Reveal>
+            <Reveal delay={320}>
+              <PickModeCard icon="🏁" title="Almost Done" description="That game you're 80% through? Let's roll the credits." />
+            </Reveal>
+            <Reveal delay={400}>
+              <PickModeCard icon="✦" title="Plus the basics" description="Free. No sign-up. Your data stays on your device. Export anytime." muted />
+            </Reveal>
           </div>
         </div>
       </section>
 
-      {/* ── Footer ── */}
+      {/* ── Footer CTA ── */}
       <section className="relative px-6 py-16 text-center">
         <div className="max-w-xs mx-auto mb-12 flex items-center gap-4">
           <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
@@ -231,6 +292,57 @@ export default function AboutPage() {
 
 /* ── Sub-components ── */
 
+/**
+ * Reveal: fade + translateY scroll-in using IntersectionObserver.
+ * Mobile-safe (opacity + transform only), respects prefers-reduced-motion,
+ * one-shot (unobserves after first reveal). Mirrors LandingPage's Reveal.
+ */
+function Reveal({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [shown, setShown] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const el = ref.current;
+    if (!el) return;
+
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+      setShown(true);
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setShown(true);
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -60px 0px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        opacity: shown ? 1 : 0,
+        transform: shown ? 'translateY(0) scale(1)' : 'translateY(40px) scale(0.985)',
+        transition: `opacity 800ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 800ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
+        willChange: shown ? 'auto' : 'opacity, transform',
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 function StepCard({ number, title, description }: { number: string; title: string; description: string }) {
   return (
     <div
@@ -242,21 +354,32 @@ function StepCard({ number, title, description }: { number: string; title: strin
           {number}
         </span>
       </div>
-      <h3 className="text-lg font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>{title}</h3>
-      <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>{description}</p>
+      <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>{title}</h3>
+      <p className="text-base leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>{description}</p>
     </div>
   );
 }
 
-function FeatureCard({ title, description }: { title: string; description: string }) {
+function PickModeCard({ icon, title, description, muted = false }: { icon: string; title: string; description: string; muted?: boolean }) {
   return (
     <div
       className="flex gap-4 rounded-xl p-5 border transition-all duration-200 hover:border-accent-purple"
-      style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border-subtle)' }}
+      style={{
+        backgroundColor: muted ? 'transparent' : 'var(--color-bg-card)',
+        borderColor: 'var(--color-border-subtle)',
+        opacity: muted ? 0.75 : 1,
+      }}
     >
+      <div
+        className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-xl"
+        style={{ backgroundColor: muted ? 'transparent' : 'var(--color-bg-elevated)' }}
+        aria-hidden="true"
+      >
+        {icon}
+      </div>
       <div>
-        <h3 className="text-sm font-bold mb-1" style={{ color: 'var(--color-text-primary)' }}>{title}</h3>
-        <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>{description}</p>
+        <h3 className="text-base font-bold mb-1" style={{ color: 'var(--color-text-primary)' }}>{title}</h3>
+        <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>{description}</p>
       </div>
     </div>
   );
