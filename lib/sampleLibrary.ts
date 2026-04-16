@@ -14,7 +14,7 @@ let _id = 0;
 const sampleId = () => `sample-${++_id}`;
 
 export const SAMPLE_GAMES: Game[] = [
-  // ── NOW PLAYING (3) ─────────────────────────────────────────────
+  // ── NOW PLAYING (1) — 2 slots intentionally open so users can park something here ──
 
   {
     id: sampleId(),
@@ -54,8 +54,8 @@ export const SAMPLE_GAMES: Game[] = [
     category: 'The Pile',
     vibes: ['challenge', 'atmospheric'],
     priority: 1,
-    notes: 'Just got to Liurnia. Dying a lot.',
-    status: 'playing',
+    notes: 'Paused in Liurnia. Died enough times, needed a break.',
+    status: 'on-deck',
     moodTags: ['intense', 'atmospheric'],
     description: 'Rise, Tarnished, and be guided by grace to brandish the power of the Elden Ring.',
     hltbMain: 55,
@@ -78,8 +78,8 @@ export const SAMPLE_GAMES: Game[] = [
     category: 'Favorites',
     vibes: ['cozy'],
     priority: 0,
-    notes: 'Year 3. Still haven\'t finished the community center.',
-    status: 'playing',
+    notes: 'Year 3 save still going. Drop back in whenever.',
+    status: 'on-deck',
     moodTags: ['chill', 'creative'],
     description: 'You\'ve inherited your grandfather\'s old farm plot. Armed with hand-me-down tools, you set out to begin your new life.',
     hltbMain: 52,
@@ -90,7 +90,7 @@ export const SAMPLE_GAMES: Game[] = [
     updatedAt: daysAgo(2),
   },
 
-  // ── ON DECK (3) ─────────────────────────────────────────────────
+  // ── ON DECK (5) ─────────────────────────────────────────────────
 
   {
     id: sampleId(),

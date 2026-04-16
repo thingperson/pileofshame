@@ -94,15 +94,6 @@ export default async function Image({ params }: { params: Promise<{ id: string }
     highlights.push({ label: 'Gamerscore', value: card.gamerscore.toLocaleString(), color: '#22c55e' });
   }
 
-  // Compact stats line
-  const statParts = [
-    `${card.games_cleared} completed`,
-    `${card.games_in_motion} in motion`,
-    `${card.backlog_size} in the pile`,
-  ];
-  if (card.streak > 1) statParts.push(`${card.streak} streak`);
-  if (card.lines_drawn > 0) statParts.push(`${card.lines_drawn} moved on`);
-
   return new ImageResponse(
     (
       <div
@@ -127,10 +118,10 @@ export default async function Image({ params }: { params: Promise<{ id: string }
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)', backgroundSize: '60px 60px', display: 'flex' }} />
 
         {/* === TWO-COLUMN LAYOUT: Logo+brand left, content right === */}
-        <div style={{ display: 'flex', flex: 1, padding: '36px 48px 0 48px', position: 'relative', zIndex: 1, gap: '40px' }}>
+        <div style={{ display: 'flex', flex: 1, padding: '36px 48px', position: 'relative', zIndex: 1, gap: '40px' }}>
 
-          {/* LEFT: Hero logomark + brand name + tagline underneath */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0, gap: '14px' }}>
+          {/* LEFT: Hero logomark clustered tight with brand name, tagline sits below */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="https://inventoryfull.gg/icon-512.png"
@@ -139,13 +130,11 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               height={280}
               style={{ width: '280px', height: '280px', borderRadius: '28px' }}
             />
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-              <div style={{ fontSize: '26px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '4px', display: 'flex' }}>
-                INVENTORY FULL
-              </div>
-              <div style={{ fontSize: '24px', color: '#94a3b8', fontFamily: 'Outfit, sans-serif', fontWeight: 400, display: 'flex' }}>
-                Stop stalling. Get playing.
-              </div>
+            <div style={{ fontSize: '26px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '4px', display: 'flex', marginTop: '6px' }}>
+              INVENTORY FULL
+            </div>
+            <div style={{ fontSize: '20px', color: '#94a3b8', fontFamily: 'Outfit, sans-serif', fontWeight: 400, display: 'flex', marginTop: '18px' }}>
+              Stop stalling. Get playing.
             </div>
           </div>
 
@@ -175,10 +164,10 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               </div>
             )}
 
-            {/* Archetype descriptor */}
+            {/* Archetype descriptor — render in full, the layout has room */}
             {card.show_archetype && card.archetype_descriptor && (
-              <div style={{ fontSize: '26px', color: '#c4b5fd', lineHeight: 1.35, display: 'flex', marginBottom: '12px' }}>
-                {card.archetype_descriptor.length > 100 ? card.archetype_descriptor.slice(0, 97) + '...' : card.archetype_descriptor}
+              <div style={{ fontSize: '24px', color: '#c4b5fd', lineHeight: 1.35, display: 'flex', marginBottom: '14px' }}>
+                {card.archetype_descriptor}
               </div>
             )}
 
@@ -213,20 +202,6 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           </div>
         </div>
 
-        {/* === BOTTOM: Compact stats line + CTA === */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 48px 26px', position: 'relative', zIndex: 1 }}>
-          <div style={{ fontSize: '16px', fontFamily: 'JetBrains Mono, monospace', color: '#64748b', display: 'flex', gap: '6px' }}>
-            {statParts.join(' \u00b7 ')}
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ fontSize: '16px', color: '#c4b5fd', display: 'flex', padding: '6px 16px', borderRadius: '8px', backgroundColor: 'rgba(167, 139, 250, 0.12)', border: '1px solid rgba(167, 139, 250, 0.25)' }}>
-              {"Your pile's not gonna play itself. \u2192"}
-            </div>
-            <div style={{ fontSize: '15px', fontFamily: 'JetBrains Mono, monospace', color: '#94a3b8', display: 'flex' }}>
-              inventoryfull.gg
-            </div>
-          </div>
-        </div>
       </div>
     ),
     {

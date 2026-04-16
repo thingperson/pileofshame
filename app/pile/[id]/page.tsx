@@ -58,7 +58,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   // Fallback without name: "The Archaeologist has 39 games waiting to be played"
   // Fallback without archetype: "[Name] has 39 games tracked, 5 completed"
   const archetypeClean = card.show_archetype && card.archetype_name
-    ? card.archetype_name.replace(/^[^\w\s]+\s*/, '') // strip leading emoji
+    ? card.archetype_name
+        .replace(/^[^\w\s]+\s*/, '') // strip leading emoji
+        .replace(/^The\s+/i, '')      // strip leading "The " so we don't double it
     : null;
   const title = archetypeClean
     ? who

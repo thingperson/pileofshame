@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import AuthButton from '@/components/AuthButton';
 
@@ -199,38 +199,46 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           ═══════════════════════════════════════════ */}
       <section className="relative px-6 py-16 sm:py-24">
         <div className="max-w-4xl mx-auto">
-          <h2
-            className="text-2xl sm:text-3xl font-bold text-center mb-4 tracking-tight"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            It&apos;s really just three things:
-          </h2>
-          <p
-            className="text-center text-sm mb-12 sm:mb-16 font-[family-name:var(--font-mono)]"
-            style={{ color: 'var(--color-text-faint)' }}
-          >
-            from &quot;I own 300 games&quot; to &quot;I&apos;m playing one&quot;
-          </p>
+          <Reveal>
+            <h2
+              className="text-2xl sm:text-3xl font-bold text-center mb-4 tracking-tight"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              It&apos;s really just three things:
+            </h2>
+            <p
+              className="text-center text-sm mb-12 sm:mb-16 font-[family-name:var(--font-mono)]"
+              style={{ color: 'var(--color-text-faint)' }}
+            >
+              from &quot;I own 300 games&quot; to &quot;I&apos;m playing one&quot;
+            </p>
+          </Reveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
-            <StepCard
-              number="01"
-              title="Import"
-              description="Connect Steam, PlayStation, Xbox, or paste a CSV. We grab everything. You do nothing."
-              icon={<ImportStepIcon />}
-            />
-            <StepCard
-              number="02"
-              title="Match today's vibe"
-              description="Tell us your mood and how much time you've got. We match you to a game that fits right now."
-              icon={<VibeStepIcon />}
-            />
-            <StepCard
-              number="03"
-              title="Play"
-              description="We pick, you play. Clear it, drop it, or just move on? No judgement. Moving on is deciding too."
-              icon={<PlayStepIcon />}
-            />
+            <Reveal delay={0}>
+              <StepCard
+                number="01"
+                title="Import"
+                description="Connect Steam, PlayStation, Xbox, or paste a CSV. We grab everything while you do nothing."
+                icon={<ImportStepIcon />}
+              />
+            </Reveal>
+            <Reveal delay={120}>
+              <StepCard
+                number="02"
+                title="Match today's vibe"
+                description="Tell us your mood and how much time you've got, and we'll match you to a game that fits right now."
+                icon={<VibeStepIcon />}
+              />
+            </Reveal>
+            <Reveal delay={240}>
+              <StepCard
+                number="03"
+                title="Play"
+                description="We pick, you play. Clear it, drop it, or just move on without guilt. Moving on is deciding too."
+                icon={<PlayStepIcon />}
+              />
+            </Reveal>
           </div>
         </div>
       </section>
@@ -248,51 +256,55 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
         </div>
 
-        <div className="max-w-2xl mx-auto text-center">
-          <h2
-            className="text-2xl sm:text-3xl font-bold tracking-tight mb-6"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            Not another backlog tracker.
-          </h2>
-
-          <div className="space-y-5">
-            <p
-              className="text-base sm:text-lg leading-relaxed"
-              style={{ color: 'var(--color-text-muted)' }}
+        <Reveal>
+          <div className="max-w-2xl mx-auto text-center">
+            <h2
+              className="text-2xl sm:text-3xl font-bold tracking-tight mb-6"
+              style={{ color: 'var(--color-text-primary)' }}
             >
-              Backloggd is more library to manage.
-              <br />
-              Managing isn&apos;t playing.
-              <br />
-              <strong style={{ color: 'var(--color-text-primary)' }}>We pick. You play.</strong>
-            </p>
+              Not another backlog tracker.
+            </h2>
+
+            <div className="space-y-5">
+              <p
+                className="text-base sm:text-lg leading-relaxed"
+                style={{ color: 'var(--color-text-muted)' }}
+              >
+                Backloggd is more library to manage.
+                <br />
+                Managing isn&apos;t playing.
+                <br />
+                <strong style={{ color: 'var(--color-text-primary)' }}>We pick. You play.</strong>
+              </p>
+            </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* ═══════════════════════════════════════════
           PULL QUOTE
           ═══════════════════════════════════════════ */}
       <section className="relative px-6 py-8 sm:py-12">
-        <div className="max-w-xl mx-auto text-center">
-          <div className="max-w-xs mx-auto mb-6 flex items-center gap-4">
-            <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
-            <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+        <Reveal>
+          <div className="max-w-xl mx-auto text-center">
+            <div className="max-w-xs mx-auto mb-6 flex items-center gap-4">
+              <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+              <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+            </div>
+            <p
+              className="text-base sm:text-lg leading-relaxed italic"
+              style={{ color: 'var(--color-text-muted)', opacity: 0.7 }}
+            >
+              Your backlog should feel exciting.
+              <br />
+              Not a warehouse of good intentions.
+            </p>
+            <div className="max-w-xs mx-auto mt-6 flex items-center gap-4">
+              <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+              <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+            </div>
           </div>
-          <p
-            className="text-base sm:text-lg leading-relaxed italic"
-            style={{ color: 'var(--color-text-muted)', opacity: 0.7 }}
-          >
-            Your backlog should feel exciting.
-            <br />
-            Not a warehouse of good intentions.
-          </p>
-          <div className="max-w-xs mx-auto mt-6 flex items-center gap-4">
-            <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
-            <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
-          </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* ═══════════════════════════════════════════
@@ -300,51 +312,65 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           ═══════════════════════════════════════════ */}
       <section className="relative px-6 py-16 sm:py-24">
         <div className="max-w-3xl mx-auto">
-          <h2
-            className="text-2xl sm:text-3xl font-bold text-center mb-3 tracking-tight"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            5 ways to pick tonight&apos;s game.
-          </h2>
-          <p
-            className="text-center text-sm mb-12 font-[family-name:var(--font-mono)]"
-            style={{ color: 'var(--color-text-faint)' }}
-          >
-            tap one. we do the rest.
-          </p>
+          <Reveal>
+            <h2
+              className="text-2xl sm:text-3xl font-bold text-center mb-3 tracking-tight"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              5 ways to pick tonight&apos;s game.
+            </h2>
+            <p
+              className="text-center text-sm mb-12 font-[family-name:var(--font-mono)]"
+              style={{ color: 'var(--color-text-faint)' }}
+            >
+              tap one. we do the rest.
+            </p>
+          </Reveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <PickModeCard
-              icon="🎲"
-              title="Anything"
-              description="Just pick something. We'll figure out what fits right now."
-            />
-            <PickModeCard
-              icon="🌙"
-              title="Quick Session"
-              description="20 minutes before bed? We know which games are built for that."
-            />
-            <PickModeCard
-              icon="🔥"
-              title="Deep Cut"
-              description="Something you forgot you owned. The pile's full of them."
-            />
-            <PickModeCard
-              icon="▶"
-              title="Keep Playing"
-              description="You started five games. Finish one. We'll tell you which."
-            />
-            <PickModeCard
-              icon="🏁"
-              title="Almost Done"
-              description="That game you're 80% through? Let's roll the credits."
-            />
-            <PickModeCard
-              icon="✦"
-              title="Plus the basics"
-              description="Free. No sign-up. Your data stays on your device. Export anytime."
-              muted
-            />
+            <Reveal delay={0}>
+              <PickModeCard
+                icon="🎲"
+                title="Anything"
+                description="Just pick something. We'll figure out what fits right now."
+              />
+            </Reveal>
+            <Reveal delay={80}>
+              <PickModeCard
+                icon="🌙"
+                title="Quick Session"
+                description="20 minutes before bed? We know which games are built for that."
+              />
+            </Reveal>
+            <Reveal delay={160}>
+              <PickModeCard
+                icon="🔥"
+                title="Deep Cut"
+                description="Something you forgot you owned. The pile's full of them."
+              />
+            </Reveal>
+            <Reveal delay={240}>
+              <PickModeCard
+                icon="▶"
+                title="Keep Playing"
+                description="You started five games. We'll tell you which one to finish."
+              />
+            </Reveal>
+            <Reveal delay={320}>
+              <PickModeCard
+                icon="🏁"
+                title="Almost Done"
+                description="That game you're 80% through? Let's roll the credits."
+              />
+            </Reveal>
+            <Reveal delay={400}>
+              <PickModeCard
+                icon="✦"
+                title="Plus the basics"
+                description="Free. No sign-up. Your data stays on your device. Export anytime."
+                muted
+              />
+            </Reveal>
           </div>
         </div>
       </section>
@@ -362,7 +388,8 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
         </div>
 
-        <div className="max-w-lg mx-auto">
+        <Reveal>
+          <div className="max-w-lg mx-auto">
           <h2
             className="text-2xl sm:text-3xl font-bold tracking-tight mb-4"
             style={{ color: 'var(--color-text-primary)' }}
@@ -414,7 +441,8 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           >
             Or try a sample library
           </button>
-        </div>
+          </div>
+        </Reveal>
 
         {/* Footer */}
         <div className="mt-16 space-y-3">
@@ -467,6 +495,58 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
 /* ─────────────────────────────────────────────
    Sub-components
    ───────────────────────────────────────────── */
+
+/**
+ * Reveal: fade + translateY scroll-in using IntersectionObserver.
+ * Mobile-safe (opacity + transform only), respects prefers-reduced-motion,
+ * one-shot (unobserves after first reveal).
+ */
+function Reveal({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [shown, setShown] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const el = ref.current;
+    if (!el) return;
+
+    // Skip the animation for users who asked for less motion
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+      setShown(true);
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setShown(true);
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -60px 0px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        opacity: shown ? 1 : 0,
+        transform: shown ? 'translateY(0)' : 'translateY(24px)',
+        transition: `opacity 700ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 700ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
+        willChange: shown ? 'auto' : 'opacity, transform',
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
 function StepCard({ number, title, description, icon }: { number: string; title: string; description: string; icon: React.ReactNode }) {
   return (
