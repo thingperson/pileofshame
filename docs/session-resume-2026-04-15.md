@@ -43,47 +43,12 @@ Landing changes applied to `components/LandingPage.tsx`:
 
 ---
 
-## What's NEXT when Brady resumes tonight
+## Track status (as of session 4, commit `5221321`)
 
-### Track A — Finish the landing PR (remaining items from Option 1)
-
-Items still to apply from `docs/landing-pr-preview-2026-04-15.md`:
-
-- **Item 3** — Differentiator section cleanup (trim to single block, "our app"). Largely superseded by item 12 — verify the section reads right after item 12 lands.
-- **Item 4 (revised)** — Replace features grid with "5 ways to pick tonight's game." Pulls from `REROLL_MODES` in `lib/reroll.ts`. Drop `FeatureCard`, unused icon components.
-- **Item 6** — GetStartedModal demoted to pure sign-in helper. Drop Import + Sample buttons from it. Keep Discord/Google/Email auth. Header copy changes.
-- **Item 7** — New `components/SampleImportNudge.tsx` component. Post-first-commit prompt. Gated by `if-sample-pending` flag clearing + `if-sample-nudge-shown` localStorage flag.
-- **Item 8** — "Sample Library" pill in `app/page.tsx` line ~594 becomes tappable `<button>` opening Import Hub.
-- **Item 9A** — Icon legend section added to `components/HelpModal.tsx` listing persistent card icons (⭐🚫💤🏆 + status icons).
-- **Item 11** — "Your backlog should feel exciting, not a warehouse of good intentions." Placed between differentiator and 5-ways grid as quiet pull-quote.
-- **Item 14** — Rename "Vibe Check" → "Match today's vibe" in How It Works step 2.
-
-### Track B — Start OG share card improvements (Option 3)
-
-All decisions locked in `docs/og-cards-improvements-2026-04-15.md`. Shipping order:
-
-1. Persona auto-title with username ("[USERNAME] is an Archaeologist with 39 games waiting to be played")
-2. "Reclaimed" language swap across stats/persona cards (replaces "unlocked")
-3. Rotating completion-card tagline pool (5-8 variants, trait-based or random)
-4. $ value as rotation variant on completion card
-5. "Less shame. More game." in OG meta description across both card types
-6. 18% stat label + dollar explainer tooltip
-
-Relevant files: `app/api/share-card/route.tsx` (render), `components/CompletionCelebration.tsx` (cleared card), persona card route (TBD — grep `persona` + `share`).
-
-### Track C — Pre-launch QA (from strategist critique, see `docs/pre-launch-risks-2026-04-15.md`)
-
-Highest priority:
-1. QA every reroll-mode → output mapping (make sure Quick Session never surfaces Marathon-tagged games)
-2. Audit completion share-card OG preview across Discord/Twitter/Reddit/BlueSky/iMessage
-3. Draft prepared answers for Reddit skeptics
-
-### Track D — Items deferred (not urgent, do if time allows)
-
-- Item 9B — First-visit tooltip on card icons
-- Item 10 — Demo GIF above the fold (requires Brady to record a capture)
-- Item 13 — Flip 3-step to outcome-first (skipped; Brady agreed it's worse in practice)
-- Item 15 — Founder anchor in footer (deferred pending Brady's handle choice)
+- **Track A (landing PR)** — ✅ ALL SHIPPED. Items 3, 4, 6, 7, 8, 9A, 11, 12, 14 live. (Items 9B, 10, 13, 15 explicitly deferred.)
+- **Track B (OG share card improvements)** — ✅ ALL 6 SHIPPED.
+- **Track C (pre-launch QA)** — ⏳ Open. See current "What's NEXT" section below for the list.
+- **Track D (deferred nice-to-haves)** — 9B, 10, 15 still open. 13 killed.
 
 ---
 
@@ -104,13 +69,12 @@ Highest priority:
 
 ---
 
-## How to pick up tonight
+## How to pick up next session
 
-1. Read this doc
-2. Skim `docs/landing-pr-preview-2026-04-15.md` items 3, 4, 6, 7, 8, 9A, 11, 14 (the remaining Option 1 work)
-3. Skim `docs/og-cards-improvements-2026-04-15.md` for OG work (Option 3)
-4. Ask Brady which track he wants to resume on: Track A (finish landing), B (OG cards), C (pre-launch QA), or combination
-5. Execute. Don't re-workshop — decisions are locked.
+1. Read this doc (top to bottom — track status + "What's NEXT" at the bottom of the progress log are what matter now).
+2. Landing + OG work are done. Next up is Brady-driven: either visual QA on the fresh deploy, or Track C pre-launch QA.
+3. If diving into Track C, skim `docs/pre-launch-risks-2026-04-15.md` and `docs/reddit-launch-prep.md`.
+4. If Brady reports visual issues from the fresh deploy, fix those first - they're cheaper to catch now than post-launch.
 
 ---
 
@@ -120,3 +84,41 @@ Highest priority:
 - **Apr 15 afternoon end** — Option 2 landing changes applied (hero inline CTAs, subhead, sign-in nav, bottom CTA, competitor line). Build + voice sweep pending. Not committed.
 - **Apr 15 tonight (session 2)** — Track A items 14, 11, 6, 9A, 3 applied. Track B items 1 (persona auto-title), 2 (reclaimed language swap), 5 (Less shame. More game. in OG meta). Track C reddit-launch-prep.md created. All build-verified + voice-swept. Not committed.
 - **Apr 15 tonight (session 3)** — Favicon mis-named-PNG fixed (`app/favicon.ico` + `app/icon.tsx` replaced with single `app/icon.png`). Track A items 4 (5-ways-to-pick grid), 7 (SampleImportNudge), 8 (tappable Sample pill) applied. Track B items 3 (trait-based rotating flavor pool), 4 ($ variant in rotation), 6 (explored label + dollar tooltips). Build-verified + voice-swept. Pushed as its own commit.
+- **Apr 15 tonight (session 4, commit `5221321`)** — Post-visual-check fixes shipped as one push:
+  - OG card: fixed "The The [Archetype]" duplication bug (strip leading `The ` before template prepends one).
+  - OG card: removed 100-char truncation on archetype descriptor.
+  - OG card: clustered `INVENTORY FULL` tight with logomark, dropped the redundant bottom row (compact stats + CTA + inventoryfull.gg).
+  - Landing: new inline `Reveal` component (IntersectionObserver, opacity + translateY, 700ms ease, one-shot, honors `prefers-reduced-motion`). Wraps each section; the two grids (How It Works, 5 Ways) stagger their reveals.
+  - Landing: copy cadence sweep - smoothed Step 01 ("We grab everything. You do nothing." → "We grab everything while you do nothing."), Step 02 (combined), Step 03 ("No judgement. Moving on is deciding too." → "just move on without guilt. Moving on is deciding too."), and Keep Playing card ("Finish one. We'll tell you which." → "We'll tell you which one to finish."). Locked punchlines preserved.
+  - Sample library: moved Elden Ring + Stardew Valley from `playing` → `on-deck`. BG3 is the only Playing Now; 2 slots open by default so new users can park something immediately.
+  - Build clean, voice sweep clean. Pushed to main → Vercel deploy triggered.
+
+---
+
+## What's NEXT when Brady resumes
+
+All Track A + Track B items are now shipped. Landing-facing work is done pending visual/device QA.
+
+### Immediate (next short session)
+
+1. **Visual QA on the fresh deploy** — live inventoryfull.gg, preferably on phone + desktop:
+   - Scroll-reveal feel: is the 700ms ease right? Stagger too slow/fast? Any flash-of-unstyled-content on first paint?
+   - Landing copy flow: does the rhythm feel more varied after the sweep, or still pair-heavy somewhere?
+   - Sample library: load the sample, confirm Playing Now shows 1/3 occupied with 2 open slots visible.
+   - OG card: share a stats card to Discord/iMessage, confirm "The The" bug gone, descriptor renders in full, INVENTORY FULL clusters with logomark.
+2. **Track C pre-launch QA** (from `docs/pre-launch-risks-2026-04-15.md`) — the only remaining launch-blocker-shaped work:
+   - QA every reroll-mode → output mapping (make sure Quick Session never surfaces Marathon-tagged games, Almost Done only pulls 80%+ progress games, etc.)
+   - Audit completion share-card OG preview across Discord / Twitter / Reddit / BlueSky / iMessage. (`/clear/[id]` card, not the pile card we just fixed.)
+   - Review `docs/reddit-launch-prep.md` (drafted session 2) - any holes in the prepared-skeptic-answers?
+
+### Nice-to-haves / deferred
+
+- **Track D Item 15 (founder anchor in footer)** - still pending Brady's handle choice. 30s of work once decided.
+- **Track D Item 10 (demo GIF above the fold)** - needs Brady to record a capture. Scroll-reveals already soften the empty-space problem, so this is less urgent than it was.
+- **Track D Item 9B (first-visit tooltip on card icons)** - deferred; icon legend in HelpModal already handles discovery.
+
+### Notes / watch-items
+
+- The scroll-reveals use `willChange: 'opacity, transform'` only until shown. Keep an eye on perf on older Androids; if there's jank, threshold can be tightened or rootMargin widened to reveal earlier.
+- `sampleLibrary.ts` comment `NOW PLAYING (1)` and `ON DECK (5)` are now authoritative - if more sample games get added later, keep those counts accurate or switch to "N" placeholders.
+- The OG bottom row drop means `statParts` is gone; if we ever want compact stats on the card again, rebuild as a header element rather than a footer.
