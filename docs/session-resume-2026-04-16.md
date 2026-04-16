@@ -57,12 +57,16 @@ Session continued from Apr 15 context (landing + OG rewrite, Track C reroll audi
 - `.claude/rules/user-psychology.md` (created)
 - `AGENTS.md` (rewritten)
 - `app/about/page.tsx`
-- `app/clear/[id]/opengraph-image.tsx`
+- `app/clear/[id]/opengraph-image.tsx` (touched twice — initial redesign, then centered header + wider art box)
+- `app/clear/[id]/page.tsx` (meta description)
+- `app/layout.tsx` (meta description + schema.org)
 - `app/page.tsx`
+- `app/pile/[id]/page.tsx` (meta description)
 - `components/GameCard.tsx`
 - `components/HelpModal.tsx`
 - `components/LandingPage.tsx`
 - `docs/track-c-reroll-audit-2026-04-15.md`
+- `e2e/smoke.spec.ts`
 - `lib/reroll.ts`
 - `public/inventoryfull-hero-transparent@2x.webp` (new)
 
@@ -74,3 +78,30 @@ Session continued from Apr 15 context (landing + OG rewrite, Track C reroll audi
 2. Voice sweep — landing + about + help modal + OG card + I-beat-it copy all need eyes. New copy to vet: "A world you lived in. Your save's still there." / "Short session tonight? We know which games are built for that." / "We'll help you pick. You do the playing." / "More library managing = less playing." / hero subheads.
 3. Legal check — no new data collection, no new third parties. Hero webp is self-hosted. Clean.
 4. Product axiom — all changes serve pick-time: better OG share (virality to new users who have the problem), better Playing Now affordance (I beat it = one-click celebration), reroll modes now match their promises. None add cognitive load at pick time.
+
+---
+
+## Post-commit fixes (same session)
+
+Three follow-up commits after `9e6ae55`:
+
+**`bf70532` — CI smoke test repair.** Landing rewrite renamed the sample-library button from "try a sample library" to "Try a sample first" and the bottom CTA duplicates it. Playwright spec updated: regex relaxed to `/try a sample/i` plus `.first()` to dodge strict-mode on the duplicate. Smoke passes locally and in CI.
+
+**`a908a08` — OG completion card polish.** Share preview tool feedback from Brady:
+- Header cluster centered (was left-aligned). Logomark 88→112px, wordmark 40→44px, gap 22→28px. Reads as a proper top-of-card brand anchor now.
+- Game art box: 200×280 portrait w/ `objectFit: cover` → 300×300 container with `objectFit: contain` + subtle dark backdrop. Landscape source art (RAWG/Steam headers) used to lose half the key art to side-crop. Now they render whole and the letterboxing reads as intentional framing.
+
+**`9bf9d43` — SEO meta description sweep.** Preview tool flagged root/pile/clear descriptions as short (77 chars on clear). Rewrote all three into the 110–160 sweet spot:
+- Root (`app/layout.tsx`, 140 chars): "Inventory Full helps you pick the right game from your backlog by mood and time. Import Steam, Xbox, PlayStation. Free, no sign-up required." Replaces the old "We pick your game tonight" with "helps you pick" per `.claude/rules/user-psychology.md` — marketing/invitation context reads warmer. Applied identically to `openGraph.description`, `twitter.description`, and the `application/ld+json` blob.
+- Clear page (`app/clear/[id]/page.tsx`): lead (flavor or fallback) + valueStr + app pitch + closer. 135–152 chars.
+- Pile page (`app/pile/[id]/page.tsx`): stats lead + app pitch + closer. 142 chars minimum, up to 174 when dollar value is shown (SERPs truncate cleanly at sentence boundary before "Free, no sign-up", so the snippet still reads).
+
+---
+
+## What's pending your review (apr 16, end of session)
+
+Nothing strictly blocking — everything that can ship without your eyes has shipped. Soft asks:
+
+1. **Eyeball the live OG card.** I can describe the fix but can't see what renders. Drop an inventoryfull.gg/clear/... URL into the preview tool again and check that BG3 key art now fits the wider box.
+2. **Deep Cut label decision.** Copy-only. Candidates from earlier: "Take Me Back", "Open Save", "Worth Another Run", or keep "Deep Cut" with the new framing. I'll wait.
+3. **Mobile pass** — yours tomorrow per earlier note.
