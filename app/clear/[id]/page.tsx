@@ -48,9 +48,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
   const title = `I cleared ${card.game_name} off my backlog | Inventory Full`;
   const valueStr = card.show_dollar_value && card.dollar_value ? ` $${Math.round(card.dollar_value)} reclaimed.` : '';
-  const description = card.flavor_text
-    ? `${card.flavor_text}${valueStr} Less shame. More game.`
-    : `${card.game_name} has been cleared from the pile.${valueStr} Less shame. More game.`;
+  // SEO description targets the 110–160 char window. Share lead (flavor or fallback) sets the
+  // emotional hook, then the app pitch carries the pitch to anyone who clicked through.
+  const lead = card.flavor_text
+    ? `${card.flavor_text}${valueStr}`
+    : `${card.game_name} cleared off the pile.${valueStr}`;
+  const description = `${lead} Inventory Full helps you pick your next game in seconds. Free, no sign-up. Less shame. More game.`;
 
   return {
     title,

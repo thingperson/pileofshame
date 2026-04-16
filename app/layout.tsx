@@ -24,13 +24,13 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Inventory Full - Stop stalling. Get playing.",
-  description: "Import your Steam, Xbox, or PlayStation library. Tell us your mood. We pick your game tonight. Free, no sign-up required.",
+  description: "Inventory Full helps you pick the right game from your backlog by mood and time. Import Steam, Xbox, PlayStation. Free, no sign-up required.",
   metadataBase: new URL('https://inventoryfull.gg'),
   keywords: ['gaming backlog', 'backlog manager', 'game tracker', 'inventory full', 'steam backlog', 'xbox backlog', 'gaming queue', 'what to play next', 'game randomizer', 'backlog tracker', 'backlog payback'],
   authors: [{ name: 'Inventory Full' }],
   openGraph: {
     title: 'Inventory Full - Stop stalling. Get playing.',
-    description: 'Import your Steam, Xbox, or PlayStation library. Tell us your mood. We pick your game tonight. Free, no sign-up required.',
+    description: 'Inventory Full helps you pick the right game from your backlog by mood and time. Import Steam, Xbox, PlayStation. Free, no sign-up required.',
     url: 'https://inventoryfull.gg',
     siteName: 'Inventory Full',
     type: 'website',
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Inventory Full - Stop stalling. Get playing.',
-    description: 'Import your Steam, Xbox, or PlayStation library. Tell us your mood. We pick your game tonight. Free, no sign-up required.',
+    description: 'Inventory Full helps you pick the right game from your backlog by mood and time. Import Steam, Xbox, PlayStation. Free, no sign-up required.',
     images: ['https://inventoryfull.gg/opengraph-image'],
   },
   other: {
@@ -93,7 +93,7 @@ export default function RootLayout({
               '@type': 'WebApplication',
               name: 'Inventory Full',
               url: 'https://inventoryfull.gg',
-              description: 'Gaming backlog manager. Your backlog should feel exciting, not a warehouse of good intentions. Import from Steam, Xbox, Playnite. Clear space, recover fun.',
+              description: 'Inventory Full helps you pick the right game from your backlog by mood and time. Import from Steam, Xbox, PlayStation, Playnite. Free, no sign-up required.',
               applicationCategory: 'GameApplication',
               operatingSystem: 'Web',
               offers: {

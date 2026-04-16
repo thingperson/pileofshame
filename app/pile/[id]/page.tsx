@@ -69,9 +69,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     : who
       ? `${who} has ${card.total_games} games tracked, ${card.games_cleared} completed | Inventory Full`
       : `Someone has ${card.total_games} games tracked, ${card.games_cleared} completed | Inventory Full`;
-  const description = archetypeClean
-    ? `${card.games_cleared} completed, ${card.backlog_size} in the pile, ${card.exploration_pct}% explored.${card.show_value && card.unplayed_value ? ` $${card.unplayed_value.toLocaleString()} waiting to be reclaimed.` : ''} Less shame. More game.`
-    : `${card.games_cleared} completed, ${card.games_in_motion} in motion, ${card.backlog_size} in the pile, ${card.exploration_pct}% explored. Less shame. More game.`;
+  // SEO description targets the 110–160 char window. Stats lead sets the lived-in numbers,
+  // app pitch carries the pitch for strangers who clicked through from a social post.
+  const statsLead = archetypeClean
+    ? `${card.games_cleared} completed, ${card.backlog_size} in the pile, ${card.exploration_pct}% explored.${card.show_value && card.unplayed_value ? ` $${card.unplayed_value.toLocaleString()} waiting to be reclaimed.` : ''}`
+    : `${card.games_cleared} completed, ${card.games_in_motion} in motion, ${card.backlog_size} in the pile, ${card.exploration_pct}% explored.`;
+  const description = `${statsLead} Inventory Full helps you pick your next game in seconds. Free, no sign-up. Less shame. More game.`;
 
   return {
     title,
