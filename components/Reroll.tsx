@@ -12,6 +12,7 @@ import { trackReroll, trackRerollCommit, trackFirstRoll, trackFirstCommit, track
 import { recordSkip } from '@/lib/skipTracking';
 import { recordSkipReason, SkipReasonKey } from '@/lib/skipReasons';
 import { recordDecision } from '@/lib/decisionHistory';
+import { emitSampleCompleted } from './SampleImportNudge';
 
 const ALL_MOODS: MoodTag[] = ['chill', 'intense', 'story-rich', 'brainless', 'atmospheric', 'competitive', 'spooky', 'creative', 'strategic', 'emotional'];
 
@@ -179,6 +180,8 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
       if (typeof window !== 'undefined' && localStorage.getItem('if-sample-pending') === '1') {
         trackSampleCompleted();
         localStorage.removeItem('if-sample-pending');
+        // Signal the SampleImportNudge to appear (post-value-proof prompt)
+        emitSampleCompleted();
       }
     } catch {
       // ignore storage errors

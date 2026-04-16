@@ -134,11 +134,14 @@ export default async function PilePage({ params }: { params: Promise<{ id: strin
               <span className="px-3 py-1 rounded-full text-xs font-mono font-medium tracking-widest" style={{ backgroundColor: 'rgba(167, 139, 250, 0.15)', color: '#a78bfa', border: '1px solid rgba(167, 139, 250, 0.3)' }}>
                 MY PILE
               </span>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2" title="Percentage of your library you've played or cleared">
                 <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
                   <div className="h-full rounded-full" style={{ width: `${card.exploration_pct}%`, backgroundColor: '#a78bfa' }} />
                 </div>
-                <span className="text-sm font-bold font-mono" style={{ color: '#a78bfa' }}>{card.exploration_pct}%</span>
+                <span className="text-sm font-bold font-mono" style={{ color: '#a78bfa' }}>
+                  {card.exploration_pct}%
+                  <span className="ml-1 font-medium" style={{ color: 'var(--color-text-faint)' }}>explored</span>
+                </span>
               </div>
             </div>
 
@@ -176,24 +179,27 @@ export default async function PilePage({ params }: { params: Promise<{ id: strin
                 <div className="text-xs text-text-faint font-mono mb-2">💎 Library Value</div>
                 <div className="grid grid-cols-2 gap-2">
                   {card.unplayed_value && (
-                    <div>
+                    <div title="Estimated retail value of unplayed games. Sourced from IsThereAnyDeal pricing + library average for missing titles.">
                       <div className="text-xs text-text-dim font-mono">Waiting to reclaim</div>
                       <div className="text-lg font-bold font-mono" style={{ color: '#a78bfa' }}>~${card.unplayed_value.toLocaleString()}</div>
                     </div>
                   )}
                   {card.played_value && (
-                    <div>
+                    <div title="Retail value of games you've cleared. This is money you put back to work.">
                       <div className="text-xs text-text-dim font-mono">Reclaimed</div>
                       <div className="text-lg font-bold font-mono" style={{ color: '#22c55e' }}>${card.played_value.toLocaleString()}</div>
                     </div>
                   )}
                   {card.backlog_hours && (
-                    <div>
+                    <div title="Total hours to complete unplayed games. Sourced from HowLongToBeat main-story estimates.">
                       <div className="text-xs text-text-dim font-mono">Time to complete</div>
                       <div className="text-lg font-bold font-mono" style={{ color: '#f59e0b' }}>~{card.backlog_hours.toLocaleString()}h</div>
                     </div>
                   )}
                 </div>
+                <p className="text-[10px] text-text-faint font-mono mt-2 italic opacity-70">
+                  * estimates via IsThereAnyDeal pricing and HowLongToBeat
+                </p>
               </div>
             )}
 

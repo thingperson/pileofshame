@@ -29,6 +29,7 @@ import OnboardingWelcome from '@/components/OnboardingWelcome';
 import LandingPage from '@/components/LandingPage';
 import { SAMPLE_GAMES } from '@/lib/sampleLibrary';
 import PostImportSummary from '@/components/PostImportSummary';
+import SampleImportNudge from '@/components/SampleImportNudge';
 import GamePassBrowse from '@/components/GamePassBrowse';
 import StalledGameNudge from '@/components/StalledGameNudge';
 import FinishCheckNudge from '@/components/FinishCheckNudge';
@@ -591,37 +592,49 @@ function AppContent() {
       {/* ── Library status pill ── */}
       {!isEmpty && (
         <div className="mb-2 flex items-center gap-2">
-          <span
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-[family-name:var(--font-mono)]"
-            style={{
-              backgroundColor: isSampleLibrary
-                ? 'color-mix(in srgb, var(--color-accent-purple) 10%, transparent)'
-                : isSignedIn
+          {isSampleLibrary ? (
+            <button
+              type="button"
+              onClick={() => setImportHubOpen(true)}
+              title="Click to import your real library"
+              aria-label="Click to import your real library"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-[family-name:var(--font-mono)] cursor-pointer transition-all hover:scale-[1.03] active:scale-[0.98]"
+              style={{
+                backgroundColor: 'color-mix(in srgb, var(--color-accent-purple) 10%, transparent)',
+                color: 'var(--color-accent-purple)',
+                border: '1px solid color-mix(in srgb, var(--color-accent-purple) 20%, transparent)',
+              }}
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ backgroundColor: 'var(--color-accent-purple)' }}
+              />
+              Sample Library
+            </button>
+          ) : (
+            <span
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-[family-name:var(--font-mono)]"
+              style={{
+                backgroundColor: isSignedIn
                   ? 'rgba(34, 197, 94, 0.08)'
                   : 'rgba(255, 255, 255, 0.04)',
-              color: isSampleLibrary
-                ? 'var(--color-accent-purple)'
-                : isSignedIn
+                color: isSignedIn
                   ? '#4ade80'
                   : 'var(--color-text-faint)',
-              border: `1px solid ${isSampleLibrary
-                ? 'color-mix(in srgb, var(--color-accent-purple) 20%, transparent)'
-                : isSignedIn
+                border: `1px solid ${isSignedIn
                   ? 'rgba(34, 197, 94, 0.15)'
                   : 'rgba(255, 255, 255, 0.06)'}`,
-            }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full" style={{
-              backgroundColor: isSampleLibrary
-                ? 'var(--color-accent-purple)'
-                : isSignedIn ? '#4ade80' : 'var(--color-text-faint)',
-            }} />
-            {isSampleLibrary
-              ? 'Sample Library'
-              : isSignedIn
+              }}
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ backgroundColor: isSignedIn ? '#4ade80' : 'var(--color-text-faint)' }}
+              />
+              {isSignedIn
                 ? `Synced as ${user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'you'}`
                 : 'Your Library'}
-          </span>
+            </span>
+          )}
           {!isSampleLibrary && !isSignedIn && (
             <span className="text-xs text-text-faint font-[family-name:var(--font-mono)]">
               not synced
@@ -780,6 +793,12 @@ function AppContent() {
           }}
         />
       )}
+
+      {/* ── Sample-user post-commit nudge (one-time) ── */}
+      <SampleImportNudge
+        isSampleLibrary={isSampleLibrary}
+        onImport={() => setImportHubOpen(true)}
+      />
 
       {/* ── Tab Content (swipe left/right to switch tabs) ── */}
       {!isEmpty && (

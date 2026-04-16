@@ -6,6 +6,7 @@ import { Game } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
 import { trackGameCleared, trackShareClear, trackFirstCompletion, trackShareCardCreated } from '@/lib/analytics';
+import { loadCache, PRICE_CACHE_KEY, getCacheKey } from '@/lib/statsHelpers';
 
 interface CompletionCelebrationProps {
   game: Game | null;
@@ -120,13 +121,94 @@ function ConfettiCanvas() {
 
 // --- Composable share card builder ---
 
-const CLEAR_FLAVORS = [
-  (name: string, days: number | null) => days && days > 365 ? `Finally cleared ${name} after ${Math.floor(days / 365)}+ years in the pile.` : `${name}: cleared. The pile gets lighter.`,
-  (name: string) => `${name}: done. One less game haunting the pile.`,
-  (name: string) => `Finished ${name}. Actually played something I own.`,
-  (name: string) => `Knocked out ${name}. Feels good.`,
-  (name: string, days: number | null) => days && days > 180 ? `${name} spent ${Math.floor(days / 30)} months in my backlog. Not anymore.` : `${name}: off the pile. Next.`,
+// Completion-card flavor pool.
+//
+// Each variant declares when it's eligible. At share-card time we filter to
+// the applicable set for this game/user and pick one at random. This gives
+// the "hey my card says something different" surprise the OG brief called
+// out — repetition kills that surprise, so the pool stays broad.
+//
+// Variants that reference specific numbers (pile count, dollars, hours)
+// should only fire when that number is meaningfully present.
+interface FlavorContext {
+  name: string;
+  daysInPile: number | null;
+  hoursOnGame: number;
+  gamesCleared: number; // count BEFORE this clear commits
+  backlogSize: number;  // count BEFORE this clear commits
+  gamePrice: number | null;
+}
+
+interface FlavorVariant {
+  id: string;
+  // Return a string when this variant is eligible for the context,
+  // or null to skip.
+  build: (ctx: FlavorContext) => string | null;
+}
+
+const CLEAR_FLAVORS: FlavorVariant[] = [
+  {
+    id: 'long-pile',
+    build: ({ name, daysInPile }) => {
+      if (!daysInPile) return null;
+      if (daysInPile > 365) {
+        const years = Math.floor(daysInPile / 365);
+        return `Crushed ${name} after ${years}+ year${years > 1 ? 's' : ''} of guilt.`;
+      }
+      if (daysInPile > 180) {
+        const months = Math.floor(daysInPile / 30);
+        return `${name} spent ${months} months in my pile. Not anymore.`;
+      }
+      return null;
+    },
+  },
+  {
+    id: 'dollar-reclaim',
+    build: ({ name, gamePrice }) => {
+      if (!gamePrice || gamePrice < 5) return null;
+      return `Cleared ${name}. $${Math.round(gamePrice)} reclaimed from the backlog.`;
+    },
+  },
+  {
+    id: 'countdown',
+    build: ({ name, backlogSize }) => {
+      if (backlogSize < 2) return null;
+      return `Closed out ${name}. Pile down to ${backlogSize - 1}.`;
+    },
+  },
+  {
+    id: 'milestone',
+    build: ({ name, gamesCleared }) => {
+      const next = gamesCleared + 1;
+      if (next === 1) return `First one off the pile: ${name}. On to the next.`;
+      if (next % 10 === 0) return `${name} cleared. That's ${next} games done.`;
+      if (next % 5 === 0) return `${name} down. ${next} cleared so far.`;
+      return null;
+    },
+  },
+  {
+    id: 'hours-worth-it',
+    build: ({ name, hoursOnGame }) => {
+      if (hoursOnGame < 40) return null;
+      return `${hoursOnGame} hours on ${name}. Credits rolled. Worth it.`;
+    },
+  },
+  // Always-eligible evergreens — broaden the pool for small libraries and
+  // early users whose trait-based variants haven't triggered yet.
+  { id: 'feels-good', build: ({ name }) => `Knocked out ${name}. Feels good.` },
+  { id: 'one-less',   build: ({ name }) => `${name}: done. One less game haunting the pile.` },
+  { id: 'actually',   build: ({ name }) => `Finished ${name}. Actually played something I own.` },
+  { id: 'no-shame',   build: ({ name }) => `${name}: cleared. No shame.` },
+  { id: 'lighter',    build: ({ name }) => `${name}: cleared. The pile gets lighter.` },
 ];
+
+function pickFlavor(ctx: FlavorContext): string {
+  const eligible = CLEAR_FLAVORS
+    .map((v) => v.build(ctx))
+    .filter((s): s is string => typeof s === 'string' && s.length > 0);
+  if (eligible.length === 0) return `${ctx.name}: cleared.`;
+  return eligible[Math.floor(Math.random() * eligible.length)];
+}
 
 interface ShareToggle {
   key: string;
@@ -172,10 +254,29 @@ function GameClearShare({
     return Math.floor((now - added) / (1000 * 60 * 60 * 24));
   }, [game.addedAt]);
 
+  // Pull the cached retail price for this specific game if we have one.
+  // The price cache is populated by StatsPanel / ValueCalculator, so users
+  // who've already computed their library value will see the dollar variant.
+  const gamePrice = useMemo(() => {
+    try {
+      const cache = loadCache<number>(PRICE_CACHE_KEY);
+      const p = cache.get(getCacheKey(game.name));
+      return typeof p === 'number' && p > 0 ? p : null;
+    } catch {
+      return null;
+    }
+  }, [game.name]);
+
   const flavorText = useMemo(() => {
-    const fn = CLEAR_FLAVORS[Math.floor(Math.random() * CLEAR_FLAVORS.length)];
-    return fn(game.name, timeInPileDays);
-  }, [game.name, timeInPileDays]);
+    return pickFlavor({
+      name: game.name,
+      daysInPile: timeInPileDays,
+      hoursOnGame,
+      gamesCleared,
+      backlogSize,
+      gamePrice,
+    });
+  }, [game.name, timeInPileDays, hoursOnGame, gamesCleared, backlogSize, gamePrice]);
 
   // HLTB comparison: percentage faster/slower
   const hltbLabel = useMemo(() => {

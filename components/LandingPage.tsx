@@ -296,47 +296,54 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
       </section>
 
       {/* ═══════════════════════════════════════════
-          FEATURES — QUICK HITS
+          5 WAYS TO PICK TONIGHT'S GAME
           ═══════════════════════════════════════════ */}
       <section className="relative px-6 py-16 sm:py-24">
         <div className="max-w-3xl mx-auto">
           <h2
-            className="text-2xl sm:text-3xl font-bold text-center mb-12 tracking-tight"
+            className="text-2xl sm:text-3xl font-bold text-center mb-3 tracking-tight"
             style={{ color: 'var(--color-text-primary)' }}
           >
-            What you get.
+            5 ways to pick tonight&apos;s game.
           </h2>
+          <p
+            className="text-center text-sm mb-12 font-[family-name:var(--font-mono)]"
+            style={{ color: 'var(--color-text-faint)' }}
+          >
+            tap one. we do the rest.
+          </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FeatureCard
-              icon={<MoodIcon />}
-              title="Mood matching"
-              description="Cozy, intense, brain-off, narrative - match your energy to a game."
+            <PickModeCard
+              icon="🎲"
+              title="Anything"
+              description="Just pick something. We'll figure out what fits right now."
             />
-            <FeatureCard
-              icon={<ClockIcon />}
-              title="Time-aware picks"
-              description="Got 20 minutes or a whole evening? We know the difference."
+            <PickModeCard
+              icon="🌙"
+              title="Quick Session"
+              description="20 minutes before bed? We know which games are built for that."
             />
-            <FeatureCard
-              icon={<TimerIcon />}
-              title="5-minute try timer"
-              description="Not sure about a game? Give it five minutes. Timer says stop, you decide."
+            <PickModeCard
+              icon="🔥"
+              title="Deep Cut"
+              description="Something you forgot you owned. The pile's full of them."
             />
-            <FeatureCard
-              icon={<PartyIcon />}
-              title="Completion celebrations"
-              description="Finished a game? You earned the confetti. Moved on? That counts too."
+            <PickModeCard
+              icon="▶"
+              title="Keep Playing"
+              description="You started five games. Finish one. We'll tell you which."
             />
-            <FeatureCard
-              icon={<FreeIcon />}
-              title="Free. No sign-up."
-              description="No email, no account required. Open it, use it. Done."
+            <PickModeCard
+              icon="🏁"
+              title="Almost Done"
+              description="That game you're 80% through? Let's roll the credits."
             />
-            <FeatureCard
-              icon={<LockIcon />}
-              title="Your data stays yours"
-              description="Everything lives in your browser. Export anytime. We don't sell anything."
+            <PickModeCard
+              icon="✦"
+              title="Plus the basics"
+              description="Free. No sign-up. Your data stays on your device. Export anytime."
+              muted
             />
           </div>
         </div>
@@ -497,18 +504,30 @@ function StepCard({ number, title, description, icon }: { number: string; title:
   );
 }
 
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+function PickModeCard({
+  icon,
+  title,
+  description,
+  muted = false,
+}: {
+  icon: string;
+  title: string;
+  description: string;
+  muted?: boolean;
+}) {
   return (
     <div
       className="flex gap-4 rounded-xl p-5 border transition-all duration-200 hover:border-accent-purple"
       style={{
-        backgroundColor: 'var(--color-bg-card)',
+        backgroundColor: muted ? 'transparent' : 'var(--color-bg-card)',
         borderColor: 'var(--color-border-subtle)',
+        opacity: muted ? 0.75 : 1,
       }}
     >
       <div
-        className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center"
-        style={{ backgroundColor: 'var(--color-bg-elevated)' }}
+        className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-xl"
+        style={{ backgroundColor: muted ? 'transparent' : 'var(--color-bg-elevated)' }}
+        aria-hidden="true"
       >
         {icon}
       </div>
@@ -558,54 +577,3 @@ function PlayStepIcon() {
   );
 }
 
-/* ─────────────────────────────────────────────
-   Feature Icons (inline SVGs, theme-aware)
-   ───────────────────────────────────────────── */
-
-function MoodIcon() {
-  return (
-    <svg width="20" height="20" className="w-5 h-5" style={{ color: 'var(--color-accent-purple)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
-    </svg>
-  );
-}
-
-function ClockIcon() {
-  return (
-    <svg width="20" height="20" className="w-5 h-5" style={{ color: 'var(--color-accent-purple)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-  );
-}
-
-function TimerIcon() {
-  return (
-    <svg width="20" height="20" className="w-5 h-5" style={{ color: 'var(--color-accent-purple)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875S10.5 3.089 10.5 4.125c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 01-.657.643 48.42 48.42 0 01-4.163-.3c.186 1.613.46 3.193.816 4.726l5.04 5.04a4.5 4.5 0 006.364-6.364l-3.862-3.862A19.873 19.873 0 0014.25 6.087z" />
-    </svg>
-  );
-}
-
-function PartyIcon() {
-  return (
-    <svg width="20" height="20" className="w-5 h-5" style={{ color: 'var(--color-accent-pink)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
-    </svg>
-  );
-}
-
-function FreeIcon() {
-  return (
-    <svg width="20" height="20" className="w-5 h-5" style={{ color: 'var(--color-accent-purple)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-    </svg>
-  );
-}
-
-function LockIcon() {
-  return (
-    <svg width="20" height="20" className="w-5 h-5" style={{ color: 'var(--color-accent-purple)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-    </svg>
-  );
-}
