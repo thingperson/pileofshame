@@ -131,17 +131,17 @@ export default async function Image({ params }: { params: Promise<{ id: string }
         {/* Grid pattern */}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)', backgroundSize: '60px 60px', display: 'flex' }} />
 
-        {/* === TOP HEADER: logomark + INVENTORY FULL, the brand anchor === */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '22px', padding: '32px 56px 0 56px', position: 'relative', zIndex: 1 }}>
+        {/* === TOP HEADER: logomark + INVENTORY FULL, centered, the brand anchor === */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '28px', padding: '34px 56px 0 56px', position: 'relative', zIndex: 1 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="https://inventoryfull.gg/icon-512.png"
             alt=""
-            width={88}
-            height={88}
-            style={{ width: '88px', height: '88px', borderRadius: '16px' }}
+            width={112}
+            height={112}
+            style={{ width: '112px', height: '112px', borderRadius: '20px' }}
           />
-          <div style={{ fontSize: '40px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '6px', display: 'flex' }}>
+          <div style={{ fontSize: '44px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '6px', display: 'flex' }}>
             INVENTORY FULL
           </div>
         </div>
@@ -149,25 +149,38 @@ export default async function Image({ params }: { params: Promise<{ id: string }
         {/* === MAIN CONTENT: game art + hero copy === */}
         <div style={{ display: 'flex', flex: 1, padding: '20px 56px 12px 56px', gap: '40px', position: 'relative', zIndex: 1 }}>
 
-          {/* Left: Game cover — portrait ratio (5:7) so covers render in their natural aspect instead of cropped square */}
+          {/* Left: Game cover — wider box + objectFit contain so landscape source art
+              (RAWG/Steam headers) renders whole instead of being guillotined on the sides.
+              Subtle bg so contain letterboxing reads as intentional framing. */}
           {card.cover_url && (
             <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={card.cover_url}
-                alt=""
-                width={200}
-                height={280}
+              <div
                 style={{
-                  width: '200px',
-                  height: '280px',
-                  objectFit: 'cover',
-                  objectPosition: 'center',
-                  borderRadius: '12px',
-                  border: '2px solid rgba(167, 139, 250, 0.3)',
+                  display: 'flex',
+                  width: '300px',
+                  height: '300px',
+                  borderRadius: '14px',
+                  border: '2px solid rgba(167, 139, 250, 0.28)',
                   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
+                  backgroundColor: 'rgba(15, 15, 22, 0.85)',
+                  overflow: 'hidden',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
-              />
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={card.cover_url}
+                  alt=""
+                  width={300}
+                  height={300}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                  }}
+                />
+              </div>
             </div>
           )}
 
