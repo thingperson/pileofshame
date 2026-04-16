@@ -7,7 +7,8 @@ test('landing -> sample -> roll modal opens', async ({ page }) => {
   await page.goto('/');
 
   // Landing page loads
-  const sampleBtn = page.getByRole('button', { name: /try a sample library/i });
+  // Two "Try a sample first" buttons exist on the landing (hero + bottom CTA). Either works.
+  const sampleBtn = page.getByRole('button', { name: /try a sample/i }).first();
   await expect(sampleBtn).toBeVisible();
 
   // Load sample library
