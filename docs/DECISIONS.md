@@ -15,6 +15,38 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-17 — Smart Pick copy locked + "tonight" retired from session copy
+
+**Decision.** Four Smart Pick types ship with 6-line headline pools each, stored in `lib/smartPickCopy.ts`. Selection is hash-based on game name — same game always returns the same headline, different games rotate. The types:
+
+1. **Almost There** 🏁 — game is near the HLTB finish line (≥75% through).
+2. **Keep Flowing** 🌊 — game is currently in Playing Now with real hours.
+3. **Forgotten Gem** 💎 — shelved with 5h+ invested AND high-rated (Steam ≥85% positive with 500+ reviews, or Metacritic ≥85).
+4. **Unfinished Business** — shelved with 5h+ invested, fallback when Forgotten Gem doesn't qualify.
+
+Priority chain (first match wins): Almost There → Keep Flowing → Forgotten Gem → Unfinished Business.
+
+Smart Pick fires inside the Resume mode (renamed from the internal `continue` / user-facing `Keep Playing` that collided with the Playing Now status label). Result-card treatment: a `🧠 Smart Pick · [type name]` pill at the top, with the headline below. The triggering reason is the #1 highlighted entry in "Why this one," other reasons (Metacritic, mood match) render beneath unstyled.
+
+Also locked in the same pass: **"tonight" is retired anywhere it implied a gaming session.** Replaced with "today" or neutral phrasing. Touches reroll mode description, help modal, stats share lines, landing + about "5 ways to pick" section, marathon tier description.
+
+**Why.**
+- The earlier mode set (Anything / Quick Session / Deep Cut / Keep Playing / Almost Done) had two overlapping names ("Keep Playing" vs the "Playing Now" status shelf) and five decisions at pick time, violating the 2-input psychology ceiling from `.claude/rules/user-psychology.md`.
+- Consolidating Keep Playing + Deep Cut into a single Resume umbrella with sub-typed headlines gives us the differentiation in voice without the decision cost. The user picks ONE mode; we do the internal routing.
+- Hash-based selection (vs random) means the same game gets the same headline on reroll — reduces the "every pick is trying to sell me" feel.
+- "Tonight" implies an evening gaming session. Users pick games mid-day, at lunch, on weekends. "Today" is neutral. The earlier sweep caught 11 occurrences across landing, about, help, reroll description, and stats share copy.
+
+**Rejected.**
+- **Keep all five modes as separate buttons.** Violates the 2-input rule and creates decision overhead before the actual pick decision.
+- **Random rotation of headlines.** Would make each reroll feel different even for the same game; hash-stable selection is warmer.
+- **"Deep Cut" as the cold-shelved label.** Collided with `TimeTier.deep-cut`. "Unfinished Business" is motivating without being lore-y; "Forgotten Gem" carves out the high-rated subset so we're not pre-emptively calling every shelved game a gem.
+
+**How to apply this.** When adding a new Smart Pick type, update `lib/smartPickCopy.ts` (add to `SmartPickType` union, `SMART_PICK_LABELS`, and `HEADLINES`) and add a detection branch to the resolver in `lib/reroll.ts` (ships in next commit). Priority order matters — put stricter conditions first.
+
+**Evidence.** Copy file: `lib/smartPickCopy.ts`. Voice filter passed per `.claude/rules/voice-and-tone.md`. Approved by Brady 2026-04-17 with two revisions from initial draft ("Maybe that changes tonight" → "today"; "Hmm" → "Time to jump back in."). Engine wiring + modal layout land in subsequent commits.
+
+---
+
 ## 2026-04-17 — Tagline retagged: "get playing." (supersedes "Stop stalling. Get playing.")
 
 **Decision.** The primary tagline is now "get playing." (lowercase, with the period) alone. Everywhere the longer "Stop stalling. Get playing." appeared — page titles, OG metadata, landing bottom CTA, about page, email templates, pile + clear share pages, root OG card — is updated to the short form. Case is intentional: lowercase reads friendlier and matches the app's casual voice. The landing page h1 remains "Inventory Full"; "get playing." sits under it as a supporting line, not as a replacement h1. Supersedes the Apr 8 lock.
