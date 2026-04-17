@@ -46,14 +46,22 @@ interface RerollProps {
   open: boolean;
   onClose: () => void;
   initialMode?: RerollMode;
+  /** Parent wires to a JustFiveMinutes ref (see app/page.tsx). The Reroll
+   *  modal's "⚡ Just 5 mins" CTA calls this and closes — the Just 5 mins
+   *  flow has its own modal + timer. */
+  onJustFiveMinutes?: () => void;
 }
 
-export default function Reroll({ open, onClose, initialMode }: RerollProps) {
+export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes }: RerollProps) {
   const [mode, setMode] = useState<RerollMode>('anything');
   const [moodFilters, setMoodFilters] = useState<MoodTag[]>([]);
   const [currentPick, setCurrentPick] = useState<Game | null>(null);
   const [smartPickType, setSmartPickType] = useState<SmartPickType | null>(null);
   const [rollCount, setRollCount] = useState(0);
+  // Collapsible sections in the pre-roll picker. Both default closed so the
+  // modal opens at 2 CTAs + energy pills; secondary choices are one tap away.
+  const [showMoreWays, setShowMoreWays] = useState(false);
+  const [showVibes, setShowVibes] = useState(false);
   const [rolling, setRolling] = useState(false);
   const [showForced, setShowForced] = useState(false);
   const [revealed, setRevealed] = useState(false);
@@ -244,15 +252,16 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
     onClose();
   }, [resetReroll, onClose]);
 
-  const handleFirstRoll = useCallback(() => {
-    const eligible = getEligibleGames(games, mode, platformPreference, moodFilters);
+  const handleFirstRoll = useCallback((overrideMode?: RerollMode) => {
+    const rollMode = overrideMode || mode;
+    const eligible = getEligibleGames(games, rollMode, platformPreference, moodFilters);
     if (eligible.length === 0) {
       showToast(moodFilters.length > 0
         ? 'No games match that mood. Try a different one.'
         : 'No games match this mode.');
       return;
     }
-    doRoll();
+    doRoll(rollMode);
   }, [games, mode, moodFilters, doRoll, showToast, platformPreference]);
 
   const SKIP_REASON_OPTIONS: { key: SkipReasonKey; label: string; icon: string }[] = [
@@ -444,66 +453,101 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
               ))}
             </div>
 
-            {/* Session type */}
-            <p className="text-xs text-text-dim font-[family-name:var(--font-mono)] uppercase tracking-wider mb-2">How much time do you have?</p>
+            {/* Primary CTAs — clicking rolls immediately in that mode (no
+                separate Roll button). "Just 5 mins" closes the modal and
+                hands off to the JustFiveMinutes flow via the parent ref. */}
             <div className="grid grid-cols-2 gap-2">
-              {REROLL_MODES.map(({ mode: m, label, icon, description }) => (
-                <button
-                  key={m}
-                  onClick={() => setMode(m)}
-                  className={`px-3 py-3 sm:py-2.5 rounded-xl text-left border transition-all ${
-                    mode === m
-                      ? 'border-accent-purple'
-                      : 'border-border-subtle hover:border-border-active'
-                  }`}
-                  style={{ backgroundColor: 'var(--color-bg-card)' }}
-                >
-                  <div className="text-base font-medium text-text-primary">
-                    {icon} {label}
-                  </div>
-                  <div className="text-xs text-text-dim mt-0.5">{description}</div>
-                </button>
-              ))}
-            </div>
-            {/* Mood filter pills */}
-            <div className="mt-4">
-              <p className="text-xs text-text-dim font-[family-name:var(--font-mono)] uppercase tracking-wider mb-2">I want something that feels...</p>
-              <div className="flex flex-wrap gap-1.5">
-                {ALL_MOODS.map((mood) => {
-                  const config = MOOD_TAG_CONFIG[mood];
-                  const active = moodFilters.includes(mood);
-                  return (
-                    <button
-                      key={mood}
-                      onClick={() => toggleMood(mood)}
-                      className={`px-3 py-2 rounded-full text-sm font-medium transition-all ${
-                        active
-                          ? 'scale-[1.02]'
-                          : 'hover:bg-white/10'
-                      }`}
-                      style={{
-                        backgroundColor: active ? `${config.color}25` : 'rgba(255,255,255,0.05)',
-                        color: active ? config.color : 'var(--color-text-muted)',
-                        border: active ? `1px solid ${config.color}50` : '1px solid rgba(255,255,255,0.08)',
-                      }}
-                    >
-                      {config.icon} {config.label}
-                    </button>
-                  );
-                })}
-              </div>
+              <button
+                onClick={() => { setMode('anything'); setTimeout(() => handleFirstRoll('anything'), 0); }}
+                className="px-4 py-5 rounded-xl text-lg font-bold text-white transition-all hover:-translate-y-0.5 active:scale-[0.98]"
+                style={{ background: 'linear-gradient(135deg, #7c3aed, #a78bfa)' }}
+              >
+                🎲 Anything
+              </button>
+              <button
+                onClick={() => onJustFiveMinutes?.()}
+                className="px-4 py-5 rounded-xl text-lg font-bold text-white transition-all hover:-translate-y-0.5 active:scale-[0.98]"
+                style={{ background: 'linear-gradient(135deg, #059669, #34d399)' }}
+                disabled={!onJustFiveMinutes}
+                title="Try a game for 5 minutes. Then decide where it goes."
+              >
+                ⚡ Just 5 mins
+              </button>
             </div>
 
-            <button
-              onClick={handleFirstRoll}
-              className="w-full mt-3 px-4 py-4 sm:py-3 text-lg sm:text-base font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
-              style={{
-                backgroundColor: 'var(--color-accent-purple)',
-                color: '#0a0a0f',
-              }}
-            >
-              🎲 Roll
-            </button>
+            {/* More ways to play — Quick Session + Resume. Collapsed by default. */}
+            <div className="mt-3 rounded-xl border" style={{ borderColor: 'var(--color-border-subtle)' }}>
+              <button
+                type="button"
+                onClick={() => setShowMoreWays((v) => !v)}
+                className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
+                aria-expanded={showMoreWays}
+              >
+                <span>More ways to play</span>
+                <span className="text-text-dim text-xs">{showMoreWays ? '▴' : '▾'}</span>
+              </button>
+              {showMoreWays && (
+                <div className="px-3 pb-3 grid grid-cols-2 gap-2">
+                  {REROLL_MODES.filter((m) => m.mode !== 'anything').map(({ mode: m, label, icon, description }) => (
+                    <button
+                      key={m}
+                      onClick={() => { setMode(m); setTimeout(() => handleFirstRoll(m), 0); }}
+                      className="px-3 py-3 rounded-xl text-left border border-border-subtle hover:border-accent-purple transition-all"
+                      style={{ backgroundColor: 'var(--color-bg-card)' }}
+                    >
+                      <div className="text-base font-medium text-text-primary">
+                        {icon} {label}
+                      </div>
+                      <div className="text-xs text-text-dim mt-0.5">{description}</div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Vibes — mood chips. Collapsed by default. Single-select to avoid
+                zero-result rolls (see toggleMood comment). Selecting a vibe
+                filters the next roll; selection persists until cleared. */}
+            <div className="mt-2 rounded-xl border" style={{ borderColor: 'var(--color-border-subtle)' }}>
+              <button
+                type="button"
+                onClick={() => setShowVibes((v) => !v)}
+                className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
+                aria-expanded={showVibes}
+              >
+                <span>
+                  Vibes
+                  {moodFilters.length > 0 && (
+                    <span className="ml-2 text-xs text-accent-purple font-[family-name:var(--font-mono)]">
+                      · {moodFilters.map((m) => MOOD_TAG_CONFIG[m].label).join(', ')}
+                    </span>
+                  )}
+                </span>
+                <span className="text-text-dim text-xs">{showVibes ? '▴' : '▾'}</span>
+              </button>
+              {showVibes && (
+                <div className="px-3 pb-3 flex flex-wrap gap-1.5">
+                  {ALL_MOODS.map((mood) => {
+                    const config = MOOD_TAG_CONFIG[mood];
+                    const active = moodFilters.includes(mood);
+                    return (
+                      <button
+                        key={mood}
+                        onClick={() => toggleMood(mood)}
+                        className={`px-3 py-2 rounded-full text-sm font-medium transition-all ${active ? 'scale-[1.02]' : 'hover:bg-white/10'}`}
+                        style={{
+                          backgroundColor: active ? `${config.color}25` : 'rgba(255,255,255,0.05)',
+                          color: active ? config.color : 'var(--color-text-muted)',
+                          border: active ? `1px solid ${config.color}50` : '1px solid rgba(255,255,255,0.08)',
+                        }}
+                      >
+                        {config.icon} {config.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         )}
 

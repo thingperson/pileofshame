@@ -221,15 +221,9 @@ export default function AboutPage() {
               <PickModeCard icon="🌙" title="Quick Session" description="Short session today? We know which games are built for that." />
             </Reveal>
             <Reveal delay={160}>
-              <PickModeCard icon="🔥" title="Deep Cut" description="A world you lived in. Your save's still there." />
+              <PickModeCard icon="➡️" title="Resume" description="Pick up a game you already started. We'll choose which one based on how close you are." />
             </Reveal>
             <Reveal delay={240}>
-              <PickModeCard icon="▶" title="Keep Playing" description="You started five games. We'll tell you which one to finish." />
-            </Reveal>
-            <Reveal delay={320}>
-              <PickModeCard icon="🏁" title="Almost Done" description="That game you're 80% through? Let's roll the credits." />
-            </Reveal>
-            <Reveal delay={400}>
               <PickModeCard icon="✦" title="Plus the basics" description="Free. No sign-up. Your data stays on your device. Export anytime." muted />
             </Reveal>
           </div>

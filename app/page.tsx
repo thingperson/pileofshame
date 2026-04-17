@@ -21,7 +21,7 @@ import CompletionCelebration from '@/components/CompletionCelebration';
 import HelpModal from '@/components/HelpModal';
 import { ToastProvider, useToast } from '@/components/Toast';
 import EnrichmentIndicator from '@/components/EnrichmentIndicator';
-import JustFiveMinutes from '@/components/JustFiveMinutes';
+import JustFiveMinutes, { JustFiveMinutesHandle } from '@/components/JustFiveMinutes';
 import NinetiesMode from '@/components/NinetiesMode';
 import SyncNudge from '@/components/SyncNudge';
 import { useAutoEnrich } from '@/hooks/useAutoEnrich';
@@ -152,6 +152,9 @@ function AppContent() {
   const [pendingSampleReroll, setPendingSampleReroll] = useState(false);
   const isSampleLoad = useRef(false);
   const [pulseReroll, setPulseReroll] = useState(false);
+  // Forwarded handle so the Reroll modal's "Just 5 mins" CTA can launch the
+  // JustFiveMinutes flow without re-implementing its pick + timer logic.
+  const justFiveRef = useRef<JustFiveMinutesHandle>(null);
   // GridCard handles its own detail modal internally
 
   const openReroll = (mode?: RerollMode) => {
@@ -516,20 +519,20 @@ function AppContent() {
             Pick for me
           </button>
           <div className="flex gap-2 w-full">
-            {(['quick-session', 'deep-cut', 'continue'] as const).map((m) => (
+            {(['quick-session', 'continue'] as const).map((m) => (
               <button
                 key={m}
                 onClick={() => openReroll(m)}
                 className="flex-1 px-3 py-3 text-xs font-[family-name:var(--font-mono)] rounded-lg transition-all hover:bg-[#111]"
                 style={{ background: '#050505', border: '1px solid #111', color: '#555' }}
               >
-                {m === 'quick-session' ? 'quick session' : m === 'deep-cut' ? 'deep cut' : 'keep playing'}
+                {m === 'quick-session' ? 'quick session' : 'resume'}
               </button>
             ))}
           </div>
           <p className="text-xs text-[#222] font-[family-name:var(--font-mono)] mt-4">less deciding. more playing.</p>
         </div>
-        <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} />
+        <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} onJustFiveMinutes={() => { setRerollOpen(false); setRerollMode(undefined); justFiveRef.current?.startSession(); }} />
         <CompletionCelebration game={celebrationGame} onClose={() => { closeCelebration(); setActiveTab('completed'); }} onConfirm={() => { if (celebrationGame) cycleStatus(celebrationGame.id); }} />
         <CloudSync />
       </div>
@@ -715,7 +718,7 @@ function AppContent() {
       {/* ── Hero CTA ── */}
       <div className="mb-3 space-y-2">
           <button
-            onClick={() => { setPulseReroll(false); handleOpenReroll('anything'); }}
+            onClick={() => { setPulseReroll(false); handleOpenReroll(); }}
             className={`w-full px-4 sm:px-6 py-4 sm:py-3.5 text-lg sm:text-lg font-bold rounded-xl text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98] ${(mounted && !hasUsedReroll) || pulseReroll ? 'animate-[pulse_2s_ease-in-out_infinite]' : ''}`}
             style={{ background: 'linear-gradient(135deg, #7c3aed, #a78bfa)' }}
           >
@@ -726,32 +729,14 @@ function AppContent() {
               ↑ Tell us your mood. We&apos;ll find your game.
             </p>
           ) : null}
+          {/* Reroll-mode drop-pill strip retired 2026-04-17 — modes live inside
+              the Reroll modal now (hero "What Should I Play?" button is the
+              single entry point). JustFiveMinutes is still mounted (hidden
+              button) so its ref can be called from inside the modal. Sub
+              Shuffle stays visible — it's a distinct feature, not a reroll
+              mode. */}
+          <JustFiveMinutes ref={justFiveRef} games={games} hideButton />
           <div className="flex gap-1.5 sm:gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
-            <button
-              onClick={() => openReroll('quick-session')}
-              aria-label="Quick Session: pick a game you can finish in one sitting"
-              className="shrink-0 px-3 py-3 sm:py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
-              style={{ background: 'linear-gradient(135deg, #6366f1, #818cf8)' }}
-            >
-              🌙 Quick Session
-            </button>
-            <button
-              onClick={() => openReroll('deep-cut')}
-              aria-label="Deep Cut: a game you already sank real hours into and stepped away from"
-              className="shrink-0 px-3 py-3 sm:py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
-              style={{ background: 'linear-gradient(135deg, #dc2626, #f87171)' }}
-            >
-              🔥 Deep Cut
-            </button>
-            <button
-              onClick={() => openReroll('continue')}
-              aria-label="Keep Playing: pick from games you've already started"
-              className="shrink-0 px-3 py-3 sm:py-2.5 text-xs font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
-              style={{ background: 'linear-gradient(135deg, #d97706, #fbbf24)' }}
-            >
-              ▶ Keep Playing
-            </button>
-            <JustFiveMinutes games={games} />
             <button
               onClick={() => setGamePassOpen(true)}
               className="shrink-0 px-3 sm:px-4 py-3 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap flex items-center gap-1.5"
@@ -1021,7 +1006,7 @@ function AppContent() {
       {/* ── Modals ── */}
       <AddGameModal open={addModalOpen} onClose={() => { setAddModalOpen(false); setAddModalInitialName(''); }} initialName={addModalInitialName} />
       <ImportHub open={importHubOpen} onClose={() => setImportHubOpen(false)} />
-      <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} />
+      <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} onJustFiveMinutes={() => { setRerollOpen(false); setRerollMode(undefined); justFiveRef.current?.startSession(); }} />
       <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
       <GamePassBrowse open={gamePassOpen} onClose={() => setGamePassOpen(false)} />
       {/* GridCard handles its own detail modal */}

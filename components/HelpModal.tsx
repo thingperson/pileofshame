@@ -70,7 +70,7 @@ const SECTIONS = [
       },
       {
         q: 'What are the different modes?',
-        a: '🎲 Anything: random from everything.\n🌙 Quick Session: a short game you can wrap today.\n🔥 Deep Cut: a game you sank real hours into and stepped away from. Your save\'s still there.\n▶ Keep Playing: a game you already started but haven\'t finished.\n🏁 Almost Done: a game you\'re close to the credits on.',
+        a: '🎲 Anything: random from everything.\n⚡ Just 5 mins: try a game for five minutes, then decide where it goes.\n🌙 Quick Session: a short game you can wrap today.\n➡️ Resume: pick up a game you already started. We\'ll pick the one that makes sense — close to the credits, currently warm, or a high-rated shelved gem you put real hours into.',
       },
       {
         q: 'What if I keep rerolling?',

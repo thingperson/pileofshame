@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Game, GameStatus } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { MAX_PLAYING_NOW, MAX_UP_NEXT } from '@/lib/constants';
@@ -9,8 +9,17 @@ import { trackJust5Min } from '@/lib/analytics';
 
 const TIMER_SECONDS = 300; // 5 minutes
 
+export interface JustFiveMinutesHandle {
+  startSession: () => void;
+}
+
 interface JustFiveMinutesProps {
   games: Game[];
+  /** Hide the standalone green "⚡ Just 5 Min" button. The flow still renders
+   *  its modal + timer; parent triggers start via the forwarded ref. Used by
+   *  the Reroll modal restructure (2026-04-17): the "Just 5 mins" CTA inside
+   *  the Reroll modal closes that modal and calls `ref.startSession()`. */
+  hideButton?: boolean;
 }
 
 function pickFiveMinuteGame(games: Game[]): Game | null {
@@ -40,7 +49,7 @@ function pickFiveMinuteGame(games: Game[]): Game | null {
 
 type TriageStep = 'suggest' | 'timing' | 'triage';
 
-export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
+const JustFiveMinutes = forwardRef<JustFiveMinutesHandle, JustFiveMinutesProps>(function JustFiveMinutes({ games, hideButton }, ref) {
   const [active, setActive] = useState(false);
   const [game, setGame] = useState<Game | null>(null);
   const [timeLeft, setTimeLeft] = useState(300);
@@ -71,6 +80,8 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
     trackJust5Min();
     resetTimer();
   }, [games, showToast, resetTimer]);
+
+  useImperativeHandle(ref, () => ({ startSession }), [startSession]);
 
   const startTimer = useCallback(() => {
     setTimerRunning(true);
@@ -165,15 +176,18 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
 
   return (
     <>
-      {/* Button — always rendered in the mode button row */}
-      <button
-        onClick={startSession}
-        className="shrink-0 px-3 sm:px-4 py-3 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
-        style={{ background: 'linear-gradient(135deg, #059669, #34d399)' }}
-        title="Try a game for 5 minutes. Then decide where it goes."
-      >
-        ⚡ Just 5 Min
-      </button>
+      {/* Button — rendered in the main page mode-button row. Hidden when the
+          Reroll modal owns the "Just 5 mins" CTA via the forwarded ref. */}
+      {!hideButton && (
+        <button
+          onClick={startSession}
+          className="shrink-0 px-3 sm:px-4 py-3 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
+          style={{ background: 'linear-gradient(135deg, #059669, #34d399)' }}
+          title="Try a game for 5 minutes. Then decide where it goes."
+        >
+          ⚡ Just 5 Min
+        </button>
+      )}
 
       {/* Main card — bottom-sheet overlay for suggest and triage phases */}
       {active && (step === 'suggest' || step === 'triage') && (
@@ -330,4 +344,6 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
       )}
     </>
   );
-}
+});
+
+export default JustFiveMinutes;

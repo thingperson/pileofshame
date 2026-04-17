@@ -5,16 +5,17 @@ import { isNotInterestedIgnored, isHitAWallSuppressed, getAllSkipReasons } from 
 import { getBehavioralWeight } from './decisionHistory';
 import type { SmartPickType } from './smartPickCopy';
 
-export type RerollMode = 'anything' | 'quick-session' | 'deep-cut' | 'continue' | 'almost-done';
+// `continue` is the internal key for user-facing "Resume". Kept as `continue`
+// so existing persisted state and analytics events don't break. Deep Cut and
+// Almost Done retired 2026-04-17 — both folded into Resume's Smart Pick
+// buckets (Forgotten Gem / Unfinished Business for old Deep Cut, Almost There
+// for old Almost Done).
+export type RerollMode = 'anything' | 'quick-session' | 'continue';
 
 export const REROLL_MODES: { mode: RerollMode; label: string; icon: string; description: string }[] = [
   { mode: 'anything', label: 'Anything', icon: '🎲', description: 'Random from all games' },
   { mode: 'quick-session', label: 'Quick Session', icon: '🌙', description: 'A short session you can wrap today' },
-  // Deep Cut semantic: a PERSONAL deep cut backed by evidence (real hours played). You lived in
-  // this world and stepped away — not a curator's obscure gem pick. Filter reflects that below.
-  { mode: 'deep-cut', label: 'Deep Cut', icon: '🔥', description: 'A world you lived in. The hours prove it.' },
-  { mode: 'continue', label: 'Keep Playing', icon: '▶', description: 'Games you already started' },
-  { mode: 'almost-done', label: 'Almost Done', icon: '🏁', description: 'Games you\'re close to finishing' },
+  { mode: 'continue', label: 'Resume', icon: '➡️', description: 'Pick up a game you already started' },
 ];
 
 // Sources that are PC-compatible (Steam can be Mac too, handled separately)
@@ -82,16 +83,6 @@ export function getEligibleGames(
         if (game.hltbMain && game.hltbMain > 12) return false;
         return true;
       }
-      case 'deep-cut': {
-        // "Personal deep cut with evidence": you sank real hours into this world and
-        // stepped away from it. Not a curator's obscure gem — yours, backed by your own
-        // playtime. Threshold: 5+ hours demonstrates genuine engagement (not a trial),
-        // and the game must be in a stepped-away state (on-deck or buried, never actively
-        // playing and never already cleared/bailed).
-        if (game.hoursPlayed < 5) return false;
-        if (game.status === 'playing') return false;
-        return game.status === 'on-deck' || game.status === 'buried';
-      }
       case 'continue': {
         // Resume covers all four Smart Pick buckets: Almost There, Keep Flowing,
         // Forgotten Gem, Unfinished Business. Any game with real hours logged in
@@ -100,13 +91,6 @@ export function getEligibleGames(
         // (played/bailed already excluded above — TS has narrowed status accordingly.)
         if (game.status !== 'playing' && game.status !== 'on-deck' && game.status !== 'buried') return false;
         return game.hoursPlayed >= 1;
-      }
-      case 'almost-done': {
-        if (game.isNonFinishable) return false;
-        if (!game.hltbMain || game.hltbMain <= 0 || game.hoursPlayed <= 0) return false;
-        const remaining = (game.hltbMain - game.hoursPlayed) / game.hltbMain;
-        // Games past the HLTB estimate (remaining < 0) also qualify — they're probably close
-        return remaining < 0.20;
       }
       default:
         return true;

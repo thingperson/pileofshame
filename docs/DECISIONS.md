@@ -15,6 +15,22 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-17 — Modal restructure: 2 CTAs + 2 dropdowns; Deep Cut / Almost Done retired
+
+**Decision.** The Reroll modal pre-roll picker goes from 5 mode cards + 10-chip mood grid + Roll button to: top row of 2 CTAs (🎲 Anything + ⚡ Just 5 mins), collapsible "More ways to play" (Quick Session + Resume), collapsible "Vibes" (mood chips). Each mode button rolls immediately — no separate Roll button anymore. Internal `continue` key stays (persisted state + analytics keep working); user label becomes "Resume" with ➡️.
+
+**Deep Cut and Almost Done retire.** Both were absorbed into Resume's Smart Pick priority chain two commits ago (Forgotten Gem / Unfinished Business cover old Deep Cut; Almost There covers old Almost Done). Keeping them as separate modes was redundant and diluted the picker.
+
+**"Just 5 mins" lives inside the modal, not the library strip.** The standalone green button is hidden on the main page via `hideButton` prop. `JustFiveMinutes` became a `forwardRef` exposing `startSession`; page.tsx holds the ref and passes a callback to `<Reroll>`. The Reroll CTA closes the reroll modal and calls `ref.startSession()`. Rejected: lifting the JustFiveMinutes modal to page.tsx — bigger refactor, no additional benefit over the ref pattern.
+
+**Sub Shuffle stays visible.** Spec said "reroll mode buttons retire"; Sub Shuffle is a GP/PS+ catalog picker, not a reroll mode. Killing it would be a UX regression with no new home defined. Kept it in a one-item strip under the hero.
+
+**Hero button opens picker, not auto-roll.** Previously `onClick={handleOpenReroll('anything')}` bypassed the picker and rolled immediately. With 2 top CTAs now, opening to the picker is fast enough that auto-rolling robs the user of the Just 5 mins option. PostImportSummary's explicit "Play" button keeps auto-roll since the user's intent is clear there.
+
+**Cognitive load framing (§3 user-psychology).** The new modal has 2 visible choices (Anything + Just 5 mins), energy pills, and two one-tap dropdowns — down from an always-visible wall of 5 mode cards + 10 mood chips. Picker opens lighter, still reaches the same destinations in one extra tap. Trade: users who wanted Quick Session or Resume now take one more click. Worth it — for the overloaded-library user the fewer visible choices at decision time matter more than shaving a click off two specific paths.
+
+---
+
 ## 2026-04-17 — Tab-follow via CustomEvent + Smart Pick trigger pill
 
 **Decision.** Status-change tab-follow (auto-switch + flash + row pulse) is driven by a window-level `gp-status-change` CustomEvent dispatched from `GameCard.handleStatusClick`. `app/page.tsx` listens and triggers `triggerTabFollow(targetTab, gameId)` — sets `activeTab` + `flashingTab` (1s) + `recentlyMovedId` (1.5s), cleared by timers.
