@@ -432,7 +432,7 @@ export default function SettingsMenu() {
                   onClick={handleImportClick}
                   className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors"
                 >
-                  📥 Restore Backup
+                  🔄 Restore Backup
                 </button>
                 {gamesWithoutArt.length > 0 && (
                   <button

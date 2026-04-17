@@ -63,6 +63,10 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   const [skipFeedbackVisible, setSkipFeedbackVisible] = useState(false);
   const [skipFeedbackRecorded, setSkipFeedbackRecorded] = useState(false);
   const skipFeedbackTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Show "why'd you skip?" at most twice per modal open — captures the
+  // primary skip reason without nagging rerolls 3+.
+  const skipFeedbackShownCount = useRef(0);
+  const SKIP_FEEDBACK_SESSION_MAX = 2;
 
   const games = useStore((s) => s.games);
   const platformPreference = useStore((s) => s.settings.platformPreference) || 'any';
@@ -121,15 +125,17 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
         timestamp: new Date().toISOString(),
       });
 
-      // Show "Why'd you skip?" feedback for the skipped game
-      if (skipFeedbackTimer.current) clearTimeout(skipFeedbackTimer.current);
-      setSkipFeedbackGame(currentPick);
-      setSkipFeedbackVisible(true);
-      setSkipFeedbackRecorded(false);
-      skipFeedbackTimer.current = setTimeout(() => {
-        setSkipFeedbackVisible(false);
-        setTimeout(() => setSkipFeedbackGame(null), 300);
-      }, 8000);
+      // Show "Why'd you skip?" feedback for the skipped game — capped at
+      // SKIP_FEEDBACK_SESSION_MAX shows per modal open. No auto-dismiss;
+      // user taps a reason or the × to close. Brady's feedback: the old
+      // 8s timeout was too fast to read, and showing every skip nagged.
+      if (skipFeedbackShownCount.current < SKIP_FEEDBACK_SESSION_MAX) {
+        if (skipFeedbackTimer.current) clearTimeout(skipFeedbackTimer.current);
+        setSkipFeedbackGame(currentPick);
+        setSkipFeedbackVisible(true);
+        setSkipFeedbackRecorded(false);
+        skipFeedbackShownCount.current += 1;
+      }
     }
 
     // Track shown game to prevent repetition
@@ -267,6 +273,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
       setSkipFeedbackGame(null);
       setSkipFeedbackVisible(false);
       setSkipFeedbackRecorded(false);
+      skipFeedbackShownCount.current = 0;
       if (skipFeedbackTimer.current) clearTimeout(skipFeedbackTimer.current);
       if (initialMode) {
         setMode(initialMode);
@@ -635,9 +642,22 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                   </p>
                 ) : (
                   <>
-                    <p className="text-xs text-text-faint font-[family-name:var(--font-mono)] text-center mb-2">
-                      Why&apos;d you skip {skipFeedbackGame.name}?
-                    </p>
+                    <div className="relative mb-2">
+                      <p className="text-xs text-text-faint font-[family-name:var(--font-mono)] text-center">
+                        Why&apos;d you skip {skipFeedbackGame.name}?
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSkipFeedbackVisible(false);
+                          setTimeout(() => setSkipFeedbackGame(null), 300);
+                        }}
+                        aria-label="Dismiss skip feedback"
+                        className="absolute right-0 top-1/2 -translate-y-1/2 text-text-faint hover:text-text-muted text-sm leading-none px-1"
+                      >
+                        ×
+                      </button>
+                    </div>
                     <div className="flex flex-wrap justify-center gap-1.5">
                       {SKIP_REASON_OPTIONS.map(({ key, label, icon }) => (
                         <button

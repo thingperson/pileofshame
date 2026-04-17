@@ -10,6 +10,7 @@ export default function FeedbackWidget() {
   const [email, setEmail] = useState('');
   const [marketingConsent, setMarketingConsent] = useState(false);
   const [status, setStatus] = useState<Status>('idle');
+  const [anyModalOpen, setAnyModalOpen] = useState(false);
 
   // ESC closes
   useEffect(() => {
@@ -20,6 +21,26 @@ export default function FeedbackWidget() {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
+
+  // Hide the floating launcher whenever a blocking modal is open — on mobile
+  // the Feedback pill was covering primary CTAs (e.g., the Let's Go button
+  // in the Reroll modal). We key off aria-modal="true" so non-blocking
+  // role="dialog" notices (like the cookie banner) don't hide us.
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const check = () => {
+      const dialogs = document.querySelectorAll('[role="dialog"][aria-modal="true"]');
+      let otherDialogOpen = false;
+      dialogs.forEach((d) => {
+        if ((d as HTMLElement).dataset.feedbackDialog !== 'true') otherDialogOpen = true;
+      });
+      setAnyModalOpen(otherDialogOpen);
+    };
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['role', 'aria-modal'] });
+    return () => observer.disconnect();
+  }, []);
 
   const submit = useCallback(async () => {
     if (message.trim().length < 3) return;
@@ -52,21 +73,24 @@ export default function FeedbackWidget() {
 
   return (
     <>
-      {/* Floating launcher button */}
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-label="Send feedback"
-        className="fixed bottom-4 right-4 z-40 px-3 py-2 text-xs font-medium rounded-full bg-neutral-800/90 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 shadow-lg backdrop-blur-sm transition-colors"
-      >
-        Feedback
-      </button>
+      {/* Floating launcher button — hidden when another modal is open */}
+      {!anyModalOpen && (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label="Send feedback"
+          className="fixed bottom-4 right-4 z-40 px-3 py-2 text-xs font-medium rounded-full bg-neutral-800/90 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 shadow-lg backdrop-blur-sm transition-colors"
+        >
+          Feedback
+        </button>
+      )}
 
       {open && (
         <div
           role="dialog"
           aria-modal="true"
           aria-label="Send feedback"
+          data-feedback-dialog="true"
           className="fixed inset-0 z-[110] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-3 sm:p-4"
           onClick={(e) => {
             if (e.target === e.currentTarget) setOpen(false);

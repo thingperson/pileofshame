@@ -914,29 +914,29 @@ button:active:not(:disabled) {
    ====================================== */
 
 .theme-light {
-  --color-bg-primary: #f4f5f7;
-  --color-bg-card: #ffffff;
-  --color-bg-elevated: #edeef1;
-  --color-border-subtle: #d4d6dc;
-  --color-border-active: #7c3aed;
-  --color-text-primary: #111827;
-  --color-text-secondary: #1f2937;
-  --color-text-muted: #4b5563;
-  --color-text-dim: #6b7280;
-  --color-text-faint: #9ca3af;
-  --color-accent-purple: #7c3aed;
-  --color-accent-pink: #ec4899;
+  --color-bg-primary: #f4f5f7 !important;
+  --color-bg-card: #ffffff !important;
+  --color-bg-elevated: #edeef1 !important;
+  --color-border-subtle: #d4d6dc !important;
+  --color-border-active: #7c3aed !important;
+  --color-text-primary: #111827 !important;
+  --color-text-secondary: #1f2937 !important;
+  --color-text-muted: #4b5563 !important;
+  --color-text-dim: #6b7280 !important;
+  --color-text-faint: #9ca3af !important;
+  --color-accent-purple: #7c3aed !important;
+  --color-accent-pink: #ec4899 !important;
 
-  --color-status-buried: #6b7280;
-  --color-status-buried-bg: #f3f4f6;
-  --color-status-on-deck: #2563eb;
-  --color-status-on-deck-bg: #dbeafe;
-  --color-status-playing: #d97706;
-  --color-status-playing-bg: #fef3c7;
-  --color-status-played: #16a34a;
-  --color-status-played-bg: #dcfce7;
-  --color-status-bailed: #dc2626;
-  --color-status-bailed-bg: #fee2e2;
+  --color-status-buried: #6b7280 !important;
+  --color-status-buried-bg: #f3f4f6 !important;
+  --color-status-on-deck: #2563eb !important;
+  --color-status-on-deck-bg: #dbeafe !important;
+  --color-status-playing: #d97706 !important;
+  --color-status-playing-bg: #fef3c7 !important;
+  --color-status-played: #16a34a !important;
+  --color-status-played-bg: #dcfce7 !important;
+  --color-status-bailed: #dc2626 !important;
+  --color-status-bailed-bg: #fee2e2 !important;
 
   background: #f4f5f7 !important;
 }
@@ -1799,9 +1799,15 @@ button:active:not(:disabled) {
   --color-accent-pink: #E26D5C !important;
 }
 
-.theme-cozy body,
 body.theme-cozy {
   background-color: #FEFAE0 !important;
+}
+
+/* Kill the dark ambient radial gradients on cozy — they muddied the beige
+   on mobile where the gradient positions concentrate more of the viewport. */
+.theme-cozy::before,
+body.theme-cozy::before {
+  display: none !important;
 }
 
 /* Cozy: swap all fonts to Nunito, kill monospace */

@@ -593,8 +593,11 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
           }
         }}
       >
-        {/* Status Badge */}
-        <div className="relative flex items-center">
+        {/* Status Badge — hidden on mobile in the collapsed list row per
+            Brady's feedback (the emoji + "→" was redundant next to the tab
+            header). Always shown when the card is expanded so users can see
+            and cycle status from the detail view. */}
+        <div className={`relative items-center ${expanded ? 'flex' : 'hidden sm:flex'}`}>
           <button
             onClick={handleStatusClick}
             onMouseEnter={() => nextStatus && setGhostStatus(nextStatus)}
@@ -910,13 +913,25 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               })()}
 
               {/* Notes — single editable field, auto-saves */}
-              <div className="relative">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs text-text-faint font-[family-name:var(--font-mono)]" htmlFor={`notes-${game.id}`}>
+                    Notes
+                  </label>
+                  <span
+                    className={`text-xs font-[family-name:var(--font-mono)] transition-colors ${notesSaved ? 'text-green-400' : 'text-text-faint'}`}
+                    aria-live="polite"
+                  >
+                    {notesSaved ? 'saved ✓' : 'auto-saves'}
+                  </span>
+                </div>
                 <textarea
+                  id={`notes-${game.id}`}
                   value={game.notes}
                   onChange={(e) => {
                     updateGame(game.id, { notes: e.target.value });
                     setNotesSaved(true);
-                    setTimeout(() => setNotesSaved(false), 2000);
+                    setTimeout(() => setNotesSaved(false), 1500);
                   }}
                   placeholder={
                     game.status === 'playing' ? 'Where did you leave off? Controls to remember?'
@@ -929,11 +944,6 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                   className="w-full text-sm bg-bg-primary border border-border-subtle rounded-lg px-3 py-2 text-text-secondary placeholder-text-faint resize-none focus:outline-none focus:border-accent-purple"
                   rows={2}
                 />
-                {notesSaved && (
-                  <span className="absolute right-2 bottom-2 text-xs text-green-400/70 font-[family-name:var(--font-mono)] animate-[fadeIn_150ms_ease-out]">
-                    saved ✓
-                  </span>
-                )}
               </div>
             </div>
           </div>
