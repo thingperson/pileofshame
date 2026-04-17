@@ -282,7 +282,7 @@ const SCORE_DESCRIPTORS: ScoreDescriptor[] = [
     range: [50, 59],
     descriptors: [
       'Rough around the edges. Play this if you\'re a fan of the genre, skip otherwise.',
-      'Mid. But sometimes mid is exactly what you need on a Tuesday night.',
+      'Mid. But sometimes mid is exactly what you need midweek.',
       'This one needs you to meet it halfway. It won\'t do the work for you.',
       'Not the best reviewed. Still earned its spot in your pile for a reason.',
       'Patchy. Has its moments. Measure your expectations.',
