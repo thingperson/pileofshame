@@ -25,6 +25,7 @@ const DISMISS_KEY = 'if-finish-check-dismissals';
 const SESSION_KEY = 'if-finish-check-session';
 
 function getDismissals(): Record<string, number> {
+  if (typeof window === 'undefined') return {};
   try {
     return JSON.parse(localStorage.getItem(DISMISS_KEY) || '{}');
   } catch {
@@ -33,16 +34,21 @@ function getDismissals(): Record<string, number> {
 }
 
 function saveDismissal(gameId: string) {
+  if (typeof window === 'undefined') return;
   const d = getDismissals();
   d[gameId] = (d[gameId] || 0) + 1;
   localStorage.setItem(DISMISS_KEY, JSON.stringify(d));
 }
 
 function isSessionDismissed(): boolean {
+  // SSR guard: this renders during server-side render of app/page.tsx; both
+  // sessionStorage and localStorage are undefined on the server.
+  if (typeof window === 'undefined') return false;
   return sessionStorage.getItem(SESSION_KEY) === 'true';
 }
 
 function setSessionDismissed() {
+  if (typeof window === 'undefined') return;
   sessionStorage.setItem(SESSION_KEY, 'true');
 }
 
