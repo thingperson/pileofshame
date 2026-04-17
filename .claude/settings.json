@@ -60,5 +60,17 @@
       "Bash(rm -rf ~*)",
       "Bash(sudo *)"
     ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "now=$(date '+%A %Y-%m-%d %H:%M %Z'); echo \"Now: $now.\"; latest=$(ls -t /Users/bradywhitteker/Desktop/getplaying/docs/session-resume-*.md 2>/dev/null | head -1); if [ -n \"$latest\" ]; then rel=${latest#/Users/bradywhitteker/Desktop/getplaying/}; echo \"Current project state pointer: read $rel before substantive work for what shipped recently, in-progress items, and rotting gotchas. Skip for trivial tasks.\"; fi"
+          }
+        ]
+      }
+    ]
   }
 }
