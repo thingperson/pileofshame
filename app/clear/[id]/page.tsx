@@ -188,7 +188,7 @@ export default async function ClearPage({ params }: { params: Promise<{ id: stri
         {/* Brand footer */}
         <div className="text-center mt-12 pb-8">
           <p className="text-xs text-text-faint font-mono tracking-widest">INVENTORY FULL</p>
-          <p className="text-xs text-text-dim mt-1">Stop stalling. Get playing.</p>
+          <p className="text-xs text-text-dim mt-1">Get playing.</p>
         </div>
       </div>
     </main>

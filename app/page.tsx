@@ -562,7 +562,7 @@ function AppContent() {
               Inventory Full
             </h1>
             <p className="text-xs text-text-faint mt-0.5 font-[family-name:var(--font-mono)]">
-              Stop stalling. Get playing.
+              Get playing.
             </p>
           </div>
           <div className="flex items-center gap-1 sm:gap-1.5">

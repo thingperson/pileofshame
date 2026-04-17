@@ -272,7 +272,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
         {/* === FOOTER: centered tagline sell + domain === */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px', padding: '0 56px 26px 56px', position: 'relative', zIndex: 1 }}>
           <div style={{ fontSize: '22px', fontWeight: 700, color: '#e2e8f0', letterSpacing: '-0.3px', display: 'flex' }}>
-            Stop stalling. Get playing.
+            Get playing.
           </div>
           <div style={{ fontSize: '17px', fontFamily: 'JetBrains Mono, monospace', color: '#a78bfa', letterSpacing: '2px', display: 'flex' }}>
             inventoryfull.gg

@@ -392,7 +392,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
               className="text-3xl sm:text-4xl font-bold tracking-tight mb-8"
               style={{ color: 'var(--color-text-primary)' }}
             >
-              Stop stalling. Get playing.
+              Get playing.
             </h2>
 
             {/* Side-by-side CTAs — mirrors the hero layout so users get consistent affordances */}

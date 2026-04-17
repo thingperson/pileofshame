@@ -24,7 +24,7 @@ const PLATFORMS = [
     id: 'steam-wishlist',
     name: 'Steam Wishlist',
     icon: '⭐',
-    desc: 'Track deals on games you want. Get notified when prices drop',
+    desc: 'Pull in your Steam wishlist so it\'s here when you want it.',
     available: true,
   },
   {

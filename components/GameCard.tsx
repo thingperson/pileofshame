@@ -730,7 +730,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               <img
                 src={game.coverUrl}
                 alt=""
-                className="w-16 h-24 sm:w-20 sm:h-28 rounded-lg object-cover shrink-0 bg-bg-primary"
+                className="w-16 h-24 sm:w-20 sm:h-28 rounded-lg object-contain shrink-0 bg-black/40"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
               />
             )}

@@ -247,7 +247,7 @@ export default function AboutPage() {
         </div>
 
         <p className="text-sm mb-6 font-[family-name:var(--font-mono)]" style={{ color: 'var(--color-text-faint)' }}>
-          stop stalling. get playing.
+          get playing.
         </p>
 
         <a

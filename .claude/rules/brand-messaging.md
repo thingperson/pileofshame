@@ -20,11 +20,17 @@ Always return to these. This is the spine:
 2. **Make ongoing progress on games you already own**
 3. **Recover more value from your collection**
 
-## Primary Tagline (Locked — Apr 8, 2026)
+## Primary Tagline (Locked — Apr 17, 2026)
 
-**"Stop stalling. Get playing."**
+**"Get playing."**
 
 This is THE tagline. Use it everywhere: page titles, OG metadata, headers, footers, share cards. One message, one voice.
+
+The earlier "Stop stalling. Get playing." is retired. Reasons (recorded in `docs/DECISIONS.md`, 2026-04-17):
+- The name "Inventory Full" already names the backlog-overload pain; "Stop stalling" restated it and read as scolding.
+- Forward imperatives ("Get playing") trigger less reactance than correction imperatives ("Stop stalling") — see `.claude/rules/user-psychology.md` §4.
+- The symmetrical two-beat cadence was an AI-tell flagged in `.claude/rules/voice-and-tone.md`.
+- Fewer words to say the same thing is the product's thesis in microcosm.
 
 Supporting lines (use as subheads, not alternatives):
 - "Your backlog's not gonna play itself." — subhead
@@ -43,7 +49,7 @@ Use this order consistently:
 1. **Main promise:** Decide what to play now
 2. **Supporting outcome:** Make ongoing progress on the games you already own
 3. **Differentiator:** Recover more value from your collection
-4. **Tagline:** Stop stalling. Get playing.
+4. **Tagline:** Get playing.
 
 Starts with immediate user pain, then moves to richer payoff.
 

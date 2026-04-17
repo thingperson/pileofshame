@@ -15,6 +15,27 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-17 — Tagline retagged: "Get playing." (supersedes "Stop stalling. Get playing.")
+
+**Decision.** The primary tagline is now "Get playing." alone. Everywhere the longer "Stop stalling. Get playing." appeared — page titles, OG metadata, landing bottom CTA, about page, email templates, pile + clear share pages, root OG card — is updated to the short form. Supersedes the Apr 8 lock.
+
+**Why.**
+- **Redundant pain-naming.** The product name "Inventory Full" already names the backlog-overload pain. "Stop stalling" restated it and landed as scolding on a second pass.
+- **Reactance.** Per `.claude/rules/user-psychology.md` §4, correction imperatives ("stop doing X") trigger more pushback than forward imperatives ("do Y") in commitment-avoidant users. "Get playing" is the forward form.
+- **AI-tell cadence.** The symmetrical "two-words. two-words." structure is flagged in `.claude/rules/voice-and-tone.md` under banned structural patterns. Brady's gut kept catching it for that reason.
+- **Meta-alignment.** The product's thesis is "remove barriers to playing." A tagline that removes two words to say the same thing is the product acting like itself.
+
+**Rejected.**
+- **Keep "Stop stalling. Get playing." everywhere.** The settled choice for 9 days, but the reasons above compounded.
+- **Keep both, split by surface** (short form in-app, long form on landing). Rejected — two taglines is the problem the Apr 8 lock solved. Splitting by surface re-creates the drift.
+- **Alternative rewrites** ("Less pile, more play", "Your pile, unlocked", etc.). None beat "Get playing." for brevity, clarity, or confidence. Stopped iterating when the short form tested best against the voice/psychology rules.
+
+**How to apply this.** Any surface that needs a tagline uses "Get playing." If a longer brand line is needed (rare), pull a supporting line from `.claude/rules/brand-messaging.md` ("Your backlog's not gonna play itself." / "Less shame. More game.") — those are subheads, not alternative taglines.
+
+**Evidence.** Sweep across `app/layout.tsx`, `app/page.tsx`, `app/about/page.tsx`, `app/opengraph-image.tsx`, `app/clear/[id]/{page,opengraph-image}.tsx`, `app/pile/[id]/{page,opengraph-image}.tsx`, `components/LandingPage.tsx`, `docs/email-templates/magic-link.html`, plus rule docs `.claude/rules/brand-messaging.md` and `.claude/rules/user-psychology.md`, and roadmap/ideas docs. Commit landing 2026-04-17.
+
+---
+
 ## 2026-04-13 — OG stats card: two-column layout, logo as hero, archetype-forward
 
 **Decision.** The stats OG card (`app/pile/[id]/opengraph-image.tsx`) uses a two-column layout: 280px logomark + brand name + tagline stacked on the left (takes roughly half the card), archetype name/descriptor/flavor text/value pills stacked on the right. Peripheral chrome (games tracked, exploration %, compact stats line, CTA, URL) sits small at the edges. All user-selected content (archetype, flavor text, checked values) renders large and legibly.

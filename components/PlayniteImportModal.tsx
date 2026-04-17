@@ -330,10 +330,10 @@ export default function PlayniteImportModal({ open, onClose }: PlayniteImportMod
 
             <div className="flex gap-2 pt-1">
               <button
-                onClick={handleClose}
+                onClick={() => { setStep('upload'); setGames([]); }}
                 className="flex-1 px-4 py-2.5 text-sm font-medium text-text-dim rounded-xl border border-border-subtle hover:text-text-muted transition-colors"
               >
-                Cancel
+                Back
               </button>
               <button
                 onClick={handleImport}
