@@ -203,7 +203,7 @@ export default function AboutPage() {
               className="text-3xl sm:text-4xl font-bold text-center mb-3 tracking-tight"
               style={{ color: 'var(--color-text-primary)' }}
             >
-              5 ways to pick tonight&apos;s game.
+              5 ways to pick today&apos;s game.
             </h2>
             <p
               className="text-center text-sm sm:text-base mb-10 font-[family-name:var(--font-mono)]"
@@ -218,7 +218,7 @@ export default function AboutPage() {
               <PickModeCard icon="🎲" title="Anything" description="Just pick something. We'll figure out what fits right now." />
             </Reveal>
             <Reveal delay={80}>
-              <PickModeCard icon="🌙" title="Quick Session" description="Short session tonight? We know which games are built for that." />
+              <PickModeCard icon="🌙" title="Quick Session" description="Short session today? We know which games are built for that." />
             </Reveal>
             <Reveal delay={160}>
               <PickModeCard icon="🔥" title="Deep Cut" description="A world you lived in. Your save's still there." />

@@ -8,7 +8,7 @@ export type RerollMode = 'anything' | 'quick-session' | 'deep-cut' | 'continue' 
 
 export const REROLL_MODES: { mode: RerollMode; label: string; icon: string; description: string }[] = [
   { mode: 'anything', label: 'Anything', icon: '🎲', description: 'Random from all games' },
-  { mode: 'quick-session', label: 'Quick Session', icon: '🌙', description: 'A short session tonight' },
+  { mode: 'quick-session', label: 'Quick Session', icon: '🌙', description: 'A short session you can wrap today' },
   // Deep Cut semantic: a PERSONAL deep cut backed by evidence (real hours played). You lived in
   // this world and stepped away — not a curator's obscure gem pick. Filter reflects that below.
   { mode: 'deep-cut', label: 'Deep Cut', icon: '🔥', description: 'A world you lived in. The hours prove it.' },
@@ -73,7 +73,7 @@ export function getEligibleGames(
         return true;
       case 'quick-session': {
         // Tier is the primary gate, but cross-check against hltbMain so a 52-hour sim
-        // tagged 'wind-down' doesn't leak into "short session tonight." Drop-in games
+        // tagged 'wind-down' doesn't leak into "short session today." Drop-in games
         // (isNonFinishable) are exempt — Vampire Survivors and Stardew are legitimately
         // short-session friendly regardless of total length.
         if (game.timeTier !== 'quick-hit' && game.timeTier !== 'wind-down') return false;

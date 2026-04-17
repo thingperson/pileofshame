@@ -16,7 +16,7 @@ const SECTIONS = [
     items: [
       {
         q: 'What is Inventory Full?',
-        a: 'Your backlog should feel exciting, not a warehouse of good intentions. Add your games, tell us your mood, and we\'ll find your game tonight. No more staring at your library wondering what to play.',
+        a: 'Your backlog should feel exciting, not a warehouse of good intentions. Add your games, tell us your mood, and we\'ll find your game today. No more staring at your library wondering what to play.',
       },
       {
         q: 'How do I add games?',
@@ -70,7 +70,7 @@ const SECTIONS = [
       },
       {
         q: 'What are the different modes?',
-        a: '🎲 Anything: random from everything.\n🌙 Quick Session: a short game you can wrap tonight.\n🔥 Deep Cut: a game you sank real hours into and stepped away from. Your save\'s still there.\n▶ Keep Playing: a game you already started but haven\'t finished.\n🏁 Almost Done: a game you\'re close to the credits on.',
+        a: '🎲 Anything: random from everything.\n🌙 Quick Session: a short game you can wrap today.\n🔥 Deep Cut: a game you sank real hours into and stepped away from. Your save\'s still there.\n▶ Keep Playing: a game you already started but haven\'t finished.\n🏁 Almost Done: a game you\'re close to the credits on.',
       },
       {
         q: 'What if I keep rerolling?',

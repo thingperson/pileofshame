@@ -306,7 +306,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
       </section>
 
       {/* ═══════════════════════════════════════════
-          5 WAYS TO PICK TONIGHT'S GAME
+          5 WAYS TO PICK TODAY'S GAME
           ═══════════════════════════════════════════ */}
       <section className="relative px-6 py-12 sm:py-16">
         <div className="max-w-3xl mx-auto">
@@ -315,7 +315,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
               className="text-3xl sm:text-4xl font-bold text-center mb-3 tracking-tight"
               style={{ color: 'var(--color-text-primary)' }}
             >
-              5 ways to pick tonight&apos;s game.
+              5 ways to pick today&apos;s game.
             </h2>
             <p
               className="text-center text-sm sm:text-base mb-10 font-[family-name:var(--font-mono)]"
@@ -337,7 +337,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
               <PickModeCard
                 icon="🌙"
                 title="Quick Session"
-                description="Short session tonight? We know which games are built for that."
+                description="Short session today? We know which games are built for that."
               />
             </Reveal>
             <Reveal delay={160}>

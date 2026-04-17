@@ -200,6 +200,10 @@ const SCORE_DESCRIPTORS: ScoreDescriptor[] = [
       'Universally adored. This is a capital-E Event game.',
       'One of the highest-rated games ever made. The hype is real.',
       'Generational talent. This one defines eras.',
+      'A game people still talk about years later. The reputation\'s earned.',
+      'The kind of game your future self will thank you for playing.',
+      'If you only play ten more games in your life, this is one.',
+      'Critics and players agree. That almost never happens.',
     ],
   },
   {
@@ -208,6 +212,10 @@ const SCORE_DESCRIPTORS: ScoreDescriptor[] = [
       'Near-universal acclaim. Damn near everyone who played this loved it.',
       'Elite tier. The kind of game people build their backlog around.',
       'A top-shelf title. If this is in your pile, move it up.',
+      'Reviewers ran out of ways to say \'great.\' You\'re about to see why.',
+      'The kind of game that shows up on year-end lists. All of them.',
+      'This one doesn\'t need you to meet it halfway. It comes to you.',
+      'Reliably great. Unanimously so.',
     ],
   },
   {
@@ -216,6 +224,10 @@ const SCORE_DESCRIPTORS: ScoreDescriptor[] = [
       'Excellent by any measure. Most players walk away impressed.',
       'Highly rated across the board. A safe bet for a great time.',
       'Strong reviews, strong word of mouth. This one earned its reputation.',
+      'Sharp execution. Not revolutionary, but very good at what it does.',
+      'You won\'t regret picking this one. Most people don\'t.',
+      'Did most things right. A few things brilliantly. Worth the time.',
+      'High marks across the board. No red flags.',
     ],
   },
   {
@@ -224,6 +236,10 @@ const SCORE_DESCRIPTORS: ScoreDescriptor[] = [
       'Solid and well-received. Not flawless, but the good outweighs the rough.',
       'A good game that does what it sets out to do. Worth your time.',
       'Well-reviewed, well-liked. The kind of game you\'re glad you played.',
+      'A B+ game that occasionally hits an A. Happens more than you\'d think.',
+      'Does the basics well. A few moments punch above.',
+      'Reviewers liked it. Players liked it. You\'ll probably like it too.',
+      'Well-made. Won\'t blow your mind but won\'t waste your time.',
     ],
   },
   {
@@ -232,6 +248,10 @@ const SCORE_DESCRIPTORS: ScoreDescriptor[] = [
       'Good, not great. Will hit if it\'s your genre. Skip if not.',
       'Positive reviews with some caveats. Know what you\'re getting into.',
       'A solid pick if the genre appeals to you. Doesn\'t transcend it.',
+      'Fine. Not a word we love, but accurate here. If you\'re in the mood, go.',
+      'Works well for what it is. Doesn\'t try to be more.',
+      'The kind of game you play and forget in two weeks. Not a bad thing.',
+      'Genre fans will be satisfied. Others might bounce.',
     ],
   },
   {
@@ -240,6 +260,10 @@ const SCORE_DESCRIPTORS: ScoreDescriptor[] = [
       'Mixed-to-positive. Has its fans, has its critics. You\'ll know which you are fast.',
       'Divisive. Some people love this, others bounce hard. You\'ll know in 15 mins.',
       'Not for everyone, but the people it clicks with really click with it.',
+      'Reviewers disagreed. So did players. Form your own opinion.',
+      'Some of it lands. Some of it doesn\'t. You\'ll know which is which.',
+      'Imperfect, but memorable to the people who stuck with it.',
+      'A game with flaws and fans. Give it an hour.',
     ],
   },
   {
@@ -248,6 +272,10 @@ const SCORE_DESCRIPTORS: ScoreDescriptor[] = [
       'Polarizing. There\'s something here, but it\'s buried under rough edges.',
       'Has ambition. Doesn\'t always land. Worth a look if the concept grabs you.',
       'The reviews are mixed, but reviews don\'t know your taste. Give it a shot.',
+      'Uneven. Parts are great, parts aren\'t. You\'ll play it to find out which.',
+      'A game trying to do too much. Sometimes that\'s exactly what you want.',
+      'Rough around the edges, but some edges have soul.',
+      'Not for everyone. If you\'re curious, that\'s a signal.',
     ],
   },
   {
@@ -256,6 +284,10 @@ const SCORE_DESCRIPTORS: ScoreDescriptor[] = [
       'Rough around the edges. Play this if you\'re a fan of the genre, skip otherwise.',
       'Mid. But sometimes mid is exactly what you need on a Tuesday night.',
       'This one needs you to meet it halfway. It won\'t do the work for you.',
+      'Not the best reviewed. Still earned its spot in your pile for a reason.',
+      'Patchy. Has its moments. Measure your expectations.',
+      'You paid for this. Might as well see what it\'s about.',
+      'Reviewers weren\'t kind. You don\'t have to be them.',
     ],
   },
   {
@@ -264,57 +296,134 @@ const SCORE_DESCRIPTORS: ScoreDescriptor[] = [
       'Brave choice having this in the pile. Respect the commitment.',
       'The reviews were brutal. Maybe they\'re wrong. Maybe.',
       'A guilty pleasure waiting to happen. Or just guilt. Either way.',
+      'Universally panned. Play it ironically. Or sincerely. No judgment.',
+      'The kind of game you play on a dare. Live a little.',
+      'Bad review scores. Strong personality. Your call.',
+      'A bold pick. Nobody ever tells stories about safe games.',
     ],
   },
 ];
 
 // --- Genre-aware fallbacks (when no metacritic) ---
 
-function getGenreFallback(genres: string[]): string {
-  const g = genres.map((s) => s.toLowerCase());
+// Genre fallback pool — 4 lines per genre, picked deterministically from a hash
+// of the game name so the same game shows the same line on reroll but different
+// games in the same genre don't all read identically.
+const GENRE_FALLBACKS: Record<string, string[]> = {
+  rpg: [
+    'An RPG in the pile. Block out some serious hours for this one.',
+    'RPG means reading. RPG means commitment. Still in?',
+    'The kind of game where \'just one more quest\' becomes midnight.',
+    'Level up. Story up. Time up. Classic RPG tax.',
+  ],
+  roguelike: [
+    'A roguelike. Every failed run is technically progress.',
+    'A roguelike. You will die. The game wants you to. You\'ll come back.',
+    'One more run energy. Set a timer or lose the evening.',
+    'Built to be replayed. Built to be brutal. Weirdly relaxing.',
+  ],
+  puzzle: [
+    'A puzzle game. Your brain will thank you. Your backlog won\'t.',
+    'A puzzle game. Bring coffee and patience.',
+    'Expect \'aha\' moments. Expect some stuck moments. Both are the point.',
+    'Perfect when thinking is what you actually want to do.',
+  ],
+  platformer: [
+    'A platformer. Jump, die, learn, repeat. The classics never change.',
+    'A platformer. Muscle memory, rhythm, and rage. All three.',
+    'Short levels, long memories. Platformers age well.',
+    'Tight controls and trial-and-error. The genre at its best.',
+  ],
+  horror: [
+    'Play this one at night with headphones. Trust the process.',
+    'Horror. Bright lights off. Headphones on. Commit.',
+    'A survival horror. Bring your nerves. Leave your composure.',
+    'Scary on purpose. Worth it if you\'re in the mood.',
+  ],
+  strategy: [
+    'A strategy game. Budget more time than you think you need.',
+    'Strategy games eat hours. Plan accordingly.',
+    'Chess with extra steps. You\'ll love the extra steps.',
+    'Thinking the game. That\'s the game.',
+  ],
+  sim: [
+    'A sim game. You\'ll either play 5 minutes or 500 hours. No in-between.',
+    'A sim. These games don\'t end. That\'s the appeal.',
+    'Menus within menus. Addictive menus.',
+    'Quiet systems doing quiet things. You\'ll lose an afternoon.',
+  ],
+  shooter: [
+    'Bullets first, questions later. Pure adrenaline.',
+    'A shooter. Aim. Shoot. Move. Repeat. There\'s joy in the rhythm.',
+    'Fast-twitch fun. Your reflexes will thank you.',
+    'If you want adrenaline, load it up.',
+  ],
+  action: [
+    'Fast combat, sharp reflexes. This one earns its spot in the pile.',
+    'Action means timing. Action means commitment to combos. Fun.',
+    'Gets the blood moving. Also gets the thumbs sore.',
+    'Reactive, rhythmic, rewarding when it clicks.',
+  ],
+  adventure: [
+    'An adventure awaits. The pile can wait. This one\'s calling.',
+    'Adventure games reward curiosity. Bring some.',
+    'Exploration means wandering means noticing. Slow it down.',
+    'Get lost in a place on purpose. That\'s the genre.',
+  ],
+  indie: [
+    'An indie pick. Often where the real magic happens.',
+    'Indie games swing for the fences. This one probably connects.',
+    'Small team, big ideas. Usually worth your time.',
+    'Indie = personality. Load it up.',
+  ],
+  racing: [
+    'A racing game. Perfect for when you want zero narrative commitment.',
+    'Racing. Pure reflex. Pure fun. And no one gets sad in a racing game.',
+    'Go fast. Turn left. Occasionally right. That\'s the deal.',
+    'A perfect 30-minute game.',
+  ],
+  fighting: [
+    'A fighting game. You\'ll spend more time in training mode than you expect.',
+    'Fighting games are rhythm games with fists. Learn the beat.',
+    'Losing is the tutorial. Winning is the reward.',
+    'Bring friends. Or bring the practice dummy.',
+  ],
+  sports: [
+    'A sports game. Great for when the real season isn\'t on.',
+    'A sports game. Ritualistic. Satisfying. Oddly meditative.',
+    'Arcade sports or sim? Either way, pick up and play.',
+    'The pickup-and-play format perfected.',
+  ],
+};
 
-  if (g.some((s) => s.includes('rpg') || s.includes('role-playing'))) {
-    return 'An RPG in the pile. Block out some serious hours for this one.';
-  }
-  if (g.some((s) => s.includes('roguelike') || s.includes('roguelite'))) {
-    return 'A roguelike. Every failed run is technically progress.';
-  }
-  if (g.some((s) => s.includes('puzzle'))) {
-    return 'A puzzle game. Your brain will thank you. Your backlog won\'t.';
-  }
-  if (g.some((s) => s.includes('platformer'))) {
-    return 'A platformer. Jump, die, learn, repeat. The classics never change.';
-  }
-  if (g.some((s) => s.includes('horror') || s.includes('survival'))) {
-    return 'Play this one at night with headphones. Trust the process.';
-  }
-  if (g.some((s) => s.includes('strategy') || s.includes('tactical'))) {
-    return 'A strategy game. Budget more time than you think you need.';
-  }
-  if (g.some((s) => s.includes('simulation') || s.includes('sim'))) {
-    return 'A sim game. You\'ll either play 5 minutes or 500 hours. No in-between.';
-  }
-  if (g.some((s) => s.includes('shooter') || s.includes('fps'))) {
-    return 'Bullets first, questions later. Pure adrenaline.';
-  }
-  if (g.some((s) => s.includes('action'))) {
-    return 'Fast combat, sharp reflexes. This one earns its spot in the pile.';
-  }
-  if (g.some((s) => s.includes('adventure') || s.includes('exploration'))) {
-    return 'An adventure awaits. The pile can wait. This one\'s calling.';
-  }
-  if (g.some((s) => s.includes('indie'))) {
-    return 'An indie pick. Often where the real magic happens.';
-  }
-  if (g.some((s) => s.includes('racing') || s.includes('driving'))) {
-    return 'A racing game. Perfect for when you want zero narrative commitment.';
-  }
-  if (g.some((s) => s.includes('fighting'))) {
-    return 'A fighting game. You\'ll spend more time in training mode than you expect.';
-  }
-  if (g.some((s) => s.includes('sports'))) {
-    return 'A sports game. Great for when the real season isn\'t on.';
-  }
+function hashString(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return h;
+}
+
+function pickFromPool(pool: string[], seed: string): string {
+  return pool[hashString(seed) % pool.length];
+}
+
+function getGenreFallback(genres: string[], gameName: string = ''): string {
+  const g = genres.map((s) => s.toLowerCase());
+  const seed = gameName.toLowerCase();
+
+  if (g.some((s) => s.includes('rpg') || s.includes('role-playing'))) return pickFromPool(GENRE_FALLBACKS.rpg, seed);
+  if (g.some((s) => s.includes('roguelike') || s.includes('roguelite'))) return pickFromPool(GENRE_FALLBACKS.roguelike, seed);
+  if (g.some((s) => s.includes('puzzle'))) return pickFromPool(GENRE_FALLBACKS.puzzle, seed);
+  if (g.some((s) => s.includes('platformer'))) return pickFromPool(GENRE_FALLBACKS.platformer, seed);
+  if (g.some((s) => s.includes('horror') || s.includes('survival'))) return pickFromPool(GENRE_FALLBACKS.horror, seed);
+  if (g.some((s) => s.includes('strategy') || s.includes('tactical'))) return pickFromPool(GENRE_FALLBACKS.strategy, seed);
+  if (g.some((s) => s.includes('simulation') || s.includes('sim'))) return pickFromPool(GENRE_FALLBACKS.sim, seed);
+  if (g.some((s) => s.includes('shooter') || s.includes('fps'))) return pickFromPool(GENRE_FALLBACKS.shooter, seed);
+  if (g.some((s) => s.includes('action'))) return pickFromPool(GENRE_FALLBACKS.action, seed);
+  if (g.some((s) => s.includes('adventure') || s.includes('exploration'))) return pickFromPool(GENRE_FALLBACKS.adventure, seed);
+  if (g.some((s) => s.includes('indie'))) return pickFromPool(GENRE_FALLBACKS.indie, seed);
+  if (g.some((s) => s.includes('racing') || s.includes('driving'))) return pickFromPool(GENRE_FALLBACKS.racing, seed);
+  if (g.some((s) => s.includes('fighting'))) return pickFromPool(GENRE_FALLBACKS.fighting, seed);
+  if (g.some((s) => s.includes('sports'))) return pickFromPool(GENRE_FALLBACKS.sports, seed);
 
   return '';
 }
@@ -501,7 +610,7 @@ export function getGameDescriptor(
 
   // 5. Genre fallback
   if (genres && genres.length > 0) {
-    const fallback = getGenreFallback(genres);
+    const fallback = getGenreFallback(genres, name);
     if (fallback) {
       return { line: fallback, confidence: 'generic' };
     }
