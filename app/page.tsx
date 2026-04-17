@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useStore } from '@/lib/store';
-import { Game } from '@/lib/types';
+import { Game, GameStatus } from '@/lib/types';
 import { RerollMode } from '@/lib/reroll';
 import { sortBestForYou } from '@/lib/smartSort';
 import { STATUS_CONFIG, MAX_PLAYING_NOW, MAX_UP_NEXT } from '@/lib/constants';
@@ -112,6 +112,40 @@ function AppContent() {
   const [gamePassOpen, setGamePassOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>('backlog');
+  // Tab-follow UX: when a game's status changes, auto-switch to the destination
+  // tab, flash its underline (~1s), and pulse-outline the game's row in its new
+  // home (~1.5s). Without these, a cycle-badge click made the game vanish with
+  // no trail — users lost where it went.
+  const [flashingTab, setFlashingTab] = useState<TabId | null>(null);
+  const [recentlyMovedId, setRecentlyMovedId] = useState<string | null>(null);
+  const flashTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pulseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const triggerTabFollow = useCallback((targetTab: TabId, gameId: string) => {
+    setActiveTab(targetTab);
+    setFlashingTab(targetTab);
+    setRecentlyMovedId(gameId);
+    if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
+    if (pulseTimerRef.current) clearTimeout(pulseTimerRef.current);
+    // Match the keyframe durations in globals.css; clearing the class re-arms
+    // the animation for the next move.
+    flashTimerRef.current = setTimeout(() => setFlashingTab(null), 1000);
+    pulseTimerRef.current = setTimeout(() => setRecentlyMovedId(null), 1500);
+  }, []);
+
+  // Listen for status changes anywhere in the tree (incl. inside
+  // GameDetailModal, which is mounted from GridCard and doesn't thread a prop
+  // back to page-level state). GameCard dispatches `gp-status-change` from
+  // every status transition.
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<{ gameId: string; newStatus: GameStatus }>).detail;
+      if (!detail) return;
+      const targetTab = TABS.find((t) => t.statuses.includes(detail.newStatus));
+      if (targetTab) triggerTabFollow(targetTab.id, detail.gameId);
+    };
+    window.addEventListener('gp-status-change', handler);
+    return () => window.removeEventListener('gp-status-change', handler);
+  }, [triggerTabFollow]);
   const [backlogLimit, setBacklogLimit] = useState(10);
   const [backlogSort, setBacklogSort] = useState<'smart' | 'a-z' | 'z-a' | 'newest' | 'oldest' | 'most-playtime' | 'least-playtime' | 'closest-to-done'>('smart');
   const [sampleBannerDismissed, setSampleBannerDismissed] = useState(false);
@@ -300,9 +334,9 @@ function AppContent() {
     const statusLabel = STATUS_CONFIG[next.status as Game['status']].label;
     showToast(`${game.name} → ${statusLabel}`);
 
-    // Switch to the destination tab
-    setActiveTab(next.tabId);
-  }, [games, updateGame, showToast, cycleStatus, getNextTabStatus]);
+    // Switch to the destination tab, flash its underline, pulse the row.
+    triggerTabFollow(next.tabId, game.id);
+  }, [games, updateGame, showToast, cycleStatus, getNextTabStatus, triggerTabFollow]);
 
   const moveGameBack = useCallback((game: Game) => {
     const statusOrder = ['buried', 'on-deck', 'playing', 'played'] as const;
@@ -316,8 +350,8 @@ function AppContent() {
     updateGame(game.id, { status: prevStatus as Game['status'] });
     showToast(`${game.name} → ${STATUS_CONFIG[prevStatus as Game['status']].label}`);
 
-    if (prevTab) setActiveTab(prevTab.id);
-  }, [updateGame, showToast]);
+    if (prevTab) triggerTabFollow(prevTab.id, game.id);
+  }, [updateGame, showToast, triggerTabFollow]);
 
   // Auto-enrich games in background after import
   useAutoEnrich();
@@ -739,7 +773,7 @@ function AppContent() {
 
       {/* ── Tab Navigation ── */}
       <div className="mb-3">
-        <TabNav activeTab={activeTab} onTabChange={setActiveTab} counts={tabCounts} />
+        <TabNav activeTab={activeTab} onTabChange={setActiveTab} counts={tabCounts} flashingTab={flashingTab} />
       </div>
 
       {/* ── Sort control + View toggle ── */}
@@ -907,7 +941,9 @@ function AppContent() {
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {visibleGames.map((game, i) => (
                   <div key={game.id} className="card-enter" style={{ animationDelay: `${i * 30}ms`, opacity: activeTab === 'backlog' && game.ignored ? 0.45 : undefined }}>
-                    <GridCard game={game} />
+                    <div className={recentlyMovedId === game.id ? 'row-pulse' : undefined}>
+                      <GridCard game={game} />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -915,6 +951,7 @@ function AppContent() {
               <div className="space-y-1.5">
                 {visibleGames.map((game, i) => (
                   <div key={game.id} className="card-enter" style={{ animationDelay: `${i * 30}ms`, opacity: activeTab === 'backlog' && game.ignored ? 0.45 : undefined }}>
+                    <div className={recentlyMovedId === game.id ? 'row-pulse' : undefined}>
                     <GameCard
                       game={game}
                       upNextIndex={activeTab === 'up-next' ? i + 1 : undefined}
@@ -929,9 +966,10 @@ function AppContent() {
                       } : undefined}
                       onStatusChange={(newStatus) => {
                         const targetTab = TABS.find((t) => t.statuses.includes(newStatus));
-                        if (targetTab) setActiveTab(targetTab.id);
+                        if (targetTab) triggerTabFollow(targetTab.id, game.id);
                       }}
                     />
+                    </div>
                   </div>
                 ))}
               </div>

@@ -650,13 +650,45 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                   </p>
                 ) : null;
               })()}
-              {/* Why this game? */}
+              {/* Why this game? Smart Pick trigger leads (accent-purple left border),
+                  remaining signals follow unstyled. */}
               {(() => {
                 const reasons = getPickReasons(currentPick);
-                return reasons.length > 0 ? (
+                // Build a Smart-Pick trigger reason — the thing that actually caused
+                // this game to surface. Sits as pill #1, visually distinguished so
+                // the user reads "because I'm 85% through" before the secondary
+                // signals (Metacritic, mood, backlog age).
+                let trigger: { icon: string; label: string } | null = null;
+                if (smartPickType) {
+                  const h = Math.round(currentPick.hoursPlayed);
+                  if (smartPickType === 'almost-there' && currentPick.hltbMain) {
+                    const pct = Math.min(99, Math.round((currentPick.hoursPlayed / currentPick.hltbMain) * 100));
+                    trigger = { icon: '🏁', label: `${pct}% to credits` };
+                  } else if (smartPickType === 'keep-flowing') {
+                    trigger = { icon: '🌊', label: `Still warm, ${h}h in` };
+                  } else if (smartPickType === 'forgotten-gem') {
+                    trigger = { icon: '💎', label: `${h}h in, top-rated` };
+                  } else if (smartPickType === 'unfinished-business') {
+                    trigger = { icon: '📜', label: `${h}h in, then silence` };
+                  }
+                }
+                if (!trigger && reasons.length === 0) return null;
+                return (
                   <div className="mt-3 pt-2 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
                     <p className="text-xs text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider mb-1.5">Why this one?</p>
                     <div className="flex flex-wrap gap-1.5">
+                      {trigger && (
+                        <span
+                          className="text-xs font-[family-name:var(--font-mono)] px-2 py-1 rounded-md"
+                          style={{
+                            backgroundColor: 'rgba(167, 139, 250, 0.12)',
+                            color: '#c4b5fd',
+                            borderLeft: '2px solid #a78bfa',
+                          }}
+                        >
+                          {trigger.icon} {trigger.label}
+                        </span>
+                      )}
                       {reasons.map((r, i) => (
                         <span
                           key={i}
@@ -668,7 +700,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                       ))}
                     </div>
                   </div>
-                ) : null;
+                );
               })()}
               </div>
             </div>

@@ -15,6 +15,18 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-17 — Tab-follow via CustomEvent + Smart Pick trigger pill
+
+**Decision.** Status-change tab-follow (auto-switch + flash + row pulse) is driven by a window-level `gp-status-change` CustomEvent dispatched from `GameCard.handleStatusClick`. `app/page.tsx` listens and triggers `triggerTabFollow(targetTab, gameId)` — sets `activeTab` + `flashingTab` (1s) + `recentlyMovedId` (1.5s), cleared by timers.
+
+**Why the event, not just the prop.** `GameCard` is rendered in three contexts: the list view (prop threaded from page.tsx ✓), the grid view (no direct GameCard, but `GridCard` opens `GameDetailModal` → which renders `GameCard forceExpanded` with no `onStatusChange` prop ✗), and inside `GameDetailModal` itself. Threading the prop through every mount point would force `GridCard` and `GameDetailModal` to know about page-level tab state they otherwise don't care about. A single broadcast keeps the coupling one-directional: GameCard only knows it moved a game; page.tsx decides what to do with that signal. Rejected alternatives: (1) lift `GameDetailModal` to page.tsx — big refactor for one feature; (2) Zustand action — adds transient UI state to a data store.
+
+**Row-pulse wrapper, not class merge.** `card-enter` and `row-pulse` both use the `animation` CSS property, so co-applying them on the same element drops one. Wrapped the `<GameCard>` / `<GridCard>` in an inner div that takes `row-pulse` conditionally. Keeps mount-time slide-in intact while layering the pulse.
+
+**Smart Pick trigger pill styling.** The Smart Pick triggering reason now leads "Why this one" with a purple-tinted background + 2px accent-purple left border. Secondary reasons (Metacritic, mood, backlog age) stay unstyled so they read as supporting evidence. Trigger labels stay short for pill width: `85% to credits` / `Still warm, 3h in` / `3h in, top-rated` / `3h in, then silence`. "Then silence" echoes the approved `smartPickCopy.ts` headline — keeps voice consistent.
+
+---
+
 ## 2026-04-17 — Smart Pick engine wired + reroll count bug fixed
 
 **Decision.** `lib/reroll.ts` gains `classifySmartPick(game)` and `pickSmartResume(...)`. Resume mode (internal key still `continue`) runs the priority chain (Almost There → Keep Flowing → Forgotten Gem → Unfinished Business), picking from the highest-priority non-empty bucket via `pickWeighted`. `continue` eligibility broadened to include `buried` status so Forgotten Gem / Unfinished Business candidates can surface.

@@ -237,6 +237,30 @@ button:active:not(:disabled) {
   100% { opacity: 0; transform: scale(0); }
 }
 
+/* Tab-follow flash: runs ~1s on the destination tab when a game moves into it.
+   Uses inset bottom shadow so it reads as a thicker, glowing underline without
+   shifting layout. Color is set via --flash-color inline on the button. */
+@keyframes tab-flash {
+  0%   { box-shadow: inset 0 -2px 0 var(--flash-color, #a78bfa); }
+  30%  { box-shadow: inset 0 -4px 0 var(--flash-color, #a78bfa), 0 0 12px var(--flash-color, #a78bfa); }
+  100% { box-shadow: inset 0 -2px 0 var(--flash-color, #a78bfa); }
+}
+.tab-flash {
+  animation: tab-flash 1s ease-out 1;
+}
+
+/* Row-pulse: runs ~1.5s on a game row that just arrived in the active tab from
+   a status change. Soft purple outline that fades. */
+@keyframes row-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.55); }
+  40%  { box-shadow: 0 0 0 6px rgba(167, 139, 250, 0.35); }
+  100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0); }
+}
+.row-pulse {
+  animation: row-pulse 1.5s ease-out 1;
+  border-radius: 12px;
+}
+
 .theme-90s {
   --color-bg-primary: #000080;
   --color-bg-card: #c0c0c0;

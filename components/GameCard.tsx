@@ -454,6 +454,15 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
 
       // Notify parent to switch tabs
       onStatusChange?.(newStatus);
+      // Broadcast for contexts that don't thread the prop (e.g. GameCard
+      // rendered inside GameDetailModal, which is mounted from GridCard and
+      // doesn't know about the page-level tab state). page.tsx listens and
+      // runs the tab-follow flash + row pulse.
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('gp-status-change', {
+          detail: { gameId: game.id, newStatus },
+        }));
+      }
 
       // Milestone celebrations (delayed so they don't overlap with status toast)
       setTimeout(() => {

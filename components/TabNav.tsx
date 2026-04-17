@@ -25,9 +25,11 @@ interface TabNavProps {
   activeTab: TabId;
   onTabChange: (tab: TabId) => void;
   counts: Record<TabId, number>;
+  /** Tab to flash briefly (~1s) — signals that a game just landed here. */
+  flashingTab?: TabId | null;
 }
 
-export default function TabNav({ activeTab, onTabChange, counts }: TabNavProps) {
+export default function TabNav({ activeTab, onTabChange, counts, flashingTab }: TabNavProps) {
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent, index: number) => {
@@ -75,11 +77,15 @@ export default function TabNav({ activeTab, onTabChange, counts }: TabNavProps) 
               active
                 ? 'text-text-primary'
                 : 'text-text-dim hover:text-text-muted hover:bg-white/5'
-            }`}
+            } ${flashingTab === tab.id ? 'tab-flash' : ''}`}
             style={active ? {
               backgroundColor: `${tab.color}15`,
               boxShadow: `inset 0 -2px 0 ${tab.color}`,
-            } : undefined}
+              // flash-color consumed by .tab-flash keyframes; harmless for non-flashing tabs
+              ['--flash-color' as string]: tab.color,
+            } as React.CSSProperties : {
+              ['--flash-color' as string]: tab.color,
+            } as React.CSSProperties}
           >
             <span className="text-xs" aria-hidden="true">{tab.icon}</span>
             <span className="hidden sm:inline">{tab.label}</span>
