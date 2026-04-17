@@ -11,32 +11,19 @@
 3. **`d999ec0` lowercase tagline + cap** — "Get playing." → "get playing." (second sweep); Up Next cap raised from 5 → 8 and centralized in `lib/constants.ts` as `MAX_UP_NEXT`; `MAX_PLAYING_NOW = 3` now enforced at every transition path (GameCard cycle, nudges, Reroll commit, Just 5 Mins triage, New Game+).
 4. **`b609248` tier 1 mobile** — light mode CSS vars `!important`-ified (was rendering dark grey on mobile); cozy theme's invalid `.theme-cozy body` selector removed and `::before` ambient gradient disabled (restored beige); feedback pill auto-hides when any `aria-modal="true"` dialog is open; skip-feedback popup killed 8s auto-dismiss, capped at 2 shows per modal-open, added × dismiss; notes indicator now persistent ("Notes" label left, "auto-saves"/"saved ✓" right); list-view status badge hidden on mobile collapsed row (still shown when expanded); SettingsMenu "Restore Backup" emoji 📥 → 🔄.
 5. **`6e879c9` copy + icons + descriptors** — "tonight" → "today" sweep across 11 sites; favicon rescaled (46% → 88%+ fill for 192/512, 67% → 76% for 256); score-tier descriptor pool 3→7 per tier (27→63 total); genre fallback pool 1→4 per genre (14→56 total, hash-selected per game name); `.claude/settings.json` allowlist added 12 read-only Claude Preview MCP tools.
-6. **`(pending next commit)` Smart Pick copy locked** — `lib/smartPickCopy.ts` with 24 approved headlines across 4 Smart Pick types, DECISIONS entry.
+6. **`4e92914` Smart Pick copy locked** — `lib/smartPickCopy.ts` with 24 approved headlines across 4 Smart Pick types, DECISIONS entry.
+7. **`(pending)` Smart Pick reroll engine + pill + roll-count fix** — `lib/reroll.ts` gains `classifySmartPick` + `pickSmartResume` (priority: Almost There → Keep Flowing → Forgotten Gem → Unfinished Business); `continue` eligibility broadened to cover buried status. `components/Reroll.tsx` renders a purple-tinted Smart Pick pill + rotating headline when the pick is from Resume mode. Roll-count bug fixed: store `incrementReroll` now fires only on commit ("Let's go"); local `rollCount` state drives the forced-choice gate and "Roll N" label; mode/energy switches pass `countAsRoll=false` so browsing doesn't burn the 10-roll cap. Forgotten Gem falls back to Metacritic ≥85 pending Steam review enrichment on the `Game` type.
 
 ---
 
 ## What's in flight (aligned, not yet built)
 
-### The reroll redesign + tab-follow fix — **next session's main event**
+### The reroll redesign + tab-follow fix — **in flight**
 
-**Smart Pick engine** — update `lib/reroll.ts`:
-- Rename `continue` mode internally; user-facing label becomes **Resume** with arrow ➡️.
-- When running Resume picks, apply priority chain (first match wins):
-  1. **Almost There** 🏁 — `hltbMain > 0 && hoursPlayed / hltbMain >= 0.75`, status playing OR on-deck.
-  2. **Keep Flowing** 🌊 — `status === 'playing' && hoursPlayed >= 1` (not almost done).
-  3. **Forgotten Gem** 💎 — `status in ['on-deck', 'buried'] && hoursPlayed >= 5 && (steamPositive >= 85% with >= 500 reviews || metacritic >= 85)`.
-  4. **Unfinished Business** — `status in ['on-deck', 'buried'] && hoursPlayed >= 5` (fallback).
-- Return picked game + its Smart Pick sub-type.
-- Deep Cut mode can be retired (folded into Resume → Unfinished Business / Forgotten Gem).
-
-**Smart Pick pill UI** — `components/Reroll.tsx`:
-- When pick has a Smart Pick sub-type, render a pill at the top of the result card: `🧠 Smart Pick · [type label]` with soft purple-tinted background.
-- Render the headline from `lib/smartPickCopy.ts` → `renderSmartPickHeadline(type, gameName, { hoursPlayed, hltbMain, ratingPct })` beneath the pill.
-- "Why this one" reasons: Smart Pick triggering reason is pill #1 with a left-border in accent-purple; secondary reasons (Metacritic, mood match) stay unstyled.
-
-**Roll-count bug fix** — `components/Reroll.tsx`:
-- Currently: clicking any mode/sub-mode triggers `incrementReroll()` which burns toward the 10-per-session cap. That's wrong — only an actual commit ("let's go") should count.
-- Fix: move `incrementReroll` to the commit path, remove it from mode-click paths. Audit all paths where `incrementReroll` is called.
+**Smart Pick engine / pill / roll-count** — **SHIPPED** (see commit #7 above).
+- "Why this one" pill-#1 accent-purple left-border treatment still TODO (reason-list styling hasn't been differentiated yet).
+- `continue` → user-facing "Resume" label rename still TODO (deferred with modal restructure; internal key remains `continue`).
+- Deep Cut mode still present in UI (retirement deferred with modal restructure).
 
 **Modal layout restructure** (holds for **after wordmark**):
 - Modal opens with **2 visible CTAs**: `🎲 Anything` + `⚡ Just 5 mins`.
@@ -90,7 +77,7 @@ Parked until wordmark lands + reroll redesign settles.
 
 ## Known gotchas (active)
 
-- **Mode/sub-mode clicks burn rolls.** Confirmed bug. Fix before any new modes ship.
+- **Mode/sub-mode clicks burn rolls.** Fixed in commit #7. Mode/energy switches now pass `countAsRoll=false`; only explicit Roll / Roll Again bumps the counter.
 - **Smart Pick selection is status-driven, not recency-driven.** We don't have a reliable `lastPlayedAt` across Steam/Xbox/PSN. Status (`playing` vs `on-deck` vs `buried`) is the proxy. Good enough; flag if Brady wants true recency later.
 - **Steam positive % + review count** is in RAWG/Steam enrichment but confirm the field names used in `Game` type before wiring Forgotten Gem gating. Fallback to Metacritic if Steam data missing.
 - **Modal UI restructure touches landing + about mode cards** — landing currently shows 5 mode cards; new design collapses to ~3. Don't restructure the modal without updating landing in the same commit.

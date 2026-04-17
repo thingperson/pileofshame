@@ -15,6 +15,18 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-17 — Smart Pick engine wired + reroll count bug fixed
+
+**Decision.** `lib/reroll.ts` gains `classifySmartPick(game)` and `pickSmartResume(...)`. Resume mode (internal key still `continue`) runs the priority chain (Almost There → Keep Flowing → Forgotten Gem → Unfinished Business), picking from the highest-priority non-empty bucket via `pickWeighted`. `continue` eligibility broadened to include `buried` status so Forgotten Gem / Unfinished Business candidates can surface.
+
+**Forgotten Gem falls back to Metacritic ≥85.** Steam positive % + review count aren't on the `Game` type yet (flagged in the session-resume gotchas). When that enrichment lands we can widen the gate. This is a deliberate partial implementation — shipping the engine now unblocks the pill UI and the modal restructure without waiting on enrichment.
+
+**Roll-count bug: fixed by split-counter pattern.** Previously `doRoll` called the store's `incrementReroll` on every invocation, so mode-switch pills (which auto-roll in the new mode) burned toward the 10-per-session cap. Fix: `doRoll` now takes `countAsRoll` (default `true`); mode and energy pills pass `false`; store `incrementReroll` moves to the commit path (`handleLetsGo`) only. The forced-choice gate at roll 10 and the "Roll N" label now read from a local `rollCount` state. Rejected: deleting the 10-roll cap entirely. We want forced-choice to fire when a user legitimately burns 10 *intentional* rerolls, just not from browsing modes.
+
+**Deep Cut mode still in the UI.** Spec said it could be retired (folded into Resume's Unfinished Business / Forgotten Gem buckets). Held until the modal restructure — touching the mode list without updating the landing mode cards causes drift.
+
+---
+
 ## 2026-04-17 — Smart Pick copy locked + "tonight" retired from session copy
 
 **Decision.** Four Smart Pick types ship with 6-line headline pools each, stored in `lib/smartPickCopy.ts`. Selection is hash-based on game name — same game always returns the same headline, different games rotate. The types:

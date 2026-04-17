@@ -3,6 +3,7 @@ import { isSoftIgnored, getSkipWeightMultiplier } from './skipTracking';
 import { getGenreCooldownMultiplier } from './genreCooldown';
 import { isNotInterestedIgnored, isHitAWallSuppressed, getAllSkipReasons } from './skipReasons';
 import { getBehavioralWeight } from './decisionHistory';
+import type { SmartPickType } from './smartPickCopy';
 
 export type RerollMode = 'anything' | 'quick-session' | 'deep-cut' | 'continue' | 'almost-done';
 
@@ -92,11 +93,12 @@ export function getEligibleGames(
         return game.status === 'on-deck' || game.status === 'buried';
       }
       case 'continue': {
-        // Keep Playing = any started game you haven't finished or given up on.
-        // Previous filter required status === 'playing' (manual promotion only),
-        // which excluded the realistic case of started-then-paused games.
-        // Landing copy: "You started five games. We'll tell you which one to finish."
+        // Resume covers all four Smart Pick buckets: Almost There, Keep Flowing,
+        // Forgotten Gem, Unfinished Business. Any game with real hours logged in
+        // a non-terminal status is eligible; the Smart Pick classifier picks the
+        // highest-priority bucket that has candidates.
         // (played/bailed already excluded above — TS has narrowed status accordingly.)
+        if (game.status !== 'playing' && game.status !== 'on-deck' && game.status !== 'buried') return false;
         return game.hoursPlayed >= 1;
       }
       case 'almost-done': {
@@ -357,6 +359,93 @@ export function pickWeighted(
   }
 
   return weighted[weighted.length - 1].game;
+}
+
+// ── Smart Pick classifier (Resume mode) ──────────────────────────
+// Priority chain: first match wins. Returns null for games that don't
+// belong in any Resume bucket.
+//
+// Steam positive % + review count are not on the Game type yet (see
+// docs/session-resume-2026-04-17.md "known gotchas"), so Forgotten Gem
+// gating falls back to Metacritic >= 85. When Steam review enrichment
+// lands on the Game type, extend the Forgotten Gem check here.
+
+export function classifySmartPick(game: Game): SmartPickType | null {
+  const { status, hoursPlayed, hltbMain, metacritic } = game;
+
+  if (
+    hltbMain && hltbMain > 0 &&
+    hoursPlayed / hltbMain >= 0.75 &&
+    (status === 'playing' || status === 'on-deck')
+  ) {
+    return 'almost-there';
+  }
+
+  if (status === 'playing' && hoursPlayed >= 1) {
+    return 'keep-flowing';
+  }
+
+  if (
+    (status === 'on-deck' || status === 'buried') &&
+    hoursPlayed >= 5 &&
+    metacritic != null && metacritic >= 85
+  ) {
+    return 'forgotten-gem';
+  }
+
+  if ((status === 'on-deck' || status === 'buried') && hoursPlayed >= 5) {
+    return 'unfinished-business';
+  }
+
+  return null;
+}
+
+const SMART_PICK_PRIORITY: SmartPickType[] = [
+  'almost-there',
+  'keep-flowing',
+  'forgotten-gem',
+  'unfinished-business',
+];
+
+/**
+ * Pick a Resume game using the Smart Pick priority chain. Groups eligible
+ * games into the four Smart Pick buckets and picks from the highest-priority
+ * non-empty bucket via `pickWeighted`. Returns the picked game and its
+ * sub-type so the UI can render the correct pill + headline.
+ *
+ * Falls back to plain `pickWeighted` across all games if no candidate
+ * classifies — shouldn't happen when called with proper Resume eligibles,
+ * but guards against edge cases (e.g. hoursPlayed rounding).
+ */
+export function pickSmartResume(
+  games: Game[],
+  skippedIds: Set<string> = new Set(),
+  recentPicks: Game[] = [],
+  energy?: EnergyLevel,
+): { game: Game; smartPickType: SmartPickType } | null {
+  if (games.length === 0) return null;
+
+  const buckets: Record<SmartPickType, Game[]> = {
+    'almost-there': [],
+    'keep-flowing': [],
+    'forgotten-gem': [],
+    'unfinished-business': [],
+  };
+
+  for (const game of games) {
+    const type = classifySmartPick(game);
+    if (type) buckets[type].push(game);
+  }
+
+  for (const type of SMART_PICK_PRIORITY) {
+    if (buckets[type].length > 0) {
+      const game = pickWeighted(buckets[type], skippedIds, recentPicks, energy);
+      if (game) return { game, smartPickType: type };
+    }
+  }
+
+  const fallback = pickWeighted(games, skippedIds, recentPicks, energy);
+  return fallback ? { game: fallback, smartPickType: 'unfinished-business' } : null;
 }
 
 /** Simple random pick (kept for backward compatibility) */

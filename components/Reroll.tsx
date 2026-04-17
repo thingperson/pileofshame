@@ -6,7 +6,8 @@ import { useStore } from '@/lib/store';
 import { STATUS_CONFIG, REROLL_MESSAGES, TIME_TIER_CONFIG, MAX_PLAYING_NOW } from '@/lib/constants';
 import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
 import { getGameDescriptor } from '@/lib/descriptors';
-import { REROLL_MODES, RerollMode, EnergyLevel, getDefaultEnergy, getEligibleGames, pickWeighted, getPickReasons } from '@/lib/reroll';
+import { REROLL_MODES, RerollMode, EnergyLevel, getDefaultEnergy, getEligibleGames, pickWeighted, pickSmartResume, getPickReasons } from '@/lib/reroll';
+import { SMART_PICK_LABELS, renderSmartPickHeadline, SmartPickType } from '@/lib/smartPickCopy';
 import { useToast } from './Toast';
 import { trackReroll, trackRerollCommit, trackFirstRoll, trackFirstCommit, trackSampleCompleted } from '@/lib/analytics';
 import { recordSkip } from '@/lib/skipTracking';
@@ -51,6 +52,8 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   const [mode, setMode] = useState<RerollMode>('anything');
   const [moodFilters, setMoodFilters] = useState<MoodTag[]>([]);
   const [currentPick, setCurrentPick] = useState<Game | null>(null);
+  const [smartPickType, setSmartPickType] = useState<SmartPickType | null>(null);
+  const [rollCount, setRollCount] = useState(0);
   const [rolling, setRolling] = useState(false);
   const [showForced, setShowForced] = useState(false);
   const [revealed, setRevealed] = useState(false);
@@ -85,7 +88,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
     setMoodFilters((prev) => (prev.includes(mood) ? [] : [mood]));
   }, []);
 
-  const doRoll = useCallback((overrideMode?: RerollMode) => {
+  const doRoll = useCallback((overrideMode?: RerollMode, countAsRoll: boolean = true) => {
     const rollMode = overrideMode || mode;
     const eligible = getEligibleGames(games, rollMode, platformPreference, moodFilters);
 
@@ -100,7 +103,16 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
       return;
     }
 
-    const pick = pickWeighted(unseenEligible.length > 0 ? unseenEligible : eligible, skippedIds, reroll.lastThreePicks, energy);
+    const pickPool = unseenEligible.length > 0 ? unseenEligible : eligible;
+    let pick: Game | null;
+    let pickedType: SmartPickType | null = null;
+    if (rollMode === 'continue') {
+      const result = pickSmartResume(pickPool, skippedIds, reroll.lastThreePicks, energy);
+      pick = result?.game ?? null;
+      pickedType = result?.smartPickType ?? null;
+    } else {
+      pick = pickWeighted(pickPool, skippedIds, reroll.lastThreePicks, energy);
+    }
     if (!pick) {
       showToast(moodFilters.length > 0
         ? 'No games match that mood. Try a different one.'
@@ -141,9 +153,13 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
     // Track shown game to prevent repetition
     setShownIds((prev) => new Set(prev).add(pick.id));
 
-    incrementReroll();
+    // NOTE: incrementReroll (store) runs only on commit ("Let's go"), not on
+    // rolls. Local rollCount drives the forced-choice gate and "Roll N" label.
+    // Mode / energy / mood-pill switches pass countAsRoll=false so browsing
+    // doesn't burn the 10-roll cap — only explicit Roll / Roll Again counts.
     trackReroll(rollMode);
-    const newCount = reroll.sessionCount + 1;
+    const newCount = countAsRoll ? rollCount + 1 : rollCount;
+    if (countAsRoll) setRollCount(newCount);
 
     // Check for reroll messages
     if (REROLL_MESSAGES[newCount]) {
@@ -156,6 +172,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
 
     setTimeout(() => {
       setCurrentPick(pick);
+      setSmartPickType(pickedType);
       setRolling(false);
       setRevealed(true);
       // Funnel: first-ever roll reveal (once per browser)
@@ -166,7 +183,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
         setTimeout(() => setShowForced(true), 600);
       }
     }, 500);
-  }, [games, mode, moodFilters, currentPick, reroll.sessionCount, incrementReroll, pushLastPick, showToast, skippedIds, shownIds, platformPreference, energy]);
+  }, [games, mode, moodFilters, currentPick, rollCount, pushLastPick, showToast, skippedIds, shownIds, platformPreference, energy]);
 
   const handleLetsGo = useCallback((game: Game) => {
     // Playing Now cap check
@@ -176,6 +193,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
       return;
     }
     updateGame(game.id, { status: 'playing' });
+    incrementReroll();
     trackRerollCommit();
     // Funnel: first-ever commit (once per browser)
     trackFirstCommit();
@@ -263,6 +281,8 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   useEffect(() => {
     if (open) {
       setCurrentPick(null);
+      setSmartPickType(null);
+      setRollCount(0);
       setPostAccept(null);
       setShowForced(false);
       setRevealed(false);
@@ -389,7 +409,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
           </h2>
           {currentPick ? (
             <p className="text-sm text-text-dim mt-1 font-[family-name:var(--font-mono)]">
-              Roll {reroll.sessionCount}
+              Roll {rollCount}
             </p>
           ) : (
             <p className="text-sm text-text-dim mt-1 font-[family-name:var(--font-mono)]">
@@ -496,7 +516,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
               {REROLL_MODES.map(({ mode: m, icon, label }) => (
                 <button
                   key={m}
-                  onClick={() => { setMode(m); setShownIds(new Set()); doRoll(m); }}
+                  onClick={() => { setMode(m); setShownIds(new Set()); doRoll(m, false); }}
                   className={`px-3 py-2 rounded-full text-sm font-medium font-[family-name:var(--font-mono)] transition-all ${
                     mode === m
                       ? 'bg-white/10 text-text-primary'
@@ -513,7 +533,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                   const next = levels[(levels.indexOf(energy) + 1) % levels.length];
                   setEnergy(next);
                   setShownIds(new Set());
-                  doRoll(mode);
+                  doRoll(mode, false);
                 }}
                 className="px-3 py-2 rounded-full text-sm font-medium font-[family-name:var(--font-mono)] text-text-dim hover:text-text-muted hover:bg-white/5 transition-all"
                 title={`Energy: ${energy}. Tap to change.`}
@@ -590,6 +610,32 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
                 <span>{TIME_TIER_CONFIG[currentPick.timeTier].icon} {TIME_TIER_CONFIG[currentPick.timeTier].label}</span>
                 {currentPick.hoursPlayed > 0 && <span>{currentPick.hoursPlayed}h logged</span>}
               </div>
+              {/* Smart Pick pill + headline */}
+              {smartPickType && (() => {
+                const { label, icon } = SMART_PICK_LABELS[smartPickType];
+                const headline = renderSmartPickHeadline(smartPickType, currentPick.name, {
+                  hoursPlayed: currentPick.hoursPlayed,
+                  hltbMain: currentPick.hltbMain,
+                  ratingPct: currentPick.metacritic ?? undefined,
+                });
+                return (
+                  <div className="mt-3">
+                    <span
+                      className="inline-block text-xs font-[family-name:var(--font-mono)] font-medium px-2.5 py-1 rounded-full"
+                      style={{
+                        backgroundColor: 'rgba(167, 139, 250, 0.15)',
+                        color: '#a78bfa',
+                        border: '1px solid rgba(167, 139, 250, 0.35)',
+                      }}
+                    >
+                      🧠 Smart Pick · {icon ? `${icon} ` : ''}{label}
+                    </span>
+                    <p className="text-sm text-text-secondary mt-2 leading-relaxed">
+                      {headline}
+                    </p>
+                  </div>
+                );
+              })()}
               {/* Descriptor */}
               {(() => {
                 const desc = getGameDescriptor(currentPick.name, currentPick.metacritic, currentPick.genres);
@@ -689,7 +735,7 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
               </button>
               <button
                 onClick={() => doRoll()}
-                disabled={reroll.sessionCount >= 10}
+                disabled={rollCount >= 10}
                 className="flex-1 px-3 py-3.5 sm:py-2.5 text-sm font-medium rounded-xl border border-border-subtle text-text-secondary hover:border-accent-purple transition-all disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 🎲 Roll Again
