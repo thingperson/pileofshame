@@ -22,9 +22,13 @@ Always return to these. This is the spine:
 
 ## Primary Tagline (Locked — Apr 17, 2026)
 
-**"Get playing."**
+**"get playing."** (lowercase, with the period)
 
 This is THE tagline. Use it everywhere: page titles, OG metadata, headers, footers, share cards. One message, one voice.
+
+Case matters. The lowercase is intentional — it reads friendlier, more casual, matches the "friend who games, texting you" voice. Do not sentence-case it ("Get playing."). The one exception is the retired-form quote below for historical reference. `<title>` tags and OG alt text also use the lowercase form for consistency; the browser tab will render "Inventory Full - get playing." which is the intended look.
+
+The h1 on the landing page remains "Inventory Full" (the wordmark). "get playing." sits under it as a supporting line, not as a replacement h1.
 
 The earlier "Stop stalling. Get playing." is retired. Reasons (recorded in `docs/DECISIONS.md`, 2026-04-17):
 - The name "Inventory Full" already names the backlog-overload pain; "Stop stalling" restated it and read as scolding.
@@ -49,7 +53,7 @@ Use this order consistently:
 1. **Main promise:** Decide what to play now
 2. **Supporting outcome:** Make ongoing progress on the games you already own
 3. **Differentiator:** Recover more value from your collection
-4. **Tagline:** Get playing.
+4. **Tagline:** get playing.
 
 Starts with immediate user pain, then moves to richer payoff.
 

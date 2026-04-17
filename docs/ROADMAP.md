@@ -1,6 +1,6 @@
 # Inventory Full — Roadmap
 
-**Mission**: Get playing.
+**Mission**: get playing.
 **Core loop**: Import games -> Tell us your mood -> We pick your game -> Track progress -> Celebrate completion.
 **Primary use case**: Mobile companion. Phone in hand, sitting in front of your console or PC. The app offloads decision pressure and gets you in the game. Design for that moment first.
 

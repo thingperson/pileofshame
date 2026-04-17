@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Game } from '@/lib/types';
 import { useStore } from '@/lib/store';
+import { MAX_PLAYING_NOW, MAX_UP_NEXT } from '@/lib/constants';
 import { useToast } from './Toast';
 
 /**
@@ -141,14 +142,20 @@ export default function StalledGameNudge({ games, onTabSwitch }: StalledGameNudg
       // Playing Now cap check
       const { games } = useStore.getState();
       const nowPlayingCount = games.filter((g) => g.status === 'playing').length;
-      if (nowPlayingCount >= 3) {
-        showToast('Playing Now is capped at 3. Finish or shelve something first.');
+      if (nowPlayingCount >= MAX_PLAYING_NOW) {
+        showToast(`Playing Now is capped at ${MAX_PLAYING_NOW}. Finish or shelve something first.`);
         return;
       }
       updateGame(nudgeGame.id, { status: 'playing', updatedAt: new Date().toISOString() });
       showToast(`${nudgeGame.name} → Playing Now ▶️`);
       onTabSwitch?.('now-playing');
     } else if (action === 'on-deck') {
+      const { games } = useStore.getState();
+      const upNextCount = games.filter((g) => g.status === 'on-deck').length;
+      if (upNextCount >= MAX_UP_NEXT) {
+        showToast(`Up Next is full (${MAX_UP_NEXT}). Start or shelve one before queuing more.`);
+        return;
+      }
       updateGame(nudgeGame.id, { status: 'on-deck', updatedAt: new Date().toISOString() });
       showToast(`${nudgeGame.name} → Up Next 🎯`);
       onTabSwitch?.('up-next');

@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'Inventory Full - Get playing.';
+export const alt = 'Inventory Full - get playing.';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -141,7 +141,7 @@ export default async function Image() {
                 flexDirection: 'column',
               }}
             >
-              <span>Get <span style={{ color: '#a78bfa' }}>playing.</span></span>
+              <span>get <span style={{ color: '#a78bfa' }}>playing.</span></span>
             </div>
 
             {/* Subline */}

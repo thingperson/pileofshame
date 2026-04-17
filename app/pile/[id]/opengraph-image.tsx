@@ -134,7 +134,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               INVENTORY FULL
             </div>
             <div style={{ fontSize: '20px', color: '#94a3b8', fontFamily: 'Outfit, sans-serif', fontWeight: 400, display: 'flex', marginTop: '18px' }}>
-              Get playing.
+              get playing.
             </div>
           </div>
 

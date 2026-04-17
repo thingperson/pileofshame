@@ -267,7 +267,7 @@ export default async function PilePage({ params }: { params: Promise<{ id: strin
         {/* Brand footer */}
         <div className="text-center mt-12 pb-8">
           <p className="text-xs text-text-faint font-mono tracking-widest">INVENTORY FULL</p>
-          <p className="text-xs text-text-dim mt-1">Get playing.</p>
+          <p className="text-xs text-text-dim mt-1">get playing.</p>
         </div>
       </div>
     </main>

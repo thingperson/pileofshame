@@ -93,7 +93,7 @@ These are not stylistic preferences. They're downstream of the research above.
 
 **Research says:** clear role division reduces cognitive load. Two short independent clauses = two chunks = low load. Confident framing avoids reactance as long as the surrounding context is voluntary.
 
-**Verdict:** psychologically sound. "Do the playing" reads slightly soft vs "get playing" which has action-verb energy. Both defensible. Preference: "We pick. You get playing." echoes the locked tagline "Get playing." for brand reinforcement.
+**Verdict:** psychologically sound. "Do the playing" reads slightly soft vs "get playing" which has action-verb energy. Both defensible. Preference: "We pick. You get playing." echoes the locked tagline "get playing." for brand reinforcement.
 
 ### "Pile of shame" language
 

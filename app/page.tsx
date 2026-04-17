@@ -5,7 +5,7 @@ import { useStore } from '@/lib/store';
 import { Game } from '@/lib/types';
 import { RerollMode } from '@/lib/reroll';
 import { sortBestForYou } from '@/lib/smartSort';
-import { STATUS_CONFIG } from '@/lib/constants';
+import { STATUS_CONFIG, MAX_PLAYING_NOW, MAX_UP_NEXT } from '@/lib/constants';
 import TabNav, { TabId, TABS } from '@/components/TabNav';
 import GameCard from '@/components/GameCard';
 import GridCard from '@/components/GridCard';
@@ -100,12 +100,8 @@ function InlineSearch({ onAddManual }: { onAddManual: () => void }) {
   );
 }
 
-// ── Up Next Cap Constant ───────────────────────────────────────────
-
-const UP_NEXT_CAP = 5;
-const NOW_PLAYING_CAP = 3;
-
 // ── Main App ───────────────────────────────────────────────────────
+// Shelf caps are centralized in lib/constants.ts (MAX_PLAYING_NOW, MAX_UP_NEXT).
 
 function AppContent() {
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -273,8 +269,8 @@ function AppContent() {
     // Up Next cap check
     if (next.status === 'on-deck') {
       const upNextCount = games.filter((g) => g.status === 'on-deck').length;
-      if (upNextCount >= UP_NEXT_CAP) {
-        showToast(`Up Next is capped at ${UP_NEXT_CAP}. These are games you're actually going to play next. Move something back first.`);
+      if (upNextCount >= MAX_UP_NEXT) {
+        showToast(`Up Next is capped at ${MAX_UP_NEXT}. These are games you're actually going to play next. Move something back first.`);
         return;
       }
     }
@@ -282,8 +278,8 @@ function AppContent() {
     // Playing Now cap check
     if (next.status === 'playing') {
       const nowPlayingCount = games.filter((g) => g.status === 'playing').length;
-      if (nowPlayingCount >= NOW_PLAYING_CAP) {
-        showToast(`Playing Now is capped at ${NOW_PLAYING_CAP}. Finish or shelve something first.`);
+      if (nowPlayingCount >= MAX_PLAYING_NOW) {
+        showToast(`Playing Now is capped at ${MAX_PLAYING_NOW}. Finish or shelve something first.`);
         return;
       }
     }
@@ -562,7 +558,7 @@ function AppContent() {
               Inventory Full
             </h1>
             <p className="text-xs text-text-faint mt-0.5 font-[family-name:var(--font-mono)]">
-              Get playing.
+              get playing.
             </p>
           </div>
           <div className="flex items-center gap-1 sm:gap-1.5">
@@ -861,16 +857,16 @@ function AppContent() {
           )}
 
           {/* Up Next cap message */}
-          {activeTab === 'up-next' && tabGames.length >= UP_NEXT_CAP && (
+          {activeTab === 'up-next' && tabGames.length >= MAX_UP_NEXT && (
             <div className="mb-3 px-3 py-2 rounded-lg text-xs text-text-muted font-[family-name:var(--font-mono)]" style={{ backgroundColor: 'rgba(56, 189, 248, 0.06)' }}>
-              Up Next is capped at {UP_NEXT_CAP}. These are games you&apos;re actually going to play, not a second backlog. Move something back to make room.
+              Up Next is capped at {MAX_UP_NEXT}. These are games you&apos;re actually going to play, not a second backlog. Move something back to make room.
             </div>
           )}
 
           {/* Playing Now cap message */}
-          {activeTab === 'now-playing' && tabGames.length >= NOW_PLAYING_CAP && (
+          {activeTab === 'now-playing' && tabGames.length >= MAX_PLAYING_NOW && (
             <div className="mb-3 px-3 py-2 rounded-lg text-xs text-text-muted font-[family-name:var(--font-mono)]" style={{ backgroundColor: 'rgba(245, 158, 11, 0.06)' }}>
-              Playing Now is capped at {NOW_PLAYING_CAP}. The constraint is the feature. Finish or shelve something to make room.
+              Playing Now is capped at {MAX_PLAYING_NOW}. The constraint is the feature. Finish or shelve something to make room.
             </div>
           )}
 

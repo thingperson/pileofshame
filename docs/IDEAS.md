@@ -597,7 +597,7 @@ Discord bot requires bot application approval for servers with 100+ members. Web
 
 ### Locked — shipped and consistent
 
-- **"Get playing."** — Primary tagline. Everywhere. Locked Apr 17 (replaces "Stop stalling. Get playing." from Apr 8 — see `docs/DECISIONS.md`).
+- **"get playing."** — Primary tagline. Lowercase with the period. Everywhere. Locked Apr 17 (replaces "Stop stalling. Get playing." from Apr 8 — see `docs/DECISIONS.md`).
 - **"Your backlog's not gonna play itself."** — Subhead / supporting line.
 - **"Less shame. More game."** — Share card / celebration CTA headline.
 - **"Your pile won't clear itself. That's where we come in."** — Share card CTA subhead.

@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Game } from '@/lib/types';
 import { useStore } from '@/lib/store';
+import { MAX_PLAYING_NOW } from '@/lib/constants';
 import { useToast } from './Toast';
 
 /**
@@ -141,8 +142,8 @@ export default function FinishCheckNudge({ games, onTabSwitch }: FinishCheckNudg
     // Playing Now cap check
     const { games } = useStore.getState();
     const nowPlayingCount = games.filter((g) => g.status === 'playing').length;
-    if (nowPlayingCount >= 3) {
-      showToast('Playing Now is capped at 3. Finish or shelve something first.');
+    if (nowPlayingCount >= MAX_PLAYING_NOW) {
+      showToast(`Playing Now is capped at ${MAX_PLAYING_NOW}. Finish or shelve something first.`);
       return;
     }
     // Move to Playing Now to encourage finishing

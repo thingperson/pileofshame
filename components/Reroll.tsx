@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Game, MoodTag } from '@/lib/types';
 import { useStore } from '@/lib/store';
-import { STATUS_CONFIG, REROLL_MESSAGES, TIME_TIER_CONFIG } from '@/lib/constants';
+import { STATUS_CONFIG, REROLL_MESSAGES, TIME_TIER_CONFIG, MAX_PLAYING_NOW } from '@/lib/constants';
 import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
 import { getGameDescriptor } from '@/lib/descriptors';
 import { REROLL_MODES, RerollMode, EnergyLevel, getDefaultEnergy, getEligibleGames, pickWeighted, getPickReasons } from '@/lib/reroll';
@@ -165,8 +165,8 @@ export default function Reroll({ open, onClose, initialMode }: RerollProps) {
   const handleLetsGo = useCallback((game: Game) => {
     // Playing Now cap check
     const nowPlayingCount = games.filter((g) => g.status === 'playing').length;
-    if (nowPlayingCount >= 3) {
-      showToast('Playing Now is capped at 3. Finish or shelve something first.');
+    if (nowPlayingCount >= MAX_PLAYING_NOW) {
+      showToast(`Playing Now is capped at ${MAX_PLAYING_NOW}. Finish or shelve something first.`);
       return;
     }
     updateGame(game.id, { status: 'playing' });

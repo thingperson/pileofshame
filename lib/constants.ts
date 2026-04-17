@@ -50,6 +50,14 @@ export const STATUS_CONFIG: Record<GameStatus, {
 
 export const STATUS_CYCLE: GameStatus[] = ['buried', 'on-deck', 'playing', 'played'];
 
+/**
+ * Shelf caps. Playing Now is strict (working-memory ceiling, ~3 concurrent
+ * focus items per user-psychology.md). Up Next is more forgiving but still
+ * bounded so the queue doesn't drift into a second backlog.
+ */
+export const MAX_PLAYING_NOW = 3;
+export const MAX_UP_NEXT = 8;
+
 export const SOURCE_ICONS: Record<GameSource, string> = {
   steam: '🟦',
   playstation: '🔵',

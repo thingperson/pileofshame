@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Game, GameStatus } from '@/lib/types';
 import { useStore } from '@/lib/store';
+import { MAX_PLAYING_NOW, MAX_UP_NEXT } from '@/lib/constants';
 import { useToast } from './Toast';
 import { trackJust5Min } from '@/lib/analytics';
 
@@ -103,17 +104,24 @@ export default function JustFiveMinutes({ games }: JustFiveMinutesProps) {
       case 'playing': {
         const { games: allGames } = useStore.getState();
         const nowPlayingCount = allGames.filter((g) => g.status === 'playing').length;
-        if (nowPlayingCount >= 3) {
-          showToast('Playing Now is capped at 3. Finish or shelve something first.');
+        if (nowPlayingCount >= MAX_PLAYING_NOW) {
+          showToast(`Playing Now is capped at ${MAX_PLAYING_NOW}. Finish or shelve something first.`);
           return;
         }
         updateGame(game.id, { status: 'playing' as GameStatus });
         showToast(`🙌 ${game.name} → Playing Now. You tried it, you liked it, you're in.`);
       }
         break;
-      case 'on-deck':
+      case 'on-deck': {
+        const { games: allGames } = useStore.getState();
+        const upNextCount = allGames.filter((g) => g.status === 'on-deck').length;
+        if (upNextCount >= MAX_UP_NEXT) {
+          showToast(`Up Next is full (${MAX_UP_NEXT}). Start or shelve one before queuing more.`);
+          return;
+        }
         updateGame(game.id, { status: 'on-deck' as GameStatus });
         showToast(`🙌 ${game.name} → Up Next. Tried it, shelved it, you know exactly when you'll want it.`);
+      }
         break;
       case 'pile':
         showToast(`🙌 ${game.name} stays in The Pile. You tried it. Now you know what it feels like. That's not nothing.`);

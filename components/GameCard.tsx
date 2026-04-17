@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Game, GameStatus } from '@/lib/types';
 import { useStore } from '@/lib/store';
-import { STATUS_CONFIG, SOURCE_LABELS } from '@/lib/constants';
+import { STATUS_CONFIG, SOURCE_LABELS, MAX_PLAYING_NOW, MAX_UP_NEXT } from '@/lib/constants';
 import { useToast } from './Toast';
 import { getGameDescriptor } from '@/lib/descriptors';
 import { MOOD_TAG_CONFIG, getPlaytimeRoast } from '@/lib/enrichment';
@@ -402,6 +402,25 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
       return;
     }
 
+    // Shelf caps: block the transition before it happens so the cycleStatus
+    // call stays a pure state machine. Caller owns the UX for "shelf is full."
+    if (next === 'on-deck' || next === 'playing') {
+      const { games } = useStore.getState();
+      if (next === 'on-deck') {
+        const upNextCount = games.filter((g) => g.status === 'on-deck').length;
+        if (upNextCount >= MAX_UP_NEXT) {
+          showToast(`Up Next is full (${MAX_UP_NEXT}). Start something or shelve one before queuing more.`);
+          return;
+        }
+      } else if (next === 'playing') {
+        const nowPlayingCount = games.filter((g) => g.status === 'playing').length;
+        if (nowPlayingCount >= MAX_PLAYING_NOW) {
+          showToast(`Playing Now is capped at ${MAX_PLAYING_NOW}. Finish or shelve something first.`);
+          return;
+        }
+      }
+    }
+
     const newStatus = cycleStatus(game.id);
     if (newStatus) {
       trackStatusChange(game.status, newStatus);
@@ -517,8 +536,8 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
   const handlePlayAgain = useCallback(() => {
     const { games } = useStore.getState();
     const nowPlayingCount = games.filter((g) => g.status === 'playing').length;
-    if (nowPlayingCount >= 3) {
-      showToast('Playing Now is capped at 3. Finish or shelve something first.');
+    if (nowPlayingCount >= MAX_PLAYING_NOW) {
+      showToast(`Playing Now is capped at ${MAX_PLAYING_NOW}. Finish or shelve something first.`);
       return;
     }
     playAgain(game.id);
@@ -527,6 +546,12 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
   }, [game.id, playAgain, showToast, onStatusChange]);
 
   const handleNewGamePlus = useCallback(() => {
+    const { games } = useStore.getState();
+    const upNextCount = games.filter((g) => g.status === 'on-deck').length;
+    if (upNextCount >= MAX_UP_NEXT) {
+      showToast(`Up Next is full (${MAX_UP_NEXT}). Start or shelve one before queuing more.`);
+      return;
+    }
     newGamePlus(game.id);
     showToast(`${game.name} → New Game+ 🎯`);
     onStatusChange?.('on-deck');

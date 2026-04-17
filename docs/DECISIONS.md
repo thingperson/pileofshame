@@ -15,9 +15,9 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
-## 2026-04-17 — Tagline retagged: "Get playing." (supersedes "Stop stalling. Get playing.")
+## 2026-04-17 — Tagline retagged: "get playing." (supersedes "Stop stalling. Get playing.")
 
-**Decision.** The primary tagline is now "Get playing." alone. Everywhere the longer "Stop stalling. Get playing." appeared — page titles, OG metadata, landing bottom CTA, about page, email templates, pile + clear share pages, root OG card — is updated to the short form. Supersedes the Apr 8 lock.
+**Decision.** The primary tagline is now "get playing." (lowercase, with the period) alone. Everywhere the longer "Stop stalling. Get playing." appeared — page titles, OG metadata, landing bottom CTA, about page, email templates, pile + clear share pages, root OG card — is updated to the short form. Case is intentional: lowercase reads friendlier and matches the app's casual voice. The landing page h1 remains "Inventory Full"; "get playing." sits under it as a supporting line, not as a replacement h1. Supersedes the Apr 8 lock.
 
 **Why.**
 - **Redundant pain-naming.** The product name "Inventory Full" already names the backlog-overload pain. "Stop stalling" restated it and landed as scolding on a second pass.
@@ -28,9 +28,10 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 **Rejected.**
 - **Keep "Stop stalling. Get playing." everywhere.** The settled choice for 9 days, but the reasons above compounded.
 - **Keep both, split by surface** (short form in-app, long form on landing). Rejected — two taglines is the problem the Apr 8 lock solved. Splitting by surface re-creates the drift.
-- **Alternative rewrites** ("Less pile, more play", "Your pile, unlocked", etc.). None beat "Get playing." for brevity, clarity, or confidence. Stopped iterating when the short form tested best against the voice/psychology rules.
+- **Alternative rewrites** ("Less pile, more play", "Your pile, unlocked", etc.). None beat "get playing." for brevity, clarity, or confidence. Stopped iterating when the short form tested best against the voice/psychology rules.
+- **Sentence case "Get playing."** Considered and held for the first push on Apr 17, then lowercased later the same day. Lowercase reads friendlier, matches the conversational voice, and visually signals "less formal" without trying hard. Consistency point: the lowercase is the ONLY correct form.
 
-**How to apply this.** Any surface that needs a tagline uses "Get playing." If a longer brand line is needed (rare), pull a supporting line from `.claude/rules/brand-messaging.md` ("Your backlog's not gonna play itself." / "Less shame. More game.") — those are subheads, not alternative taglines.
+**How to apply this.** Any surface that needs a tagline uses "get playing." (lowercase, with the period). If a longer brand line is needed (rare), pull a supporting line from `.claude/rules/brand-messaging.md` ("Your backlog's not gonna play itself." / "Less shame. More game.") — those are subheads, not alternative taglines.
 
 **Evidence.** Sweep across `app/layout.tsx`, `app/page.tsx`, `app/about/page.tsx`, `app/opengraph-image.tsx`, `app/clear/[id]/{page,opengraph-image}.tsx`, `app/pile/[id]/{page,opengraph-image}.tsx`, `components/LandingPage.tsx`, `docs/email-templates/magic-link.html`, plus rule docs `.claude/rules/brand-messaging.md` and `.claude/rules/user-psychology.md`, and roadmap/ideas docs. Commit landing 2026-04-17.
 
