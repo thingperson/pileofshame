@@ -4,30 +4,31 @@
 
 ---
 
-## What shipped today (6 commits on main)
+## What shipped today (10 commits on main)
 
 1. **`3574659` infra** — lean AGENTS.md, new `.claude/rules/token-efficiency.md`, SessionStart hook printing date + path to this doc.
 2. **`8bb0c0f` tagline retire + fixes** — "Stop stalling. Get playing." → "Get playing." sweep; GameCard detail-view art `object-cover` → `object-contain` fix; Playnite "Cancel" → "Back" on select step; Steam Wishlist copy stripped of notification promise.
-3. **`d999ec0` lowercase tagline + cap** — "Get playing." → "get playing." (second sweep); Up Next cap raised from 5 → 8 and centralized in `lib/constants.ts` as `MAX_UP_NEXT`; `MAX_PLAYING_NOW = 3` now enforced at every transition path (GameCard cycle, nudges, Reroll commit, Just 5 Mins triage, New Game+).
-4. **`b609248` tier 1 mobile** — light mode CSS vars `!important`-ified (was rendering dark grey on mobile); cozy theme's invalid `.theme-cozy body` selector removed and `::before` ambient gradient disabled (restored beige); feedback pill auto-hides when any `aria-modal="true"` dialog is open; skip-feedback popup killed 8s auto-dismiss, capped at 2 shows per modal-open, added × dismiss; notes indicator now persistent ("Notes" label left, "auto-saves"/"saved ✓" right); list-view status badge hidden on mobile collapsed row (still shown when expanded); SettingsMenu "Restore Backup" emoji 📥 → 🔄.
-5. **`6e879c9` copy + icons + descriptors** — "tonight" → "today" sweep across 11 sites; favicon rescaled (46% → 88%+ fill for 192/512, 67% → 76% for 256); score-tier descriptor pool 3→7 per tier (27→63 total); genre fallback pool 1→4 per genre (14→56 total, hash-selected per game name); `.claude/settings.json` allowlist added 12 read-only Claude Preview MCP tools.
-6. **`4e92914` Smart Pick copy locked** — `lib/smartPickCopy.ts` with 24 approved headlines across 4 Smart Pick types, DECISIONS entry.
-9. **`(pending)` Modal restructure + Resume rename + Deep Cut/Almost Done retirement** — `lib/reroll.ts` shrinks `REROLL_MODES` from 5 to 3 (Anything / Quick Session / Resume — internal key for Resume stays `continue` for persisted state continuity). `case 'deep-cut'` and `case 'almost-done'` eligibility blocks deleted; both folded into Resume's Smart Pick buckets already. `components/Reroll.tsx` picker rewritten: two top CTAs (🎲 Anything + ⚡ Just 5 mins), two collapsible sections below — "More ways to play" (Quick Session + Resume, rolls on click) and "Vibes" (mood chips). `components/JustFiveMinutes.tsx` now `forwardRef` + `hideButton`; `app/page.tsx` mounts it hidden, passes `onJustFiveMinutes` callback to `<Reroll>` that closes the modal and calls `justFiveRef.current.startSession()`. Retired the drop-pill mode shortcut strip under the hero button on the library page (Sub Shuffle stays — it's a separate GP/PS+ catalog affordance). Hero button now opens the modal picker (no auto-roll). Landing + about pick-mode grids go from 5 → 3 cards. HelpModal mode descriptions rewritten. `timeTier === 'deep-cut'` (game-length classification) is unrelated and stays.
-
-8. **`0910f54` Tab-follow flash + row pulse + Smart Pick trigger-pill styling** — `app/globals.css` gains `tab-flash` (1s underline glow) and `row-pulse` (1.5s purple ring). `app/page.tsx` adds `flashingTab` / `recentlyMovedId` state + `triggerTabFollow(targetTab, gameId)` helper, wired to `moveGameForward`, `moveGameBack`, and a new window event listener. `components/GameCard.tsx` broadcasts a `gp-status-change` CustomEvent from every status transition — this covers GameCard instances rendered inside `GameDetailModal` (mounted from `GridCard`) that don't thread the prop back to page state. In the Reroll result card, the Smart Pick trigger reason now leads the "Why this one" list with a purple-tinted pill + 2px accent-purple left border; secondary reasons (Metacritic, mood) stay unstyled.
-
-7. **`b6f4f8f` Smart Pick reroll engine + pill + roll-count fix** — `lib/reroll.ts` gains `classifySmartPick` + `pickSmartResume` (priority: Almost There → Keep Flowing → Forgotten Gem → Unfinished Business); `continue` eligibility broadened to cover buried status. `components/Reroll.tsx` renders a purple-tinted Smart Pick pill + rotating headline when the pick is from Resume mode. Roll-count bug fixed: store `incrementReroll` now fires only on commit ("Let's go"); local `rollCount` state drives the forced-choice gate and "Roll N" label; mode/energy switches pass `countAsRoll=false` so browsing doesn't burn the 10-roll cap. Forgotten Gem falls back to Metacritic ≥85 pending Steam review enrichment on the `Game` type.
+3. **`d999ec0` lowercase tagline + cap** — "Get playing." → "get playing." (second sweep); Up Next cap raised from 5 → 8 and centralized in `lib/constants.ts` as `MAX_UP_NEXT`; `MAX_PLAYING_NOW = 3` now enforced at every transition path.
+4. **`b609248` tier 1 mobile** — light mode CSS vars `!important`-ified; cozy theme ambient gradient fix; feedback pill auto-hides over modals; skip-feedback popup capped at 2 shows + × dismiss; notes indicator persistent; list-view status badge hidden on mobile collapsed row; SettingsMenu emoji 📥 → 🔄.
+5. **`6e879c9` copy + icons + descriptors** — "tonight" → "today" sweep; favicon rescaled (88%+ fill); score-tier descriptor pool 3→7 per tier; genre fallback pool 1→4 per genre; Claude Preview MCP allowlist.
+6. **`4e92914` Smart Pick copy locked** — `lib/smartPickCopy.ts` with 24 approved headlines across 4 Smart Pick types.
+7. **`b6f4f8f` Smart Pick reroll engine + pill + roll-count fix** — `lib/reroll.ts` gains `classifySmartPick` + `pickSmartResume` (priority: Almost There → Keep Flowing → Forgotten Gem → Unfinished Business); `continue` eligibility broadened to cover buried. `components/Reroll.tsx` renders Smart Pick pill + rotating headline for Resume mode. Store `incrementReroll` moves to commit path only; local `rollCount` drives forced-choice; mode/energy switches pass `countAsRoll=false`. Forgotten Gem falls back to Metacritic ≥85 pending Steam review enrichment on the `Game` type.
+8. **`0910f54` Tab-follow flash + row pulse + Smart Pick trigger-pill styling** — `app/globals.css` gains `tab-flash` (1s underline) and `row-pulse` (1.5s purple ring). `app/page.tsx` adds `flashingTab` / `recentlyMovedId` state + `triggerTabFollow(targetTab, gameId)` helper. `components/GameCard.tsx` broadcasts a `gp-status-change` CustomEvent from every status transition so GameCard instances inside `GameDetailModal` (mounted from `GridCard`) propagate without prop threading. Smart Pick trigger reason leads "Why this one" with purple-tinted pill + 2px accent-purple left border; secondary reasons unstyled.
+9. **`f977182` SSR fix + "Tuesday night" sweep** — `components/StalledGameNudge.tsx` guards `sessionStorage` / `localStorage` with `typeof window` check (was throwing `ReferenceError` on every SSR pass). Last "Tuesday night" line in 50-59 score-tier pool changed to "midweek".
+10. **`11ff302` Modal restructure + Resume rename + Deep Cut/Almost Done retirement** — `lib/reroll.ts` shrinks `REROLL_MODES` from 5 to 3 (Anything / Quick Session / Resume; internal key for Resume stays `continue`). `case 'deep-cut'` and `case 'almost-done'` eligibility blocks deleted (both folded into Resume's Smart Pick buckets). `components/Reroll.tsx` picker rewritten: two top CTAs (🎲 Anything + ⚡ Just 5 mins), two collapsible sections ("More ways to play": Quick Session + Resume; "Vibes": mood chips). Modes roll on click; no separate Roll button. `components/JustFiveMinutes.tsx` now `forwardRef` + `hideButton`; page.tsx mounts it hidden, passes `onJustFiveMinutes` callback to `<Reroll>` that closes the modal and calls `justFiveRef.current.startSession()`. Drop-pill mode shortcut strip retires (Sub Shuffle stays). Hero button opens picker (no auto-roll). Landing + about pick-mode grids 5 → 3 cards. HelpModal mode descriptions rewritten. `timeTier === 'deep-cut'` (game length) is unrelated and stays.
 
 ---
 
-## What's in flight (aligned, not yet built)
+## Next up — Tier 2 / Tier 3 mobile work
 
-### The reroll redesign + tab-follow fix — **in flight**
+Wordmark is NOT a blocker for this tier (Brady clarified 2026-04-17 ~3:45pm). Placeholder space is fine; wordmark slots in when it lands. Pick any order; each is a standalone commit.
 
-**Smart Pick engine / pill / roll-count + trigger-pill styling + tab-follow** — **SHIPPED** (see commits #7 and #8 above).
-**Modal layout restructure + Resume rename + Deep Cut/Almost Done retirement** — **SHIPPED** (see commit #9 above). Two CTAs, two collapsible sections, picker opens on hero click (no auto-roll). `continue` key internal only; user-facing label is "Resume" with ➡️.
+1. **Header declutter on mobile** — import + stats icons + search + sign-in collapse into the settings gear on mobile. Header component lives at `components/Header.tsx` (verify path). Desktop layout stays unchanged.
+2. **Tabs styled as proper tab chrome, not floating text** — `components/TabNav.tsx`. Currently the tabs have subtle bg + inset underline. Design direction: full tab-bar chrome (connected row, clearer selected affordance). Match the Ori-mobile screenshot reference (`notes/feedback-inbox/raw/`).
+3. **Sample-library dismiss banner hidden on mobile** — `components/SampleImportNudge.tsx` or similar. Hide on `< sm` breakpoint.
+4. **Game detail view rework on mobile** — `components/GameDetailModal.tsx` + inner `<GameCard forceExpanded>`. Mobile spec: (a) swap title/score positions so title leads and "Steam · 88" sits below; (b) storyline content tap-to-reveal under a "Storyline" label instead of always-visible; (c) elevate the purple curated-descriptor quote above the description. Screenshot reference: Ori-mobile in `notes/feedback-inbox/raw/`.
 
-**Tab-follow UX fix** — **SHIPPED** (see commit #8 above). Key wrinkle discovered and solved: GameCard instances rendered inside `GameDetailModal` (mounted by `GridCard`) don't have the `onStatusChange` prop wired to page-level state, so grid-view status changes silently broke the tab-follow. Fix was to dispatch a `gp-status-change` CustomEvent from every `GameCard.handleStatusClick`; `app/page.tsx` adds a single window listener that triggers tab-follow regardless of render context. Keeps existing `onStatusChange` prop for explicit parent wiring when needed, but the event covers the cross-context case.
+The "drop pill mode shortcuts under reroll on mobile" item is already covered by the modal restructure (commit #10) — drop from this list.
 
 ### Content / design work parked
 
@@ -47,34 +48,23 @@ Runbook at `docs/mcp-install-2026-04-17.md`. All three remote HTTP with OAuth �
 
 Brady will install when he has the appetite.
 
-### Tier 2 / Tier 3 mobile work (Brady's larger design list)
-
-- Header declutter on mobile (import + stats icons + search + sign-in into settings gear)
-- Drop pill mode shortcuts under reroll on mobile (covered by modal restructure above)
-- Tabs styled as proper tab chrome, not "floating text"
-- Sample-library dismiss banner hidden on mobile
-- Game detail view rework: title swap position with "Steam - 88" on mobile, story tap-to-reveal under "Storyline" label, elevate purple quote above description
-- Ori-mobile screenshot in `notes/feedback-inbox/raw/` — detail-view typography spec reference
-
-Brady clarified 2026-04-17 ~3:45pm: wordmark is NOT a blocker for this tier. Placeholder space is good enough; wordmark slots in when it lands. So Tier 2/3 mobile is cleared to start after the modal restructure ships.
-
 ---
 
 ## Open decisions for next session
 
-1. Reroll engine build approach — one commit or staged (engine → pill UI → modal layout)?
-2. Wordmark asset pipeline — when Brady exports, where does it live (`public/` for raster, or `components/Wordmark.tsx` if SVG)?
-3. Completion share-card v2 — ship with wordmark or independently?
-4. Stat-fallback copy for the share card when user ≥ HLTB hours — "X hours invested" or no stat?
+1. Wordmark asset pipeline — when Brady exports, where does it live (`public/` for raster, or `components/Wordmark.tsx` if SVG)?
+2. Completion share-card v2 — ship with wordmark or independently?
+3. Stat-fallback copy for the share card when user ≥ HLTB hours — "X hours invested" or no stat?
+4. Sub Shuffle's home — lives alone in the retired drop-pill strip now. Candidate for moving into the settings gear or the Reroll modal's "More ways to play" dropdown later. Not urgent.
 
 ---
 
 ## Known gotchas (active)
 
-- **Mode/sub-mode clicks burn rolls.** Fixed in commit #7. Mode/energy switches now pass `countAsRoll=false`; only explicit Roll / Roll Again bumps the counter.
-- **Smart Pick selection is status-driven, not recency-driven.** We don't have a reliable `lastPlayedAt` across Steam/Xbox/PSN. Status (`playing` vs `on-deck` vs `buried`) is the proxy. Good enough; flag if Brady wants true recency later.
-- **Steam positive % + review count** is in RAWG/Steam enrichment but confirm the field names used in `Game` type before wiring Forgotten Gem gating. Fallback to Metacritic if Steam data missing.
-- **Modal UI restructure touches landing + about mode cards** — landing currently shows 5 mode cards; new design collapses to ~3. Don't restructure the modal without updating landing in the same commit.
+- **Smart Pick selection is status-driven, not recency-driven.** We don't have a reliable `lastPlayedAt` across Steam/Xbox/PSN. Status (`playing` vs `on-deck` vs `buried`) is the proxy. Flag if Brady wants true recency later.
+- **Steam positive % + review count** not yet on the `Game` type — Forgotten Gem classification falls back to Metacritic ≥85. When the enrichment lands, widen the gate in `lib/reroll.ts` `classifySmartPick`.
+- **FinishCheckNudge has the same SSR bug** StalledGameNudge had (fixed in commit #9). A chip was spawned as a side task to fix it separately. If that task didn't run, do the same `typeof window` guard pattern around lines 40-46.
+- **Spawned-task worktrees at `.claude/worktrees/*`** can show up as untracked/embedded-git warnings. Don't `git add` them; they live outside the main repo's index.
 
 ---
 
