@@ -4,7 +4,7 @@
 
 ---
 
-## What shipped today (10 commits on main)
+## What shipped today (11 commits on main)
 
 1. **`3574659` infra** — lean AGENTS.md, new `.claude/rules/token-efficiency.md`, SessionStart hook printing date + path to this doc.
 2. **`8bb0c0f` tagline retire + fixes** — "Stop stalling. Get playing." → "Get playing." sweep; GameCard detail-view art `object-cover` → `object-contain` fix; Playnite "Cancel" → "Back" on select step; Steam Wishlist copy stripped of notification promise.
@@ -16,6 +16,7 @@
 8. **`0910f54` Tab-follow flash + row pulse + Smart Pick trigger-pill styling** — `app/globals.css` gains `tab-flash` (1s underline) and `row-pulse` (1.5s purple ring). `app/page.tsx` adds `flashingTab` / `recentlyMovedId` state + `triggerTabFollow(targetTab, gameId)` helper. `components/GameCard.tsx` broadcasts a `gp-status-change` CustomEvent from every status transition so GameCard instances inside `GameDetailModal` (mounted from `GridCard`) propagate without prop threading. Smart Pick trigger reason leads "Why this one" with purple-tinted pill + 2px accent-purple left border; secondary reasons unstyled.
 9. **`f977182` SSR fix + "Tuesday night" sweep** — `components/StalledGameNudge.tsx` guards `sessionStorage` / `localStorage` with `typeof window` check (was throwing `ReferenceError` on every SSR pass). Last "Tuesday night" line in 50-59 score-tier pool changed to "midweek".
 10. **`11ff302` Modal restructure + Resume rename + Deep Cut/Almost Done retirement** — `lib/reroll.ts` shrinks `REROLL_MODES` from 5 to 3 (Anything / Quick Session / Resume; internal key for Resume stays `continue`). `case 'deep-cut'` and `case 'almost-done'` eligibility blocks deleted (both folded into Resume's Smart Pick buckets). `components/Reroll.tsx` picker rewritten: two top CTAs (🎲 Anything + ⚡ Just 5 mins), two collapsible sections ("More ways to play": Quick Session + Resume; "Vibes": mood chips). Modes roll on click; no separate Roll button. `components/JustFiveMinutes.tsx` now `forwardRef` + `hideButton`; page.tsx mounts it hidden, passes `onJustFiveMinutes` callback to `<Reroll>` that closes the modal and calls `justFiveRef.current.startSession()`. Drop-pill mode shortcut strip retires (Sub Shuffle stays). Hero button opens picker (no auto-roll). Landing + about pick-mode grids 5 → 3 cards. HelpModal mode descriptions rewritten. `timeTier === 'deep-cut'` (game length) is unrelated and stays.
+11. **`4cf2cd7` FinishCheckNudge SSR fix** — sibling of #9; same `typeof window` guard pattern for `sessionStorage` / `localStorage` accessors. Landed via spawned side-task.
 
 ---
 
@@ -63,7 +64,7 @@ Brady will install when he has the appetite.
 
 - **Smart Pick selection is status-driven, not recency-driven.** We don't have a reliable `lastPlayedAt` across Steam/Xbox/PSN. Status (`playing` vs `on-deck` vs `buried`) is the proxy. Flag if Brady wants true recency later.
 - **Steam positive % + review count** not yet on the `Game` type — Forgotten Gem classification falls back to Metacritic ≥85. When the enrichment lands, widen the gate in `lib/reroll.ts` `classifySmartPick`.
-- **FinishCheckNudge has the same SSR bug** StalledGameNudge had (fixed in commit #9). A chip was spawned as a side task to fix it separately. If that task didn't run, do the same `typeof window` guard pattern around lines 40-46.
+- **SSR guards in other nudges/components** — StalledGameNudge (#9) and FinishCheckNudge (`4cf2cd7`) both had unguarded `sessionStorage` / `localStorage` at module scope. Pattern worth checking for in any new `Nudge`-style component: wrap with `if (typeof window === 'undefined') return ...`.
 - **Spawned-task worktrees at `.claude/worktrees/*`** can show up as untracked/embedded-git warnings. Don't `git add` them; they live outside the main repo's index.
 
 ---
