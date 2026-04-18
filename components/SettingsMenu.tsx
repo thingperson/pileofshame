@@ -7,6 +7,7 @@ import { downloadBackup, readBackupFile } from '@/lib/backup';
 import { enrichBatch } from '@/lib/enrichGame';
 import { trackThemeSession } from '@/lib/archetypes';
 import { useToast } from './Toast';
+import AuthButton from './AuthButton';
 
 // Capture the browser's install prompt event globally
 let deferredInstallPrompt: Event & { prompt?: () => Promise<void>; userChoice?: Promise<{ outcome: string }> } | null = null;
@@ -18,7 +19,12 @@ if (typeof window !== 'undefined') {
   });
 }
 
-export default function SettingsMenu() {
+interface SettingsMenuProps {
+  onOpenImport?: () => void;
+  onOpenSearch?: () => void;
+}
+
+export default function SettingsMenu({ onOpenImport, onOpenSearch }: SettingsMenuProps = {}) {
   const [open, setOpen] = useState(false);
   const [canInstall, setCanInstall] = useState(false);
   const [confirmImport, setConfirmImport] = useState(false);
@@ -276,6 +282,39 @@ export default function SettingsMenu() {
               </div>
             ) : !confirmImport ? (
               <>
+                {/* Mobile quick actions — collapsed from header on small screens */}
+                {(onOpenImport || onOpenSearch) && (
+                  <div className="sm:hidden px-1 pb-1 space-y-0.5">
+                    {onOpenSearch && (
+                      <button
+                        onClick={() => { onOpenSearch(); setOpen(false); }}
+                        className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors flex items-center gap-2"
+                      >
+                        <span>🔍</span> Add a game
+                      </button>
+                    )}
+                    {onOpenImport && (
+                      <button
+                        onClick={() => { onOpenImport(); setOpen(false); }}
+                        className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors flex items-center gap-2"
+                      >
+                        <span>📥</span> Import games
+                      </button>
+                    )}
+                    <a
+                      href="/stats"
+                      onClick={() => setOpen(false)}
+                      className="w-full block text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors flex items-center gap-2"
+                    >
+                      <span>📊</span> Stats
+                    </a>
+                    <div className="px-3 py-1">
+                      <AuthButton />
+                    </div>
+                    <div className="h-px mx-2 my-1" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+                  </div>
+                )}
+
                 {/* Theme Toggle */}
                 <div className="px-3 py-2 space-y-1.5">
                   <p className="text-sm text-text-faint font-[family-name:var(--font-mono)]">Theme</p>

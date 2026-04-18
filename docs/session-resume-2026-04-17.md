@@ -17,19 +17,29 @@
 9. **`f977182` SSR fix + "Tuesday night" sweep** — `components/StalledGameNudge.tsx` guards `sessionStorage` / `localStorage` with `typeof window` check (was throwing `ReferenceError` on every SSR pass). Last "Tuesday night" line in 50-59 score-tier pool changed to "midweek".
 10. **`11ff302` Modal restructure + Resume rename + Deep Cut/Almost Done retirement** — `lib/reroll.ts` shrinks `REROLL_MODES` from 5 to 3 (Anything / Quick Session / Resume; internal key for Resume stays `continue`). `case 'deep-cut'` and `case 'almost-done'` eligibility blocks deleted (both folded into Resume's Smart Pick buckets). `components/Reroll.tsx` picker rewritten: two top CTAs (🎲 Anything + ⚡ Just 5 mins), two collapsible sections ("More ways to play": Quick Session + Resume; "Vibes": mood chips). Modes roll on click; no separate Roll button. `components/JustFiveMinutes.tsx` now `forwardRef` + `hideButton`; page.tsx mounts it hidden, passes `onJustFiveMinutes` callback to `<Reroll>` that closes the modal and calls `justFiveRef.current.startSession()`. Drop-pill mode shortcut strip retires (Sub Shuffle stays). Hero button opens picker (no auto-roll). Landing + about pick-mode grids 5 → 3 cards. HelpModal mode descriptions rewritten. `timeTier === 'deep-cut'` (game length) is unrelated and stays.
 11. **`4cf2cd7` FinishCheckNudge SSR fix** — sibling of #9; same `typeof window` guard pattern for `sessionStorage` / `localStorage` accessors. Landed via spawned side-task.
+12. **Mobile Tier 2/3 bundle** — four mobile items in one commit:
+    - Header declutter: Import / Stats / Search / AuthButton wrapped in `hidden sm:contents` in [app/page.tsx](app/page.tsx) header. SettingsMenu (now accepts `onOpenImport` / `onOpenSearch` props) grows a mobile-only top section with 🔍 Add a game, 📥 Import games, 📊 Stats, and an embedded `<AuthButton />`. Desktop unchanged.
+    - Tab chrome: [components/TabNav.tsx](components/TabNav.tsx) — on mobile, tabs are `flex-1`, `rounded-t-lg`, share a bottom border, and the active tab gets a subtle color-tinted top/side border so it reads as a proper tab rather than a floating pill.
+    - Sample banner: `hidden sm:flex` on the dismiss banner in [app/page.tsx:682](app/page.tsx:682).
+    - Detail-view rework: [components/GameCard.tsx](components/GameCard.tsx) — when `forceExpanded` is true, the title span drops truncation on mobile and renders a second line showing `SOURCE · <score pill>` right below the name. Descriptor quote moved above synopsis in the render order. Synopsis is wrapped in a mobile-only tap-to-reveal under a "Storyline" label (desktop stays always-visible). Duplicate platform/score in the stats row is hidden on mobile when `forceExpanded`.
 
 ---
 
-## Next up — Tier 2 / Tier 3 mobile work
+## Next up
 
-Wordmark is NOT a blocker for this tier (Brady clarified 2026-04-17 ~3:45pm). Placeholder space is fine; wordmark slots in when it lands. Pick any order; each is a standalone commit.
+### Parked — wordmark gates these
+- **Wordmark land-and-sweep** — Brady designing. When the asset ships, sweep every `<h1>Inventory Full</h1>` + OG cards + email templates + favicon (if aligned).
+- **Completion share card v2** — new design captured above; ships with wordmark. Feedback open: drop colon after CLEARED, resolve username dup, stat-fallback guard, name-opt-out variant.
 
-1. **Header declutter on mobile** — import + stats icons + search + sign-in collapse into the settings gear on mobile. Header component lives at `components/Header.tsx` (verify path). Desktop layout stays unchanged.
-2. **Tabs styled as proper tab chrome, not floating text** — `components/TabNav.tsx`. Currently the tabs have subtle bg + inset underline. Design direction: full tab-bar chrome (connected row, clearer selected affordance). Match the Ori-mobile screenshot reference (`notes/feedback-inbox/raw/`).
-3. **Sample-library dismiss banner hidden on mobile** — `components/SampleImportNudge.tsx` or similar. Hide on `< sm` breakpoint.
-4. **Game detail view rework on mobile** — `components/GameDetailModal.tsx` + inner `<GameCard forceExpanded>`. Mobile spec: (a) swap title/score positions so title leads and "Steam · 88" sits below; (b) storyline content tap-to-reveal under a "Storyline" label instead of always-visible; (c) elevate the purple curated-descriptor quote above the description. Screenshot reference: Ori-mobile in `notes/feedback-inbox/raw/`.
+### Mobile polish candidates (pick up next mobile pass)
+- **Sub Shuffle home** — still lives alone in the retired drop-pill strip. Move into SettingsMenu or Reroll modal's "More ways to play" dropdown.
+- **Mobile sign-in flow inside SettingsMenu** — today we embed `<AuthButton />` verbatim. That component renders its own dropdown menu; confirm it behaves inside the SettingsMenu popover on real mobile (there's a risk of nested-menu weirdness or z-index collisions).
 
-The "drop pill mode shortcuts under reroll on mobile" item is already covered by the modal restructure (commit #10) — drop from this list.
+### Data / descriptor work still parked
+- **Custom descriptor top-80 expansion** — review form at `docs/descriptor-expansion-review-2026-04-17.md`.
+- **Score-tier + genre-fallback expansion** — shipped live, review doc at `docs/score-tier-genre-expansion-review-2026-04-17.md` if Brady wants to tweak.
+- **Favicon evening-reference sweep** — one leftover "Tuesday night" line exists in the 50-59 tier; decide if it matters.
+- **Jump Back In cheat sheets** — audit later. 20+ verified re-entry packs in `lib/reentryPacks.ts`.
 
 ### Content / design work parked
 

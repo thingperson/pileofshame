@@ -367,6 +367,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
   const [showBailConfirm, setShowBailConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [notesSaved, setNotesSaved] = useState(false);
+  const [storylineOpen, setStorylineOpen] = useState(false);
   const [bailing, setBailing] = useState(false);
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
   const { cycleStatus, getNextStatus, setBailed, unBail, shelveGame, playAgain, newGamePlus, updateGame, deleteGame, showCelebration, toggleIgnore } = useStore();
@@ -666,7 +667,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
         </div>
 
         {/* Game Name */}
-        <span className="flex-1 min-w-0 text-[15px] sm:text-base font-semibold text-text-primary truncate">
+        <span className={`flex-1 min-w-0 font-semibold text-text-primary ${forceExpanded ? 'text-base sm:text-base sm:truncate' : 'text-[15px] sm:text-base truncate'}`}>
           {upNextIndex && (
             <span className="text-accent-purple font-bold font-[family-name:var(--font-mono)] mr-1.5 text-sm">
               {upNextIndex}.
@@ -676,6 +677,25 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
           {game.ignored && <span className="text-text-faint mr-1" title="Ignored from recommendations" aria-label="Ignored">🚫</span>}
           {!game.ignored && isSoftIgnored(game.id) && <span className="text-text-faint mr-1" title="Skipped 5+ times. Hidden from picker." aria-label="Soft-ignored">💤</span>}
           {game.name}
+          {forceExpanded && (
+            <span className="sm:hidden block mt-1 text-xs font-normal font-[family-name:var(--font-mono)] text-text-muted">
+              {SOURCE_LABELS[game.source]}
+              {game.metacritic && (
+                <>
+                  <span className="mx-1.5 text-text-faint">·</span>
+                  <span
+                    className="px-1.5 py-0.5 rounded text-xs font-bold"
+                    style={{
+                      backgroundColor: game.metacritic >= 75 ? 'rgba(34,197,94,0.15)' : game.metacritic >= 50 ? 'rgba(234,179,8,0.15)' : 'rgba(239,68,68,0.15)',
+                      color: game.metacritic >= 75 ? '#22c55e' : game.metacritic >= 50 ? '#eab308' : '#ef4444',
+                    }}
+                  >
+                    {game.metacritic}
+                  </span>
+                </>
+              )}
+            </span>
+          )}
         </span>
 
         {/* Achievement mini */}
@@ -795,10 +815,10 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                   }
                   return null;
                 })()}
-                <span className="text-text-muted">{SOURCE_LABELS[game.source]}</span>
+                <span className={`text-text-muted ${forceExpanded ? 'hidden sm:inline' : ''}`}>{SOURCE_LABELS[game.source]}</span>
                 {game.metacritic && (
                   <span
-                    className="px-1.5 py-0.5 rounded text-xs font-bold"
+                    className={`px-1.5 py-0.5 rounded text-xs font-bold ${forceExpanded ? 'hidden sm:inline-block' : ''}`}
                     style={{
                       backgroundColor: game.metacritic >= 75 ? 'rgba(34,197,94,0.15)' : game.metacritic >= 50 ? 'rgba(234,179,8,0.15)' : 'rgba(239,68,68,0.15)',
                       color: game.metacritic >= 75 ? '#22c55e' : game.metacritic >= 50 ? '#eab308' : '#ef4444',
@@ -855,17 +875,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                 </div>
               )}
 
-              {/* Synopsis — from RAWG */}
-              {game.description && (
-                <p className="text-xs text-text-muted leading-relaxed" title="Description via RAWG">
-                  {game.description.length > 180
-                    ? game.description.slice(0, 180).replace(/\s+\S*$/, '') + '...'
-                    : game.description
-                  }
-                </p>
-              )}
-
-              {/* Descriptor — opinionated one-liner */}
+              {/* Descriptor — opinionated one-liner (elevated above synopsis) */}
               {descriptor && (
                 <div
                   className="text-sm leading-relaxed italic"
@@ -878,6 +888,44 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                   &ldquo;{descriptor.line}&rdquo;
                 </div>
               )}
+
+              {/* Synopsis — from RAWG. Tap-to-reveal under "Storyline" label on mobile. */}
+              {game.description && (() => {
+                const synopsis = game.description.length > 180
+                  ? game.description.slice(0, 180).replace(/\s+\S*$/, '') + '...'
+                  : game.description;
+                return (
+                  <div>
+                    {/* Mobile: tap-to-reveal */}
+                    <div className="sm:hidden">
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); setStorylineOpen((v) => !v); }}
+                        aria-expanded={storylineOpen}
+                        className="flex items-center gap-1.5 text-xs font-[family-name:var(--font-mono)] text-text-dim hover:text-text-muted transition-colors"
+                      >
+                        <span>Storyline</span>
+                        <svg
+                          aria-hidden="true"
+                          className={`w-3 h-3 transition-transform ${storylineOpen ? 'rotate-180' : ''}`}
+                          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                      {storylineOpen && (
+                        <p className="mt-1.5 text-xs text-text-muted leading-relaxed" title="Description via RAWG">
+                          {synopsis}
+                        </p>
+                      )}
+                    </div>
+                    {/* Desktop: always visible */}
+                    <p className="hidden sm:block text-xs text-text-muted leading-relaxed" title="Description via RAWG">
+                      {synopsis}
+                    </p>
+                  </div>
+                );
+              })()}
 
               {/* HLTB + Mood Tags row */}
               {(game.hltbMain || (game.moodTags && game.moodTags.length > 0)) && (

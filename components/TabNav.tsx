@@ -59,7 +59,8 @@ export default function TabNav({ activeTab, onTabChange, counts, flashingTab }: 
     <div
       role="tablist"
       aria-label="Game pipeline"
-      className="flex gap-1 overflow-x-auto scrollbar-hide -mx-1 px-1 pb-1"
+      className="flex gap-0 sm:gap-1 overflow-x-auto scrollbar-hide -mx-1 px-1 sm:pb-1 border-b sm:border-b-0"
+      style={{ borderColor: 'var(--color-border-subtle)' }}
     >
       {TABS.map((tab, index) => {
         const active = activeTab === tab.id;
@@ -73,7 +74,7 @@ export default function TabNav({ activeTab, onTabChange, counts, flashingTab }: 
             tabIndex={active ? 0 : -1}
             onClick={() => onTabChange(tab.id)}
             onKeyDown={(e) => handleKeyDown(e, index)}
-            className={`shrink-0 flex items-center gap-1.5 px-3 py-3 sm:py-2 rounded-lg text-sm font-medium transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple ${
+            className={`shrink-0 flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-t-lg sm:rounded-lg text-sm font-medium transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple relative sm:static -mb-px sm:mb-0 ${
               active
                 ? 'text-text-primary'
                 : 'text-text-dim hover:text-text-muted hover:bg-white/5'
@@ -81,6 +82,9 @@ export default function TabNav({ activeTab, onTabChange, counts, flashingTab }: 
             style={active ? {
               backgroundColor: `${tab.color}15`,
               boxShadow: `inset 0 -2px 0 ${tab.color}`,
+              borderTop: `1px solid ${tab.color}30`,
+              borderLeft: `1px solid ${tab.color}20`,
+              borderRight: `1px solid ${tab.color}20`,
               // flash-color consumed by .tab-flash keyframes; harmless for non-flashing tabs
               ['--flash-color' as string]: tab.color,
             } as React.CSSProperties : {

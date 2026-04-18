@@ -599,25 +599,30 @@ function AppContent() {
             </p>
           </div>
           <div className="flex items-center gap-1 sm:gap-1.5">
-            <InlineSearch onAddManual={() => { setAddModalInitialName(''); setAddModalOpen(true); }} />
-            <button
-              onClick={() => setImportHubOpen(true)}
-              className="flex items-center gap-1 px-2.5 py-2.5 sm:px-2.5 sm:py-2 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
-              title="Import games"
-            >
-              <span className="text-sm sm:text-base">📥</span>
-              <span className="hidden sm:inline">Import</span>
-            </button>
-            <a
-              href="/stats"
-              className="flex items-center gap-1 px-2.5 py-2.5 sm:px-2.5 sm:py-2 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
-              title="Stats"
-            >
-              <span className="text-sm sm:text-base">📊</span>
-              <span className="hidden sm:inline">Stats</span>
-            </a>
-            <AuthButton />
-            <SettingsMenu />
+            <div className="hidden sm:contents">
+              <InlineSearch onAddManual={() => { setAddModalInitialName(''); setAddModalOpen(true); }} />
+              <button
+                onClick={() => setImportHubOpen(true)}
+                className="flex items-center gap-1 px-2.5 py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+                title="Import games"
+              >
+                <span className="text-base">📥</span>
+                <span>Import</span>
+              </button>
+              <a
+                href="/stats"
+                className="flex items-center gap-1 px-2.5 py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-secondary hover:border-accent-purple hover:text-text-primary transition-all"
+                title="Stats"
+              >
+                <span className="text-base">📊</span>
+                <span>Stats</span>
+              </a>
+              <AuthButton />
+            </div>
+            <SettingsMenu
+              onOpenImport={() => setImportHubOpen(true)}
+              onOpenSearch={() => { setAddModalInitialName(''); setAddModalOpen(true); }}
+            />
           </div>
         </div>
       </header>
@@ -679,7 +684,7 @@ function AppContent() {
       {/* ── Sample library banner (auto-dismiss after first action) ── */}
       {isSampleLibrary && !sampleBannerDismissed && (
         <div
-          className="mb-3 flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl text-xs font-[family-name:var(--font-mono)]"
+          className="mb-3 hidden sm:flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl text-xs font-[family-name:var(--font-mono)]"
           style={{
             backgroundColor: 'color-mix(in srgb, var(--color-accent-purple) 8%, var(--color-bg-card))',
             border: '1px solid color-mix(in srgb, var(--color-accent-purple) 20%, transparent)',
