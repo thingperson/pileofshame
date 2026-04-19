@@ -38,7 +38,6 @@
 ### Data / descriptor work still parked
 - **Custom descriptor top-80 expansion** — review form at `docs/descriptor-expansion-review-2026-04-17.md`.
 - **Score-tier + genre-fallback expansion** — shipped live, review doc at `docs/score-tier-genre-expansion-review-2026-04-17.md` if Brady wants to tweak.
-- **Favicon evening-reference sweep** — one leftover "Tuesday night" line exists in the 50-59 tier; decide if it matters.
 - **Jump Back In cheat sheets** — audit later. 20+ verified re-entry packs in `lib/reentryPacks.ts`.
 
 ### Content / design work parked
@@ -47,7 +46,7 @@
 - **Completion share card v2** — new design from Brady (2026-04-17): hero illustration top, full-width green `[USERNAME] CLEARED` banner, game art + one stat line, wordmark + "get playing." footer. Feedback notes captured: drop the colon after CLEARED, resolve username-duplication in banner vs stat, add stat-fallback guard so slower-than-HLTB doesn't shame, and a name-opt-out treatment ("GAME CLEARED" when user hides name). Ships alongside wordmark.
 - **Custom descriptor top-80 expansion** — `docs/descriptor-expansion-review-2026-04-17.md` has 80 candidates + 13 series templates in review form. Brady tweaks in place, I sync back on approval.
 - **Score-tier + genre-fallback expansion** — already shipped live. Review doc at `docs/score-tier-genre-expansion-review-2026-04-17.md` for if Brady wants to tweak any.
-- **Favicon** — shipped at improved fill ratio. One known edge case flagged by Brady's background: Tuesday-night line in 50-59 tier still says "Tuesday night." He swept "tonight" but didn't sweep other evening references. Decide if he cares.
+- **Favicon** — shipped at improved fill ratio. "Tuesday night" residue in 50-59 tier swept in commit `f977182` → "midweek".
 - **Jump Back In cheat sheets** — audit later phase. 20+ verified re-entry packs in `lib/reentryPacks.ts`. Not blocking.
 
 ### MCPs to install (Brady's turn)

@@ -532,7 +532,7 @@ function AppContent() {
           </div>
           <p className="text-xs text-[#222] font-[family-name:var(--font-mono)] mt-4">less deciding. more playing.</p>
         </div>
-        <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} onJustFiveMinutes={() => { setRerollOpen(false); setRerollMode(undefined); justFiveRef.current?.startSession(); }} />
+        <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} onJustFiveMinutes={() => { setRerollOpen(false); setRerollMode(undefined); justFiveRef.current?.startSession(); }} onSubShuffle={() => { setRerollOpen(false); setRerollMode(undefined); setGamePassOpen(true); }} />
         <CompletionCelebration game={celebrationGame} onClose={() => { closeCelebration(); setActiveTab('completed'); }} onConfirm={() => { if (celebrationGame) cycleStatus(celebrationGame.id); }} />
         <CloudSync />
       </div>
@@ -734,28 +734,11 @@ function AppContent() {
               ↑ Tell us your mood. We&apos;ll find your game.
             </p>
           ) : null}
-          {/* Reroll-mode drop-pill strip retired 2026-04-17 — modes live inside
-              the Reroll modal now (hero "What Should I Play?" button is the
-              single entry point). JustFiveMinutes is still mounted (hidden
-              button) so its ref can be called from inside the modal. Sub
-              Shuffle stays visible — it's a distinct feature, not a reroll
-              mode. */}
+          {/* Modes + Sub Shuffle live inside the Reroll modal ("More ways to
+              play" dropdown). Hero "What Should I Play?" is the single entry.
+              JustFiveMinutes stays mounted (hidden button) so its ref can be
+              called from inside the modal. */}
           <JustFiveMinutes ref={justFiveRef} games={games} hideButton />
-          <div className="flex gap-1.5 sm:gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
-            <button
-              onClick={() => setGamePassOpen(true)}
-              className="shrink-0 px-3 sm:px-4 py-3 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap flex items-center gap-1.5"
-              style={{ background: 'linear-gradient(135deg, #107c10 0%, #1a8a1a 50%, #0070d1 100%)' }}
-              title="Pick a game from Game Pass or PS+ catalog"
-            >
-              <span className="inline-flex items-center gap-1">
-                <span className="text-xs font-black tracking-tight" style={{ color: '#7ec850' }}>GP</span>
-                <span className="text-xs opacity-50">/</span>
-                <span className="text-xs font-black tracking-tight" style={{ color: '#ffd800' }}>PS+</span>
-              </span>
-              <span>Sub Shuffle</span>
-            </button>
-          </div>
         </div>
 
       {/* Auto-enrichment progress */}
@@ -1011,7 +994,7 @@ function AppContent() {
       {/* ── Modals ── */}
       <AddGameModal open={addModalOpen} onClose={() => { setAddModalOpen(false); setAddModalInitialName(''); }} initialName={addModalInitialName} />
       <ImportHub open={importHubOpen} onClose={() => setImportHubOpen(false)} />
-      <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} onJustFiveMinutes={() => { setRerollOpen(false); setRerollMode(undefined); justFiveRef.current?.startSession(); }} />
+      <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} onJustFiveMinutes={() => { setRerollOpen(false); setRerollMode(undefined); justFiveRef.current?.startSession(); }} onSubShuffle={() => { setRerollOpen(false); setRerollMode(undefined); setGamePassOpen(true); }} />
       <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
       <GamePassBrowse open={gamePassOpen} onClose={() => setGamePassOpen(false)} />
       {/* GridCard handles its own detail modal */}

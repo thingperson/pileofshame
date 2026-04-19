@@ -50,9 +50,11 @@ interface RerollProps {
    *  modal's "⚡ Just 5 mins" CTA calls this and closes — the Just 5 mins
    *  flow has its own modal + timer. */
   onJustFiveMinutes?: () => void;
+  /** Opens the GamePassBrowse (Sub Shuffle) modal. Closes Reroll first. */
+  onSubShuffle?: () => void;
 }
 
-export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes }: RerollProps) {
+export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, onSubShuffle }: RerollProps) {
   const [mode, setMode] = useState<RerollMode>('anything');
   const [moodFilters, setMoodFilters] = useState<MoodTag[]>([]);
   const [currentPick, setCurrentPick] = useState<Game | null>(null);
@@ -501,6 +503,21 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes }
                       <div className="text-xs text-text-dim mt-0.5">{description}</div>
                     </button>
                   ))}
+                  {onSubShuffle && (
+                    <button
+                      onClick={() => onSubShuffle()}
+                      className="col-span-2 px-3 py-3 rounded-xl text-left border border-border-subtle hover:border-accent-purple transition-all"
+                      style={{ backgroundColor: 'var(--color-bg-card)' }}
+                    >
+                      <div className="text-base font-medium text-text-primary">
+                        <span className="font-black tracking-tight" style={{ color: '#7ec850' }}>GP</span>
+                        <span className="opacity-50"> / </span>
+                        <span className="font-black tracking-tight" style={{ color: '#ffd800' }}>PS+</span>
+                        <span> Sub Shuffle</span>
+                      </div>
+                      <div className="text-xs text-text-dim mt-0.5">Pick from the Game Pass or PS+ catalog.</div>
+                    </button>
+                  )}
                 </div>
               )}
             </div>

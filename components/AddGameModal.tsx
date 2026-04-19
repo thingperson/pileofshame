@@ -187,6 +187,7 @@ export default function AddGameModal({ open, onClose, initialName }: AddGameModa
                   setMetacritic(undefined);
                   setGenres(undefined);
                 }}
+                aria-label="Remove cover art"
                 className="text-xs text-text-dim hover:text-text-muted"
               >
                 ✕

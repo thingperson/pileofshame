@@ -305,10 +305,10 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
 
             <div className="flex gap-2 pt-1">
               <button
-                onClick={handleClose}
+                onClick={() => { setStep('confirm'); setGames([]); setSelected(new Set()); }}
                 className="flex-1 px-4 py-2.5 text-sm text-text-dim rounded-xl border border-border-subtle hover:text-text-muted transition-colors"
               >
-                Cancel
+                Back
               </button>
               <button
                 onClick={handleImport}

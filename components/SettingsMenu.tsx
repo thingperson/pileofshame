@@ -26,6 +26,7 @@ interface SettingsMenuProps {
 
 export default function SettingsMenu({ onOpenImport, onOpenSearch }: SettingsMenuProps = {}) {
   const [open, setOpen] = useState(false);
+  const [openSection, setOpenSection] = useState<'display' | 'library' | 'data' | null>(null);
   const [canInstall, setCanInstall] = useState(false);
   const [confirmImport, setConfirmImport] = useState(false);
   const [pendingImport, setPendingImport] = useState<string | null>(null);
@@ -315,115 +316,7 @@ export default function SettingsMenu({ onOpenImport, onOpenSearch }: SettingsMen
                   </div>
                 )}
 
-                {/* Theme Toggle */}
-                <div className="px-3 py-2 space-y-1.5">
-                  <p className="text-sm text-text-faint font-[family-name:var(--font-mono)]">Theme</p>
-                  <div className="flex flex-wrap gap-1">
-                    {[
-                      // Active theme roster. CSS for hidden themes still lives
-                      // in globals.css — stashed for later, not deleted. When
-                      // bringing one back, add it here and it's live again.
-                      { value: 'dark', label: '🌙 Dark' },
-                      { value: 'light', label: '☀️ Light' },
-                      { value: '80s', label: '🌆 80s' },
-                      { value: '90s', label: '🚧 90s' },
-                      { value: 'future', label: '🔮 Future' },
-                      { value: 'dino', label: '🦕 Dino' },
-                      { value: 'cozy', label: '☕ Cozy' },
-                      { value: 'void', label: '🫥 Void' },
-                      // Hidden for now (CSS retained in globals.css):
-                      //   { value: 'weird', label: '👁️ Weird' },
-                      //   { value: 'ultra', label: '⚡ ULTRA' },       // stashed — Brady likes it, bring back later
-                      //   { value: 'minimal', label: '- Minimal' },
-                      //   { value: 'tropical', label: '🌴 Tropical' },
-                      //   { value: 'campfire', label: '🔥 Campfire' },
-                    ].map((opt) => (
-                      <button
-                        key={opt.value}
-                        onClick={() => {
-                          useStore.setState((s) => ({
-                            settings: { ...s.settings, theme: opt.value as LibrarySettings['theme'] },
-                          }));
-                          trackThemeSession(opt.value);
-                          setOpen(false);
-                        }}
-                        className={`px-2 py-1 text-xs rounded-md font-medium transition-all ${
-                          settings.theme === opt.value
-                            ? 'bg-accent-purple/20 text-accent-purple border border-accent-purple/30'
-                            : 'text-text-dim hover:text-text-muted border border-transparent'
-                        }`}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Text Size */}
-                <div className="px-3 py-2 space-y-1.5">
-                  <p className="text-sm text-text-faint font-[family-name:var(--font-mono)]">Text size</p>
-                  <div className="flex gap-1">
-                    {[
-                      { value: 'default', label: 'Default' },
-                      { value: 'comfortable', label: 'Comfortable' },
-                    ].map((opt) => {
-                      const current = typeof window !== 'undefined' && document.documentElement.classList.contains('comfortable') ? 'comfortable' : 'default';
-                      return (
-                        <button
-                          key={opt.value}
-                          onClick={() => {
-                            if (opt.value === 'comfortable') {
-                              document.documentElement.classList.add('comfortable');
-                              localStorage.setItem('if-text-size', 'comfortable');
-                            } else {
-                              document.documentElement.classList.remove('comfortable');
-                              localStorage.setItem('if-text-size', 'default');
-                            }
-                            setOpen(false);
-                          }}
-                          className={`px-2 py-1 text-xs rounded-md font-medium transition-all ${
-                            current === opt.value
-                              ? 'bg-accent-purple/20 text-accent-purple border border-accent-purple/30'
-                              : 'text-text-dim hover:text-text-muted border border-transparent'
-                          }`}
-                        >
-                          {opt.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Platform Preference */}
-                <div className="px-3 py-2 space-y-1.5">
-                  <p className="text-sm text-text-faint font-[family-name:var(--font-mono)]">I play on</p>
-                  <div className="flex gap-1">
-                    {[
-                      { value: 'any', label: 'Any' },
-                      { value: 'pc', label: '🖥️ PC' },
-                      { value: 'mac', label: '🍎 Mac' },
-                      { value: 'console', label: '🎮 Console' },
-                    ].map((opt) => (
-                      <button
-                        key={opt.value}
-                        onClick={() => {
-                          useStore.setState((s) => ({
-                            settings: { ...s.settings, platformPreference: opt.value as 'any' | 'pc' | 'mac' | 'console' },
-                          }));
-                        }}
-                        className={`px-2 py-1 text-xs rounded-md font-medium transition-all ${
-                          settings.platformPreference === opt.value
-                            ? 'bg-accent-purple/20 text-accent-purple border border-accent-purple/30'
-                            : 'text-text-dim hover:text-text-muted border border-transparent'
-                        }`}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Connected Platforms */}
+                {/* Connected Platforms (read-only info, not a setting) */}
                 {(linkedSteamId || psnGames.length > 0) && (
                   <div className="px-3 py-2 space-y-1.5">
                     <p className="text-sm text-text-faint font-[family-name:var(--font-mono)]">Connected Platforms</p>
@@ -450,8 +343,6 @@ export default function SettingsMenu({ onOpenImport, onOpenSearch }: SettingsMen
                   </div>
                 )}
 
-                <div className="h-px mx-3" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
-
                 {canInstall && (
                   <button
                     onClick={handleInstallPWA}
@@ -461,47 +352,209 @@ export default function SettingsMenu({ onOpenImport, onOpenSearch }: SettingsMen
                     📲 Install App
                   </button>
                 )}
-                <button
-                  onClick={handleExport}
-                  className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors"
-                >
-                  📦 Export Backup
-                </button>
-                <button
-                  onClick={handleImportClick}
-                  className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors"
-                >
-                  🔄 Restore Backup
-                </button>
-                {gamesWithoutArt.length > 0 && (
+
+                <div className="h-px mx-3 my-1" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+
+                {/* Display section */}
+                <div className="rounded-lg">
                   <button
-                    onClick={handleEnrichArt}
-                    disabled={enriching}
-                    className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors disabled:opacity-50"
+                    type="button"
+                    onClick={() => setOpenSection((s) => s === 'display' ? null : 'display')}
+                    aria-expanded={openSection === 'display'}
+                    className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-text-secondary rounded-lg hover:bg-bg-card transition-colors"
                   >
-                    {enriching ? '⏳ Fetching...' : `🖼️ Fetch Cover Art (${gamesWithoutArt.length})`}
+                    <span>🎨 Display</span>
+                    <span className="text-text-dim text-xs">{openSection === 'display' ? '▴' : '▾'}</span>
                   </button>
+                  {openSection === 'display' && (
+                    <div className="pb-1">
+                      {/* Theme */}
+                      <div className="px-3 py-2 space-y-1.5">
+                        <p className="text-xs text-text-faint font-[family-name:var(--font-mono)]">Theme</p>
+                        <div className="flex flex-wrap gap-1">
+                          {[
+                            // Active theme roster. CSS for hidden themes still lives
+                            // in globals.css — stashed for later, not deleted. When
+                            // bringing one back, add it here and it's live again.
+                            { value: 'dark', label: '🌙 Dark' },
+                            { value: 'light', label: '☀️ Light' },
+                            { value: '80s', label: '🌆 80s' },
+                            { value: '90s', label: '🚧 90s' },
+                            { value: 'future', label: '🔮 Future' },
+                            { value: 'dino', label: '🦕 Dino' },
+                            { value: 'cozy', label: '☕ Cozy' },
+                            { value: 'void', label: '🫥 Void' },
+                            // Hidden for now (CSS retained in globals.css):
+                            //   { value: 'weird', label: '👁️ Weird' },
+                            //   { value: 'ultra', label: '⚡ ULTRA' },       // stashed — Brady likes it, bring back later
+                            //   { value: 'minimal', label: '- Minimal' },
+                            //   { value: 'tropical', label: '🌴 Tropical' },
+                            //   { value: 'campfire', label: '🔥 Campfire' },
+                          ].map((opt) => (
+                            <button
+                              key={opt.value}
+                              onClick={() => {
+                                useStore.setState((s) => ({
+                                  settings: { ...s.settings, theme: opt.value as LibrarySettings['theme'] },
+                                }));
+                                trackThemeSession(opt.value);
+                                setOpen(false);
+                              }}
+                              className={`px-2 py-1 text-xs rounded-md font-medium transition-all ${
+                                settings.theme === opt.value
+                                  ? 'bg-accent-purple/20 text-accent-purple border border-accent-purple/30'
+                                  : 'text-text-dim hover:text-text-muted border border-transparent'
+                              }`}
+                            >
+                              {opt.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Text Size */}
+                      <div className="px-3 py-2 space-y-1.5">
+                        <p className="text-xs text-text-faint font-[family-name:var(--font-mono)]">Text size</p>
+                        <div className="flex gap-1">
+                          {[
+                            { value: 'default', label: 'Default' },
+                            { value: 'comfortable', label: 'Comfortable' },
+                          ].map((opt) => {
+                            const current = typeof window !== 'undefined' && document.documentElement.classList.contains('comfortable') ? 'comfortable' : 'default';
+                            return (
+                              <button
+                                key={opt.value}
+                                onClick={() => {
+                                  if (opt.value === 'comfortable') {
+                                    document.documentElement.classList.add('comfortable');
+                                    localStorage.setItem('if-text-size', 'comfortable');
+                                  } else {
+                                    document.documentElement.classList.remove('comfortable');
+                                    localStorage.setItem('if-text-size', 'default');
+                                  }
+                                  setOpen(false);
+                                }}
+                                className={`px-2 py-1 text-xs rounded-md font-medium transition-all ${
+                                  current === opt.value
+                                    ? 'bg-accent-purple/20 text-accent-purple border border-accent-purple/30'
+                                    : 'text-text-dim hover:text-text-muted border border-transparent'
+                                }`}
+                              >
+                                {opt.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Platform Preference */}
+                      <div className="px-3 py-2 space-y-1.5">
+                        <p className="text-xs text-text-faint font-[family-name:var(--font-mono)]">I play on</p>
+                        <div className="flex gap-1">
+                          {[
+                            { value: 'any', label: 'Any' },
+                            { value: 'pc', label: '🖥️ PC' },
+                            { value: 'mac', label: '🍎 Mac' },
+                            { value: 'console', label: '🎮 Console' },
+                          ].map((opt) => (
+                            <button
+                              key={opt.value}
+                              onClick={() => {
+                                useStore.setState((s) => ({
+                                  settings: { ...s.settings, platformPreference: opt.value as 'any' | 'pc' | 'mac' | 'console' },
+                                }));
+                              }}
+                              className={`px-2 py-1 text-xs rounded-md font-medium transition-all ${
+                                settings.platformPreference === opt.value
+                                  ? 'bg-accent-purple/20 text-accent-purple border border-accent-purple/30'
+                                  : 'text-text-dim hover:text-text-muted border border-transparent'
+                              }`}
+                            >
+                              {opt.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Library tools section */}
+                {(gamesWithoutArt.length > 0 || steamGames.length > 0 || gamesNeedingEnrichment.length > 0) && (
+                  <div className="rounded-lg">
+                    <button
+                      type="button"
+                      onClick={() => setOpenSection((s) => s === 'library' ? null : 'library')}
+                      aria-expanded={openSection === 'library'}
+                      className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-text-secondary rounded-lg hover:bg-bg-card transition-colors"
+                    >
+                      <span>📚 Library tools</span>
+                      <span className="text-text-dim text-xs">{openSection === 'library' ? '▴' : '▾'}</span>
+                    </button>
+                    {openSection === 'library' && (
+                      <div className="pb-1">
+                        {gamesWithoutArt.length > 0 && (
+                          <button
+                            onClick={handleEnrichArt}
+                            disabled={enriching}
+                            className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors disabled:opacity-50"
+                          >
+                            {enriching ? '⏳ Fetching...' : `🖼️ Fetch Cover Art (${gamesWithoutArt.length})`}
+                          </button>
+                        )}
+                        {steamGames.length > 0 && (
+                          <button
+                            onClick={() => handleRefreshSteamHours()}
+                            disabled={refreshingSteam}
+                            className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors disabled:opacity-50"
+                          >
+                            {refreshingSteam ? '⏳ Syncing...' : `🔄 Refresh Steam Hours (${steamGames.length})`}
+                          </button>
+                        )}
+                        {gamesNeedingEnrichment.length > 0 && (
+                          <button
+                            onClick={handleEnrichAll}
+                            disabled={enrichingAll}
+                            className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors disabled:opacity-50"
+                          >
+                            {enrichingAll
+                              ? `⏳ Enriching ${enrichProgress}`
+                              : `🧠 Smart Enrich (${gamesNeedingEnrichment.length} games)`}
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 )}
-                {steamGames.length > 0 && (
+
+                {/* Data section */}
+                <div className="rounded-lg">
                   <button
-                    onClick={() => handleRefreshSteamHours()}
-                    disabled={refreshingSteam}
-                    className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors disabled:opacity-50"
+                    type="button"
+                    onClick={() => setOpenSection((s) => s === 'data' ? null : 'data')}
+                    aria-expanded={openSection === 'data'}
+                    className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-text-secondary rounded-lg hover:bg-bg-card transition-colors"
                   >
-                    {refreshingSteam ? '⏳ Syncing...' : `🔄 Refresh Steam Hours (${steamGames.length})`}
+                    <span>💾 Data</span>
+                    <span className="text-text-dim text-xs">{openSection === 'data' ? '▴' : '▾'}</span>
                   </button>
-                )}
-                {gamesNeedingEnrichment.length > 0 && (
-                  <button
-                    onClick={handleEnrichAll}
-                    disabled={enrichingAll}
-                    className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors disabled:opacity-50"
-                  >
-                    {enrichingAll
-                      ? `⏳ Enriching ${enrichProgress}`
-                      : `🧠 Smart Enrich (${gamesNeedingEnrichment.length} games)`}
-                  </button>
-                )}
+                  {openSection === 'data' && (
+                    <div className="pb-1">
+                      <button
+                        onClick={handleExport}
+                        className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors"
+                      >
+                        📦 Export Backup
+                      </button>
+                      <button
+                        onClick={handleImportClick}
+                        className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors"
+                      >
+                        🔄 Restore Backup
+                      </button>
+                    </div>
+                  )}
+                </div>
               </>
             ) : (
               <div className="p-2 space-y-2">

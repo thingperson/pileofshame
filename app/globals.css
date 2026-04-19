@@ -271,7 +271,7 @@ button:active:not(:disabled) {
   --color-text-secondary: #000000;
   --color-text-muted: #333333;
   --color-text-dim: #666666;
-  --color-text-faint: #808080;
+  --color-text-faint: #505050;
   --color-accent-purple: #ff00ff;
   --color-accent-pink: #ff69b4;
 
@@ -577,7 +577,7 @@ button:active:not(:disabled) {
   --color-text-secondary: #d4b8ff;
   --color-text-muted: #a878e8;
   --color-text-dim: #7c4dbe;
-  --color-text-faint: #5a3399;
+  --color-text-faint: #8a63c9;
   --color-accent-purple: #ff6ec7;
   --color-accent-pink: #ff2975;
 
@@ -772,7 +772,7 @@ button:active:not(:disabled) {
   --color-text-secondary: #a0d4f0;
   --color-text-muted: #6aadcc;
   --color-text-dim: #3d7a99;
-  --color-text-faint: #2a5570;
+  --color-text-faint: #5a90b8;
   --color-accent-purple: #00f0ff;
   --color-accent-pink: #ff00aa;
 
@@ -947,7 +947,7 @@ button:active:not(:disabled) {
   --color-text-secondary: #1f2937 !important;
   --color-text-muted: #4b5563 !important;
   --color-text-dim: #6b7280 !important;
-  --color-text-faint: #9ca3af !important;
+  --color-text-faint: #7a828f !important;
   --color-accent-purple: #7c3aed !important;
   --color-accent-pink: #ec4899 !important;
 
@@ -1074,7 +1074,7 @@ button:active:not(:disabled) {
   --color-text-secondary: #c4dcc4;
   --color-text-muted: #8fb88f;
   --color-text-dim: #6d9a6d;
-  --color-text-faint: #4d7a4d;
+  --color-text-faint: #7ab07a;
   --color-accent-purple: #6dbf6d;
   --color-accent-pink: #d4a24e;
 
@@ -1303,7 +1303,7 @@ button:active:not(:disabled) {
   --color-text-secondary: #b0c9b8;
   --color-text-muted: #809a88;
   --color-text-dim: #587060;
-  --color-text-faint: #485048;
+  --color-text-faint: #707a70;
   --color-accent-purple: #cc5588;
   --color-accent-pink: #5588aa;
 
@@ -1497,7 +1497,7 @@ button:active:not(:disabled) {
   --color-text-secondary: #e0e0e0;
   --color-text-muted: #aaaaaa;
   --color-text-dim: #777777;
-  --color-text-faint: #333300;
+  --color-text-faint: #6a6a22;
   --color-accent-purple: #BFFF00;
   --color-accent-pink: #BFFF00;
 
@@ -1642,7 +1642,7 @@ button:active:not(:disabled) {
   --color-text-secondary: #666666;
   --color-text-muted: #444444;
   --color-text-dim: #333333;
-  --color-text-faint: #222222;
+  --color-text-faint: #555555;
   --color-accent-purple: #555555;
   --color-accent-pink: #444444;
 
@@ -2123,7 +2123,7 @@ body.theme-minimal {
   --color-text-secondary: #D0EDE9 !important;
   --color-text-muted: #8BBEB7 !important;
   --color-text-dim: #5E9A92 !important;
-  --color-text-faint: #3D7A72 !important;
+  --color-text-faint: #6fa59c !important;
   --color-accent-purple: #4ECDC4 !important;
   --color-accent-pink: #FF6B6B !important;
 }
@@ -2243,7 +2243,7 @@ body.theme-tropical {
   --color-text-secondary: #D4C9B4 !important;
   --color-text-muted: #A89880 !important;
   --color-text-dim: #7A6E5A !important;
-  --color-text-faint: #5A5040 !important;
+  --color-text-faint: #a39885 !important;
   --color-accent-purple: #FE7F2D !important;
   --color-accent-pink: #FCCA46 !important;
 }
