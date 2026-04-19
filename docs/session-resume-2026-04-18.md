@@ -17,6 +17,16 @@
 
 ## Next up
 
+### Start here if coming in cold
+No active in-flight work. Everything below is optional / decision-gated. If Brady opens a fresh session without context, ask what he wants — don't pick up a task unprompted. The audit findings from Apr 18 are actionable if he wants to keep swinging; otherwise wait for the wordmark or a new direction.
+
+### Recent audit findings (full details above, kept here as pointers)
+Run on Apr 18 against `main @ 7e5f4fb`. All fixes in scope shipped; follow-ups below.
+- **import-regression** — clean after today's fixes.
+- **theme-check** — 10 themes patched; **90s systemic failures** remain (non-faint).
+- **feature-creep-audit** — open candidates listed below.
+- **SSR guard audit** — no crashes; try/catch pattern is doing the defensive work on storage utils.
+
 ### Parked — wordmark gates these
 - **Wordmark land-and-sweep** — Brady designing. When the asset ships, sweep every `<h1>Inventory Full</h1>` + OG cards + email templates + favicon (if aligned).
 - **Completion share card v2** — new design captured in Apr 17 resume; ships with wordmark. Feedback open: drop colon after CLEARED, resolve username dup, stat-fallback guard, name-opt-out variant.
