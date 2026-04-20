@@ -1,4 +1,6 @@
-import { PlayerArchetype } from '@/lib/archetypes';
+import { PlayerArchetype, getArchetypeSpriteKey } from '@/lib/archetypes';
+import { hasSprite } from '@/lib/pixel/sprites';
+import PixelSprite from './PixelSprite';
 
 interface ArchetypeCardProps {
   currentArchetype: PlayerArchetype;
@@ -26,7 +28,21 @@ export default function ArchetypeCard({
       }}
     >
       <div className="flex items-start gap-3">
-        <div className="text-3xl shrink-0">{currentArchetype.icon}</div>
+        <div className="shrink-0 w-12 h-12 flex items-center justify-center">
+          {(() => {
+            const spriteKey = getArchetypeSpriteKey(currentArchetype);
+            if (spriteKey && hasSprite(spriteKey)) {
+              return (
+                <PixelSprite
+                  name={spriteKey}
+                  size={48}
+                  ariaLabel={currentArchetype.title}
+                />
+              );
+            }
+            return <span className="text-3xl">{currentArchetype.icon}</span>;
+          })()}
+        </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-base font-bold text-text-primary">{currentArchetype.title}</span>

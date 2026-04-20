@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { Game } from '@/lib/types';
 import { getAllMatchingArchetypes, getThemeUsage } from '@/lib/archetypes';
+import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
 import { trackStatsExpand } from '@/lib/analytics';
 import {
@@ -336,7 +337,11 @@ export default function StatsPanel({ games }: StatsPanelProps) {
 
   // Player archetype
   const themeUsage = useMemo(() => getThemeUsage(), []);
-  const archetypes = useMemo(() => getAllMatchingArchetypes(games, themeUsage), [games, themeUsage]);
+  const includeRoasts = useStore((s) => s.settings.showRoasts ?? false);
+  const archetypes = useMemo(
+    () => getAllMatchingArchetypes(games, themeUsage, { includeRoasts }),
+    [games, themeUsage, includeRoasts],
+  );
   const currentArchetype = archetypes[archetypeIndex % archetypes.length];
 
   const handleRerollArchetype = useCallback(() => {

@@ -64,6 +64,9 @@ export interface LibrarySettings {
   viewMode: ViewMode;
   theme: 'dark' | 'light' | '90s' | '80s' | 'future' | 'dino' | 'weird' | 'ultra' | 'void' | 'cozy' | 'minimal' | 'tropical' | 'campfire';
   platformPreference: PlatformPreference;
+  // Opt-in for roast-tone archetype content. Default off: roast archetypes are
+  // filtered out of matches unless the user turns this on.
+  showRoasts?: boolean;
 }
 
 export interface FilterState {

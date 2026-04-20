@@ -581,7 +581,18 @@ const FALLBACK: PlayerArchetype = {
   tone: 'neutral',
 };
 
-export function getAllMatchingArchetypes(games: Game[], themeUsage?: ThemeUsage): PlayerArchetype[] {
+export interface ArchetypeOptions {
+  // When false (default), roast-tone archetypes are filtered out. Respects the
+  // product rule that shame/critique framing must be opt-in.
+  includeRoasts?: boolean;
+}
+
+export function getAllMatchingArchetypes(
+  games: Game[],
+  themeUsage?: ThemeUsage,
+  opts?: ArchetypeOptions,
+): PlayerArchetype[] {
+  const includeRoasts = opts?.includeRoasts ?? false;
   if (games.length < 3) return [FALLBACK];
 
   const stats = computeStats(games);
@@ -609,9 +620,56 @@ export function getAllMatchingArchetypes(games: Game[], themeUsage?: ThemeUsage)
     }
   }
 
-  return matches.length > 0 ? matches : [FALLBACK];
+  const filtered = includeRoasts
+    ? matches
+    : matches.filter((m) => m.tone !== 'roast');
+
+  return filtered.length > 0 ? filtered : [FALLBACK];
 }
 
-export function getPlayerArchetype(games: Game[]): PlayerArchetype {
-  return getAllMatchingArchetypes(games)[0];
+export function getPlayerArchetype(games: Game[], opts?: ArchetypeOptions): PlayerArchetype {
+  return getAllMatchingArchetypes(games, undefined, opts)[0];
+}
+
+/**
+ * Maps archetype titles → pixel sprite keys. See lib/pixel/data/personas.json.
+ * Not every archetype has a sprite yet (9 gaps — see
+ * notes/apr20-improvements-claude-design/design-feedback.md). `undefined`
+ * means consumers should fall back to the emoji icon.
+ */
+const SPRITE_KEY_BY_TITLE: Record<string, string> = {
+  'Pure Collector': 'pureCollector',
+  'The Hoarder': 'hoarder',
+  'The Dabbler': 'dabbler',
+  'The Quitter': 'quitter',
+  'The Window Shopper': 'windowShopper',
+  'Backlog Zero': 'backlogZero',
+  'The Completionist': 'completionist',
+  'The Critic': 'critic',
+  'The Enthusiast': 'enthusiast',
+  'The Balanced Gamer': 'balanced',
+  'The Omni-Gamer': 'omniGamer',
+  'Steam Loyalist': 'steamLoyalist',
+  'PlayStation Purist': 'psPurist',
+  'The Quick Draw': 'quickDraw',
+  'The Endurance Runner': 'enduranceRunner',
+  'The Optimizer': 'optimizer',
+  'The Wishful Thinker': 'wishfulThinker',
+  'Cozy Craver': 'cozy',
+  'The Momentum Builder': 'momentumBuilder',
+  'The Bargain Hunter': 'bargainHunter',
+  'The Night Owl': 'nightOwl',
+  'Dino Devotee': 'dinoRider',
+  'Synthwave Surfer': 'synthwave',
+  'ULTRA Devotee': 'ultraDevotee',
+  'Holographic Entity': 'hologram',
+  'The Unsettling One': 'unsettling',
+  'The Lighthouse': 'lighthouse',
+  'The Gamer': undefined as unknown as string, // fallback uses emoji
+};
+
+export function getArchetypeSpriteKey(archetype: PlayerArchetype): string | undefined {
+  // Dynamic "<Genre> Addict" archetype uses the generic genreAddict sprite.
+  if (archetype.title.endsWith(' Addict')) return 'genreAddict';
+  return SPRITE_KEY_BY_TITLE[archetype.title];
 }

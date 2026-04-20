@@ -447,6 +447,35 @@ export default function SettingsMenu({ onOpenImport, onOpenSearch }: SettingsMen
                         </div>
                       </div>
 
+                      {/* Roast opt-in */}
+                      <div className="px-3 py-2 space-y-1.5">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            useStore.setState((s) => ({
+                              settings: { ...s.settings, showRoasts: !(s.settings.showRoasts ?? false) },
+                            }));
+                          }}
+                          className="w-full flex items-center justify-between text-left"
+                        >
+                          <span className="text-xs text-text-faint font-[family-name:var(--font-mono)]">
+                            🔥 Show roasts
+                          </span>
+                          <span
+                            className={`px-2 py-0.5 text-xs rounded-md font-medium transition-all ${
+                              (settings.showRoasts ?? false)
+                                ? 'bg-accent-purple/20 text-accent-purple border border-accent-purple/30'
+                                : 'text-text-dim border border-transparent'
+                            }`}
+                          >
+                            {(settings.showRoasts ?? false) ? 'On' : 'Off'}
+                          </span>
+                        </button>
+                        <p className="text-[10px] text-text-faint leading-tight">
+                          Off by default. Turn on to see roast-tone archetypes.
+                        </p>
+                      </div>
+
                       {/* Platform Preference */}
                       <div className="px-3 py-2 space-y-1.5">
                         <p className="text-xs text-text-faint font-[family-name:var(--font-mono)]">I play on</p>
