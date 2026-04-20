@@ -2,18 +2,36 @@
 
 **Purpose:** Start the next session oriented. Read this when the task isn't trivial.
 
-This was a **docs / planning / infrastructure** session — not a feature sprint. One code change deployed (SEO metadata + 90s contrast), plus a lot of spec work and two new skills.
+Morning/afternoon was a **docs / planning / infrastructure** session (commits `55bdf1a` + `3a0e7c8`). Late-afternoon added a second feature commit `ffcbb48` integrating Claude Design's pixel sprite drop + a roast opt-in toggle.
 
 ---
 
-## What shipped today (1 commit `55bdf1a` on main, deploy READY)
+## What shipped today
+
+### Morning/afternoon — `55bdf1a` + `3a0e7c8` on main (deploy READY)
 
 1. **90s theme contrast pass** — accent + status pills on silver card now hit WCAG UI thresholds. `app/globals.css` lines ~264–290. See screenshot verification done this session.
 2. **SEO per-page metadata** — [app/about/layout.tsx](../app/about/layout.tsx), [app/stats/layout.tsx](../app/stats/layout.tsx) (`/stats` is **noindex**). [app/sitemap.ts](../app/sitemap.ts) adjusted (removed /stats, bumped /about priority 0.7→0.8).
 3. **Two new skills registered:** [accessibility-review](../.claude/skills/accessibility-review/SKILL.md), [mobile-best-practices](../.claude/skills/mobile-best-practices/SKILL.md). Both runnable via Skill tool.
 4. **.gitignore** now excludes `.claude/worktrees/`.
 
-All other changes were documentation.
+### Late-afternoon — `ffcbb48` on main (deploy READY)
+
+5. **Pixel sprite infrastructure** — Claude Design delivered 31 persona sprites + 13 mood chips + badges + ambient. Integrated as:
+   - [lib/pixel/palette.ts](../lib/pixel/palette.ts) — shared 28-color palette (`IF_PALETTE`).
+   - [lib/pixel/sprites.ts](../lib/pixel/sprites.ts) + [lib/pixel/data/](../lib/pixel/data/) — typed sprite maps (`PERSONA_SPRITES`, `MOOD_SPRITES`, `BADGE_SPRITES`, `SLOT_SPRITES`, `AMBIENT_SPRITES`, `ALL_SPRITES`).
+   - [components/PixelSprite.tsx](../components/PixelSprite.tsx) — React SVG renderer with optional drop shadow + aria support.
+6. **ArchetypeCard** now renders a 48px pixel sprite when one maps to the archetype title; falls back to emoji otherwise. Title→sprite mapping lives in [lib/archetypes.ts](../lib/archetypes.ts) as `SPRITE_KEY_BY_TITLE` + `getArchetypeSpriteKey()`.
+7. **Roast opt-in toggle** — `LibrarySettings.showRoasts` (default `false`). When off, `getAllMatchingArchetypes()` filters out `tone: 'roast'` archetypes. Toggle lives in SettingsMenu under Display. Enforces `user-psychology.md` rule that shame/critique framing must be opt-in.
+
+### Known gaps from this drop (intentional — awaiting Design)
+
+- **9 archetypes have no pixel sprite yet:** Juggler, Archaeologist, Sniper, Redeemer, Deep Diver, Eclectic, Infinite Player, Webmaster Supreme, Minimalist. These still render emoji. Ask list: `notes/apr20-improvements-claude-design/design-feedback.md` (notes/ is gitignored — local file only).
+- **Line icons** referenced in Claude Design's Icon System page were NOT included in the drop — only pixel art. Line-icon sweep (next-sprint candidate #3 below) is still open. Nothing changed there this session.
+- **Current pixel sprites render small/janky** per Brady's visual check. Acceptable for now; revisit with Design once gaps filled. Sprites are fixed-color across all themes (won't adapt to ULTRA/Synthwave/etc.) — palette-strategy decision also pending Design.
+- **Mood sprites, slot sprites, badge sprites, ambient sprites** are in the codebase but **not yet rendered anywhere.** Only personas are wired through ArchetypeCard. Future work needs to decide where these surface (share cards? theme backgrounds? empty states?).
+
+Also included with commit `3a0e7c8`: `notes/apr20-improvements-claude-design/` with raw design files, a feedback doc for Design, and the App Review voice/legal/psychology sweep (notes/ is gitignored, so read these locally only).
 
 ---
 
@@ -51,7 +69,7 @@ No active in-flight feature work. A handful of parked items + several clean next
 
 1. **Sort menu voice rewrite** (XS, pure voice win). Rename "Best for You" etc. in Inventory Full's voice instead of generic library-app language.
 2. **Sample Library pill contrast** + 90s nav button contrast (S, closes remaining Apr 18 a11y threads).
-3. **Emoji → line-icon sweep** (M, biggest visual upgrade per hour — design review flagged it as the single highest-impact visual change).
+3. **Emoji → line-icon sweep** (M, biggest visual upgrade per hour — design review flagged it as the single highest-impact visual change). **Blocked on Claude Design delivering actual line-icon assets** — the Apr 20 drop only included pixel art, not line icons. Ask in `notes/apr20-improvements-claude-design/design-feedback.md`.
 4. **Unify pick modals** (L, architectural — do before surfacing more personality on top of them). Game Pass + Just 5 Mins + Anything into one shell.
 5. **Taste Reflection feature** (M, spec in [IDEAS.md](IDEAS.md) — "you love games that are X, Y, Z" after completion, surfacing 2–3 from user's own library).
 6. **Three pick-mode entry-point audit** — verify `lib/reroll.ts` makes the three modes functionally distinct as DECISIONS.md now claims (Just 5 Mins = psychological not HLTB, Quick Session = HLTB short, Almost Done = HLTB time-remaining sort).
@@ -125,9 +143,10 @@ No active in-flight feature work. A handful of parked items + several clean next
 
 ## Quick health snapshot
 
-- Build: ✅ passes
-- Deploy: ✅ READY (55bdf1a live)
+- Build: ✅ passes (verified after `ffcbb48`)
+- Deploy: ✅ READY (`ffcbb48` pushed)
 - Sentry: ✅ wired (pre-existing warning noted above)
 - UptimeRobot: ✅ pinging `/api/health` every 5 min
 - MCPs: ✅ Supabase + Sentry + Vercel live
-- No known regressions from today's deploy.
+- Preview: ✅ ArchetypeCard sprite render verified on `/stats` (Cozy Craver → pink pixel sprite)
+- No known regressions from today's deploys.
