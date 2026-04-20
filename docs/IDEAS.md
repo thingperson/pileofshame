@@ -6,6 +6,41 @@ Running list of ideas, rambles, and half-formed thoughts. Gets synthesized into 
 
 ## Active Ideas (ready to spec or build soon)
 
+### Taste Reflection on Completion — "You love games that are X, Y, Z"
+
+**The moment:** user clears a game. Confetti. Celebration. Then one quiet line: *"That's your 8th completion. Turns out you love games that are **atmospheric, story-rich, and under 15 hours**. Want two more like that?"* → shows 2–3 games from their own Up Next or Backlog that fit the pattern.
+
+**Why it matters (psychology):**
+- Reinforces identity after a peak moment. Identity-based motivation (Oyserman) — "I'm the kind of player who finishes atmospheric short games" sticks better than "you finished a game."
+- Turns one win into a second session seed without session-extending the current one. Loop-completing, not session-extending.
+- Uses data the user already gave us (mood tags + completion patterns + time tiers) to produce something personal.
+
+**Why NOT a "recommended new games" feature:** that would break the no-sell rule. Recommendations are strictly from games the user **already owns or has on Up Next.** This is a "surface what you already have" feature, not a discovery feed.
+
+**Data signal:**
+- Mood tags on completed games → cluster the top 3 recurring
+- HLTB time tier of completions → short / medium / marathon pattern
+- Genre distribution of completions
+- After N completions (N=3 minimum), patterns stabilize enough to name
+
+**Rough copy directions:**
+- "You clear short cozy games like clockwork. Here's one from your Up Next that fits."
+- "Third RPG in a row. Respect. Want to see what else in your Backlog scratches that itch?"
+- "You finish atmospheric games. You start open-world ones. Your Up Next has both — guess which one's more likely."
+
+**Placement:**
+- Inside the Completion celebration modal, after confetti, before share prompt
+- Also surfaceable from the archetype card (persistent version of the pattern)
+
+**Priority:** sooner rather than later per Brady. Gated on: enough signal (need users with 3+ completions) + design pass. Implementation is ~1 sprint.
+
+**Open questions:**
+- What if they clear a game that DOESN'T fit their pattern? Does the copy acknowledge ("plot twist — this breaks your pattern, what drew you to it?") or just skip the reflection that time?
+- Threshold for "enough completions" to name a pattern — 3? 5?
+- Should the 2-3 surfaced games be picker-engine-ranked, or random from the matching pool?
+
+---
+
 ### ~~HLTB Progress Inference & Nudges~~ — SHIPPED ✅
 The data already exists (hoursPlayed + hltbMain). We just need to tell stories with it.
 

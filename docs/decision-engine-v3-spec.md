@@ -1,7 +1,9 @@
 # Decision Engine V3 -- Specification
 
+> **STATUS: SHIPPED (April 2026) — historical reference.** All six features below are live in production. This spec documents what was built, not what's planned. See ROADMAP.md "SHIPPED" section for live-status references.
+
 **Date:** April 6, 2026
-**Status:** Ready for implementation
+**Status:** Shipped April 2026 (all 6 features live)
 **Depends on:** Decision Engine V2 (shipped), Skip Tracking (shipped), Stalled Game Detection (shipped)
 **Files affected:** `lib/reroll.ts`, `lib/skipTracking.ts`, `lib/types.ts`, `components/Reroll.tsx`, `components/StatsPanel.tsx`
 

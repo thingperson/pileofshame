@@ -272,18 +272,18 @@ button:active:not(:disabled) {
   --color-text-muted: #333333;
   --color-text-dim: #666666;
   --color-text-faint: #505050;
-  --color-accent-purple: #ff00ff;
-  --color-accent-pink: #ff69b4;
+  --color-accent-purple: #551a8b;
+  --color-accent-pink: #a01060;
 
-  --color-status-buried: #808080;
+  --color-status-buried: #404040;
   --color-status-buried-bg: #d3d3d3;
   --color-status-on-deck: #0000ff;
   --color-status-on-deck-bg: #add8e6;
-  --color-status-playing: #ff8c00;
+  --color-status-playing: #8b3a00;
   --color-status-playing-bg: #ffd700;
-  --color-status-played: #008000;
+  --color-status-played: #004d00;
   --color-status-played-bg: #90ee90;
-  --color-status-bailed: #ff0000;
+  --color-status-bailed: #a00000;
   --color-status-bailed-bg: #ffcccc;
 
   font-family: "Comic Sans MS", "Comic Sans", "Chalkboard SE", cursive !important;

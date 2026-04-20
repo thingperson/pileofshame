@@ -54,3 +54,7 @@ next-env.d.ts
 /playwright-report/
 /test-results/
 /playwright/.cache/
+
+# claude code transient worktrees (see AGENTS.md)
+.claude/worktrees/
+

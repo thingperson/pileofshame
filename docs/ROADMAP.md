@@ -126,7 +126,15 @@
 
 ---
 
-## CURRENT SPRINT — April 2026
+## LAST SPRINT — April 14–18, 2026 (CLOSED)
+
+*Sprint closed on Apr 18. Items below retained as a shipping log. See `docs/doc-audit-2026-04-20.md` for the Apr 20 audit.*
+
+## NEXT SPRINT — TBD
+
+*Deliberately blank. Pick next direction after audit/planning cycle settles. Candidates parked in [docs/doc-audit-2026-04-20.md](doc-audit-2026-04-20.md) and the planning specs added in that cycle.*
+
+---
 
 ### Xbox Import + Game Pass (HIGH — Priority 1)
 - OpenXBL API key in `.env.local` ✅ — verified working (gamertag search returns results)
@@ -247,9 +255,11 @@
 
 ---
 
-## NEXT SPRINT
+## LAST SPRINT CONTINUED — items formerly in "NEXT SPRINT" above, now closed
 
-### Decision Engine V3 (HIGH)
+*This section was "NEXT SPRINT" before the Apr 20 relabel. All HIGH/MEDIUM items shipped — see `docs/doc-audit-2026-04-20.md`.*
+
+### Decision Engine V3 (HIGH) — SHIPPED, see `decision-engine-v3-spec.md` (historical)
 - ~~"Ignore this title" / negative weighting~~ — **SHIPPED**
 - ~~Skip tracking~~ — **SHIPPED** (persistent skip memory, soft-ignore after 5)
 - ~~Stalled game detection~~ — **SHIPPED** (nudge card + "Did you finish?" prompt)

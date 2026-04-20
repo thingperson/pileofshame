@@ -1,5 +1,13 @@
 # Feature Creep Audit — April 3, 2026
 
+> **HISTORICAL — several verdicts overridden (2026-04-20).** Keep this doc as a methodology reference, but do not act on the calls below that were later reversed:
+>
+> - **Archetypes: verdict "keep 1, remove reroll" is REVERSED.** Archetypes are intentional personality, not bloat. Reroll lets users cycle through the multiple archetypes that apply to them. Share card is parked pending per-archetype art, not abandoned.
+> - **Themes: verdict "trim 9 → 5" is REVERSED.** Themes are tested, no maintenance-burden signal has surfaced. Theme count is now 13.
+> - **Share composer consolidation**: still valid, low priority.
+>
+> See `docs/doc-audit-2026-04-20.md` for the full override context.
+
 ## Core Loop Reminder
 **Import → Tell us your mood → We find your game → Play → Celebrate**
 

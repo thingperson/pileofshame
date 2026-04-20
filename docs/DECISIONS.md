@@ -15,6 +15,62 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-20 — RAWG commercial tier is a monetization BLOCKER
+
+**Decision.** Before any revenue feature ships (Supporter tier, affiliate links, paid themes, anything that moves us from "donation-optional" to "commercial"), we MUST first upgrade RAWG from free to a commercial plan.
+
+**Why.** RAWG's free tier terms are explicitly non-commercial. The moment we accept a dollar of revenue tied to the product, continued use of the RAWG free tier violates their ToS — independent of our MAU. Revenue + free RAWG = we're out of compliance from day one.
+
+**The cost.** RAWG Business plan is ~$149/mo. That's the hurdle any monetization surface must clear before it even reduces hosting burden. It's a hefty floor, not a gentle ramp.
+
+**Practical sequencing.**
+1. Sign up for RAWG Business (confirm pricing current at time of decision — cited at $149/mo in `docs/scale-up-costs-2026-04-20.md`)
+2. Verify API key works and no ToS ambiguity remains
+3. Then and only then: ship first revenue feature (affiliate link, Supporter tier, whatever)
+
+**Flagged as a blocker in:**
+- `docs/scale-up-costs-2026-04-20.md`
+- `docs/monetization-spec-2026-04-20.md`
+- This decision log
+
+**Alternatives considered + rejected.**
+- Switch to IGDB (free, but requires Twitch OAuth + less complete metadata) — possible long-term but a full migration, not a quick swap. Park as a fallback if RAWG pricing changes unfavorably.
+- Cache-only after initial fill (never refresh) — fragile, misses new releases
+- Self-host game metadata — not solo-builder-realistic
+
+**How to apply.** Any PR, roadmap item, or session that proposes shipping a monetization surface MUST have "RAWG commercial plan signed up" on the pre-flight checklist. Future sessions: if the user says "let's ship premium / ship the affiliate link / turn on Supporter" — pause and verify RAWG posture before touching code.
+
+---
+
+## 2026-04-20 — Doc audit: overrides + new direction
+
+**Decision.** Ran a full audit of `/docs` after the Apr 14–18 sprint closed. Several prior decisions are explicitly overridden or reinforced. Captured here so future sessions have the authoritative view.
+
+**Overrides:**
+- **Apr 3 feature-creep audit on archetypes is REVERSED.** The audit said "cut to 1 archetype, remove reroll." Wrong framing — archetypes are intentional personality, and the reroll lets users cycle through the multiple archetypes that match them. Share card is parked pending per-archetype art (Brady working on it), not abandoned.
+- **Apr 3 feature-creep audit on themes (9 → 5) is REVERSED.** No maintenance-burden signal has surfaced. Theme count is now 13 and fine. Themes are part of the moat per the Apr 20 design review.
+- **Three pick modes (Just 5 Mins / Quick Session / Almost Done) confirmed distinct, NOT redundant.** Earlier audit sketched them as overlapping HLTB filters; wrong. *Just 5 Mins* is psychological foot-in-the-door — "try for 5 minutes, decide after," not HLTB-based, we decide for them. *Quick Session* is HLTB-filtered short games for a 20-min window. *Almost Done* is HLTB time-remaining sort for backlog clearers. Different psychology, different data, all earning their slot. Don't flag again.
+
+**Reinforced / upgraded:**
+- **Email re-engagement moves up** — out from behind push notifications (Phase 5) to Tier 1 of the email strategy. Push still Phase 5. Email is cheaper, faster, and addresses the retention blind spot without service-worker complexity. See `docs/email-infra-spec-2026-04-20.md`.
+- **ROADMAP sprint labeling** — "CURRENT SPRINT" was active language; closed Apr 18. Relabeled as "LAST SPRINT — CLOSED" with "NEXT SPRINT — TBD" left deliberately blank until Brady picks.
+- **`decision-engine-v3-spec.md`** marked shipped/historical at the top. All six V3 features are live.
+
+**New specs written this cycle (all in `docs/`):**
+- `doc-audit-2026-04-20.md` — the audit itself
+- `competitive-landscape-2026-04-20.md` + `competitive-refresh-prompt.md`
+- `monetization-spec-2026-04-20.md` — cover-costs-first, two tiers, $3/mo Supporter with theme gating
+- `scale-up-costs-2026-04-20.md` + `email-infra-spec-2026-04-20.md`
+- `seo-audit-2026-04-20.md` — quick-win list, implementation in progress
+- `metrics-radar-2026-04-20.md` — MAU-triggered instrumentation plan
+- `pwa-explainer-2026-04-20.md` — three tiers, Tier 1 shipped, others deferred
+- `ai-lingo-reference.md` + `archetypes-catalogue.md`
+- `IDEAS.md` gained the Taste Reflection feature
+
+**Biggest strategic call from the audit:** retention is our biggest unflagged blind spot. We have zero cohort data. Instrumentation plan gated to MAU thresholds so we don't over-build pre-launch, but `metrics-radar-2026-04-20.md` specifies exactly what to flip on at 500 / 2k / 5k / 15k MAU.
+
+---
+
 ## 2026-04-17 — Modal restructure: 2 CTAs + 2 dropdowns; Deep Cut / Almost Done retired
 
 **Decision.** The Reroll modal pre-roll picker goes from 5 mode cards + 10-chip mood grid + Roll button to: top row of 2 CTAs (🎲 Anything + ⚡ Just 5 mins), collapsible "More ways to play" (Quick Session + Resume), collapsible "Vibes" (mood chips). Each mode button rolls immediately — no separate Roll button anymore. Internal `continue` key stays (persisted state + analytics keep working); user label becomes "Resume" with ➡️.
