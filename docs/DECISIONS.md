@@ -15,6 +15,28 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-21 — "Pile" vs "backlog" — voice on-page, SEO in meta
+
+**Decision.** The landing subhead is canonical "Your pile's not gonna play itself." — and by extension any on-page h1/h2 that names the whole collection uses "pile." "Backlog" stays reserved for (a) the unplayed-status column in the app and (b) meta description / JSON-LD / keywords for SEO discovery. `voice-charter.md` and `brand-messaging.md` updated today to match.
+
+**Why.**
+- Terminology spec (`voice-and-tone.md`) has always said "Backlog" = status, "Pile / Your Library" = whole collection. The charter's subhead line ("Your backlog's not gonna play itself.") contradicted that, and the contradiction surfaced when the shipped h1 got swapped to a wordmark earlier today and Brady asked for the bold line back.
+- "Pile" carries voice — warmer, in-group, Brady's. "Backlog" reads generic and tracker-coded, which we are explicitly not.
+- "Gaming backlog" is a real search term (11 backlog-weighted keywords in `app/layout.tsx`). Dropping it from the SEO layer would cost inbound traffic.
+- Split resolves both: on-page voice wins the in-product moment; meta/SEO voice wins discovery.
+
+**Implementation.**
+- `.claude/rules/voice-charter.md:72` — subhead updated with the split rationale.
+- `.claude/rules/brand-messaging.md:42` — same.
+- `components/LandingPage.tsx` — h1 restored as "Your pile's not gonna play itself." (also removed duplicate hero wordmark, added "Open app" nav button, swapped bottom CTA text for pink tagline wordmark, fixed "5 ways" → "3 ways" copy drift).
+- `app/layout.tsx:27-50,112-127` — meta description + keywords still carry "backlog" (verified unchanged).
+
+**Rejected.**
+- Using one word for both surfaces. "Backlog" everywhere kills voice on landing; "pile" everywhere leaves discovery on the table.
+- Keeping the charter's "backlog" subhead. It contradicted the terminology spec in the same rule set and didn't match shipped copy from before the wordmark experiment.
+
+---
+
 ## 2026-04-21 — Launch plan consolidated into single Launch Bible; 7 source docs archived
 
 **Decision.** All launch-planning content now lives in one doc: `docs/LAUNCH_BIBLE.md`. Seven source docs were moved to `docs/archive/launch-2026-04-21/` and marked as frozen history. The bible is the single source of truth; source docs are for reference only.

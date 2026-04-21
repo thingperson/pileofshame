@@ -233,3 +233,52 @@ Not blocking launch (dark-default themes work everywhere), but park a real cross
 - `main` tip: `17f07df` (launch bible consolidation), 1 commit ahead of `origin/main`
 - Build: not re-run (docs-only commit)
 - Known bug (unchanged): mobile Brave/Chromium light/cozy theme rendering
+
+---
+
+## Fifth wave (2026-04-21 PM — session 2) — landing polish + sample-library clutter
+
+**Shipped (commit `5cf101c`, pushed to main):**
+
+22. ✅ **Landing h1 restored** — `components/LandingPage.tsx` back to bold "Your pile's not gonna play itself." h1. Duplicate hero wordmark removed (the top banner already carries it). Bottom CTA text "get playing." swapped for pink `Wordmark variant="tagline"` graphic.
+
+23. ✅ **"5 ways" → "3 ways" copy drift fixed** — closes punch-list item carried from fourth wave.
+
+24. ✅ **"Open app" nav button** — top-right of landing, gradient purple-pink, triggers `onLoadSample` so first-time visitors can poke the app without committing. Sits next to Sign in.
+
+25. ✅ **Sample library clutter** — `app/page.tsx:771-775` gates StalledGameNudge, FinishCheckNudge, and SyncNudge on `!isSampleLibrary`. Sample mode now renders: Sample pill + banner → CTA → tabs → games. Nudges return the moment a real import replaces the sample. Addresses the onboarding-bounce risk Brady flagged in the screenshot.
+
+26. ✅ **Share composer flavor reroll** — `components/CompletionCelebration.tsx`. `pickFlavor` takes an optional `exclude` so reroll always lands on a different line. Dice 🎲 button top-right of the flavor preview (`aria-label="Try another line"`). Closes carried issue #4 from the AM session.
+
+27. ✅ **Cookie banner reposition** — `components/CookieBanner.tsx` now a compact bottom-right card on sm+ (`max-w-sm`, 16px gaps), full-width on mobile. Stops covering the landing CTAs on desktop. Verified at 1280×800 (banner x=874, CTAs on the left unobstructed).
+
+28. ✅ **DefaultBanner padding trim** — `app/globals.css:1722` `20px 16px 16px` → `10px 16px 6px`. Tighter vertical rhythm above the What-Should-I-Play button.
+
+29. ✅ **DECISIONS entry** — "Pile vs backlog: voice on-page, SEO in meta" logged with full rejected-alternatives. Codifies the split between charter-voice-docs (pile wins) and `app/layout.tsx` meta/keywords (backlog wins) so it doesn't get relitigated.
+
+30. ✅ **Voice charter + brand-messaging updated** — `.claude/rules/voice-charter.md:72` and `.claude/rules/brand-messaging.md:42` now both say the landing subhead is "Your pile's not gonna play itself." with the SEO-split rationale inline.
+
+31. ✅ **Orphan cleanup** — `public/og-fonts/` (two duplicate TTFs) deleted. OG code reads only from `public/og-assets/`; verified via grep before removing.
+
+## Carried issues — status after this session
+
+From the "Brady's observed issues" block at top of this file:
+
+1. **Landing wordmark purple bug** — not the issue Brady thought. Landing h1 was a wordmark today; reverted to bold text, so the purple-INVENTORY concern is moot. DefaultBanner (top of page) still forces `--wordmark-in: #fff` via CSS class.
+2. **"5 ways" → "3 ways"** — closed (item 23 above).
+3. **Safari line-icon bug** — deferred. Acknowledged by Brady as minor.
+4. **Share composer flavor reroll** — closed (item 26 above).
+
+## Verify on next session start
+
+- `https://inventoryfull.gg/` landing h1 reads "Your pile's not gonna play itself." and shows the "Open app" button top-right.
+- Load sample library: the three nudges (Pick up where you left off / Did you finish this / Local only) should NOT render. Real imports (non-`sample-` game IDs) still see them.
+- Complete a sample game to confirm the 🎲 reroll button on the share composer picks a different flavor line each click.
+
+## Health snapshot (session-2 close, 2026-04-21)
+
+- `main` tip: `5cf101c` (landing polish + sample-library clutter pass), pushed to origin
+- Build: not rerun locally — preview server compiled clean, no console errors observed during verification
+- Known bugs (unchanged): mobile Brave/Chromium light/cozy theme rendering; Safari desktop line icons
+- Launch punch-list items closed this session: landing copy drift (5→3), landing wordmark concern, share flavor reroll
+- Launch punch-list remaining: see bible §2 (5 🔴 blockers Apr 23–26)

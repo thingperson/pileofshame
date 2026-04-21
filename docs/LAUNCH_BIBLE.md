@@ -84,8 +84,8 @@ Dated. Owner. State. Integrates with the day-by-day playbook below — these gat
 
 | # | Item | Why it blocks | Target | State |
 |---|------|---------------|--------|-------|
-| B1 | Landing wordmark rendering purple on hero | First thing reviewers see; brand integrity | Apr 23 | ⬜ |
-| B2 | Landing claims "5 ways to pick today's game" but shows 3 | Copy drift looks sloppy under scrutiny | Apr 23 | ⬜ |
+| B1 | Landing wordmark rendering purple on hero | First thing reviewers see; brand integrity | Apr 23 | ✅ 2026-04-21 (landing h1 reverted to bold text; DefaultBanner forces white `--wordmark-in`) |
+| B2 | Landing claims "5 ways to pick today's game" but shows 3 | Copy drift looks sloppy under scrutiny | Apr 23 | ✅ 2026-04-21 (headline → "3 ways") |
 | B3 | QA all 3 reroll modes (Just 5 Mins / Quick Session / Resume) — 10 picks each, confirm Quick Session never surfaces 40h+ games | Reddit will stress-test this on day one | Apr 25 | ⬜ |
 | B4 | OG unfurl test on Discord, Twitter/Bluesky, Reddit, iMessage, Slack (real platforms, not preview tools) | Share cards are our virality loop | Apr 25 | ⬜ |
 | B5 | Sample library first-pick tuning — first 3 rolls across all modes must feel genuine | Most people try sample before importing | Apr 26 | ⬜ |
@@ -95,7 +95,7 @@ Dated. Owner. State. Integrates with the day-by-day playbook below — these gat
 | # | Item | Target | State |
 |---|------|--------|-------|
 | S1 | Safari desktop line icons not rendering (carried from earlier) | Apr 26 | ⬜ |
-| S2 | Share-card flavor-text reroll button (composer) | Apr 27 | ⬜ |
+| S2 | Share-card flavor-text reroll button (composer) | Apr 27 | ✅ 2026-04-21 (🎲 button on flavor preview; excludes current line) |
 | S3 | Landing hero CTA position on mobile — confirm above fold on iPhone SE width | Apr 26 | ⬜ |
 | S4 | "Lines Drawn" label on stats page — hover tooltip or rename | Apr 27 | ⬜ |
 | S5 | Four-button action row visual hierarchy (Return/Not for me/Don't suggest/Delete) | Apr 27 | ⬜ |
@@ -147,7 +147,7 @@ Theme: build reception infrastructure and start the Reddit karma clock. No produ
 - [ ] Start press kit folder: public Google Drive, add 4 screenshots + OG card + logomark + one-paragraph description
 
 **Thu Apr 23**
-- [ ] **FIX B1** (wordmark purple) + **FIX B2** ("5 ways") — deploy both
+- [x] ~~**FIX B1** (wordmark purple) + **FIX B2** ("5 ways")~~ — both shipped Apr 21 (commit `5cf101c`)
 - [ ] Bluesky post #3 (post D3)
 - [ ] Reddit: 3 comments
 - [ ] YouTube outreach list: search "steam backlog", "gaming backlog manager", "backlog challenge"; save 10 creators 5k–100k subs to a spreadsheet (name, handle, video URL, sub count, last upload)
@@ -171,7 +171,7 @@ Theme: build reception infrastructure and start the Reddit karma clock. No produ
 - [ ] Draft the Reddit posts for next week — open [Reddit Copy](#reddit-copy), adapt the personal stats (game count, actual library path)
 
 **Mon Apr 27**
-- [ ] **FIX S2** (share-card flavor reroll) + **S4** (Lines Drawn label) + **S5** (action row hierarchy)
+- [ ] **FIX S4** (Lines Drawn label) + **S5** (action row hierarchy) — ~~S2~~ shipped Apr 21
 - [ ] Bluesky post #7 (post D7) — "been building a thing. tell you about it soon."
 - [ ] Reddit: 3 comments. End-of-day karma check — should be 50+. If not, push Tue post to Wed.
 - [ ] Final OG unfurl re-test after all fixes
