@@ -15,6 +15,38 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-21 — Share composer locked to $ reclaimed + HLTB-faster-than-average
+
+**Decision.** The CompletionCelebration share composer exposes at most two toggles: **$X reclaimed from the pile** (when a price is cached for this game) and **Xh faster than average** (only when the player actually beat the HLTB main-story time). No other stats are shareable.
+
+**Retired from the composer:** hours invested, time in pile, "Game #N, K left in pile", star rating, HLTB-thorough/slower.
+
+**Why.**
+- The share card is a brag surface, not a dashboard. Hours invested is ambiguous (80h could be flex or could be a grind). Time-in-pile invites self-judgment. Game-count stats are meaningful to the user in-app but don't carry emotional weight to someone seeing the unfurl cold. Thorough/slower reads apologetic — off-brand.
+- The two signals left standing are each unambiguous: recovered dollars is a real-world receipt, HLTB-faster is a skill flex. Both land without context.
+- Aligns with the product axiom: fewer decisions at share-time = less time in app.
+
+**Implementation.** `components/CompletionCelebration.tsx` state reduced to `showDollar` + `showHltb`. `hltbFasterHours` memo returns `null` when slower, which gates the toggle's `available` flag — the slower case literally cannot be surfaced. `/api/share` already accepted `dollarValue`/`showDollarValue` so no schema change was needed.
+
+**Rejected.** Keeping a superset of toggles with sensible defaults — would have preserved flexibility at the cost of analysis paralysis at exactly the moment we want the user to close the tab and go brag somewhere.
+
+---
+
+## 2026-04-21 — OG clear card wordmark uses inline SVG paths, not the component or a font approximation
+
+**Decision.** The bottom-right brand mark on the clear-share OG card (`app/clear/[id]/opengraph-image.tsx`) is inlined as raw SVG `<path>` elements copied from `public/if-logos/wordmark-alone.svg`. It does NOT use `components/Wordmark.tsx` and does NOT approximate the mark with Bungee Regular text.
+
+**Why.**
+- `@vercel/og` runs on satori. External SVG via `<img src="…wordmark-full.svg">` loads unreliably at edge runtime — we got unsupported-format errors and stale caches.
+- `components/Wordmark.tsx` is a client React component with props and className forwarding; satori walks a flat HTML-ish tree, not React. So the component can't be reused directly — only its path data can.
+- A Bungee-text approximation was tried and explicitly rejected — wrong letterforms, read as generic retro type rather than the brand mark.
+
+**Implementation.** Two `<path>` elements (teal VENTORY FULL + white IN) inside an inline `<svg>` with the 'alone' viewBox `70 645 2580 335`, pinned bottom-right at 260×34.
+
+**Drift risk.** If the brand wordmark changes, update both `components/Wordmark.tsx` AND the inline paths in `opengraph-image.tsx`. Consider a shared constants file next time this comes up.
+
+---
+
 ## 2026-04-20 — RAWG commercial tier is a monetization BLOCKER
 
 **Decision.** Before any revenue feature ships (Supporter tier, affiliate links, paid themes, anything that moves us from "donation-optional" to "commercial"), we MUST first upgrade RAWG from free to a commercial plan.

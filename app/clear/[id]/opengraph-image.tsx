@@ -6,13 +6,25 @@ export const alt = 'Game Cleared - Inventory Full';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
+function siteOrigin(): string {
+  // Prefer explicit override, else Vercel-provided URL, else localhost for dev.
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  if (explicit) return explicit.replace(/\/$/, '');
+  const vercel = process.env.VERCEL_URL;
+  if (vercel) return `https://${vercel}`;
+  return process.env.NODE_ENV === 'production' ? 'https://inventoryfull.gg' : 'http://localhost:3000';
+}
+
 async function loadFonts() {
-  const [outfitBold, outfitRegular, jetbrainsMono] = await Promise.all([
-    fetch('https://fonts.gstatic.com/s/outfit/v15/QGYyz_MVcBeNP4NjuGObqx1XmO1I4bCyC4E.ttf').then(r => r.arrayBuffer()),
-    fetch('https://fonts.gstatic.com/s/outfit/v15/QGYyz_MVcBeNP4NjuGObqx1XmO1I4TC1C4E.ttf').then(r => r.arrayBuffer()),
-    fetch('https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8-qxjPQ.ttf').then(r => r.arrayBuffer()),
+  // Bungee / Bungee Inline live in public/og-fonts (TTF; satori/og can't decode woff2).
+  // Outfit Bold is a known-good gstatic static TTF URL.
+  const origin = siteOrigin();
+  const [bungeeInline, bungee, outfitBold] = await Promise.all([
+    fetch(`${origin}/og-fonts/BungeeInline.ttf`).then((r) => r.arrayBuffer()),
+    fetch(`${origin}/og-fonts/Bungee.ttf`).then((r) => r.arrayBuffer()),
+    fetch('https://fonts.gstatic.com/s/outfit/v15/QGYyz_MVcBeNP4NjuGObqx1XmO1I4bCyC4E.ttf').then((r) => r.arrayBuffer()),
   ]);
-  return { outfitBold, outfitRegular, jetbrainsMono };
+  return { bungeeInline, bungee, outfitBold };
 }
 
 interface ShareCard {
@@ -36,63 +48,122 @@ interface ShareCard {
   flavor_text: string | null;
 }
 
+function getMockCard(id: string): ShareCard {
+  // /clear/mock | mock-dollar | mock-hltb | mock-slow | mock-count | mock-hours
+  const base: ShareCard = {
+    game_name: 'Elden Ring',
+    cover_url: null,
+    rating: 5,
+    hours_played: 85,
+    hltb_main: 58,
+    time_in_pile_days: null,
+    dollar_value: 70,
+    total_cleared: 12,
+    backlog_remaining: 143,
+    total_reclaimed: null,
+    show_hours: false,
+    show_hltb_compare: false,
+    show_pile_time: false,
+    show_dollar_value: false,
+    show_stats: false,
+    show_display_name: true,
+    display_name: 'brady',
+    flavor_text: null,
+  };
+  const v = id.replace(/^mock-?/, '');
+  switch (v) {
+    case 'hltb':
+      return { ...base, game_name: 'Hollow Knight', hours_played: 28, hltb_main: 40, show_hltb_compare: true };
+    case 'slow':
+      return { ...base, game_name: 'The Witcher 3', hours_played: 160, hltb_main: 103, show_hltb_compare: true };
+    case 'count':
+      return { ...base, game_name: 'Stardew Valley', show_stats: true };
+    case 'hours':
+      return { ...base, game_name: 'Baldur\'s Gate 3', hours_played: 120, show_hours: true };
+    case 'long':
+      return { ...base, game_name: 'Disco Elysium: The Final Cut', show_dollar_value: true };
+    case 'dollar':
+    case '':
+    default:
+      return { ...base, show_dollar_value: true };
+  }
+}
+
+function pickSubtitle(card: ShareCard): string {
+  // Four stat templates, first-match wins. Falls back to a generic line.
+  if (card.show_dollar_value && card.dollar_value) {
+    return `that's $${Math.round(card.dollar_value)} back from the pile.`;
+  }
+  if (card.show_hltb_compare && card.hours_played && card.hltb_main && card.hltb_main > 0) {
+    const diff = Math.round(card.hltb_main - card.hours_played);
+    if (diff > 0) return `${diff}h faster than average.`;
+    if (diff < 0) return `${Math.abs(diff)}h more. you took your time.`;
+  }
+  if (card.show_stats && card.total_cleared) {
+    return `game #${card.total_cleared} off the pile.`;
+  }
+  if (card.show_hours && card.hours_played) {
+    return `${Math.round(card.hours_played)}h, well spent.`;
+  }
+  return 'another one down.';
+}
+
 export default async function Image({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  // Fetch share card from Supabase (using anon key — public read)
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-  const { data: card } = await supabase
-    .from('share_cards')
-    .select('*')
-    .eq('id', id)
-    .single<ShareCard>();
+  // Preview/mock shortcuts — hit /clear/mock/opengraph-image to see the card
+  // without a real share_cards row. Variants exercise each subtitle template.
+  let card: ShareCard | null = null;
+  if (id.startsWith('mock')) {
+    card = getMockCard(id);
+  } else {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const { data } = await supabase
+      .from('share_cards')
+      .select('*')
+      .eq('id', id)
+      .single<ShareCard>();
+    card = data;
+  }
 
   if (!card) {
-    // Fallback: generic branded card
     return new ImageResponse(
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', background: '#0a0a0f', color: '#a78bfa', fontSize: '32px', fontFamily: 'system-ui' }}>
-        inventoryfull.gg
-      </div>,
+      (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', background: '#0b0618', color: '#a78bfa', fontSize: '32px', fontFamily: 'system-ui' }}>
+          inventoryfull.gg
+        </div>
+      ),
       { ...size },
     );
   }
 
-  const { outfitBold, outfitRegular, jetbrainsMono } = await loadFonts();
+  const { bungeeInline, bungee, outfitBold } = await loadFonts();
+  const origin = siteOrigin();
 
-  // Build detail lines based on what the user chose to show.
-  // NOTE: time_in_pile_days intentionally omitted — not reliably accurate and
-  // doesn't carry emotional weight for the share moment.
-  const details: { label: string; value: string; color: string }[] = [];
+  const gameName = card.game_name.toUpperCase();
+  const subtitle = pickSubtitle(card);
 
-  if (card.show_hltb_compare && card.hours_played && card.hltb_main && card.hltb_main > 0) {
-    const diff = Math.round(card.hltb_main - card.hours_played);
-    if (diff > 0) {
-      details.push({ label: 'vs average', value: `${diff}h faster`, color: '#22c55e' });
-    } else if (diff < 0) {
-      details.push({ label: 'vs average', value: `${Math.abs(diff)}h more (thorough)`, color: '#f59e0b' });
-    }
+  // Layout strategy:
+  //   Short combined ("ELDEN RING CLEARED!") → one line, big type.
+  //   Longer → stack "game" on top, "CLEARED!" below. Game-name size scales
+  //   against its own length so "Disco Elysium: The Final Cut" still fits.
+  // Rough Bungee Inline width ≈ 0.6 × fontSize per char. Safe-zone padding 80px
+  // each side → content cap ≈ 1040px.
+  const combinedLen = gameName.length + ' CLEARED!'.length;
+  const stackLayout = combinedLen > 22;
+  let gameSize: number;
+  let clearedSize: number;
+  if (stackLayout) {
+    // Fit game name alone to ~1000px. Char ≈ 0.58 × fontSize.
+    gameSize = Math.min(104, Math.max(44, Math.floor(1000 / (gameName.length * 0.58))));
+    clearedSize = 112;
+  } else {
+    // Single line — fit combined string.
+    gameSize = Math.min(96, Math.floor(1000 / (combinedLen * 0.58)));
+    clearedSize = gameSize;
   }
-
-  if (card.show_hours && card.hours_played) {
-    details.push({ label: 'Time invested', value: `${Math.round(card.hours_played)}h`, color: '#38bdf8' });
-  }
-
-  if (card.show_dollar_value && card.dollar_value) {
-    details.push({ label: 'Value recovered', value: `$${Math.round(card.dollar_value)}`, color: '#22c55e' });
-  }
-
-  if (card.show_stats && card.total_cleared) {
-    details.push({ label: 'Total cleared', value: `Game #${card.total_cleared}`, color: '#c4b5fd' });
-  }
-
-  if (card.show_stats && card.backlog_remaining) {
-    details.push({ label: 'Pile remaining', value: `${card.backlog_remaining} games`, color: '#64748b' });
-  }
-
-  const stars = card.rating > 0 ? '⭐'.repeat(card.rating) : '';
 
   return new ImageResponse(
     (
@@ -100,192 +171,195 @@ export default async function Image({ params }: { params: Promise<{ id: string }
         style={{
           display: 'flex',
           flexDirection: 'column',
-          width: '100%',
-          height: '100%',
-          background: '#0a0a0f',
-          fontFamily: 'Outfit, sans-serif',
+          width: '1200px',
+          height: '630px',
+          background: 'linear-gradient(180deg, #1a0a2e 0%, #0b0618 60%, #0b0618 100%)',
           position: 'relative',
-          overflow: 'hidden',
+          fontFamily: 'Outfit, sans-serif',
         }}
       >
-        {/* Background: game cover art, blurred and heavily dimmed so brand frame dominates */}
-        {card.cover_url && (
-          <div style={{ position: 'absolute', inset: 0, display: 'flex' }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={card.cover_url}
-              alt=""
-              width={1200}
-              height={630}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(48px) brightness(0.22) saturate(0.55)' }}
-            />
-          </div>
-        )}
+        {/* Purple radial glow — full-width flex row centers it */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '-80px',
+            left: 0,
+            width: '1200px',
+            height: '560px',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            style={{
+              width: '900px',
+              height: '560px',
+              background: 'radial-gradient(ellipse, rgba(168, 85, 247, 0.38), rgba(234, 45, 225, 0.08) 45%, transparent 70%)',
+              display: 'flex',
+            }}
+          />
+        </div>
 
-        {/* Dark overlay for readability */}
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(10, 10, 15, 0.78)', display: 'flex' }} />
-
-        {/* Purple glow from top */}
-        <div style={{ position: 'absolute', top: '-80px', left: '50%', width: '900px', height: '500px', background: 'radial-gradient(ellipse, rgba(124, 58, 237, 0.22), transparent 65%)', transform: 'translateX(-50%)', display: 'flex' }} />
-
-        {/* Grid pattern */}
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)', backgroundSize: '60px 60px', display: 'flex' }} />
-
-        {/* === TOP HEADER: logomark + INVENTORY FULL, centered, the brand anchor === */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '28px', padding: '34px 56px 0 56px', position: 'relative', zIndex: 1 }}>
+        {/* Hero PNG faded as the backdrop anchor — centered via flex row */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '10px',
+            left: 0,
+            width: '1200px',
+            height: '380px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="https://inventoryfull.gg/icon-512.png"
+            src={`${origin}/inventoryfull-hero-transparent.png`}
             alt=""
-            width={112}
-            height={112}
-            style={{ width: '112px', height: '112px', borderRadius: '20px' }}
+            width={540}
+            height={360}
+            style={{ width: '540px', height: '360px', objectFit: 'contain', opacity: 0.4 }}
           />
-          <div style={{ fontSize: '44px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500, color: '#a78bfa', letterSpacing: '6px', display: 'flex' }}>
-            INVENTORY FULL
-          </div>
         </div>
 
-        {/* === MAIN CONTENT: game art + hero copy === */}
-        <div style={{ display: 'flex', flex: 1, padding: '20px 56px 12px 56px', gap: '40px', position: 'relative', zIndex: 1 }}>
-
-          {/* Left: Game cover — wider box + objectFit contain so landscape source art
-              (RAWG/Steam headers) renders whole instead of being guillotined on the sides.
-              Subtle bg so contain letterboxing reads as intentional framing. */}
-          {card.cover_url && (
-            <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-              <div
-                style={{
-                  display: 'flex',
-                  width: '300px',
-                  height: '300px',
-                  borderRadius: '14px',
-                  border: '2px solid rgba(167, 139, 250, 0.28)',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
-                  backgroundColor: 'rgba(15, 15, 22, 0.85)',
-                  overflow: 'hidden',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={card.cover_url}
-                  alt=""
-                  width={300}
-                  height={300}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                  }}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Right: Content — CLEARED, game name, flavor, small detail pills */}
-          <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center' }}>
-            {/* CLEARED badge + stars — both bumped, this is the emotional punchline */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '14px' }}>
-              <div
-                style={{
-                  padding: '6px 20px',
-                  borderRadius: '9999px',
-                  backgroundColor: 'rgba(34, 197, 94, 0.18)',
-                  color: '#22c55e',
-                  fontSize: '22px',
-                  fontFamily: 'JetBrains Mono, monospace',
-                  fontWeight: 500,
-                  border: '1px solid rgba(34, 197, 94, 0.4)',
-                  letterSpacing: '4px',
-                  display: 'flex',
-                }}
-              >
-                CLEARED
-              </div>
-              {stars && <div style={{ fontSize: '30px', display: 'flex' }}>{stars}</div>}
-            </div>
-
-            {/* Game name — hero type */}
+        {/* Main hero — game name (strikethrough) + CLEARED!, stacked or inline */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: stackLayout ? '150px' : '178px',
+            left: 0,
+            width: '1200px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '0 80px',
+            gap: stackLayout ? '10px' : '0',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: stackLayout ? 0 : '22px', flexWrap: 'nowrap' }}>
             <div
               style={{
-                fontSize: card.game_name.length > 34 ? '44px' : card.game_name.length > 22 ? '54px' : '62px',
-                fontWeight: 800,
-                color: '#f8fafc',
-                letterSpacing: '-2px',
-                lineHeight: 1.05,
+                fontFamily: 'Bungee Inline, sans-serif',
+                fontSize: `${gameSize}px`,
+                color: '#f4ecff',
+                letterSpacing: '1px',
+                textDecoration: 'line-through',
+                textDecorationColor: '#ea2de1',
+                textDecorationThickness: `${Math.max(4, Math.round(gameSize / 18))}px`,
                 display: 'flex',
-                marginBottom: '12px',
+                whiteSpace: 'nowrap',
               }}
             >
-              {card.game_name}
+              {gameName}
             </div>
-
-            {/* Flavor text — bumped prominence under the title */}
-            {card.flavor_text && (
+            {!stackLayout && (
               <div
                 style={{
-                  fontSize: '24px',
-                  color: '#cbd5e1',
-                  fontStyle: 'italic',
-                  lineHeight: 1.35,
+                  fontFamily: 'Bungee, sans-serif',
+                  fontSize: `${clearedSize}px`,
+                  color: '#ff5a8a',
+                  letterSpacing: '1px',
                   display: 'flex',
-                  marginBottom: '16px',
+                  whiteSpace: 'nowrap',
                 }}
               >
-                {card.flavor_text}
+                CLEARED!
               </div>
             )}
+          </div>
+          {stackLayout && (
+            <div
+              style={{
+                fontFamily: 'Bungee, sans-serif',
+                fontSize: `${clearedSize}px`,
+                color: '#ff5a8a',
+                letterSpacing: '2px',
+                display: 'flex',
+              }}
+            >
+              CLEARED!
+            </div>
+          )}
+        </div>
 
-            {/* Detail pills — barely visible, secondary */}
-            {details.length > 0 && (
-              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                {details.map((d) => (
-                  <div
-                    key={d.label}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      padding: '6px 12px',
-                      borderRadius: '8px',
-                      backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                      border: '1px solid rgba(255, 255, 255, 0.06)',
-                    }}
-                  >
-                    <div style={{ fontSize: '11px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{d.label}</div>
-                    <div style={{ fontSize: '16px', fontWeight: 700, color: d.color, fontFamily: 'JetBrains Mono, monospace', display: 'flex' }}>{d.value}</div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Display name attribution */}
-            {card.show_display_name && card.display_name && (
-              <div style={{ fontSize: '13px', color: '#64748b', fontFamily: 'JetBrains Mono, monospace', marginTop: '12px', display: 'flex' }}>
-                cleared by {card.display_name}
-              </div>
-            )}
+        {/* Subtitle — stat template */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '108px',
+            left: 0,
+            width: '1200px',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            style={{
+              fontFamily: 'Outfit, sans-serif',
+              fontWeight: 700,
+              fontSize: '34px',
+              color: '#d8c8f5',
+              letterSpacing: '-0.3px',
+              display: 'flex',
+            }}
+          >
+            {subtitle}
           </div>
         </div>
 
-        {/* === FOOTER: centered tagline sell + domain === */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px', padding: '0 56px 26px 56px', position: 'relative', zIndex: 1 }}>
-          <div style={{ fontSize: '22px', fontWeight: 700, color: '#e2e8f0', letterSpacing: '-0.3px', display: 'flex' }}>
-            get playing.
+        {/* Bottom row: attribution (left) + wordmark (right) */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '32px',
+            left: 0,
+            width: '1200px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '0 48px',
+          }}
+        >
+          <div
+            style={{
+              fontSize: '16px',
+              color: '#7c6a9a',
+              fontFamily: 'Outfit, sans-serif',
+              fontWeight: 700,
+              display: 'flex',
+            }}
+          >
+            {card.show_display_name && card.display_name ? `cleared by ${card.display_name}` : ''}
           </div>
-          <div style={{ fontSize: '17px', fontFamily: 'JetBrains Mono, monospace', color: '#a78bfa', letterSpacing: '2px', display: 'flex' }}>
-            inventoryfull.gg
-          </div>
+          {/* Wordmark — inline paths from public/if-logos/wordmark-alone.svg so
+              satori renders actual brand glyphs (external SVG <img> is unreliable
+              in @vercel/og). "IN" override to white on dark; "VENTORY FULL" teal. */}
+          <svg
+            width={260}
+            height={34}
+            viewBox="70 645 2580 335"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m1592.68 702.2 107.69-50.26h157.95v116.14h-113.18v-61.66h-40.12v102.2H1822v55.33h-116.98v108.96h-112.34zm294.79-50.26h113.18v265.64h39.7V651.94h113.61v320.97h-266.49zm296.05 0h112.34v266.07h97.13v54.9h-209.48V651.94Zm238.61 0h112.34v266.07h97.13v54.9h-209.48V651.94Z"
+              fill="#1ae2c0"
+            />
+            <path
+              d="M76.42 651.89h65.88v320.97H76.42zm91.22 51.1 64.62-51.1h91.22v320.97h-66.31V706.79h-23.23v266.07h-66.3zm181.17-51.1h64.62v266.07h23.23V651.89h65.88v271.98l-62.51 48.99h-91.22zm179.06 50.26 63.77-50.26h90.8v116.14h-65.88v-61.66h-23.23v102.2h67.99v55.33h-67.99v53.64h89.11v55.32H527.87zm179.91.84 64.62-51.1h91.22v320.97h-66.31V706.79h-23.23v266.07h-66.3zm216.23 3.81h-35.05v-54.9h137.26v54.9h-34.21v266.07h-67.99V706.8Zm127.54 0 66.3-54.9h88.69v266.49l-65.04 54.48h-89.95zm89.53 210.74V706.8h-23.23v210.74zm90.8-213.28 64.19-52.37h90.38v143.59l-36.74 40.54h36.74v136.84h-65.88V864.74h-22.81v108.12h-65.88zm88.69 100.51v-97.56h-22.81v97.56zm91.22 112.77h87.84v-54.9h-87.84V651.9h64.62v155.42h23.23V651.9h66.31v265.64l-64.19 55.32h-89.95v-55.32Z"
+              fill="#ffffff"
+            />
+          </svg>
         </div>
       </div>
     ),
     {
       ...size,
       fonts: [
-        { name: 'Outfit', data: outfitBold, weight: 800 as const, style: 'normal' as const },
-        { name: 'Outfit', data: outfitRegular, weight: 400 as const, style: 'normal' as const },
-        { name: 'JetBrains Mono', data: jetbrainsMono, weight: 500 as const, style: 'normal' as const },
+        { name: 'Bungee Inline', data: bungeeInline, weight: 400 as const, style: 'normal' as const },
+        { name: 'Bungee', data: bungee, weight: 400 as const, style: 'normal' as const },
+        { name: 'Outfit', data: outfitBold, weight: 700 as const, style: 'normal' as const },
       ],
     },
   );

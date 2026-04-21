@@ -8,7 +8,7 @@
 
 **Active sprint:** Public soft-launch **Friday 2026-04-24** as **donationware**. See the full 9-item list in [session-resume-2026-04-20.md](session-resume-2026-04-20.md) §ACTIVE SPRINT — this doc only tracks progress since 2026-04-20.
 
-**Next action:** Sprint item **5 — Clear-share OG card v2** (comp 9 in `notes/OG-card-share-9.png`). Everything wordmark/favicon/nav-related is done and deployed.
+**Next action:** Sprint item **6 — Supabase email template rewrite**. Items 1–5 shipped 2026-04-21.
 
 **What's done in this session (2026-04-21):**
 1. ✅ SVGO-strip wordmark SVGs — 88–99% compression, 6 files in `public/if-logos/`
@@ -20,12 +20,17 @@
    - About nav (`app/about/page.tsx`) — `variant="alone"`
    - Landing footer (`components/LandingPage.tsx`) — small muted `variant="alone"` above Privacy/Terms/Cookies row
 
-**Remaining sprint items (5 through 9):**
-5. **OG card v2** — comp 9 reference in `notes/OG-card-share-9.png`. Faded hero PNG bg, Bungee Inline for game name w/ strikethrough, Bungee Regular "CLEARED!", Outfit Bold stat subtitle, wordmark anchor bottom-right. Four stat templates. Fonts all Google Fonts, edge-fetchable.
-6. **Supabase email template rewrite** — Auth → Email Templates dashboard, Inventory Full voice, custom "From" name.
-7. **Email opt-in checkbox on signup** — `wants_updates` column, unchecked default, separate from auth consent.
-8. **Privacy Policy update** — disclose `wants_updates` collection. Ships WITH or BEFORE the checkbox.
-9. **Pre-push gates** — `/pre-push-review` skill (build, voice, legal, mobile, a11y).
+**What shipped later in 2026-04-21 (second wave):**
+5. ✅ **OG card v2** — `app/clear/[id]/opengraph-image.tsx` rewritten. Centered hero PNG at 0.4 opacity with radial purple glow, game name in Bungee Inline with pink strikethrough, `CLEARED!` in Bungee regular (pink), Outfit Bold subtitle. Brand wordmark bottom-right is **inline SVG paths** (pulled from `wordmark-alone.svg`) — satori won't load external SVG via `<img>` reliably, and a Bungee text approximation was rejected as off-brand. Title auto-scales + stacks onto two lines for long names (threshold = combined length > 22 chars). Safe-zone padding 80px each side. TTFs at `public/og-fonts/` (satori can't decode woff2). Four subtitle templates — `$X back from the pile.` → `Xh faster than average.` → `Xh more. you took your time.` → `game #N off the pile.` → `Xh, well spent.` → fallback `another one down.` Mock preview routes: `/clear/mock[-hltb|-slow|-count|-hours|-long]/opengraph-image`.
+6. ✅ **Share composer trimmed** — `components/CompletionCelebration.tsx` dropped hours / pile-time / stats / rating toggles. Only $-reclaimed (when price cached) + HLTB-faster (only when they actually beat average, slower case never exposed) are shareable. Reasoning: everything else was weak signal and diluted the brag. Matches product axiom "less time in app."
+7. ✅ **Landing hero** — `components/LandingPage.tsx:130` replaced "Your pile's not gonna play itself." h1 with centered `Wordmark variant="full"` (white `IN` + teal `VENTORY FULL` + pink `get playing.` tagline). Scales responsively 16rem → 26rem.
+8. ✅ **App-header wordmark removed** — `app/page.tsx` duplicate mark gone since `DefaultBanner` carries it above.
+
+**Remaining sprint items:**
+- **Sprint 6** — Supabase email template rewrite (dashboard work, Inventory Full voice, custom From name).
+- **Sprint 7** — Email opt-in checkbox on signup (`wants_updates` column, unchecked default, separate from auth consent).
+- **Sprint 8** — Privacy Policy update (disclose `wants_updates`). Ships WITH or BEFORE the checkbox.
+- **Sprint 9** — Pre-push gates (`/pre-push-review` skill).
 
 ---
 
@@ -63,9 +68,22 @@ See [session-resume-2026-04-20.md](session-resume-2026-04-20.md) for:
 
 ---
 
+## Known bug — Chromium mobile theme rendering
+
+**Reported 2026-04-21 by Brady.** `light` and `cozy` themes render correctly on desktop Safari, desktop Brave, and mobile Safari — but fail on **mobile Brave (Android Chromium)**. Desktop Chromium is fine, so it's specifically the Android-Chromium code path.
+
+Likely suspects (unverified):
+- `color-mix(in oklch …)` or `light-dark()` — Android Chromium has historically lagged on OKLCH and color-scheme features vs. desktop Chromium.
+- CSS custom property fallback chain in `app/globals.css` theme tokens.
+- Any `@supports` branch that divides light/cozy from the other themes.
+
+Not blocking launch (dark-default themes work everywhere), but park a real cross-browser audit on the Week 2 list.
+
+---
+
 ## Health snapshot (2026-04-21)
 
 - Build: ✅ passes (`npm run build` exits 0)
-- Sprint items 1/2/3/4: ✅ done
-- Sprint items 5–9: pending
-- No known regressions from today's work
+- Sprint items 1–8 (wordmark wave + OG card + share trim + landing hero): ✅ shipped
+- Sprint items 6–9 (email infra): pending
+- Known bug: light/cozy themes broken on mobile Brave/Chromium (see above)

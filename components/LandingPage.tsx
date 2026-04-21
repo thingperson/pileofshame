@@ -127,13 +127,13 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
             />
           </div>
 
-          <h1
-            className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.05] mb-5"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            Your pile&apos;s not gonna
-            <br />
-            <span style={{ color: 'var(--color-accent-purple)' }}>play itself.</span>
+          <h1 className="m-0 mb-5 flex justify-center">
+            <Wordmark
+              variant="full"
+              title="Inventory Full — get playing."
+              className="w-64 sm:w-80 md:w-[22rem] lg:w-[26rem] h-auto"
+              style={{ ['--wordmark-in' as string]: '#ffffff' }}
+            />
           </h1>
 
           <p

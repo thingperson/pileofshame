@@ -235,17 +235,13 @@ function GameClearShare({
   const [creating, setCreating] = useState(false);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
 
-  // Toggle states for composable card
-  const [showHours, setShowHours] = useState(hoursOnGame > 0);
-  const [showHltb, setShowHltb] = useState(!!(game.hltbMain && hoursOnGame > 0));
-  const [showPileTime, setShowPileTime] = useState(true);
-  const [showStats, setShowStats] = useState(true);
-  const [showRating, setShowRating] = useState(false);
-
-  // Update rating toggle when user rates
-  useEffect(() => {
-    if (rating > 0) setShowRating(true);
-  }, [rating]);
+  // Share composer is intentionally minimal — the only two stats worth sharing
+  // are: dollar value reclaimed, and HLTB-faster-than-average (a real flex).
+  // Everything else dilutes the brag or shares data that doesn't carry
+  // emotional weight outside our app. Keeping it to 1–2 toggles also respects
+  // the "less time in app" product axiom.
+  const [showDollar, setShowDollar] = useState(true);
+  const [showHltb, setShowHltb] = useState(true);
 
   const timeInPileDays = useMemo(() => {
     if (!game.addedAt) return null;
@@ -278,31 +274,33 @@ function GameClearShare({
     });
   }, [game.name, timeInPileDays, hoursOnGame, gamesCleared, backlogSize, gamePrice]);
 
-  // HLTB comparison: percentage faster/slower
-  const hltbLabel = useMemo(() => {
-    if (!game.hltbMain || !hoursOnGame || game.hltbMain <= 0) return '';
-    const diff = game.hltbMain - hoursOnGame;
-    const pct = Math.round(Math.abs(diff) / game.hltbMain * 100);
-    if (diff > 0) return `${pct}% faster than average (${Math.round(game.hltbMain)}h)`;
-    if (diff < 0) return `${pct}% more thorough than average`;
-    return 'Right on the average completion time';
+  // HLTB "faster than average" — only a brag when the player actually beat it
+  // below the average. Slower/thorough isn't share-worthy per Brady 2026-04-21.
+  const hltbFasterHours = useMemo(() => {
+    if (!game.hltbMain || !hoursOnGame || game.hltbMain <= 0) return null;
+    const diff = Math.round(game.hltbMain - hoursOnGame);
+    return diff > 0 ? diff : null;
   }, [game.hltbMain, hoursOnGame]);
 
   const toggles: ShareToggle[] = [
-    { key: 'hours', label: `${hoursOnGame}h invested`, available: hoursOnGame > 0, enabled: showHours },
-    { key: 'hltb', label: hltbLabel, available: !!(game.hltbMain && hoursOnGame > 0 && hltbLabel), enabled: showHltb },
-    { key: 'pile', label: timeInPileDays ? `${timeInPileDays > 365 ? Math.floor(timeInPileDays / 365) + 'y' : timeInPileDays > 30 ? Math.floor(timeInPileDays / 30) + 'mo' : timeInPileDays + 'd'} in the pile` : 'Time in pile', available: !!timeInPileDays, enabled: showPileTime },
-    { key: 'stats', label: `Game #${gamesCleared + 1}, ${backlogSize} left in the pile`, available: true, enabled: showStats },
-    { key: 'rating', label: rating > 0 ? `${rating}/5 stars` : 'My rating', available: rating > 0, enabled: showRating },
+    {
+      key: 'dollar',
+      label: gamePrice ? `$${Math.round(gamePrice)} reclaimed from the pile` : '$ reclaimed',
+      available: !!gamePrice,
+      enabled: showDollar,
+    },
+    {
+      key: 'hltb',
+      label: hltbFasterHours ? `${hltbFasterHours}h faster than average` : '',
+      available: !!hltbFasterHours,
+      enabled: showHltb,
+    },
   ];
 
   const handleToggle = (key: string) => {
     switch (key) {
-      case 'hours': setShowHours(v => !v); break;
+      case 'dollar': setShowDollar(v => !v); break;
       case 'hltb': setShowHltb(v => !v); break;
-      case 'pile': setShowPileTime(v => !v); break;
-      case 'stats': setShowStats(v => !v); break;
-      case 'rating': setShowRating(v => !v); break;
     }
   };
 
@@ -315,16 +313,18 @@ function GameClearShare({
         body: JSON.stringify({
           gameName: game.name,
           coverUrl: game.coverUrl || null,
-          rating: showRating ? rating : 0,
+          rating: 0,
           hoursPlayed: hoursOnGame || null,
           hltbMain: game.hltbMain || null,
-          timeInPileDays: timeInPileDays,
+          timeInPileDays,
           totalCleared: gamesCleared + 1,
           backlogRemaining: backlogSize,
-          showHours,
-          showHltbCompare: showHltb,
-          showPileTime,
-          showStats,
+          dollarValue: showDollar && gamePrice ? gamePrice : null,
+          showHours: false,
+          showHltbCompare: showHltb && !!hltbFasterHours,
+          showPileTime: false,
+          showStats: false,
+          showDollarValue: showDollar && !!gamePrice,
           flavorText,
         }),
       });
