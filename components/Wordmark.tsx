@@ -20,7 +20,7 @@ const FILL_TAGLINE = 'var(--wordmark-tagline, #ea2de1)';
 const VIEWBOX: Record<WordmarkVariant, string> = {
   full: '70 645 2580 510',
   alone: '70 645 2580 335',
-  tagline: '20 775 2840 250',
+  tagline: '820 900 2000 260',
 };
 
 // "VENTORY FULL" glyphs (teal body). Used by `full` and `alone`.

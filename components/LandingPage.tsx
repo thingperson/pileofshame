@@ -67,22 +67,30 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
       </div>
 
       {/* ═══════════════════════════════════════════
-          TOP NAV — open app + sign-in, minimal
+          TOP HEADER — wordmark + nav in one row
           ═══════════════════════════════════════════ */}
-      <nav className="relative z-20 flex items-center justify-end gap-2 px-6 py-4">
-        <button
-          onClick={onLoadSample}
-          className="px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-150 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
-          style={{
-            background: 'linear-gradient(135deg, var(--color-accent-purple) 0%, var(--color-accent-pink) 100%)',
-            color: '#fff',
-            boxShadow: '0 2px 12px color-mix(in srgb, var(--color-accent-purple) 25%, transparent)',
-          }}
-        >
-          Open app
-        </button>
-        <AuthButton />
-      </nav>
+      <header className="relative z-20 flex items-center justify-between gap-3 px-4 sm:px-6 py-3">
+        <Wordmark
+          variant="full"
+          aria-label="Inventory Full — get playing."
+          className="h-9 sm:h-11 w-auto"
+          style={{ ['--wordmark-in' as string]: '#ffffff' }}
+        />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onLoadSample}
+            className="px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-150 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
+            style={{
+              background: 'linear-gradient(135deg, var(--color-accent-purple) 0%, var(--color-accent-pink) 100%)',
+              color: '#fff',
+              boxShadow: '0 2px 12px color-mix(in srgb, var(--color-accent-purple) 25%, transparent)',
+            }}
+          >
+            Open app
+          </button>
+          <AuthButton />
+        </div>
+      </header>
 
       {/* ═══════════════════════════════════════════
           HERO
@@ -437,9 +445,6 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
 
         {/* Footer */}
         <div className="mt-16 space-y-4">
-          <div className="flex justify-center" style={{ opacity: 0.4 }}>
-            <Wordmark variant="alone" aria-label="Inventory Full" className="h-5 w-auto" />
-          </div>
           <p
             className="text-xs font-[family-name:var(--font-mono)]"
             style={{ color: 'var(--color-text-faint)', opacity: 0.5 }}

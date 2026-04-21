@@ -526,6 +526,9 @@ const THEME_CLASSES = ['theme-90s', 'theme-80s', 'theme-future', 'theme-light', 
 
 export default function NinetiesMode({ children }: { children: React.ReactNode }) {
   const theme = useStore((s) => s.settings.theme);
+  // Landing (empty library) renders its own integrated header with wordmark + nav,
+  // so the default banner is suppressed to avoid a second duplicate wordmark row.
+  const isLanding = useStore((s) => s.games.length === 0);
 
   useEffect(() => {
     // Remove all theme classes
@@ -612,7 +615,7 @@ export default function NinetiesMode({ children }: { children: React.ReactNode }
   if (theme !== 'void') {
     return (
       <>
-        <DefaultBanner />
+        {!isLanding && <DefaultBanner />}
         {children}
       </>
     );
