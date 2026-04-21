@@ -207,7 +207,7 @@ Only include sections with real content. Skip empty ones — don't write "N/A."
   - **### State changes** — what's different about Inventory Full from the hub's perspective (status shifts, phase transitions, timeline updates, new infra connected, metrics moved). Drives pulse.md updates on the hub side.
   - **### Patterns noticed** — working style, cognitive pattern, friction signal. Only when there's real signal. Skip if routine.
   - **### Cross-project signal** — if something matters for Slant, Luma, Speakeasier, or Holograms Razor, say so with a pointer. Skip if nothing.
-  - **### What Brady OS pages need touching (if any)** — name existing `inventory-full-*` wiki pages that should be refreshed, one-line note per page. Drives ingest on the hub side.
+  - **### What Brady OS pages need touching (if any)** — describe the *area* or *theme* that should be refreshed on the hub side, not a filename. The Brady OS ingester owns its own wiki schema; this repo shouldn't track or guess page names (they rot). Phrase it like: *"On Brady OS's side, the area covering [theme] should be refreshed — exact page is the ingester's call."* Drives ingest without cross-repo coupling.
 
 ### Do NOT include
 
@@ -217,6 +217,8 @@ Only include sections with real content. Skip empty ones — don't write "N/A."
 - Routine bug fixes unless they change the project's story
 - Padding, hedge-phrases, narrative filler
 - Anything that only matters inside this repo
+- **Self-referential notes about the handoff mechanism itself** — don't explain what the `decisions:` frontmatter does or doesn't do, don't narrate what Brady OS will do with this note. Brady OS knows its own ingest flow. Prose like "no decision-log entry needed beyond the frontmatter" is pure noise.
+- **Guessed Brady OS page names.** This repo does not track the hub's wiki schema. Describe themes/areas, not filenames.
 
 ### Sanity checks before writing
 
