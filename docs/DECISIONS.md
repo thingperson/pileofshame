@@ -15,6 +15,27 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-21 — OG images on this repo use Node runtime + fs.readFile + PNG assets
+
+**Decision.** The `/clear/[id]/opengraph-image` route runs on **`runtime = 'nodejs'`**, reads its font TTFs and hero PNG with `fs.readFile` from `public/og-assets/`, and uses **PNG** (not webp) for any `<img>` embedded as a data URL. The root `/opengraph-image` and `/pile/[id]/opengraph-image` routes stay on `edge` for now (they fetch only gstatic fonts, not local assets) but should migrate to the same pattern if they ever need local asset loading.
+
+**Why.**
+- **Edge runtime + `new URL(..., import.meta.url)` is broken under Next.js 16 Turbopack production bundling.** Vercel's build passed, but the deployed edge function crashed inside satori's font pipeline (`TypeError: u2 is not iterable`). Two deploys shipped and stayed broken before we caught that the build's green light didn't mean the function ran.
+- **Edge + fetching your own origin is fragile.** The original code read `NEXT_PUBLIC_SITE_URL`, which was never set anywhere in the codebase (everything else uses `NEXT_PUBLIC_APP_URL`), fell through to `VERCEL_URL`, and fetched 3 fonts + a 1.7 MB PNG back from `*.vercel.app` — timed out unpredictably under load.
+- **`next/og` 16.2.1's satori crashes on webp data URLs.** Same `u2 is not iterable`. Swapping to a 47 KB downsized PNG fixed it. Webp works fine in the app itself — this is a next/og bundled-satori issue.
+- Node runtime + `fs.readFile` + `join(process.cwd(), 'public/…')` is the pattern `app/apple-icon.tsx` already uses reliably.
+
+**Implementation.** `app/clear/[id]/opengraph-image.tsx:10` exports `runtime = 'nodejs'`. `loadAssets()` uses `readFile` for TTFs + hero PNG, `fetch` only for the gstatic Outfit Bold URL. Hero embedded as `data:image/png;base64,<Buffer.toString('base64')>`. Assets live in `public/og-assets/Bungee.ttf`, `BungeeInline.ttf`, `hero.png` (540×360, generated from the 1.7 MB original via `sharp`).
+
+**Rejected.**
+- Edge + `new URL(..., import.meta.url)` — the canonical @vercel/og docs pattern. Works on webpack, broken on Turbopack prod.
+- Edge + fetching from `NEXT_PUBLIC_APP_URL` hardcoded — fixes the env-var bug but keeps the fragile self-origin roundtrip.
+- Keeping webp for the hero — 14× smaller than PNG but crashes satori.
+
+**Drift risk.** If future work adds another OG route and reaches for `edge`, it'll hit the same wall. When the root and pile routes need local assets, migrate them to Node too. Also: if `next/og` is ever bumped and satori's webp decoder is fixed upstream, the PNG constraint can relax — test before assuming.
+
+---
+
 ## 2026-04-21 — Share composer locked to $ reclaimed + HLTB-faster-than-average
 
 **Decision.** The CompletionCelebration share composer exposes at most two toggles: **$X reclaimed from the pile** (when a price is cached for this game) and **Xh faster than average** (only when the player actually beat the HLTB main-story time). No other stats are shareable.

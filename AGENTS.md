@@ -31,7 +31,7 @@ If a feature adds catalogue management, organization tools, or "engagement" that
 - Auth: Supabase via `@supabase/ssr`. Guest mode is first-class.
 - Integrations: `psn-api`, Steam public API, Xbox (OpenXBL), RAWG, HLTB.
 - Observability: Sentry (`@sentry/nextjs`), live in prod.
-- OG images: `next/og` ImageResponse on edge runtime.
+- OG images: `next/og` ImageResponse. Clear card on Node runtime + `fs.readFile`; root + pile still on edge with gstatic fonts.
 - Tests: Playwright e2e (`npm run test:e2e`). No unit tests.
 - Deploy: `git push` to `main` → Vercel. No `gh` / `vercel` CLI. Node via `fnm`.
 
@@ -65,7 +65,7 @@ Don't re-open without a specific reason:
 
 ## Evergreen gotchas
 
-- **Edge runtime for OG images:** no Node APIs, no filesystem. Fonts fetched from Google over HTTPS at cold start.
+- **OG image runtime split:** clear card uses Node runtime so it can `fs.readFile` local assets from `public/og-assets/`. Root + pile stay on edge + gstatic because they only need external fonts. Don't use webp for `<img>` in any OG route — satori crashes on it. See `docs/DECISIONS.md` 2026-04-21 for the full context.
 - **`GameCard.tsx` is ~1000 lines.** Edit with targeted `Edit` calls, don't rewrite.
 - **PSN tokens are ephemeral.** Never log, never persist server-side. Pass through and discard.
 - **Turbopack vs webpack:** some dev-time behaviors differ (HMR, plugin APIs). Prod uses Turbopack too.
