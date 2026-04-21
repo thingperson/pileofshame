@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import Wordmark from '@/components/Wordmark';
 
 export default function AboutPage() {
   const [visible, setVisible] = useState(false);
@@ -18,8 +19,8 @@ export default function AboutPage() {
     >
       {/* ── Nav bar ── */}
       <nav className="sticky top-0 z-20 px-6 py-4 flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-primary)', borderBottom: '1px solid var(--color-border-subtle)' }}>
-        <a href="/" className="text-lg font-extrabold tracking-tight hover:text-accent-purple transition-colors" style={{ color: 'var(--color-text-primary)' }}>
-          Inventory Full
+        <a href="/" className="transition-opacity hover:opacity-80" aria-label="Inventory Full — home">
+          <Wordmark variant="alone" className="h-6 w-auto" />
         </a>
         <a
           href="/"

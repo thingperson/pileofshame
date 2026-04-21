@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useStore } from '@/lib/store';
+import Wordmark from '@/components/Wordmark';
 
 // ============================
 // 90s MODE COMPONENTS
@@ -499,9 +500,11 @@ function DinoFact() {
 function DefaultBanner() {
   return (
     <div className="default-banner">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/inventoryfull-logomark.webp" alt="" className="default-banner-logo" />
-      <span className="default-banner-text">INVENTORY FULL</span>
+      <Wordmark
+        variant="full"
+        aria-label="Inventory Full — get playing."
+        className="default-banner-wordmark"
+      />
     </div>
   );
 }

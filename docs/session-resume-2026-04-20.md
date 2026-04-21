@@ -2,6 +2,20 @@
 
 **Purpose:** Start the next session oriented. Read this when the task isn't trivial.
 
+---
+
+## ⚡ START HERE — Fresh session orientation
+
+**Active sprint:** Public soft-launch **Friday 2026-04-24** as **donationware** (Ko-fi already live). No affiliate, no paid tier, no RAWG Business yet — deferred to Week 2+.
+
+**Next action:** SVGO-strip wordmark SVGs in `public/if-logos/` (each is ~200KB of Adobe XMP cruft), then build `components/Wordmark.tsx`. Full 9-item Friday list in "🚀 ACTIVE SPRINT" section below.
+
+**Wordmark assets live** at `public/if-logos/` (untracked — commit with the wordmark work). OG card reference: `notes/OG-card-share-9.png` (comp 9, approved design).
+
+**Blocked/parked:** Claude Design access lost (Brady locked out) — 9 archetypes still render emoji, acceptable for launch. Archetype share card parked on per-archetype art.
+
+---
+
 Morning/afternoon was a **docs / planning / infrastructure** session (commits `55bdf1a` + `3a0e7c8`). Late-afternoon added a second feature commit `ffcbb48` integrating Claude Design's pixel sprite drop + a roast opt-in toggle.
 
 ---
@@ -55,7 +69,69 @@ Also included with commit `3a0e7c8`: `notes/apr20-improvements-claude-design/` w
 
 ## Next up
 
-### Start here if coming in cold
+### 🚀 ACTIVE SPRINT: Public soft-launch Friday 2026-04-24
+
+**Posture:** donationware launch. Ko-fi / Buy Me a Slice already in footer. **No affiliate, no paid tiers, no RAWG Business yet** — those all move to Week 2+. Rationale: affiliate approvals take days-to-weeks and we launch cleaner without commercial pressure on a decision-paralyzed user base. Affiliate layer comes post-launch once we have traffic data for applications and disclosure copy is ready.
+
+**Friday build list (in order):**
+
+1. **SVGO-strip wordmark SVGs** in `public/if-logos/` — each is ~200KB of Adobe XMP cruft, target ~2KB each
+2. **`components/Wordmark.tsx`** — inline SVG component with `variant="full|alone|tagline"` and theme-aware fill
+3. **Favicon pipeline** — generate 16/32/192/512 PNGs from `IF.svg` + `IF-white-I.svg`, wire `<link rel="icon">` with `prefers-color-scheme` media queries (two variants — Brady provided both for browser-tab visibility)
+4. **Wordmark land-and-sweep** — replace every `<h1>Inventory Full</h1>` text in landing, header, about, footer with `<Wordmark />`
+5. **Clear-share OG card v2** — comp 9 in `notes/OG-card-share-9.png` is the reference. Faded hero PNG background (`public/inventoryfull-hero-transparent.png` — already edge-fetchable), Bungee Inline for game name with strikethrough, Bungee Regular for "CLEARED!", Outfit Bold for stat subtitle, wordmark anchor bottom-right. User picks one stat from ~4 templates ("$X back from the pile" / "X hours well spent" / "faster than X% of players" / "backlog -1"). Fonts all on Google Fonts, edge-fetchable.
+6. **Supabase email template rewrite** (Auth → Email Templates in dashboard) — subjects + bodies in Inventory Full voice, custom "From" name. 30 min. Replaces need for full Resend for launch.
+7. **Email opt-in checkbox** on signup — `wants_updates` column, unchecked default, separate from auth consent. Legal requirement per `.claude/rules/legal-compliance.md`.
+8. **Privacy Policy update** (`app/privacy/page.tsx`) — disclose the new opt-in collection, note we don't share/sell. MUST ship WITH or BEFORE the checkbox, never after.
+9. **Pre-push gates** — build, voice sweep, legal check, mobile check, a11y check. Full `/pre-push-review` skill.
+
+**Launch-day (Friday 2026-04-24):**
+
+10. **Show HN** post (morning PT, peak HN traffic)
+11. **IndieHackers** launch post
+12. **Twitter + Bluesky** thread from Brady's accounts
+13. **NO Reddit** — low-karma new accounts get shadowbanned in niche subs. Reddit comes weeks 2–4 via organic karma-building on older accounts.
+
+Thursday evening deploy, 12h soak, public Friday.
+
+### Week 2+ (post-launch, in parallel)
+
+- **RAWG Business plan** signup (~$149/mo) — gate for any affiliate / revenue feature. Do BEFORE first affiliate link goes live.
+- **Affiliate applications** (direct, not via CJ for new apps — CJ is slow and thin on gaming):
+  - Humble Partner (direct)
+  - Fanatical Affiliate (direct — apply alongside pending CJ)
+  - Green Man Gaming via Partnerize
+  - GOG via Awin (alongside pending CJ)
+  - IndieGala (direct)
+  - **Do NOT apply to:** G2A, Kinguin, Eneba — keyseller reputation issues misaligned with brand
+  - **No programs exist for:** Steam (closed), Epic, Nintendo, PlayStation Store, Xbox Store — accept that affiliate ceiling is lower than it first appears
+  - **CJ pending (leave alone):** Fanatical, GOG — don't cancel, but don't wait on them. GearUP offer in CJ = off-thesis, skip.
+- **Affiliate disclosure copy** — Privacy + Terms + per-page FTC disclosure drafted and reviewed before any link goes live
+- **Reddit karma building** — Brady's older accounts participate organically in r/patientgamers, r/backlog, r/SteamDeck, r/gamingsuggestions. Comments, not promotion. Weeks of buildup before any link-drop.
+- **Full Resend domain setup** — `auth.inventoryfull.gg` + `updates.inventoryfull.gg`, SPF/DKIM/DMARC, template build. Not blocking Friday; Supabase default covers auth emails for soft launch.
+- **Email export to Google Sheet** — monthly pull `SELECT email FROM auth.users WHERE wants_updates = true` for future marketing list
+- **Product Hunt** — hold for week 2–3 once there's traction signal. One-shot.
+- **Social co-pilot agent** (optional, if social is earning its keep) — Chrome MCP + scheduled agent. Drafts replies and curates content for Brady's approval; does NOT auto-post. Per social-media TOS, auto-engagement gets accounts flagged.
+
+### What this posture takes OFF the Friday plate
+
+- RAWG Business signup + payment
+- Affiliate network applications (all 5+)
+- FTC affiliate disclosure copy on every surface
+- Terms of Service updates for commercial relationships
+- Per-product affiliate link integration
+- Legal review of affiliate flow
+- Full Resend domain + DNS propagation (24–48h) + template build
+- Reddit launch posts (which would flame out anyway)
+
+Roughly 2 weeks of work moved to post-launch where it belongs.
+
+### Parked (unchanged from earlier)
+- **Archetype share card** — blocked on per-archetype art (Claude Design lockout — Brady lost access, 27/36 sprites already landed, not urgent for Friday)
+- **Completion share card archetype art** — same blocker
+- **9 archetypes still render emoji** — Juggler, Archaeologist, Sniper, Redeemer, Deep Diver, Eclectic, Infinite Player, Webmaster Supreme, Minimalist. Acceptable for launch.
+
+### Start here if coming in cold (pre-sprint options — superseded by sprint above)
 No active in-flight feature work. A handful of parked items + several clean next-sprint candidates surfaced by the audit. If Brady opens a fresh session without context, ask what he wants — options below.
 
 ### Parked — wordmark gates these

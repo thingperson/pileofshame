@@ -1719,65 +1719,47 @@ button:active:not(:disabled) {
 
 .default-banner {
   text-align: center;
-  padding: 16px 16px 12px;
+  padding: 20px 16px 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  /* Flip the "IN" glyphs to white on dark backgrounds; body stays teal, tagline stays pink. */
+  --wordmark-in: #fff;
 }
-.default-banner-logo {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--color-accent-purple) 20%, transparent));
+.default-banner-wordmark {
+  height: 44px;
+  width: auto;
+  filter: drop-shadow(0 0 12px color-mix(in srgb, var(--color-accent-purple) 20%, transparent));
 }
 @media (min-width: 640px) {
-  .default-banner-logo {
-    width: 40px;
-    height: 40px;
+  .default-banner-wordmark {
+    height: 56px;
   }
 }
 
-.default-banner-text {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-  opacity: 0.7;
-  font-family: var(--font-mono);
+/* Light theme — keep the "IN" dark for contrast on light bg */
+.theme-light .default-banner {
+  --wordmark-in: #320b5e;
 }
-@media (min-width: 640px) {
-  .default-banner-text {
-    font-size: 13px;
-    letter-spacing: 4px;
-  }
+.theme-light .default-banner-wordmark {
+  filter: none;
+  opacity: 0.85;
 }
 
-/* Ultra override — chartreuse glow */
-.theme-ultra .default-banner-text {
-  color: #BFFF00 !important;
-  opacity: 1;
-  text-shadow: 0 0 10px rgba(191, 255, 0, 0.3);
-  letter-spacing: 8px;
-  font-size: 13px;
+/* Ultra override — chartreuse "IN" */
+.theme-ultra .default-banner {
+  --wordmark-in: #BFFF00;
 }
-
-/* Light override */
-.theme-light .default-banner-text {
-  color: #6b7280 !important;
-  opacity: 0.5;
+.theme-ultra .default-banner-wordmark {
+  filter: drop-shadow(0 0 10px rgba(191, 255, 0, 0.35));
 }
 
 /* Weird override — distortion and wrongness */
 .theme-weird .default-banner {
   transform: rotate(-0.5deg) skewX(0.3deg);
 }
-.theme-weird .default-banner-text {
-  animation: weird-flicker 3s ease-in-out infinite, weird-shadow-crawl 6s linear infinite;
-  font-family: 'Comic Sans MS', 'Chalkboard SE', cursive !important;
-  letter-spacing: 8px;
-  word-spacing: 6px;
+.theme-weird .default-banner-wordmark {
+  animation: weird-flicker 3s ease-in-out infinite;
 }
 
 /* ========================
@@ -2219,12 +2201,12 @@ body.theme-tropical {
   background-color: #4ECDC4 !important;
 }
 
-/* Tropical: banner — bright mint */
-.theme-tropical .default-banner-text {
-  color: #4ECDC4 !important;
-  opacity: 0.8;
-  letter-spacing: 6px;
-  text-shadow: 0 0 20px rgba(78, 205, 196, 0.2);
+/* Tropical: banner — bright mint "IN" */
+.theme-tropical .default-banner {
+  --wordmark-in: #4ECDC4;
+}
+.theme-tropical .default-banner-wordmark {
+  filter: drop-shadow(0 0 12px rgba(78, 205, 196, 0.25));
 }
 
 /* ========================
@@ -2339,12 +2321,12 @@ body.theme-campfire {
   background-color: #FE7F2D !important;
 }
 
-/* Campfire: banner — warm glow */
-.theme-campfire .default-banner-text {
-  color: #FE7F2D !important;
-  opacity: 0.8;
-  letter-spacing: 6px;
-  text-shadow: 0 0 20px rgba(254, 127, 45, 0.2);
+/* Campfire: banner — warm glow "IN" */
+.theme-campfire .default-banner {
+  --wordmark-in: #FE7F2D;
+}
+.theme-campfire .default-banner-wordmark {
+  filter: drop-shadow(0 0 14px rgba(254, 127, 45, 0.3));
 }
 
 @media (prefers-reduced-motion: reduce) {

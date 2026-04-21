@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import AuthButton from '@/components/AuthButton';
+import Wordmark from '@/components/Wordmark';
 
 interface LandingPageProps {
   onImport: () => void;
@@ -425,7 +426,10 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
         </Reveal>
 
         {/* Footer */}
-        <div className="mt-16 space-y-3">
+        <div className="mt-16 space-y-4">
+          <div className="flex justify-center" style={{ opacity: 0.4 }}>
+            <Wordmark variant="alone" aria-label="Inventory Full" className="h-5 w-auto" />
+          </div>
           <p
             className="text-xs font-[family-name:var(--font-mono)]"
             style={{ color: 'var(--color-text-faint)', opacity: 0.5 }}

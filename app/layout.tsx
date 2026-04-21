@@ -63,6 +63,22 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://inventoryfull.gg',
   },
+  icons: {
+    icon: [
+      // No-media fallback for browsers that don't support prefers-color-scheme on favicons.
+      { url: '/inventoryfull-icon-256.png', type: 'image/png', sizes: '256x256' },
+      // Light-scheme: dark "I" + teal "F" — visible on light browser tabs.
+      { url: '/favicon-light-16.png', type: 'image/png', sizes: '16x16', media: '(prefers-color-scheme: light)' },
+      { url: '/favicon-light-32.png', type: 'image/png', sizes: '32x32', media: '(prefers-color-scheme: light)' },
+      { url: '/favicon-light-192.png', type: 'image/png', sizes: '192x192', media: '(prefers-color-scheme: light)' },
+      { url: '/favicon-light-512.png', type: 'image/png', sizes: '512x512', media: '(prefers-color-scheme: light)' },
+      // Dark-scheme: white "I" + teal "F" — visible on dark browser tabs.
+      { url: '/favicon-dark-16.png', type: 'image/png', sizes: '16x16', media: '(prefers-color-scheme: dark)' },
+      { url: '/favicon-dark-32.png', type: 'image/png', sizes: '32x32', media: '(prefers-color-scheme: dark)' },
+      { url: '/favicon-dark-192.png', type: 'image/png', sizes: '192x192', media: '(prefers-color-scheme: dark)' },
+      { url: '/favicon-dark-512.png', type: 'image/png', sizes: '512x512', media: '(prefers-color-scheme: dark)' },
+    ],
+  },
 };
 
 export default function RootLayout({

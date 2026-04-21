@@ -16,6 +16,7 @@ import ImportHub from '@/components/ImportHub';
 import SettingsMenu from '@/components/SettingsMenu';
 import ViewToggle from '@/components/ViewToggle';
 import AuthButton from '@/components/AuthButton';
+import Wordmark from '@/components/Wordmark';
 import CloudSync from '@/components/CloudSync';
 import CompletionCelebration from '@/components/CompletionCelebration';
 import HelpModal from '@/components/HelpModal';
@@ -587,17 +588,16 @@ function AppContent() {
       {/* ── Header ── */}
       <header className="mb-3 space-y-2">
         <div className="flex items-center justify-between">
-          <div>
-            <h1
-              className="text-2xl font-extrabold tracking-tight text-text-primary cursor-pointer hover:text-accent-purple transition-colors"
-              onClick={() => { setActiveTab('backlog'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            >
-              Inventory Full
-            </h1>
-            <p className="text-xs text-text-faint mt-0.5 font-[family-name:var(--font-mono)]">
-              get playing.
-            </p>
-          </div>
+          <h1
+            className="m-0 cursor-pointer transition-opacity hover:opacity-80"
+            onClick={() => { setActiveTab('backlog'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+          >
+            <Wordmark
+              variant="alone"
+              aria-label="Inventory Full"
+              className="h-6 w-auto"
+            />
+          </h1>
           <div className="flex items-center gap-1 sm:gap-1.5">
             <div className="hidden sm:contents">
               <InlineSearch onAddManual={() => { setAddModalInitialName(''); setAddModalOpen(true); }} />
