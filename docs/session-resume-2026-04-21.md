@@ -26,6 +26,11 @@
 7. ✅ **Landing hero** — `components/LandingPage.tsx:130` replaced "Your pile's not gonna play itself." h1 with centered `Wordmark variant="full"` (white `IN` + teal `VENTORY FULL` + pink `get playing.` tagline). Scales responsively 16rem → 26rem.
 8. ✅ **App-header wordmark removed** — `app/page.tsx` duplicate mark gone since `DefaultBanner` carries it above.
 
+**Third wave (2026-04-21 PM):**
+9. ✅ **OG image unreachable — fully fixed** (commits `b6f51b2` → `8a1f993` → `3210a1b`). Three layers of root cause; see §OG image unreachable fix below for the narrative. Final state: Node runtime + `fs.readFile` from `public/og-assets/`, PNG hero (webp crashes satori).
+10. ✅ **OG card visual polish** — hero at full opacity (was 0.4 watermark), headline ~20% smaller (stacked 104/112 → 83/90, inline 96 → 77), `lineHeight: 1` on both lines + `marginTop: 8px` between them so the stacked game-name + CLEARED! sit tight instead of floating ~30px apart.
+11. ✅ **Share composer empty state** — `components/CompletionCelebration.tsx` now hides the "Pick what to include." prefix and the empty toggles block when `availableToggles.length === 0`. Before, a game with no cached retail price and no HLTB-beat rendered the instruction line with nothing to pick underneath it. Composer collapses to flavor preview + share button — the originally intended behavior.
+
 **Remaining sprint items:**
 - **Sprint 6** — Supabase email template rewrite (dashboard work, Inventory Full voice, custom From name).
 - **Sprint 7** — Email opt-in checkbox on signup (`wants_updates` column, unchecked default, separate from auth consent).
@@ -109,10 +114,16 @@ Not blocking launch (dark-default themes work everywhere), but park a real cross
 
 ---
 
-## Health snapshot (2026-04-21)
+## Health snapshot (2026-04-21, end-of-day UTC)
 
 - Build: ✅ passes (`npm run build` exits 0)
-- Sprint items 1–8 (wordmark wave + OG card + share trim + landing hero): ✅ shipped
-- Sprint items 6–9 (email infra): pending
+- Sprint items 1–8 (wordmark wave + OG card + share trim + landing hero): ✅ shipped AM
+- Sprint items 9–11 (OG unreachable fix + card polish + share composer empty state): ✅ shipped PM
+- Sprint items 6–9 (email infra, pre-push gates): pending → next session
+- `main` tip: `3210a1b` (OG polish) → Vercel deploy in flight at push time
 - Known bug: light/cozy themes broken on mobile Brave/Chromium (see above)
-- OG image unreachable: ✅ fixed PM (see fix section above)
+
+## Verify on next session start
+
+- Hit `https://inventoryfull.gg/clear/<real-id>/opengraph-image` directly and confirm it returns a valid 1200×630 PNG (not an empty response). Two prior deploys shipped bad OG; don't trust Vercel green alone — the endpoint must respond.
+- Re-run an OG preview tool against a real `/clear/<id>` URL. The "unreachable" flag should clear. "Missing a CTA in your image" is an OCR false positive from the preview tool — we intentionally don't stamp a CTA on the card (share cards read as self-expression, not an ad).
