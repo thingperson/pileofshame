@@ -130,9 +130,9 @@
 
 *Sprint closed on Apr 18. Items below retained as a shipping log. See `docs/doc-audit-2026-04-20.md` for the Apr 20 audit.*
 
-## NEXT SPRINT — TBD
+## NEXT SPRINT — Launch prep (Apr 21 → May 11)
 
-*Deliberately blank. Pick next direction after audit/planning cycle settles. Candidates parked in [docs/doc-audit-2026-04-20.md](doc-audit-2026-04-20.md) and the planning specs added in that cycle.*
+*Public push starts Tue Apr 28. See [docs/LAUNCH_BIBLE.md](LAUNCH_BIBLE.md) for the day-by-day playbook, pre-launch punch list, channel playbooks, and copy bank. Sprint closes May 11 after PH / Show HN week.*
 
 ---
 

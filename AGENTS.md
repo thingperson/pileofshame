@@ -43,7 +43,7 @@ If a feature adds catalogue management, organization tools, or "engagement" that
 - `components/` — React, client by default. `LandingPage.tsx` and `GameCard.tsx` are the big ones. Keep landing aligned with `app/about/page.tsx`.
 - `lib/` — Pure logic + integrations. Prefer adding here over inflating components. Key files: `store.ts`, `types.ts`, `reroll.ts`, `enrichment.ts`, `archetypes.ts`.
 - `.claude/rules/` — Loaded every session. Voice, legal, psychology, deploy gates, token efficiency.
-- `docs/` — Roadmap, session notes, decisions. `docs/session-resume-*.md` = current state.
+- `docs/` — Roadmap, session notes, decisions. `docs/session-resume-*.md` = current state. `docs/LAUNCH_BIBLE.md` = single source of truth for launch planning (Apr 21–May 11 sprint).
 - `supabase/` — Schema + migrations.
 
 `ls` the repo for anything else.

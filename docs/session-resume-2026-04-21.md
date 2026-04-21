@@ -197,3 +197,39 @@ Not blocking launch (dark-default themes work everywhere), but park a real cross
 - `main` tip: `4caea1b` (unchanged from AM; no new pushes this session — skill infra is local until committed)
 - Uncommitted locally: `session-close/SKILL.md` (new), `session-handoff/SKILL.md` (deleted), `AGENTS.md` (pointer). All three are the same logical change — commit together.
 - Build: not re-run this session (no runtime code touched)
+
+---
+
+## Fourth wave (2026-04-21 late evening) — launch plan consolidation
+
+**Shipped:**
+
+16. ✅ **Launch Bible consolidation** (commit `17f07df`). `docs/LAUNCH_BIBLE.md` is the new single source of truth for everything launch-related — positioning, dated punch list (Apr 21 → 27), day-by-day playbook (Apr 21 → May 18), channel playbooks, paste-ready copy bank (14 Bluesky drafts, 4 Reddit posts, PH listing, Show HN, emails, creator/press pitches), infra checklist, monetization roadmap, scale-up plan, BradyOS handoff integration. 7 source docs moved to `docs/archive/launch-2026-04-21/` with a README mapping old → new bible sections.
+
+17. ✅ **Four launch calls locked** (Brady-approved, logged in DECISIONS.md):
+    - **Timing:** quiet-live now, public push starts Tue Apr 28. No Fri Apr 24 announcement.
+    - **Doc location:** `docs/LAUNCH_BIBLE.md`, sources archived (not in-place references).
+    - **Monetization staging:** donationware from day one (Ko-fi, live); Supporter tier ($3–5/mo cosmetic perks) at 2k MAU; affiliate revenue gated on RAWG Commercial ($149/mo).
+    - **Pre-launch QA:** dated punch list integrated into the day-by-day playbook.
+
+18. ✅ **Migration 007 verified applied** via Supabase MCP `execute_sql` — both `wants_updates` and `wants_updates_consented_at` columns confirmed on `profiles`. Brady had applied it via dashboard SQL editor (not CLI), which is why `supabase_migrations.schema_migrations` is empty but the columns are live.
+
+19. ✅ **Supabase email templates pasted** (Brady confirmed evening) — all 6 styled transactional templates from the 2026-04-21 PM drafts are live in the dashboard.
+
+20. ✅ **Porkbun email forwarders added:** `press@ / help@ / info@ / hi@ / hello@ / privacy@` → Inventory Full Gmail. Ready for May 3 press pitch batch.
+
+21. ✅ **BradyOS handoff written** at `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Handoffs/inbox/2026-04-21-launch-bible-and-daily-rhythm.md` with explicit canonical-path pointer to the bible (belt-and-suspenders so BradyOS can recover if context is lost). BradyOS has repo access and will read the bible directly for deep reference.
+
+**Today's sprint — all closed.** Migration 007 applied. Email templates pasted. Ko-fi live. Forwarders live. Launch plan consolidated. Next focus: Bluesky DNS handle claim + Reddit warmup account selection + PH maker profile (Wed Apr 22 block in bible §3).
+
+## Verify on next session start
+
+- `docs/LAUNCH_BIBLE.md` is the first stop for any launch-related work. Don't re-read the 7 archived docs unless explicitly asked.
+- Launch punch list (bible §2) has 5 🔴 blockers with dated targets Apr 23–26. First up Thu Apr 23: landing wordmark purple bug + "5 ways"→3 copy drift.
+- `public/og-fonts/` is orphan (duplicates of files in `public/og-assets/`). Safe to delete next session if wanted; not blocking anything.
+
+## Late-evening health snapshot
+
+- `main` tip: `17f07df` (launch bible consolidation), 1 commit ahead of `origin/main`
+- Build: not re-run (docs-only commit)
+- Known bug (unchanged): mobile Brave/Chromium light/cozy theme rendering
