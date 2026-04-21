@@ -15,6 +15,45 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-21 — Launch plan consolidated into single Launch Bible; 7 source docs archived
+
+**Decision.** All launch-planning content now lives in one doc: `docs/LAUNCH_BIBLE.md`. Seven source docs were moved to `docs/archive/launch-2026-04-21/` and marked as frozen history. The bible is the single source of truth; source docs are for reference only.
+
+**Why.**
+- Eight scattered docs had accumulated overlap, contradiction, and drift (Friday-Apr-24 soft-launch vs. Apr-28 staggered push; shelf-view vs. tab-pipeline; "we help pick" vs. "we pick"; 5 reroll modes vs. 3). Every session wasted context reconciling them.
+- Solo builder needs a daily operational doc, not 8 strategy docs. The bible has a dated day-by-day playbook (Apr 21 → May 18), not just a strategy narrative.
+- BradyOS handoff needs a single source to surface today's tasks. Eight docs makes that impossible.
+
+**Four calls locked today (Brady-approved via AskUserQuestion):**
+
+1. **Launch timing: quiet-live now, public push starts Apr 28.** No Fri Apr 24 announcement. The site is already live; we use the interval for Bluesky warmup + Reddit karma farming + PH asset prep. Reddit posts staggered Apr 29 / 30 / May 1 / 3; Product Hunt May 6.
+
+   - Rejected: shipping donationware Fri Apr 24 with full announcement — kills the Reddit warmup window, and the karma protocol needs 7–10 days to defeat sockpuppet detection.
+   - Rejected: silent launch with no ceremony — the week of prep has real value (Bluesky follower count grows the PH launch-day reach).
+
+2. **Location: `docs/LAUNCH_BIBLE.md` + sources archived in dated folder.**
+
+   - Rejected: "leave sources in place as deep-dive reference" — sources will go stale and contradict the bible again. Archive + freeze is the only way to prevent drift.
+   - Rejected: "replace marketing-prep.md in place" — loses the broader scope (marketing-prep was one of 8; bible is bigger).
+
+3. **Monetization: donationware from day one; Supporter tier at 2k MAU; affiliates gated on RAWG commercial.** Launch with Ko-fi link only. Supporter tier ($3–5/mo cosmetic perks — themes, extra archetypes, early access) ships when rolling-30-day MAU crosses 2k. Affiliate revenue is blocked on RAWG Business plan ($149/mo) because free tier is non-commercial ToS.
+
+   - Rejected: "donationware only in bible scope, separate monetization doc later" — we just consolidated; creating a new parallel doc would reintroduce the drift problem.
+   - Rejected: "pre-announce Supporter tier in launch marketing" — commits us publicly before the tier is built.
+
+4. **Pre-launch QA: dated punch list in the bible, integrated with the day-by-day playbook.** Five blocking items (landing wordmark purple, "5 ways" copy drift, reroll mode QA, OG unfurl, sample first-pick tuning) with targets Apr 23–26; five "should fix" items through Apr 27; the rest is post-launch.
+
+   - Rejected: "reference old docs, don't duplicate" — item status would rot across two files and nobody would know which was current.
+
+**Archived docs (frozen in `docs/archive/launch-2026-04-21/`):**
+`marketing-prep.md`, `reddit-launch-prep.md`, `email-strategy.md`, `scale-up-plan.md`, `scale-up-costs-2026-04-20.md`, `pre-launch-risks-2026-04-15.md`, `notes/inventory-full-launch-plan_1.md`. README.md in the archive folder maps old → new locations in the bible.
+
+**Not archived:** `BLUE_SKY.md`, `ROADMAP.md`, `ROADMAP_PHASES.md`, `DECISIONS.md`, `competitive-refresh-prompt.md`, `Inventory Full — Ship-Readiness Review/`. These are not launch docs — they're philosophy, product state, decision log, audit templates, external review.
+
+**Implementation.** `docs/LAUNCH_BIBLE.md` (new, ~1000 lines). `docs/archive/launch-2026-04-21/` with 7 files + README. BradyOS handoff written to `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Handoffs/inbox/2026-04-21-launch-bible-and-daily-rhythm.md` so BradyOS can surface today's tasks on demand.
+
+---
+
 ## 2026-04-21 — OG images on this repo use Node runtime + fs.readFile + PNG assets
 
 **Decision.** The `/clear/[id]/opengraph-image` route runs on **`runtime = 'nodejs'`**, reads its font TTFs and hero PNG with `fs.readFile` from `public/og-assets/`, and uses **PNG** (not webp) for any `<img>` embedded as a data URL. The root `/opengraph-image` and `/pile/[id]/opengraph-image` routes stay on `edge` for now (they fetch only gstatic fonts, not local assets) but should migrate to the same pattern if they ever need local asset loading.

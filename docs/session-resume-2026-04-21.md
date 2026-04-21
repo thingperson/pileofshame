@@ -8,7 +8,7 @@
 
 **Active sprint:** Public soft-launch **Friday 2026-04-24** as **donationware**. See the full 9-item list in [session-resume-2026-04-20.md](session-resume-2026-04-20.md) §ACTIVE SPRINT — this doc only tracks progress since 2026-04-20.
 
-**Next action:** Apply migration 007 in Supabase dashboard, then paste the 6 email templates from the 2026-04-21 afternoon session (below). Items 1–8 shipped 2026-04-21.
+**Next action:** All Apr 21 sprint items are done (migration 007 applied, 6 email templates pasted in dashboard). Next substantive work: launch prep per [docs/LAUNCH_BIBLE.md](LAUNCH_BIBLE.md) — consolidated 2026-04-21 PM from 7 scattered docs. Public push starts Tue Apr 28; pre-launch punch list in bible §2.
 
 ---
 
@@ -72,11 +72,13 @@ Four items Brady flagged at end of session. Not blocking launch but worth hittin
 11. ✅ **Share composer empty state** — `components/CompletionCelebration.tsx` now hides the "Pick what to include." prefix and the empty toggles block when `availableToggles.length === 0`. Before, a game with no cached retail price and no HLTB-beat rendered the instruction line with nothing to pick underneath it. Composer collapses to flavor preview + share button — the originally intended behavior.
 12. ✅ **`/session-handoff` skill added** (`c01787e`) — `.claude/skills/session-handoff/SKILL.md`. End-of-session housekeeping: auto-applies session-resume updates, surfaces DECISIONS / ROADMAP / AGENTS.md drift for review, prints a next-session kickoff block. Run when wrapping up. This handoff was its first run.
 
-**Remaining sprint items:**
-- **Sprint 6** — Supabase email template rewrite (dashboard work, Inventory Full voice, custom From name).
-- **Sprint 7** — Email opt-in checkbox on signup (`wants_updates` column, unchecked default, separate from auth consent).
-- **Sprint 8** — Privacy Policy update (disclose `wants_updates`). Ships WITH or BEFORE the checkbox.
-- **Sprint 9** — Pre-push gates (`/pre-push-review` skill).
+**Remaining sprint items:** None. All closed 2026-04-21.
+- ✅ Sprint 6 — Supabase email templates pasted (Brady confirmed 2026-04-21 evening)
+- ✅ Sprint 7 — Email opt-in checkbox on signup (code live; migration 007 applied, columns verified via SQL 2026-04-21 evening)
+- ✅ Sprint 8 — Privacy Policy updated
+- ✅ Sprint 9 — Pre-push review run
+
+**Next focus:** Launch Bible consolidation shipped 2026-04-21 PM. See [docs/LAUNCH_BIBLE.md](LAUNCH_BIBLE.md) for the daily playbook (Apr 21 → May 18).
 
 ---
 
