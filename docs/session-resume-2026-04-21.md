@@ -21,7 +21,7 @@
    - Landing footer (`components/LandingPage.tsx`) — small muted `variant="alone"` above Privacy/Terms/Cookies row
 
 **What shipped later in 2026-04-21 (second wave):**
-5. ✅ **OG card v2** — `app/clear/[id]/opengraph-image.tsx` rewritten. Centered hero PNG at 0.4 opacity with radial purple glow, game name in Bungee Inline with pink strikethrough, `CLEARED!` in Bungee regular (pink), Outfit Bold subtitle. Brand wordmark bottom-right is **inline SVG paths** (pulled from `wordmark-alone.svg`) — satori won't load external SVG via `<img>` reliably, and a Bungee text approximation was rejected as off-brand. Title auto-scales + stacks onto two lines for long names (threshold = combined length > 22 chars). Safe-zone padding 80px each side. TTFs at `public/og-fonts/` (satori can't decode woff2). Four subtitle templates — `$X back from the pile.` → `Xh faster than average.` → `Xh more. you took your time.` → `game #N off the pile.` → `Xh, well spent.` → fallback `another one down.` Mock preview routes: `/clear/mock[-hltb|-slow|-count|-hours|-long]/opengraph-image`.
+5. ✅ **OG card v2** — `app/clear/[id]/opengraph-image.tsx` rewritten. Centered hero at 0.4 opacity with radial purple glow, game name in Bungee Inline with pink strikethrough, `CLEARED!` in Bungee regular (pink), Outfit Bold subtitle. Brand wordmark bottom-right is **inline SVG paths** (pulled from `wordmark-alone.svg`) — satori won't load external SVG via `<img>` reliably, and a Bungee text approximation was rejected as off-brand. Title auto-scales + stacks onto two lines for long names (threshold = combined length > 22 chars). Safe-zone padding 80px each side. TTFs + hero webp live at `app/clear/[id]/_og-assets/` and are loaded via `new URL('./…', import.meta.url)` — see §OG image unreachable fix below for why. Four subtitle templates — `$X back from the pile.` → `Xh faster than average.` → `Xh more. you took your time.` → `game #N off the pile.` → `Xh, well spent.` → fallback `another one down.` Mock preview routes: `/clear/mock[-hltb|-slow|-count|-hours|-long]/opengraph-image`.
 6. ✅ **Share composer trimmed** — `components/CompletionCelebration.tsx` dropped hours / pile-time / stats / rating toggles. Only $-reclaimed (when price cached) + HLTB-faster (only when they actually beat average, slower case never exposed) are shareable. Reasoning: everything else was weak signal and diluted the brag. Matches product axiom "less time in app."
 7. ✅ **Landing hero** — `components/LandingPage.tsx:130` replaced "Your pile's not gonna play itself." h1 with centered `Wordmark variant="full"` (white `IN` + teal `VENTORY FULL` + pink `get playing.` tagline). Scales responsively 16rem → 26rem.
 8. ✅ **App-header wordmark removed** — `app/page.tsx` duplicate mark gone since `DefaultBanner` carries it above.
@@ -67,6 +67,12 @@ See [session-resume-2026-04-20.md](session-resume-2026-04-20.md) for:
 - MCPs, rotting gotchas, health snapshot
 
 ---
+
+## OG image unreachable fix (2026-04-21 PM)
+
+Third-party OG preview tools flagged `https://inventoryfull.gg/clear/<id>` with "OG Image URL appears to be invalid or unreachable." Root cause: `app/clear/[id]/opengraph-image.tsx` read `NEXT_PUBLIC_SITE_URL` (unset anywhere in the codebase — everything else uses `NEXT_PUBLIC_APP_URL`), fell through to `VERCEL_URL` → the auto-generated `*.vercel.app` URL, then ran three font fetches + a 1.7 MB hero PNG fetch back to that origin from inside the edge function. The self-referential roundtrip was fragile enough to fail or time out under load.
+
+**Fix:** Dropped the origin fetches entirely. Fonts moved to `app/clear/[id]/_og-assets/` (underscore = private, Next.js won't route it); loaded with the canonical `new URL('./file', import.meta.url)` pattern so the bundler inlines them. Hero switched to the existing 122 KB webp (was rendering at 40 % opacity anyway, the 1.7 MB PNG was overkill) and embedded as a base64 data URL in the `<img src>` so satori doesn't need to fetch it at render time. `siteOrigin()` helper deleted — no env var needed anymore.
 
 ## Known bug — Chromium mobile theme rendering
 

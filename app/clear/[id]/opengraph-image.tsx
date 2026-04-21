@@ -6,25 +6,28 @@ export const alt = 'Game Cleared - Inventory Full';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-function siteOrigin(): string {
-  // Prefer explicit override, else Vercel-provided URL, else localhost for dev.
-  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
-  if (explicit) return explicit.replace(/\/$/, '');
-  const vercel = process.env.VERCEL_URL;
-  if (vercel) return `https://${vercel}`;
-  return process.env.NODE_ENV === 'production' ? 'https://inventoryfull.gg' : 'http://localhost:3000';
+// Assets live next to this route file so the bundler inlines them and the edge
+// function never reaches back to its own origin to fetch its own assets —
+// that roundtrip was the cause of "OG image unreachable" on some renders.
+// Outfit Bold stays on gstatic (known-good static TTF; woff2 wouldn't decode).
+async function loadAssets() {
+  const [bungeeInline, bungee, outfitBold, heroBytes] = await Promise.all([
+    fetch(new URL('./_og-assets/BungeeInline.ttf', import.meta.url)).then((r) => r.arrayBuffer()),
+    fetch(new URL('./_og-assets/Bungee.ttf', import.meta.url)).then((r) => r.arrayBuffer()),
+    fetch('https://fonts.gstatic.com/s/outfit/v15/QGYyz_MVcBeNP4NjuGObqx1XmO1I4bCyC4E.ttf').then((r) => r.arrayBuffer()),
+    fetch(new URL('./_og-assets/hero.webp', import.meta.url)).then((r) => r.arrayBuffer()),
+  ]);
+  return { bungeeInline, bungee, outfitBold, heroBytes };
 }
 
-async function loadFonts() {
-  // Bungee / Bungee Inline live in public/og-fonts (TTF; satori/og can't decode woff2).
-  // Outfit Bold is a known-good gstatic static TTF URL.
-  const origin = siteOrigin();
-  const [bungeeInline, bungee, outfitBold] = await Promise.all([
-    fetch(`${origin}/og-fonts/BungeeInline.ttf`).then((r) => r.arrayBuffer()),
-    fetch(`${origin}/og-fonts/Bungee.ttf`).then((r) => r.arrayBuffer()),
-    fetch('https://fonts.gstatic.com/s/outfit/v15/QGYyz_MVcBeNP4NjuGObqx1XmO1I4bCyC4E.ttf').then((r) => r.arrayBuffer()),
-  ]);
-  return { bungeeInline, bungee, outfitBold };
+// Satori reads <img src> as a URL at render time; data URLs are the safe path
+// in edge runtime since file:// URLs from import.meta.url resolution aren't
+// portable. 122 KB webp → ~160 KB base64 — fits comfortably in the JSX blob.
+function bytesToBase64(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
 }
 
 interface ShareCard {
@@ -139,8 +142,8 @@ export default async function Image({ params }: { params: Promise<{ id: string }
     );
   }
 
-  const { bungeeInline, bungee, outfitBold } = await loadFonts();
-  const origin = siteOrigin();
+  const { bungeeInline, bungee, outfitBold, heroBytes } = await loadAssets();
+  const heroDataUrl = `data:image/webp;base64,${bytesToBase64(heroBytes)}`;
 
   const gameName = card.game_name.toUpperCase();
   const subtitle = pickSubtitle(card);
@@ -200,7 +203,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           />
         </div>
 
-        {/* Hero PNG faded as the backdrop anchor — centered via flex row */}
+        {/* Hero faded as the backdrop anchor — centered via flex row */}
         <div
           style={{
             position: 'absolute',
@@ -215,7 +218,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={`${origin}/inventoryfull-hero-transparent.png`}
+            src={heroDataUrl}
             alt=""
             width={540}
             height={360}
