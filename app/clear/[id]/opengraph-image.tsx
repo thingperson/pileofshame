@@ -153,11 +153,11 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   let clearedSize: number;
   if (stackLayout) {
     // Fit game name alone to ~1000px. Char ≈ 0.58 × fontSize.
-    gameSize = Math.min(104, Math.max(44, Math.floor(1000 / (gameName.length * 0.58))));
-    clearedSize = 112;
+    gameSize = Math.min(83, Math.max(35, Math.floor(800 / (gameName.length * 0.58))));
+    clearedSize = 90;
   } else {
     // Single line — fit combined string.
-    gameSize = Math.min(96, Math.floor(1000 / (combinedLen * 0.58)));
+    gameSize = Math.min(77, Math.floor(800 / (combinedLen * 0.58)));
     clearedSize = gameSize;
   }
 
@@ -216,7 +216,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
             alt=""
             width={540}
             height={360}
-            style={{ width: '540px', height: '360px', objectFit: 'contain', opacity: 0.4 }}
+            style={{ width: '540px', height: '360px', objectFit: 'contain' }}
           />
         </div>
 
@@ -232,7 +232,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
             alignItems: 'center',
             justifyContent: 'center',
             padding: '0 80px',
-            gap: stackLayout ? '10px' : '0',
+            gap: '0',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: stackLayout ? 0 : '22px', flexWrap: 'nowrap' }}>
@@ -240,6 +240,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               style={{
                 fontFamily: 'Bungee Inline, sans-serif',
                 fontSize: `${gameSize}px`,
+                lineHeight: 1,
                 color: '#f4ecff',
                 letterSpacing: '1px',
                 textDecoration: 'line-through',
@@ -256,6 +257,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
                 style={{
                   fontFamily: 'Bungee, sans-serif',
                   fontSize: `${clearedSize}px`,
+                  lineHeight: 1,
                   color: '#ff5a8a',
                   letterSpacing: '1px',
                   display: 'flex',
@@ -271,6 +273,8 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               style={{
                 fontFamily: 'Bungee, sans-serif',
                 fontSize: `${clearedSize}px`,
+                lineHeight: 1,
+                marginTop: '8px',
                 color: '#ff5a8a',
                 letterSpacing: '2px',
                 display: 'flex',
