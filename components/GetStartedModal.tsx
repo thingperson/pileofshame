@@ -18,6 +18,7 @@ export default function GetStartedModal({ open, onClose }: GetStartedModalProps)
   const [email, setEmail] = useState('');
   const [emailSent, setEmailSent] = useState(false);
   const [emailError, setEmailError] = useState('');
+  const [wantsUpdates, setWantsUpdates] = useState(false);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -81,7 +82,7 @@ export default function GetStartedModal({ open, onClose }: GetStartedModalProps)
               {/* Sign in options */}
               <div className="space-y-2">
                 <button
-                  onClick={() => { signInWithDiscord(); handleClose(); }}
+                  onClick={() => { signInWithDiscord(wantsUpdates); handleClose(); }}
                   className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-bold rounded-xl transition-all hover:scale-[1.01] active:scale-[0.99]"
                   style={{ backgroundColor: '#5865F2', color: '#ffffff' }}
                 >
@@ -91,7 +92,7 @@ export default function GetStartedModal({ open, onClose }: GetStartedModalProps)
                   Discord
                 </button>
                 <button
-                  onClick={() => { signInWithGoogle(); handleClose(); }}
+                  onClick={() => { signInWithGoogle(wantsUpdates); handleClose(); }}
                   className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-medium rounded-xl border transition-all hover:scale-[1.01] active:scale-[0.99]"
                   style={{
                     borderColor: 'var(--color-border-active)',
@@ -118,6 +119,18 @@ export default function GetStartedModal({ open, onClose }: GetStartedModalProps)
                 >
                   Use email instead
                 </button>
+
+                <label className="flex items-start gap-2 pt-1 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={wantsUpdates}
+                    onChange={(e) => setWantsUpdates(e.target.checked)}
+                    className="mt-0.5 w-3.5 h-3.5 accent-accent-purple cursor-pointer shrink-0"
+                  />
+                  <span className="text-[11px] leading-snug text-text-muted group-hover:text-text-secondary transition-colors">
+                    Email me when we ship something worth knowing. No spam.
+                  </span>
+                </label>
               </div>
             </>
           )}
@@ -127,7 +140,7 @@ export default function GetStartedModal({ open, onClose }: GetStartedModalProps)
               e.preventDefault();
               setEmailError('');
               if (!email.includes('@')) { setEmailError('Enter a valid email'); return; }
-              const { error } = await signInWithEmail(email);
+              const { error } = await signInWithEmail(email, wantsUpdates);
               if (error) { setEmailError(error.message || 'Something went wrong'); }
               else { setEmailSent(true); }
             }} className="space-y-2">

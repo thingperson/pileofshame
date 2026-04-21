@@ -23,6 +23,7 @@ export default function AuthButton() {
   const [email, setEmail] = useState('');
   const [emailSent, setEmailSent] = useState(false);
   const [emailError, setEmailError] = useState('');
+  const [wantsUpdates, setWantsUpdates] = useState(false);
   const isPWA = useIsPWA();
   const hasLocalGames = useStore((s) => s.games.length > 0);
 
@@ -110,7 +111,7 @@ export default function AuthButton() {
             {!showEmailInput && !emailSent && (
               <>
                 <button
-                  onClick={() => { signInWithDiscord(); setShowSignIn(false); }}
+                  onClick={() => { signInWithDiscord(wantsUpdates); setShowSignIn(false); }}
                   className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-bold rounded-xl transition-all hover:scale-[1.01] active:scale-[0.99]"
                   style={{ backgroundColor: '#5865F2', color: '#ffffff' }}
                 >
@@ -120,7 +121,7 @@ export default function AuthButton() {
                   Discord
                 </button>
                 <button
-                  onClick={() => { signInWithGoogle(); setShowSignIn(false); }}
+                  onClick={() => { signInWithGoogle(wantsUpdates); setShowSignIn(false); }}
                   className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-medium rounded-xl border transition-all hover:scale-[1.01] active:scale-[0.99]"
                   style={{
                     borderColor: 'var(--color-border-active)',
@@ -148,6 +149,18 @@ export default function AuthButton() {
                   Use email instead
                 </button>
 
+                <label className="flex items-start gap-2 pt-1 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={wantsUpdates}
+                    onChange={(e) => setWantsUpdates(e.target.checked)}
+                    className="mt-0.5 w-3.5 h-3.5 accent-accent-purple cursor-pointer shrink-0"
+                  />
+                  <span className="text-[11px] leading-snug text-text-muted group-hover:text-text-secondary transition-colors">
+                    Email me when we ship something worth knowing. No spam.
+                  </span>
+                </label>
+
                 {hasLocalGames && (
                   <>
                     <div className="h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
@@ -167,7 +180,7 @@ export default function AuthButton() {
                 e.preventDefault();
                 setEmailError('');
                 if (!email.includes('@')) { setEmailError('Enter a valid email'); return; }
-                const { error } = await signInWithEmail(email);
+                const { error } = await signInWithEmail(email, wantsUpdates);
                 if (error) { setEmailError(error.message || 'Something went wrong'); }
                 else { setEmailSent(true); }
               }} className="space-y-2">

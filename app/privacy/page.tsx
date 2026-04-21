@@ -18,7 +18,7 @@ export default function PrivacyPage() {
 
         <h1 className="text-3xl font-bold mb-2">Privacy Policy</h1>
         <p className="text-sm text-text-dim font-[family-name:var(--font-mono)] mb-8">
-          Last updated: April 14, 2026
+          Last updated: April 21, 2026
         </p>
 
         <div className="space-y-8 text-text-secondary text-[15px] leading-relaxed">
@@ -96,6 +96,19 @@ export default function PrivacyPage() {
                   gamertag or XUID. Your gamertag is sent to our server for the API call but is not
                   stored beyond what is saved in your local game library. The imported data is stored
                   in your browser&apos;s localStorage (or in your synced account if you&apos;re signed in).
+                </p>
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-text-primary mb-1">If you opt into product update emails</h3>
+                <p>
+                  When you create an account, there&apos;s an unchecked checkbox labeled
+                  &ldquo;Email me when we ship something worth knowing. No spam.&rdquo; If and only if
+                  you tick it, we store that consent against your profile along with the timestamp
+                  you gave it. We use it to send occasional product-update emails (new features, major
+                  changes). We will not send marketing email on any other basis. Every such email
+                  includes a one-click unsubscribe. Opting out revokes the consent immediately.
+                  Auth emails (magic links, password reset, email change confirmation) are transactional
+                  and are sent regardless of this setting because you asked for them.
                 </p>
               </div>
               <div>
