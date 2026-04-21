@@ -10,6 +10,8 @@ paths:
 
 # Voice & Tone Guide — Inventory Full
 
+> **Deep-dive reference only.** The canonical enforcement doc is [`voice-charter.md`](./voice-charter.md) — 1 page, memorable, the ship-or-don't-ship bar. Load this file when the charter flags something and you need the full banned-vocab list or the rationale behind a rule. If this file contradicts the charter, the charter wins.
+
 ## Who We Sound Like
 A gaming buddy who roasts you with love. Self-aware. Funny. Never mean. We know the user's psychology: they're paralyzed by choice, they feel guilt about unplayed games, they avoid commitment because they fear missing out on something better. We break those barriers down. We assure. We make committing feel safe.
 

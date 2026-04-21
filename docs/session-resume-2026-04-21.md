@@ -8,7 +8,33 @@
 
 **Active sprint:** Public soft-launch **Friday 2026-04-24** as **donationware**. See the full 9-item list in [session-resume-2026-04-20.md](session-resume-2026-04-20.md) §ACTIVE SPRINT — this doc only tracks progress since 2026-04-20.
 
-**Next action:** Sprint item **6 — Supabase email template rewrite**. Items 1–5 shipped 2026-04-21.
+**Next action:** Apply migration 007 in Supabase dashboard, then paste the 6 email templates from the 2026-04-21 afternoon session (below). Items 1–8 shipped 2026-04-21.
+
+---
+
+## Afternoon wave (2026-04-21 PM) — sprint items 7, 8, 9 + voice charter
+
+**Shipped:**
+
+9. ✅ **Sprint 7 — Email opt-in on signup.** `supabase/migrations/007_wants_updates.sql` adds `wants_updates` + `wants_updates_consented_at` to `profiles` and rewrites `handle_new_user()` to seed from `raw_user_meta_data`. `lib/useAuth.ts` takes `wantsUpdates` param (default false) on all three sign-in methods; email passes via `options.data`, OAuth stashes in localStorage under `if_pendingWantsUpdates` and writes the profile row on `SIGNED_IN` for new users. Checkbox added to `AuthButton.tsx` + `GetStartedModal.tsx` above sign-in options — label "Email me when we ship something worth knowing. No spam.", unchecked default, `text-muted` for contrast.
+
+10. ✅ **Sprint 8 — Privacy Policy update.** `app/privacy/page.tsx` gets new "If you opt into product update emails" section, Last-updated bumped to Apr 21, 2026. Ships in same diff as the code — compliant with legal-compliance.md "policy updates ship WITH or BEFORE the feature."
+
+11. ✅ **Sprint 9 — Pre-push review** run via subagent. Verdict: legal clean, voice clean, axiom-safe, migration idempotent. One flagged fix (checkbox label `text-faint` contrast) → fixed. Non-blocker follow-ups logged below.
+
+12. ✅ **Sprint 6 copy drafted** — 6 Supabase email templates (confirm signup, magic link, reset password, change email, invite, reauth OTP) in styled tier-2 HTML with inline CSS and the Inventory Full wordmark. Paste-ready for the Supabase dashboard. Templates reference `https://inventoryfull.gg/email-wordmark.png` — rasterized at 600×375, 6.8 KB, committed to `public/`. **Deploy order: push code → confirm PNG URL returns 200 → paste templates in Supabase.** The drafts live in this conversation transcript; copy them out before closing the session.
+
+13. ✅ **Voice Charter.** New canonical 1-page enforcement doc at `.claude/rules/voice-charter.md`. Resolves two long-standing contradictions:
+    - **Marketing-vs-fulfillment "help" split (option C):** "We'll help you pick" stays on landing/invitation surfaces; pick-moment copy drops "help" and uses confident delivery ("Here's your game"). Both intentional, now documented.
+    - **"Moving on is deciding too"** formalized as a protected canonical line, not just a rule-book suggestion.
+    Charter references 5 canonical exemplars from shipped code (archetypes, completion celebration, reroll, landing, moving on) as the pattern-match target for future copy. `voice-and-tone.md` and `brand-messaging.md` now have pointer banners at the top flagging them as deep-dive reference only; charter wins on conflicts. `deploy-gates.md` updated to check the charter first.
+
+**Non-blocker follow-ups (email-infra sprint, Week 2+):**
+- OAuth localStorage stash (`if_pendingWantsUpdates`) has no expiration. Stale flag can persist if user aborts OAuth and signs in later — low-probability consent drift. Fix: clear on any `SIGNED_IN` regardless of `isNew`, or add a timestamp + TTL.
+- `isNew` heuristic in `useAuth` uses `created_at === updated_at || <60s`. Verify Supabase doesn't bump `updated_at` during OTP verify, or OAuth opt-in writes get skipped for slightly-aged first sessions.
+- Privacy Policy promises "one-click unsubscribe" and "opting out revokes immediately." No mechanisms exist yet. Not breaking the promise today (zero emails being sent), but must land before first marketing send. Track with Resend wiring.
+- Server-side validation: malicious client can self-opt-in by setting `raw_user_meta_data.wants_updates = true` without showing the checkbox. Self-harm only (opts YOU into spam). Acceptable for launch.
+
 
 **What's done in this session (2026-04-21):**
 1. ✅ SVGO-strip wordmark SVGs — 88–99% compression, 6 files in `public/if-logos/`

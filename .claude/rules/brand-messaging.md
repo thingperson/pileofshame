@@ -8,6 +8,8 @@ paths:
 
 # Inventory Full — Brand Messaging Guide
 
+> **Deep-dive reference only.** The canonical enforcement doc is [`voice-charter.md`](./voice-charter.md) — 1 page, memorable, the ship-or-don't-ship bar. Load this file for messaging hierarchy, positioning rationale, or the extended social-copy examples. If this file contradicts the charter, the charter wins.
+
 ## Brand Description (Master)
 
 Inventory Full is a new app for people with too many games, too many half-started campaigns, and too much decision paralysis. It helps you decide what to play now, make ongoing progress on the games you already own, and recover more value from your collection.

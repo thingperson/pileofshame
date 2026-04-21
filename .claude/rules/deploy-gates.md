@@ -8,7 +8,7 @@ These are HARD REQUIREMENTS before any `git push` to main. No exceptions, no "I 
 Run `npm run build`. If it fails, stop. Do not push broken code.
 
 ### 2. Voice/AI lingo sweep (if any user-facing copy changed)
-Grep changed files against the banned vocab, structural patterns, and emotional patterns in `.claude/rules/voice-and-tone.md` §Banned. Non-negotiable — user has explicitly requested this runs on every deploy with new copy.
+Check changed copy against `.claude/rules/voice-charter.md` — the canonical enforcement doc. That's the ship-or-don't-ship bar: five principles, short banned-patterns list, locked exceptions (help-language marketing/fulfillment split, Moving On canon), terminology table. The longer `voice-and-tone.md` is deep-dive reference; only load it if the charter flags something and you need the full vocab list. Non-negotiable — user has explicitly requested this runs on every deploy with new copy.
 
 ### 3. Legal compliance check (if features touch user data, deals, profiling, or notifications)
 Review against `.claude/rules/legal-compliance.md`. Key questions:
