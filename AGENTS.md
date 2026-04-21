@@ -79,6 +79,16 @@ Recent/rotting gotchas live in the latest session-resume doc.
 
 Before any `git push` to main, follow `.claude/rules/deploy-gates.md` (build, voice sweep, legal check, product axiom).
 
+### Pre-Push Gates
+
+Before pushing, run the full pre-push sweep (lint, typecheck, build, docs update) and verify fixes. Commit in logical units and update handoff docs before the final push.
+
+---
+
+## Accessibility & Contrast
+
+Legibility is non-negotiable. All text/background combinations must meet WCAG AA contrast minimums (4.5:1 for body text, 3:1 for large text). Never defer contrast failures as a "designer's call" — fix them.
+
 ---
 
 ## How Brady works
@@ -98,3 +108,9 @@ Before any `git push` to main, follow `.claude/rules/deploy-gates.md` (build, vo
 2. `docs/` for session notes and decisions.
 3. `node_modules/next/dist/docs/` for Next.js 16 specifics.
 4. Ask Brady. Don't invent conventions.
+
+---
+
+## Session Handoffs
+
+At the end of substantial sessions, update the session-resume handoff doc (`docs/session-resume-*.md`) with: current state, what shipped, what's pending, and date/time with timezone. This enables clean starts in fresh sessions.

@@ -8,16 +8,7 @@ These are HARD REQUIREMENTS before any `git push` to main. No exceptions, no "I 
 Run `npm run build`. If it fails, stop. Do not push broken code.
 
 ### 2. Voice/AI lingo sweep (if any user-facing copy changed)
-Run the voice sweep from the deploy skill. Grep changed files for banned patterns:
-- "You don't X, you Y" / "That's not X, that's Y" / "You're not X, you're Y"
-- Em dashes for dramatic pauses
-- "Dive into" / "Elevate" / "Unlock the power of" / "Whether you're"
-- Banned words: "delve", "tapestry", "landscape", "journey"
-- "Ah," / "Well," openers
-- Triple adjective lists
-- Overly parallel "You X. You Y. You Z." structures
-
-This is non-negotiable. The user has explicitly requested this runs on every deploy with new copy.
+Grep changed files against the banned vocab, structural patterns, and emotional patterns in `.claude/rules/voice-and-tone.md` §Banned. Non-negotiable — user has explicitly requested this runs on every deploy with new copy.
 
 ### 3. Legal compliance check (if features touch user data, deals, profiling, or notifications)
 Review against `.claude/rules/legal-compliance.md`. Key questions:
