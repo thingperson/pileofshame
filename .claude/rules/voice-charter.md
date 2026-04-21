@@ -69,7 +69,7 @@ Retired labels (do not reintroduce): Buried, Play Next, On Deck, Queue, Active, 
 
 ### Taglines
 - **Primary:** `get playing.` (lowercase, with period). Use everywhere.
-- **Landing subhead:** "Your backlog's not gonna play itself."
+- **Landing subhead:** "Your pile's not gonna play itself." ("pile" matches our locked terminology for the whole collection — "backlog" is reserved for the unplayed-status column. Keep "backlog" in SEO meta description / JSON-LD for discovery; on-page voice uses "pile.")
 - **Celebration/share only:** "Less shame. More game."
 - **Retired:** "Stop stalling. Get playing." — do not reintroduce.
 

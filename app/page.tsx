@@ -768,11 +768,11 @@ function AppContent() {
       )}
 
       {/* ── Behavioral Nudges (1 each per session, dismissable) ── */}
-      {!isEmpty && activeTab === 'backlog' && <StalledGameNudge games={games} onTabSwitch={(id) => setActiveTab(id as TabId)} />}
-      {!isEmpty && activeTab === 'backlog' && <FinishCheckNudge games={games} onTabSwitch={(id) => setActiveTab(id as TabId)} />}
+      {!isEmpty && !isSampleLibrary && activeTab === 'backlog' && <StalledGameNudge games={games} onTabSwitch={(id) => setActiveTab(id as TabId)} />}
+      {!isEmpty && !isSampleLibrary && activeTab === 'backlog' && <FinishCheckNudge games={games} onTabSwitch={(id) => setActiveTab(id as TabId)} />}
 
       {/* ── Sync Nudge (below tabs, above games) ── */}
-      {!isEmpty && <SyncNudge />}
+      {!isEmpty && !isSampleLibrary && <SyncNudge />}
 
       {/* ── Post-Import Summary ── */}
       {importBreakdown && (

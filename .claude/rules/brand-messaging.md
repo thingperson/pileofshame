@@ -39,7 +39,7 @@ The earlier "Stop stalling. Get playing." is retired. Reasons (recorded in `docs
 - Fewer words to say the same thing is the product's thesis in microcosm.
 
 Supporting lines (use as subheads, not alternatives):
-- "Your backlog's not gonna play itself." — subhead
+- "Your pile's not gonna play itself." — landing subhead (on-page voice). Use "backlog" in meta description / JSON-LD for SEO; on-page h1/h2 uses "pile" to match our terminology (backlog = status column, pile = whole collection).
 - "Less shame. More game." — celebration/share context only
 
 ## Core Attitude Lines

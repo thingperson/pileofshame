@@ -202,12 +202,14 @@ const CLEAR_FLAVORS: FlavorVariant[] = [
   { id: 'lighter',    build: ({ name }) => `${name}: cleared. The pile gets lighter.` },
 ];
 
-function pickFlavor(ctx: FlavorContext): string {
+function pickFlavor(ctx: FlavorContext, exclude?: string): string {
   const eligible = CLEAR_FLAVORS
     .map((v) => v.build(ctx))
     .filter((s): s is string => typeof s === 'string' && s.length > 0);
   if (eligible.length === 0) return `${ctx.name}: cleared.`;
-  return eligible[Math.floor(Math.random() * eligible.length)];
+  const pool = exclude ? eligible.filter((s) => s !== exclude) : eligible;
+  const choose = pool.length > 0 ? pool : eligible;
+  return choose[Math.floor(Math.random() * choose.length)];
 }
 
 interface ShareToggle {
@@ -263,16 +265,19 @@ function GameClearShare({
     }
   }, [game.name]);
 
-  const flavorText = useMemo(() => {
-    return pickFlavor({
+  const flavorCtx = useMemo(
+    () => ({
       name: game.name,
       daysInPile: timeInPileDays,
       hoursOnGame,
       gamesCleared,
       backlogSize,
       gamePrice,
-    });
-  }, [game.name, timeInPileDays, hoursOnGame, gamesCleared, backlogSize, gamePrice]);
+    }),
+    [game.name, timeInPileDays, hoursOnGame, gamesCleared, backlogSize, gamePrice],
+  );
+  const [flavorText, setFlavorText] = useState(() => pickFlavor(flavorCtx));
+  const rerollFlavor = () => setFlavorText((current) => pickFlavor(flavorCtx, current));
 
   // HLTB "faster than average" — only a brag when the player actually beat it
   // below the average. Slower/thorough isn't share-worthy per Brady 2026-04-21.
@@ -366,10 +371,19 @@ function GameClearShare({
 
       {/* Flavor text preview */}
       <div
-        className="rounded-lg p-2.5 text-sm text-text-muted italic leading-relaxed"
+        className="rounded-lg p-2.5 pr-10 relative text-sm text-text-muted italic leading-relaxed"
         style={{ backgroundColor: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.04)' }}
       >
         {flavorText}
+        <button
+          type="button"
+          onClick={rerollFlavor}
+          aria-label="Try another line"
+          title="Try another line"
+          className="absolute top-1.5 right-1.5 w-7 h-7 rounded-md flex items-center justify-center text-text-faint hover:text-text-primary hover:bg-white/5 transition-colors cursor-pointer"
+        >
+          🎲
+        </button>
       </div>
 
       {/* Toggle checkboxes — hidden entirely when no optional stats exist,

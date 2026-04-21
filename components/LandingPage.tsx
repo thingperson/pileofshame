@@ -67,9 +67,20 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
       </div>
 
       {/* ═══════════════════════════════════════════
-          TOP NAV — sign-in only, minimal
+          TOP NAV — open app + sign-in, minimal
           ═══════════════════════════════════════════ */}
-      <nav className="relative z-20 flex items-center justify-end px-6 py-4">
+      <nav className="relative z-20 flex items-center justify-end gap-2 px-6 py-4">
+        <button
+          onClick={onLoadSample}
+          className="px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-150 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
+          style={{
+            background: 'linear-gradient(135deg, var(--color-accent-purple) 0%, var(--color-accent-pink) 100%)',
+            color: '#fff',
+            boxShadow: '0 2px 12px color-mix(in srgb, var(--color-accent-purple) 25%, transparent)',
+          }}
+        >
+          Open app
+        </button>
         <AuthButton />
       </nav>
 
@@ -127,13 +138,11 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
             />
           </div>
 
-          <h1 className="m-0 mb-5 flex justify-center">
-            <Wordmark
-              variant="full"
-              title="Inventory Full — get playing."
-              className="w-64 sm:w-80 md:w-[22rem] lg:w-[26rem] h-auto"
-              style={{ ['--wordmark-in' as string]: '#ffffff' }}
-            />
+          <h1
+            className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight mb-4"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
+            Your pile&apos;s not gonna play itself.
           </h1>
 
           <p
@@ -316,7 +325,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
               className="text-3xl sm:text-4xl font-bold text-center mb-3 tracking-tight"
               style={{ color: 'var(--color-text-primary)' }}
             >
-              5 ways to pick today&apos;s game.
+              3 ways to pick today&apos;s game.
             </h2>
             <p
               className="text-center text-sm sm:text-base mb-10 font-[family-name:var(--font-mono)]"
@@ -375,11 +384,12 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
 
         <Reveal>
           <div className="max-w-lg mx-auto">
-            <h2
-              className="text-3xl sm:text-4xl font-bold tracking-tight mb-8"
-              style={{ color: 'var(--color-text-primary)' }}
-            >
-              get playing.
+            <h2 className="m-0 mb-8 flex justify-center">
+              <Wordmark
+                variant="tagline"
+                aria-label="get playing."
+                className="w-48 sm:w-56 md:w-64 h-auto"
+              />
             </h2>
 
             {/* Side-by-side CTAs — mirrors the hero layout so users get consistent affordances */}

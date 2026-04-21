@@ -98,9 +98,9 @@ export default function CookieBanner() {
           role="dialog"
           aria-live="polite"
           aria-label="Cookie preferences"
-          className="fixed bottom-0 inset-x-0 z-[100] p-3 sm:p-4 pointer-events-none"
+          className="fixed bottom-0 inset-x-0 sm:inset-x-auto sm:right-4 sm:bottom-4 sm:left-auto z-[100] p-3 sm:p-0 pointer-events-none"
         >
-          <div className="max-w-2xl mx-auto bg-neutral-900/95 backdrop-blur-md border border-neutral-700 rounded-xl shadow-2xl p-4 sm:p-5 pointer-events-auto">
+          <div className="sm:max-w-sm max-w-2xl mx-auto sm:mx-0 bg-neutral-900/95 backdrop-blur-md border border-neutral-700 rounded-xl shadow-2xl p-4 pointer-events-auto">
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
               <p className="text-sm text-neutral-200 leading-relaxed flex-1">
                 We use cookies for sign-in and anonymous analytics. Sign-in cookies are required.{' '}
