@@ -12,6 +12,20 @@
 
 ---
 
+## 🎯 Carried into next session — Brady's observed issues (2026-04-21 PM)
+
+Four items Brady flagged at end of session. Not blocking launch but worth hitting before or alongside Friday push.
+
+1. **Landing page wordmark — "INVENTORY" rendering as purple up top.** Brady sees a purple "INVENTORY" on the landing hero — either the `--wordmark-in` CSS var is resolving wrong on the landing (should be white "IN" + teal "VENTORY FULL"), or the DefaultBanner override cascade isn't hitting this route. Check `components/LandingPage.tsx` hero wordmark vs. `components/NinetiesMode.tsx` `DefaultBanner` — likely two wordmarks stacked or conflicting theme vars. Inspect on prod after deploy finishes.
+
+2. **Landing page claims "5 ways to pick today's game" but shows 3.** Copy/content drift. Grep `LandingPage.tsx` for "5 ways" — either update the headline to match the 3 shown, or restore the missing 2 sections. Low-effort, voice-affecting.
+
+3. **Line icons don't render on Safari desktop — still unfixed.** Brady previously reported this; check whether the earlier attempted fix actually shipped or if it silently regressed. Likely suspect: SVG `stroke-dasharray` + `mask` combination, or a CSS var Safari doesn't resolve the same way. Inspect in Safari Web Inspector; compare computed styles vs. Chrome. May need fallback inline stroke values instead of CSS-var-driven strokes.
+
+4. **Can't reroll the descriptive text on the share composer after clearing a game.** Share card copy is randomly selected from a flavor pool (see `components/CompletionCelebration.tsx` ~lines 156–202). Currently the user gets one roll and stuck with it — no "try another line" affordance. Brady wants a reroll button on the composer. Small UX add: button next to the copy that picks a different item from the eligible pool (must exclude the one currently shown; pool is context-filtered by $-threshold / HLTB-faster). Product-axiom safe because it's an in-moment tool at the celebration surface, not engagement bait.
+
+---
+
 ## Afternoon wave (2026-04-21 PM) — sprint items 7, 8, 9 + voice charter
 
 **Shipped:**
