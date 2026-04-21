@@ -17,6 +17,11 @@ const FILL_TAGLINE = 'var(--wordmark-tagline, #ea2de1)';
 
 // Tight viewBoxes hand-tuned from the SVGO'd source files in public/if-logos/
 // (all sources share the 2880x1800 master canvas; we crop per variant).
+// NOTE: the `tagline` variant's paths actually render "get playing.gg" (the full
+// domain) — the final "g" of "playing" is fused with the ".gg" glyphs in path
+// index 10 and can't be cleanly cropped. `full` variant hides the ".gg" via a
+// narrower viewBox; `tagline` shows the domain. For "get playing." alone, use
+// styled text, not this variant.
 const VIEWBOX: Record<WordmarkVariant, string> = {
   full: '70 645 2580 510',
   alone: '70 645 2580 335',

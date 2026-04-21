@@ -392,12 +392,11 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
 
         <Reveal>
           <div className="max-w-lg mx-auto">
-            <h2 className="m-0 mb-8 flex justify-center">
-              <Wordmark
-                variant="tagline"
-                aria-label="get playing."
-                className="w-48 sm:w-56 md:w-64 h-auto"
-              />
+            <h2
+              className="text-3xl sm:text-4xl font-bold tracking-tight mb-8 lowercase"
+              style={{ color: 'var(--color-accent-pink)' }}
+            >
+              get playing.
             </h2>
 
             {/* Side-by-side CTAs — mirrors the hero layout so users get consistent affordances */}
