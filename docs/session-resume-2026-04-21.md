@@ -168,3 +168,30 @@ Not blocking launch (dark-default themes work everywhere), but park a real cross
 
 - Hit `https://inventoryfull.gg/clear/<real-id>/opengraph-image` directly and confirm it returns a valid 1200×630 PNG (not an empty response). Two prior deploys shipped bad OG; don't trust Vercel green alone — the endpoint must respond.
 - Re-run an OG preview tool against a real `/clear/<id>` URL. The "unreachable" flag should clear. "Missing a CTA in your image" is an OCR false positive from the preview tool — we intentionally don't stamp a CTA on the card (share cards read as self-expression, not an ad).
+
+---
+
+## Evening wave (2026-04-21 ~11 PM PDT) — session-close skill infrastructure
+
+**Shipped (uncommitted at time of writing — next `git commit` on this branch):**
+
+13. ✅ **`session-close` skill built** at `.claude/skills/session-close/SKILL.md`. Replaces the earlier `session-handoff` skill (deleted in same change). Owns two artifacts at end of session: the code-level `docs/session-resume-*.md` for the next Claude Code session here, AND an operator-level handoff to the Brady OS Handoffs bus at `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Handoffs/inbox/`. 10-step ritual: pre-flight → tidy → decisions → session-resume (same-day-wave vs. new-file logic) → ROADMAP/AGENTS.md/BUILD_HISTORY drift scans → suggest reviews → opt-in push → handoff → kickoff block → report.
+
+14. ✅ **`AGENTS.md` updated** — one-line pointer added under `## Session Handoffs` naming `session-close` as the canonical mechanism.
+
+15. ✅ **First real handoff written to the bus** at `Handoffs/inbox/2026-04-21-inventory-full-session-close-ritual-formalized.md`. Proves the wiring works; Brady OS can ingest on its side.
+
+## Trigger phrases for next session
+
+"close session" / "wrap session" / "close us out" / "close down" / "we're done here" / "session close" — any of these trips the `session-close` skill. No more ad-hoc end-of-session.
+
+## Open for next session
+
+- **Friday launch (2026-04-24) is 3 days out.** Sprint carryover from earlier today still the priority: apply migration 007 in Supabase, paste the 6 email templates. See the 4 "observed issues" block at top of this file before shipping polish.
+- Mobile Brave/Chromium theme bug still parked — Week 2, not blocking launch.
+
+## Evening health snapshot
+
+- `main` tip: `4caea1b` (unchanged from AM; no new pushes this session — skill infra is local until committed)
+- Uncommitted locally: `session-close/SKILL.md` (new), `session-handoff/SKILL.md` (deleted), `AGENTS.md` (pointer). All three are the same logical change — commit together.
+- Build: not re-run this session (no runtime code touched)

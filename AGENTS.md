@@ -114,3 +114,5 @@ Legibility is non-negotiable. All text/background combinations must meet WCAG AA
 ## Session Handoffs
 
 At the end of substantial sessions, update the session-resume handoff doc (`docs/session-resume-*.md`) with: current state, what shipped, what's pending, and date/time with timezone. This enables clean starts in fresh sessions.
+
+Canonical mechanism: the `session-close` skill (`.claude/skills/session-close/`). It owns the session-resume doc AND writes a Brady OS handoff to the shared Handoffs bus so the hub stays in sync. Trigger with "close session" / "wrap session" / "close us out."
