@@ -297,6 +297,8 @@ function GameClearShare({
     },
   ];
 
+  const availableToggles = toggles.filter(t => t.available);
+
   const handleToggle = (key: string) => {
     switch (key) {
       case 'dollar': setShowDollar(v => !v); break;
@@ -359,7 +361,7 @@ function GameClearShare({
       }}
     >
       <p className="text-xs text-text-faint font-[family-name:var(--font-mono)]">
-        Pick what to include. This creates a link that unfurls with a card when pasted.
+        {availableToggles.length > 0 ? 'Pick what to include. ' : ''}Creates a link that unfurls with a card when pasted.
       </p>
 
       {/* Flavor text preview */}
@@ -370,9 +372,11 @@ function GameClearShare({
         {flavorText}
       </div>
 
-      {/* Toggle checkboxes */}
-      <div className="space-y-1.5">
-        {toggles.filter(t => t.available).map((t) => (
+      {/* Toggle checkboxes — hidden entirely when no optional stats exist,
+          so the composer collapses to flavor preview + share button. */}
+      {availableToggles.length > 0 && (
+        <div className="space-y-1.5">
+        {availableToggles.map((t) => (
           <label
             key={t.key}
             className="flex items-center gap-2.5 cursor-pointer group"
@@ -388,7 +392,8 @@ function GameClearShare({
             </span>
           </label>
         ))}
-      </div>
+        </div>
+      )}
 
       {/* Action buttons */}
       {!shareUrl ? (

@@ -1,33 +1,26 @@
 import { ImageResponse } from 'next/og';
 import { createClient } from '@supabase/supabase-js';
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 
-export const runtime = 'edge';
+// Node runtime so we can read the co-located assets straight off disk. Edge +
+// `fetch(new URL(..., import.meta.url))` blew up in Next 16 Turbopack
+// ("u2 is not iterable" inside satori's font pipeline); fs.readFile is the
+// pattern `app/apple-icon.tsx` uses and it works reliably.
+export const runtime = 'nodejs';
 export const alt = 'Game Cleared - Inventory Full';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-// Assets live next to this route file so the bundler inlines them and the edge
-// function never reaches back to its own origin to fetch its own assets —
-// that roundtrip was the cause of "OG image unreachable" on some renders.
-// Outfit Bold stays on gstatic (known-good static TTF; woff2 wouldn't decode).
 async function loadAssets() {
+  const dir = join(process.cwd(), 'public/og-assets');
   const [bungeeInline, bungee, outfitBold, heroBytes] = await Promise.all([
-    fetch(new URL('./_og-assets/BungeeInline.ttf', import.meta.url)).then((r) => r.arrayBuffer()),
-    fetch(new URL('./_og-assets/Bungee.ttf', import.meta.url)).then((r) => r.arrayBuffer()),
+    readFile(join(dir, 'BungeeInline.ttf')),
+    readFile(join(dir, 'Bungee.ttf')),
     fetch('https://fonts.gstatic.com/s/outfit/v15/QGYyz_MVcBeNP4NjuGObqx1XmO1I4bCyC4E.ttf').then((r) => r.arrayBuffer()),
-    fetch(new URL('./_og-assets/hero.webp', import.meta.url)).then((r) => r.arrayBuffer()),
+    readFile(join(dir, 'hero.png')),
   ]);
   return { bungeeInline, bungee, outfitBold, heroBytes };
-}
-
-// Satori reads <img src> as a URL at render time; data URLs are the safe path
-// in edge runtime since file:// URLs from import.meta.url resolution aren't
-// portable. 122 KB webp → ~160 KB base64 — fits comfortably in the JSX blob.
-function bytesToBase64(buffer: ArrayBuffer): string {
-  const bytes = new Uint8Array(buffer);
-  let binary = '';
-  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-  return btoa(binary);
 }
 
 interface ShareCard {
@@ -143,7 +136,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   }
 
   const { bungeeInline, bungee, outfitBold, heroBytes } = await loadAssets();
-  const heroDataUrl = `data:image/webp;base64,${bytesToBase64(heroBytes)}`;
+  const heroDataUrl = `data:image/png;base64,${heroBytes.toString('base64')}`;
 
   const gameName = card.game_name.toUpperCase();
   const subtitle = pickSubtitle(card);
@@ -203,7 +196,8 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           />
         </div>
 
-        {/* Hero faded as the backdrop anchor — centered via flex row */}
+        {/* Hero faded as the backdrop anchor — centered via flex row.
+            PNG not webp: satori in next/og 16.2.1 crashes on webp data URLs. */}
         <div
           style={{
             position: 'absolute',

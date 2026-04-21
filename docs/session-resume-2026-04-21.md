@@ -21,7 +21,7 @@
    - Landing footer (`components/LandingPage.tsx`) — small muted `variant="alone"` above Privacy/Terms/Cookies row
 
 **What shipped later in 2026-04-21 (second wave):**
-5. ✅ **OG card v2** — `app/clear/[id]/opengraph-image.tsx` rewritten. Centered hero at 0.4 opacity with radial purple glow, game name in Bungee Inline with pink strikethrough, `CLEARED!` in Bungee regular (pink), Outfit Bold subtitle. Brand wordmark bottom-right is **inline SVG paths** (pulled from `wordmark-alone.svg`) — satori won't load external SVG via `<img>` reliably, and a Bungee text approximation was rejected as off-brand. Title auto-scales + stacks onto two lines for long names (threshold = combined length > 22 chars). Safe-zone padding 80px each side. TTFs + hero webp live at `app/clear/[id]/_og-assets/` and are loaded via `new URL('./…', import.meta.url)` — see §OG image unreachable fix below for why. Four subtitle templates — `$X back from the pile.` → `Xh faster than average.` → `Xh more. you took your time.` → `game #N off the pile.` → `Xh, well spent.` → fallback `another one down.` Mock preview routes: `/clear/mock[-hltb|-slow|-count|-hours|-long]/opengraph-image`.
+5. ✅ **OG card v2** — `app/clear/[id]/opengraph-image.tsx` rewritten. Centered hero at 0.4 opacity with radial purple glow, game name in Bungee Inline with pink strikethrough, `CLEARED!` in Bungee regular (pink), Outfit Bold subtitle. Brand wordmark bottom-right is **inline SVG paths** (pulled from `wordmark-alone.svg`) — satori won't load external SVG via `<img>` reliably, and a Bungee text approximation was rejected as off-brand. Title auto-scales + stacks onto two lines for long names (threshold = combined length > 22 chars). Safe-zone padding 80px each side. TTFs + downsized 540×360 PNG hero live at `public/og-assets/`, loaded via `fs.readFile` on the **Node runtime** — see §OG image unreachable fix below for why. Four subtitle templates — `$X back from the pile.` → `Xh faster than average.` → `Xh more. you took your time.` → `game #N off the pile.` → `Xh, well spent.` → fallback `another one down.` Mock preview routes: `/clear/mock[-hltb|-slow|-count|-hours|-long]/opengraph-image`.
 6. ✅ **Share composer trimmed** — `components/CompletionCelebration.tsx` dropped hours / pile-time / stats / rating toggles. Only $-reclaimed (when price cached) + HLTB-faster (only when they actually beat average, slower case never exposed) are shareable. Reasoning: everything else was weak signal and diluted the brag. Matches product axiom "less time in app."
 7. ✅ **Landing hero** — `components/LandingPage.tsx:130` replaced "Your pile's not gonna play itself." h1 with centered `Wordmark variant="full"` (white `IN` + teal `VENTORY FULL` + pink `get playing.` tagline). Scales responsively 16rem → 26rem.
 8. ✅ **App-header wordmark removed** — `app/page.tsx` duplicate mark gone since `DefaultBanner` carries it above.
@@ -68,11 +68,31 @@ See [session-resume-2026-04-20.md](session-resume-2026-04-20.md) for:
 
 ---
 
-## OG image unreachable fix (2026-04-21 PM)
+## OG image unreachable fix (2026-04-21 PM) — take 2
 
-Third-party OG preview tools flagged `https://inventoryfull.gg/clear/<id>` with "OG Image URL appears to be invalid or unreachable." Root cause: `app/clear/[id]/opengraph-image.tsx` read `NEXT_PUBLIC_SITE_URL` (unset anywhere in the codebase — everything else uses `NEXT_PUBLIC_APP_URL`), fell through to `VERCEL_URL` → the auto-generated `*.vercel.app` URL, then ran three font fetches + a 1.7 MB hero PNG fetch back to that origin from inside the edge function. The self-referential roundtrip was fragile enough to fail or time out under load.
+**Story so far.** Two deploys, three layers of root cause. Recording it here because this one ate time and the lessons aren't obvious.
 
-**Fix:** Dropped the origin fetches entirely. Fonts moved to `app/clear/[id]/_og-assets/` (underscore = private, Next.js won't route it); loaded with the canonical `new URL('./file', import.meta.url)` pattern so the bundler inlines them. Hero switched to the existing 122 KB webp (was rendering at 40 % opacity anyway, the 1.7 MB PNG was overkill) and embedded as a base64 data URL in the `<img src>` so satori doesn't need to fetch it at render time. `siteOrigin()` helper deleted — no env var needed anymore.
+**The symptom:** third-party OG preview tools flagged `https://inventoryfull.gg/clear/<id>` with "OG Image URL appears to be invalid or unreachable." Meta tags looked right; Vercel deployment showed green; but any consumer that actually fetched the image got an empty response.
+
+**Layer 1 (first attempt, shipped as `b6f51b2` then reverted in effect):** `app/clear/[id]/opengraph-image.tsx` read `NEXT_PUBLIC_SITE_URL` (unset anywhere in the codebase — everything else uses `NEXT_PUBLIC_APP_URL`), fell through to `VERCEL_URL` → the auto-generated `*.vercel.app` URL, then ran three font fetches + a 1.7 MB hero PNG fetch back to that origin from inside the **edge** function. The self-referential roundtrip was fragile.
+
+Swapped in the canonical `new URL('./file', import.meta.url)` pattern with assets co-located in `app/clear/[id]/_og-assets/`. **Vercel build failed at 01:32.** Next.js 16 + Turbopack doesn't bundle `new URL(..., import.meta.url)` the same way webpack did — the edge bundle was produced but satori's font pipeline choked on the resolved URLs. Error surfaced as `TypeError: u2 is not iterable` inside `failed to pipe response`. Nothing ever shipped; the broken original version stayed live.
+
+**Layer 2 (runtime):** switched from `runtime = 'edge'` to `runtime = 'nodejs'`, following the pattern `app/apple-icon.tsx` already uses. Assets moved to `public/og-assets/` and loaded with `fs.readFile` + `join(process.cwd(), …)`. Build recovers, asset loading clean. Still `u2 is not iterable` at render time.
+
+**Layer 3 (the actual culprit):** the `<img>` hero tag with a **webp** data URL. Satori claims webp support but the bundled version in `next/og` (16.2.1) crashes on webp decode. Swapped the 122 KB webp for a 47 KB downsized PNG (540×360 via sharp) and the endpoint returns a clean 1200×630 PNG.
+
+**Final state:**
+- Runtime: `nodejs`
+- Assets in `public/og-assets/` (Bungee.ttf, BungeeInline.ttf, hero.png — 47 KB)
+- `fs.readFile` for Buffer → `.toString('base64')` for the inline hero data URL
+- Gstatic for Outfit Bold (HTTP fetch, works on Node too)
+- `siteOrigin()` helper + `NEXT_PUBLIC_SITE_URL` dependency removed
+
+**Gotchas for future OG work:**
+1. **Edge + `new URL(..., import.meta.url)` is not safe on Turbopack production yet.** Use Node runtime + `fs.readFile(join(process.cwd(), 'public/…'))`.
+2. **Satori's webp decoder is broken in current `next/og`.** Use PNG or JPG for `<img>` data URLs. Webp is fine for the pages themselves.
+3. **Always fetch the live OG image endpoint directly** (`curl /clear/<id>/opengraph-image`) to verify, don't just trust the Vercel build green light.
 
 ---
 
