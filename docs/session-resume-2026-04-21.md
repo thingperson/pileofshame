@@ -30,6 +30,7 @@
 9. ✅ **OG image unreachable — fully fixed** (commits `b6f51b2` → `8a1f993` → `3210a1b`). Three layers of root cause; see §OG image unreachable fix below for the narrative. Final state: Node runtime + `fs.readFile` from `public/og-assets/`, PNG hero (webp crashes satori).
 10. ✅ **OG card visual polish** — hero at full opacity (was 0.4 watermark), headline ~20% smaller (stacked 104/112 → 83/90, inline 96 → 77), `lineHeight: 1` on both lines + `marginTop: 8px` between them so the stacked game-name + CLEARED! sit tight instead of floating ~30px apart.
 11. ✅ **Share composer empty state** — `components/CompletionCelebration.tsx` now hides the "Pick what to include." prefix and the empty toggles block when `availableToggles.length === 0`. Before, a game with no cached retail price and no HLTB-beat rendered the instruction line with nothing to pick underneath it. Composer collapses to flavor preview + share button — the originally intended behavior.
+12. ✅ **`/session-handoff` skill added** (`c01787e`) — `.claude/skills/session-handoff/SKILL.md`. End-of-session housekeeping: auto-applies session-resume updates, surfaces DECISIONS / ROADMAP / AGENTS.md drift for review, prints a next-session kickoff block. Run when wrapping up. This handoff was its first run.
 
 **Remaining sprint items:**
 - **Sprint 6** — Supabase email template rewrite (dashboard work, Inventory Full voice, custom From name).
@@ -120,7 +121,7 @@ Not blocking launch (dark-default themes work everywhere), but park a real cross
 - Sprint items 1–8 (wordmark wave + OG card + share trim + landing hero): ✅ shipped AM
 - Sprint items 9–11 (OG unreachable fix + card polish + share composer empty state): ✅ shipped PM
 - Sprint items 6–9 (email infra, pre-push gates): pending → next session
-- `main` tip: `3210a1b` (OG polish) → Vercel deploy in flight at push time
+- `main` tip after handoff: `c01787e` (session-handoff skill) — previous deploys still settling
 - Known bug: light/cozy themes broken on mobile Brave/Chromium (see above)
 
 ## Verify on next session start
