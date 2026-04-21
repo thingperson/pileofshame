@@ -74,6 +74,8 @@ Third-party OG preview tools flagged `https://inventoryfull.gg/clear/<id>` with 
 
 **Fix:** Dropped the origin fetches entirely. Fonts moved to `app/clear/[id]/_og-assets/` (underscore = private, Next.js won't route it); loaded with the canonical `new URL('./file', import.meta.url)` pattern so the bundler inlines them. Hero switched to the existing 122 KB webp (was rendering at 40 % opacity anyway, the 1.7 MB PNG was overkill) and embedded as a base64 data URL in the `<img src>` so satori doesn't need to fetch it at render time. `siteOrigin()` helper deleted — no env var needed anymore.
 
+---
+
 ## Known bug — Chromium mobile theme rendering
 
 **Reported 2026-04-21 by Brady.** `light` and `cozy` themes render correctly on desktop Safari, desktop Brave, and mobile Safari — but fail on **mobile Brave (Android Chromium)**. Desktop Chromium is fine, so it's specifically the Android-Chromium code path.
@@ -93,3 +95,4 @@ Not blocking launch (dark-default themes work everywhere), but park a real cross
 - Sprint items 1–8 (wordmark wave + OG card + share trim + landing hero): ✅ shipped
 - Sprint items 6–9 (email infra): pending
 - Known bug: light/cozy themes broken on mobile Brave/Chromium (see above)
+- OG image unreachable: ✅ fixed PM (see fix section above)
