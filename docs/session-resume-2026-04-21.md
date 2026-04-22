@@ -282,3 +282,31 @@ From the "Brady's observed issues" block at top of this file:
 - Known bugs (unchanged): mobile Brave/Chromium light/cozy theme rendering; Safari desktop line icons
 - Launch punch-list items closed this session: landing copy drift (5→3), landing wordmark concern, share flavor reroll
 - Launch punch-list remaining: see bible §2 (5 🔴 blockers Apr 23–26)
+
+---
+
+## Sixth wave (2026-04-21 — post-push bug fixes)
+
+Brady spotted two landing bugs on prod immediately after the fifth-wave deploy and we turned them around before closing.
+
+**Shipped:**
+
+32. ✅ **Header merge** (commit `143bd6e`). Landing was rendering two stacked header rows — the `NinetiesMode` `DefaultBanner` carrying the centered wordmark + tagline on top, and the `LandingPage` nav with the Open-app + Sign-in buttons below. `NinetiesMode` now suppresses `DefaultBanner` when `games.length === 0`; `LandingPage` renders its own integrated header with wordmark (sized h-9/h-11, ~15% smaller than DefaultBanner) on the left and nav buttons on the right in a single row. The black separator band is gone and the hero image moves up.
+
+33. ✅ **Footer muted wordmark removed** (same commit). The dim `Wordmark variant="alone"` sitting under the bottom CTA was doubling with the tagline graphic and reading as visual noise. Deleted. Footer is now the dino-theme line + Privacy/Terms/Cookies.
+
+34. ✅ **Tagline variant viewBox** (same commit). Old `20 775 2840 250` clipped the "get playing" glyphs (at y≈1062–1148) while leaving the ".gg" portion (at y≈914) visible — which is why prod showed a stray ".gg" floating above a clipped row. Updated to `820 900 2000 260` so the real bbox (x=853–2803, y=914–1149) renders.
+
+35. ✅ **Bottom CTA reverted to styled text** (commit `c36f830`). The `tagline` Wordmark variant visually renders "get playing.**gg**" (the full domain) — path index 10 fuses the final "g" of "playing" with the ".gg" glyphs, so no viewBox crop cleanly produces "get playing." without ".gg". Reverted bottom CTA to `<h2>get playing.</h2>` in `var(--color-accent-pink)`. Added a `// NOTE:` block to `Wordmark.tsx` documenting the trap so nobody else walks into it.
+
+## Rotting gotcha added this wave
+
+- **`Wordmark variant="tagline"` renders "get playing.gg", not "get playing."** For the on-page "get playing." moment (any h1/h2/CTA), use styled text — not this variant. The `full` variant is fine because its tighter viewBox clips the ".gg" portion. Trap documented inline in `components/Wordmark.tsx` above `VIEWBOX`.
+
+## Health snapshot (session-close 2, 2026-04-21 late PM PDT)
+
+- `main` tip: `c36f830`, pushed
+- 3 commits shipped after the first session-close snapshot (`143bd6e`, `c36f830`, and the earlier `b1bd1be` docs-only commit from the first close)
+- Build: not rerun locally (client-only edits; preview verified clean at header-merge step, bottom CTA verified via DOM computedStyle)
+- Known bugs (unchanged): mobile Brave/Chromium light/cozy theme rendering; Safari desktop line icons
+- Tagline Wordmark variant is technically still broken-for-intent — flagged, not fixed (would require editing SVG paths to split the fused "g" glyph). Not blocking launch; text substitute is cleaner anyway.
