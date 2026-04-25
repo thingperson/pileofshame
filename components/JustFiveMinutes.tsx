@@ -291,8 +291,9 @@ const JustFiveMinutes = forwardRef<JustFiveMinutesHandle, JustFiveMinutesProps>(
       {/* Floating timer pill — shows during timing phase, sticks to bottom */}
       {active && step === 'timing' && (
         <div
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 pl-3 pr-2 py-2 rounded-full shadow-xl shadow-black/40"
+          className="fixed left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 pl-3 pr-2 py-2 rounded-full shadow-xl shadow-black/40"
           style={{
+            bottom: 'calc(1.5rem + env(safe-area-inset-bottom))',
             backgroundColor: 'var(--color-bg-elevated)',
             border: '1px solid rgba(5, 150, 105, 0.4)',
             animation: 'scaleIn 300ms ease-out',

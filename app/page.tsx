@@ -502,7 +502,7 @@ function AppContent() {
   // === THE VOID ===
   if (isVoid) {
     return (
-      <div className="relative z-10 w-full max-w-[960px] mx-auto px-4 flex flex-col items-center justify-center" style={{ minHeight: '100vh' }}>
+      <div className="relative z-10 w-full max-w-[960px] mx-auto px-4 flex flex-col items-center justify-center" style={{ minHeight: '100dvh' }}>
         <div className="fixed top-4 right-4 z-50 flex gap-2">
           <SettingsMenu />
         </div>

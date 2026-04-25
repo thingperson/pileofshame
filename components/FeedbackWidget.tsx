@@ -79,7 +79,8 @@ export default function FeedbackWidget() {
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Send feedback"
-          className="fixed bottom-4 right-4 z-40 px-3 py-2 text-xs font-medium rounded-full bg-neutral-800/90 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 shadow-lg backdrop-blur-sm transition-colors"
+          className="fixed right-4 z-40 px-3 py-2 text-xs font-medium rounded-full bg-neutral-800/90 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 shadow-lg backdrop-blur-sm transition-colors"
+          style={{ bottom: 'calc(1rem + env(safe-area-inset-bottom))' }}
         >
           Feedback
         </button>

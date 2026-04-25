@@ -45,7 +45,18 @@ body {
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
   font-family: var(--font-display);
-  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* iOS Safari auto-zooms inputs whose font-size is below 16px on focus.
+   Force the rendered size to 16px on mobile while preserving the
+   visual `text-sm`/`text-xs` Tailwind classes on desktop. */
+@media (max-width: 640px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="color"]),
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
 }
 
 /* Ambient background gradients */
