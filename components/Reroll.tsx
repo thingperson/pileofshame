@@ -577,7 +577,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
               {REROLL_MODES.map(({ mode: m, icon, label }) => (
                 <button
                   key={m}
-                  onClick={() => { setMode(m); setShownIds(new Set()); doRoll(m, false); }}
+                  onClick={() => { setMode(m); }}
                   className={`px-3 py-2 rounded-full text-sm font-medium font-[family-name:var(--font-mono)] transition-all ${
                     mode === m
                       ? 'bg-white/10 text-text-primary'
@@ -593,8 +593,6 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                   const levels: EnergyLevel[] = ['low', 'medium', 'high'];
                   const next = levels[(levels.indexOf(energy) + 1) % levels.length];
                   setEnergy(next);
-                  setShownIds(new Set());
-                  doRoll(mode, false);
                 }}
                 className="px-3 py-2 rounded-full text-sm font-medium font-[family-name:var(--font-mono)] text-text-dim hover:text-text-muted hover:bg-white/5 transition-all"
                 title={`Energy: ${energy}. Tap to change.`}

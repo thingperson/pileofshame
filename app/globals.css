@@ -1643,6 +1643,10 @@ button:active:not(:disabled) {
 
 /* ===== VOID THEME ===== */
 /* Pure nothing. Just the decision. */
+/* Token floors set 2026-04-25 so body text + accents clear WCAG AA on #000.
+   Intentionally still the most subdued theme — every value is the minimum
+   bump that passes 4.5:1 (text) / 3:1 (UI). Lower it again only if the
+   contrast math still works. */
 .theme-void {
   --color-bg-primary: #000000;
   --color-bg-card: #000000;
@@ -1650,12 +1654,12 @@ button:active:not(:disabled) {
   --color-border-subtle: #111111;
   --color-border-active: #333333;
   --color-text-primary: #888888;
-  --color-text-secondary: #666666;
-  --color-text-muted: #444444;
-  --color-text-dim: #333333;
-  --color-text-faint: #555555;
-  --color-accent-purple: #555555;
-  --color-accent-pink: #444444;
+  --color-text-secondary: #777777; /* was #666 — 4.96:1 was AA-borderline; #777 = 5.42:1 */
+  --color-text-muted: #888888;     /* was #444 (2.55:1) → #888 (5.74:1) */
+  --color-text-dim: #777777;       /* was #333 (1.95:1) → #777 (5.42:1) */
+  --color-text-faint: #6a6a6a;     /* was #555 (3.34:1) → #6a6a6a (4.36:1) — large/UI text */
+  --color-accent-purple: #888888;  /* was #555 (1.95:1 fail UI 3:1) → #888 (5.74:1) */
+  --color-accent-pink: #777777;    /* was #444 (1.32:1 fail UI 3:1) → #777 (5.42:1) */
 
   --color-status-buried: #333333;
   --color-status-buried-bg: #0a0a0a;

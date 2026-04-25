@@ -138,7 +138,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   const { bungeeInline, bungee, outfitBold, heroBytes } = await loadAssets();
   const heroDataUrl = `data:image/png;base64,${heroBytes.toString('base64')}`;
 
-  const gameName = card.game_name.toUpperCase();
+  const gameName = (card.game_name ?? 'A Game').toUpperCase();
   const subtitle = pickSubtitle(card);
 
   // Layout strategy:

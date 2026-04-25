@@ -20,7 +20,12 @@ export default function AboutPage() {
       {/* ── Nav bar ── */}
       <nav className="sticky top-0 z-20 px-6 py-4 flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-primary)', borderBottom: '1px solid var(--color-border-subtle)' }}>
         <a href="/" className="transition-opacity hover:opacity-80" aria-label="Inventory Full — home">
-          <Wordmark variant="alone" className="h-6 w-auto" />
+          <Wordmark
+            variant="full"
+            aria-label="Inventory Full — get playing."
+            className="h-6 w-auto"
+            style={{ ['--wordmark-in' as string]: '#ffffff' }}
+          />
         </a>
         <a
           href="/"
@@ -204,7 +209,7 @@ export default function AboutPage() {
               className="text-3xl sm:text-4xl font-bold text-center mb-3 tracking-tight"
               style={{ color: 'var(--color-text-primary)' }}
             >
-              5 ways to pick today&apos;s game.
+              4 ways to pick today&apos;s game.
             </h2>
             <p
               className="text-center text-sm sm:text-base mb-10 font-[family-name:var(--font-mono)]"

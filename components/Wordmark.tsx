@@ -67,6 +67,7 @@ export default function Wordmark({
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox={VIEWBOX[variant]}
+      preserveAspectRatio="xMidYMid meet"
       role={role ?? (isDecorative ? 'presentation' : 'img')}
       aria-label={ariaLabel}
       aria-labelledby={labelId}

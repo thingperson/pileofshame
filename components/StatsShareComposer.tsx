@@ -288,6 +288,24 @@ export default function StatsShareComposer({
         </button>
       ) : (
         <div className="space-y-2">
+          {/* OG card preview — what the share will unfurl as */}
+          <div
+            className="rounded-lg overflow-hidden"
+            style={{
+              border: '1px solid rgba(255,255,255,0.08)',
+              backgroundColor: 'rgba(0,0,0,0.3)',
+              aspectRatio: '1200 / 630',
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`${shareUrl}/opengraph-image`}
+              alt="Share card preview"
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+
           {/* URL display + copy */}
           <button
             onClick={handleCopyLink}
