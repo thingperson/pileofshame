@@ -15,6 +15,45 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-25 — Landing trimmed to hero-only; /about becomes the canonical product narrative
+
+**Decision.** The landing page (`/`) is now a fast decision funnel: hero + CTAs + footer, nothing else. The marketing narrative (How it works / Not another tracker / pull quote / "3 ways to pick") was deleted from `components/LandingPage.tsx` and lives only on `app/about/page.tsx`, which is now the canonical "what is this product" page.
+
+**Why.**
+- The onboarding audit (in this session's resume doc) found that decision-paralyzed users on the landing page were reading ~20s of marketing copy before reaching a CTA. The thesis is "less time in app = success." Marketing copy on landing is time-in-app that doesn't terminate in play.
+- About already had near-identical sections (the agent compared them line-for-line). Cutting from landing didn't lose any content — it lost a duplicate.
+- Reduces decision surface at the moment when the user is least equipped to handle it.
+
+**Implementation.**
+- `components/LandingPage.tsx` — deleted ~165 lines: HOW IT WORKS, THE PITCH, PULL QUOTE, "3 ways to pick" sections, plus orphan `StepCard`, `PickModeCard`, `ImportStepIcon`, `VibeStepIcon`, `PlayStepIcon` components. Replaced with a comment block flagging the move date.
+- `app/about/page.tsx` — already had equivalent sections. Only fix: "5 ways to pick" → "4 ways" copy drift (matches 4 cards rendered).
+- About nav also got the Wordmark fix — `variant="alone"` → `variant="full"` with `--wordmark-in: #ffffff` inline so it stays legible on the dark nav (matches landing's pattern).
+
+**Rejected.**
+- "Keep both pages with marketing narrative; just trim landing slightly." Half-measure. The whole point is a hard split: landing is action funnel, about is narrative.
+- "Move sections to a new page like `/why`." More routes, more decisions about which to link to. About is already the right home.
+- "Leave landing as-is and just add a `<a href='/about'>Why?</a>` link." Doesn't solve the time-in-app problem on landing.
+
+**Restorability.** All deleted content is in git history at commit `ce5fc7d`'s parent. If we change direction, `git revert` or cherry-pick the deleted block back. Not a one-way door.
+
+---
+
+## 2026-04-25 — Void theme tokens bumped to clear WCAG AA on #000
+
+**Decision.** The Void theme is intentionally the most subdued theme — pure black background with near-monochrome grays — but several tokens (text-dim 1.95:1, accent-pink 1.32:1) failed WCAG AA, making body text invisible and accent UI unreadable. Bumped each token to the minimum value that passes 4.5:1 (text) / 3:1 (UI).
+
+**Why.**
+- `AGENTS.md` "Accessibility & Contrast": *"Legibility is non-negotiable. All text/background combinations must meet WCAG AA contrast minimums (4.5:1 for body text, 3:1 for large text). Never defer contrast failures as a 'designer's call' — fix them."*
+- The "void = oppressive nothing" design intent doesn't override the legibility rule. Theme can still feel subdued — it's the *most* subdued theme by design — without being unreadable.
+
+**Implementation.** `app/globals.css:1646–1658` — token table updated with comments showing the old → new contrast ratios.
+
+**Rejected.**
+- "Leave Void as-is; it's a deliberate aesthetic." Violates the AGENTS.md non-negotiable. AA is a launch gate.
+- "Hide Void from the theme picker until it's redesigned." Punts the work; users who already chose Void in localStorage still have it active.
+
+---
+
 ## 2026-04-21 — "Pile" vs "backlog" — voice on-page, SEO in meta
 
 **Decision.** The landing subhead is canonical "Your pile's not gonna play itself." — and by extension any on-page h1/h2 that names the whole collection uses "pile." "Backlog" stays reserved for (a) the unplayed-status column in the app and (b) meta description / JSON-LD / keywords for SEO discovery. `voice-charter.md` and `brand-messaging.md` updated today to match.
