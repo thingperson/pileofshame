@@ -633,20 +633,25 @@ export function getPlayerArchetype(games: Game[], opts?: ArchetypeOptions): Play
 
 /**
  * Maps archetype titles → pixel sprite keys. See lib/pixel/data/personas.json.
- * Not every archetype has a sprite yet (9 gaps — see
- * notes/apr20-improvements-claude-design/design-feedback.md). `undefined`
- * means consumers should fall back to the emoji icon.
+ * Full coverage as of 2026-04-25 — every archetype has a sprite. Dynamic
+ * "<Genre> Addict" archetypes use the generic genreAddict sprite (handled
+ * in getArchetypeSpriteKey).
  */
 const SPRITE_KEY_BY_TITLE: Record<string, string> = {
   'Pure Collector': 'pureCollector',
   'The Hoarder': 'hoarder',
   'The Dabbler': 'dabbler',
   'The Quitter': 'quitter',
+  'The Juggler': 'juggler',
+  'The Archaeologist': 'archaeologist',
   'The Window Shopper': 'windowShopper',
   'Backlog Zero': 'backlogZero',
   'The Completionist': 'completionist',
+  'The Sniper': 'sniper',
+  'The Redeemer': 'redeemer',
   'The Critic': 'critic',
   'The Enthusiast': 'enthusiast',
+  'The Deep Diver': 'deepdiver',
   'The Balanced Gamer': 'balanced',
   'The Omni-Gamer': 'omniGamer',
   'Steam Loyalist': 'steamLoyalist',
@@ -655,17 +660,21 @@ const SPRITE_KEY_BY_TITLE: Record<string, string> = {
   'The Endurance Runner': 'enduranceRunner',
   'The Optimizer': 'optimizer',
   'The Wishful Thinker': 'wishfulThinker',
+  'The Eclectic': 'eclectic',
   'Cozy Craver': 'cozy',
+  'The Infinite Player': 'infinite',
   'The Momentum Builder': 'momentumBuilder',
   'The Bargain Hunter': 'bargainHunter',
   'The Night Owl': 'nightOwl',
-  'Dino Devotee': 'dinoRider',
+  'Dino Devotee': 'dino',
+  'Webmaster Supreme': 'webmaster',
   'Synthwave Surfer': 'synthwave',
   'ULTRA Devotee': 'ultraDevotee',
   'Holographic Entity': 'hologram',
   'The Unsettling One': 'unsettling',
   'The Lighthouse': 'lighthouse',
-  'The Gamer': undefined as unknown as string, // fallback uses emoji
+  'The Minimalist': 'minimalist',
+  'The Gamer': 'gamer',
 };
 
 export function getArchetypeSpriteKey(archetype: PlayerArchetype): string | undefined {
