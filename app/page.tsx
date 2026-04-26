@@ -404,6 +404,12 @@ function AppContent() {
         // fire a generic "any" source — the breakdown already tells GA4
         // everything about the resulting library shape.
         trackImportCompleted('any', games.length);
+        // Auto-launch the Reroll modal so the user lands on a first-pick
+        // moment, not on a stats summary they have to dismiss. The breakdown
+        // modal still renders (behind Reroll); user falls into it after
+        // closing Reroll if they want the numbers. Onboarding axiom: less
+        // time in app, faster path to playing.
+        openReroll('anything');
       }
     }
     prevGameCount.current = games.length;

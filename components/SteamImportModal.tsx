@@ -114,6 +114,13 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
     }
   };
 
+  // Default-import only games the user hasn't started — fast path for
+  // big libraries where scrolling 500 games to deselect played ones is
+  // the actual bottleneck.
+  const selectOnlyUnplayed = () => {
+    setSelected(new Set(games.filter((g) => g.playtimeHours === 0).map((g) => g.appid)));
+  };
+
   const handleImport = () => {
     const toImport = games.filter((g) => selected.has(g.appid));
     let count = 0;
@@ -397,13 +404,22 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
         {step === 'select' && (
           <>
             {/* Select controls */}
-            <div className="px-5 pb-2 flex items-center gap-2">
+            <div className="px-5 pb-2 flex items-center gap-3 flex-wrap">
               <button
                 onClick={toggleAll}
                 className="text-xs text-accent-purple hover:underline"
               >
                 {selected.size === games.length ? 'Deselect all' : 'Select all'}
               </button>
+              {games.some((g) => g.playtimeHours > 0) && (
+                <button
+                  onClick={selectOnlyUnplayed}
+                  className="text-xs text-accent-purple hover:underline"
+                  title="Only select games you haven't started yet"
+                >
+                  Hide what I&apos;ve played
+                </button>
+              )}
             </div>
 
             {/* Game list */}

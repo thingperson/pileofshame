@@ -23,8 +23,10 @@ export default function GameSearch({ value, onChange, onSelect }: GameSearchProp
   const [results, setResults] = useState<RawgResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const listboxId = 'game-search-results';
 
   const search = useCallback(async (query: string) => {
     if (query.length < 2) {
@@ -55,6 +57,11 @@ export default function GameSearch({ value, onChange, onSelect }: GameSearchProp
     };
   }, [value, search]);
 
+  // Reset active highlight whenever the result set changes
+  useEffect(() => {
+    setActiveIndex(-1);
+  }, [results]);
+
   // Close dropdown on outside click
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -72,6 +79,38 @@ export default function GameSearch({ value, onChange, onSelect }: GameSearchProp
     onSelect(result);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showDropdown || results.length === 0) {
+      if (e.key === 'ArrowDown' && results.length > 0) {
+        // Re-open dropdown on ArrowDown if it was closed
+        setShowDropdown(true);
+        setActiveIndex(0);
+        e.preventDefault();
+      }
+      return;
+    }
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setActiveIndex((prev) => (prev + 1) % results.length);
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setActiveIndex((prev) => (prev <= 0 ? results.length - 1 : prev - 1));
+        break;
+      case 'Enter':
+        if (activeIndex >= 0 && activeIndex < results.length) {
+          e.preventDefault();
+          handleSelect(results[activeIndex]);
+        }
+        break;
+      case 'Escape':
+        e.preventDefault();
+        setShowDropdown(false);
+        break;
+    }
+  };
+
   return (
     <div ref={containerRef} className="relative">
       <div className="relative">
@@ -80,8 +119,18 @@ export default function GameSearch({ value, onChange, onSelect }: GameSearchProp
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => results.length > 0 && setShowDropdown(true)}
+          onKeyDown={handleKeyDown}
           placeholder="Search for a game..."
           aria-label="Search for a game to add"
+          role="combobox"
+          aria-expanded={showDropdown}
+          aria-controls={listboxId}
+          aria-autocomplete="list"
+          aria-activedescendant={
+            activeIndex >= 0 && results[activeIndex]
+              ? `${listboxId}-${results[activeIndex].slug}`
+              : undefined
+          }
           autoFocus
           className="w-full text-sm bg-bg-primary border border-border-subtle rounded-lg px-3 py-2.5 text-text-primary placeholder-text-faint focus:outline-none focus:border-accent-purple"
         />
@@ -94,18 +143,27 @@ export default function GameSearch({ value, onChange, onSelect }: GameSearchProp
 
       {showDropdown && results.length > 0 && (
         <div
+          id={listboxId}
+          role="listbox"
+          aria-label="Game search results"
           className="absolute z-50 w-full mt-1 rounded-xl border overflow-hidden shadow-xl max-h-[320px] overflow-y-auto"
           style={{
             backgroundColor: 'var(--color-bg-elevated)',
             borderColor: 'var(--color-border-active)',
           }}
         >
-          {results.map((result) => (
+          {results.map((result, idx) => (
             <button
               key={result.slug}
+              id={`${listboxId}-${result.slug}`}
               type="button"
+              role="option"
+              aria-selected={activeIndex === idx}
               onClick={() => handleSelect(result)}
-              className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-white/5 transition-colors"
+              onMouseEnter={() => setActiveIndex(idx)}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${
+                activeIndex === idx ? 'bg-white/10' : 'hover:bg-white/5'
+              }`}
             >
               {result.coverUrl ? (
                 <img

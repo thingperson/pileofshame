@@ -65,7 +65,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
   const [showMoreWays, setShowMoreWays] = useState(false);
   const [showVibes, setShowVibes] = useState(false);
   const [rolling, setRolling] = useState(false);
-  const [showForced, setShowForced] = useState(false);
+  const [commitNudgeShown, setCommitNudgeShown] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [skipModePicker, setSkipModePicker] = useState(false);
   const [skippedIds, setSkippedIds] = useState<Set<string>>(new Set());
@@ -176,6 +176,14 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
       showToast(REROLL_MESSAGES[newCount]);
     }
 
+    // Soft commitment nudge once per session, around roll 8. No trap —
+    // the user can keep rolling. Replaces the old hard 10-roll forced-
+    // choice modal which violated "less time in app = success."
+    if (countAsRoll && newCount === 8 && !commitNudgeShown) {
+      showToast("You've seen a lot. Trust your gut.");
+      setCommitNudgeShown(true);
+    }
+
     // Animate
     setRolling(true);
     setRevealed(false);
@@ -187,13 +195,8 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
       setRevealed(true);
       // Funnel: first-ever roll reveal (once per browser)
       trackFirstRoll();
-
-      // Check if forced choice at roll 10
-      if (newCount >= 10) {
-        setTimeout(() => setShowForced(true), 600);
-      }
     }, 500);
-  }, [games, mode, moodFilters, currentPick, rollCount, pushLastPick, showToast, skippedIds, shownIds, platformPreference, energy]);
+  }, [games, mode, moodFilters, currentPick, rollCount, pushLastPick, showToast, skippedIds, shownIds, platformPreference, energy, commitNudgeShown]);
 
   const handleLetsGo = useCallback((game: Game) => {
     // Playing Now cap check
@@ -235,7 +238,6 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
     // Show post-accept nudge instead of immediately closing
     setPostAccept(game);
     setCurrentPick(null);
-    setShowForced(false);
 
     // Auto-dismiss after 3 seconds
     setTimeout(() => {
@@ -249,7 +251,6 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
     resetReroll();
     setCurrentPick(null);
     setPostAccept(null);
-    setShowForced(false);
     setRevealed(false);
     onClose();
   }, [resetReroll, onClose]);
@@ -295,7 +296,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
       setSmartPickType(null);
       setRollCount(0);
       setPostAccept(null);
-      setShowForced(false);
+      setCommitNudgeShown(false);
       setRevealed(false);
       setSkippedIds(new Set());
       setShownIds(new Set());
@@ -381,8 +382,6 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
 
   if (!open) return null;
 
-  const forcedPicks = reroll.lastThreePicks;
-
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4">
       {/* Backdrop */}
@@ -430,7 +429,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
         </div>
 
         {/* Mode Selector (only before first roll, skip if mode pre-selected) */}
-        {!currentPick && !showForced && !skipModePicker && (
+        {!currentPick && !skipModePicker && (
           <div className="px-5 pb-4">
             {/* Energy selector */}
             <p className="text-xs text-text-dim font-[family-name:var(--font-mono)] uppercase tracking-wider mb-2">How&apos;s your energy?</p>
@@ -569,7 +568,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
         )}
 
         {/* Current Pick */}
-        {currentPick && !showForced && (
+        {currentPick && (
           <div className={`flex flex-col min-h-0 flex-1 transition-all duration-500 ${revealed ? 'opacity-100' : 'opacity-0'}`}>
           <div className="px-5 overflow-y-auto min-h-0 flex-1">
             {/* Mode switcher pills */}
@@ -826,8 +825,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
               </button>
               <button
                 onClick={() => doRoll()}
-                disabled={rollCount >= 10}
-                className="flex-1 px-3 py-3.5 sm:py-2.5 text-sm font-medium rounded-xl border border-border-subtle text-text-secondary hover:border-accent-purple transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                className="flex-1 px-3 py-3.5 sm:py-2.5 text-sm font-medium rounded-xl border border-border-subtle text-text-secondary hover:border-accent-purple transition-all"
               >
                 🎲 Roll Again
               </button>
@@ -845,68 +843,9 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
           </div>
         )}
 
-        {/* Forced Choice (Roll 10) */}
-        {showForced && (
-          <div className="px-5 pb-5">
-            <p className="text-center text-sm font-medium text-text-secondary mb-1">
-              Pick one. No more rolls.
-            </p>
-            <p className="text-center text-xs text-text-faint font-[family-name:var(--font-mono)] mb-4">
-              These came up during your session. One of them is calling your name.
-            </p>
-            <div className="space-y-2">
-              {forcedPicks.map((game) => {
-                const desc = getGameDescriptor(game.name, game.metacritic, game.genres);
-                return (
-                  <button
-                    key={game.id}
-                    onClick={() => handleLetsGo(game)}
-                    className="w-full flex items-center gap-3 p-4 sm:p-3 rounded-xl border transition-all hover:border-accent-purple hover:scale-[1.01]"
-                    style={{
-                      backgroundColor: 'var(--color-bg-card)',
-                      borderColor: 'var(--color-border-subtle)',
-                    }}
-                  >
-                    {game.coverUrl && (
-                      <img src={game.coverUrl} alt="" className="w-12 h-12 rounded-lg object-cover shrink-0" />
-                    )}
-                    <div className="flex-1 min-w-0 text-left">
-                      <span className="text-sm font-medium text-text-primary truncate block">
-                        {game.name}
-                      </span>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        {game.metacritic && (
-                          <span
-                            className="text-xs font-bold px-1 rounded"
-                            style={{
-                              backgroundColor: game.metacritic >= 75 ? 'rgba(34,197,94,0.15)' : 'rgba(234,179,8,0.15)',
-                              color: game.metacritic >= 75 ? '#22c55e' : '#eab308',
-                            }}
-                          >
-                            {game.metacritic}
-                          </span>
-                        )}
-                        {game.hltbMain && (
-                          <span className="text-xs text-text-dim font-[family-name:var(--font-mono)]">~{game.hltbMain}h</span>
-                        )}
-                        <span className="text-xs text-text-dim">{TIME_TIER_CONFIG[game.timeTier].icon}</span>
-                      </div>
-                      {desc && (
-                        <p className="text-xs text-text-faint mt-0.5 truncate italic">{desc.line}</p>
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-            <button
-              onClick={handleNotNow}
-              className="w-full mt-3 px-3 py-2 text-xs text-text-dim hover:text-text-muted transition-colors"
-            >
-              Fine, I&apos;ll pick later
-            </button>
-          </div>
-        )}
+        {/* The 10-roll forced-choice modal was removed 2026-04-25 — it
+            trapped users and read as punitive ("Pick one. No more rolls.").
+            Replaced with a one-time soft toast at roll 8 in doRoll above. */}
 
         {/* Post-accept nudge overlay */}
         {postAccept && (
