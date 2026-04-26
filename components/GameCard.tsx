@@ -10,6 +10,8 @@ import { MOOD_TAG_CONFIG, getPlaytimeRoast } from '@/lib/enrichment';
 import { trackStatusChange } from '@/lib/analytics';
 import { getSkipCount, resetSkipCount, isSoftIgnored } from '@/lib/skipTracking';
 import { getReentryTips } from '@/lib/reentryPacks';
+import PixelSprite from './PixelSprite';
+import { hasSprite } from '@/lib/pixel/sprites';
 
 // ── Jump Back In Cheat Sheet ──────────────────────────────────────
 
@@ -28,10 +30,10 @@ function JumpBackIn({ game }: { game: Game }) {
 
   return (
     <div
-      className="rounded-lg border overflow-hidden"
+      className="rounded-lg overflow-hidden"
       style={{
         backgroundColor: hasVerifiedPack ? 'rgba(167, 139, 250, 0.04)' : 'rgba(245, 158, 11, 0.04)',
-        borderColor: hasVerifiedPack ? 'rgba(167, 139, 250, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+        borderLeft: `4px solid ${hasVerifiedPack ? '#a78bfa' : '#f59e0b'}`,
       }}
     >
       <button
@@ -41,7 +43,7 @@ function JumpBackIn({ game }: { game: Game }) {
           hasVerifiedPack ? 'text-accent-purple/80 hover:text-accent-purple' : 'text-amber-300/80 hover:text-amber-300'
         }`}
       >
-        <span>{hasVerifiedPack ? '🗺️ Jump Back In' : '🗺️ Jump Back In'}</span>
+        <span>Jump Back In</span>
         <span className="text-xs opacity-60" aria-hidden="true">{open ? '▲' : '▼'}</span>
       </button>
       {open && (
@@ -123,7 +125,7 @@ function JumpBackIn({ game }: { game: Game }) {
           {/* Genre tips (fallback when no verified pack) */}
           {!reentry && genreTips.length > 0 && (
             <div className="space-y-1">
-              <p className="text-xs text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider">Quick reminders</p>
+              <p className="text-[12px] text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider">// QUICK REMINDERS</p>
               {genreTips.map((tip, i) => (
                 <p key={i} className="text-xs text-text-muted leading-relaxed">
                   {tip}
@@ -589,6 +591,41 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
         borderLeftColor: statusConfig.color,
       }}
     >
+      {/* Header band (modal only) — status pill in its own row above the title */}
+      {forceExpanded && (
+        <div className="px-3.5 pt-3 pb-1">
+          <button
+            onClick={handleStatusClick}
+            onMouseEnter={() => nextStatus && setGhostStatus(nextStatus)}
+            onMouseLeave={() => setGhostStatus(null)}
+            onMouseDown={handleLongPressStart}
+            onMouseUp={handleLongPressEnd}
+            onTouchStart={handleLongPressStart}
+            onTouchEnd={handleLongPressEnd}
+            className={`
+              inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider
+              font-[family-name:var(--font-mono)] transition-all duration-150
+              ${game.status !== 'played' && game.status !== 'bailed'
+                ? 'hover:brightness-125 active:scale-95 cursor-pointer ring-1 ring-white/10 hover:ring-white/25'
+                : 'cursor-default'}
+            `}
+            style={{
+              backgroundColor: 'rgba(124, 58, 237, 0.15)',
+              color: statusConfig.color,
+            }}
+            aria-label={`Status: ${statusConfig.label}${nextStatus ? `. Tap to move to ${STATUS_CONFIG[nextStatus].label}` : ''}`}
+          >
+            {hasSprite(statusConfig.spriteKey) ? (
+              <PixelSprite name={statusConfig.spriteKey} size={14} />
+            ) : (
+              <span aria-hidden="true">{statusConfig.icon}</span>
+            )}
+            <span>{statusConfig.label}</span>
+            {nextStatus && <span className="opacity-60">→</span>}
+          </button>
+        </div>
+      )}
+
       {/* Compact View */}
       <div
         className={`flex items-center gap-3 px-3.5 py-3 select-none ${forceExpanded ? '' : 'cursor-pointer'}`}
@@ -607,7 +644,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
             Brady's feedback (the emoji + "→" was redundant next to the tab
             header). Always shown when the card is expanded so users can see
             and cycle status from the detail view. */}
-        <div className={`relative items-center ${expanded ? 'flex' : 'hidden sm:flex'}`}>
+        <div className={`relative items-center ${forceExpanded ? 'hidden' : expanded ? 'flex' : 'hidden sm:flex'}`}>
           <button
             onClick={handleStatusClick}
             onMouseEnter={() => nextStatus && setGhostStatus(nextStatus)}
@@ -680,20 +717,6 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
           {forceExpanded && (
             <span className="sm:hidden block mt-1 text-xs font-normal font-[family-name:var(--font-mono)] text-text-muted">
               {SOURCE_LABELS[game.source]}
-              {game.metacritic && (
-                <>
-                  <span className="mx-1.5 text-text-faint">·</span>
-                  <span
-                    className="px-1.5 py-0.5 rounded text-xs font-bold"
-                    style={{
-                      backgroundColor: game.metacritic >= 75 ? 'rgba(34,197,94,0.15)' : game.metacritic >= 50 ? 'rgba(234,179,8,0.15)' : 'rgba(239,68,68,0.15)',
-                      color: game.metacritic >= 75 ? '#22c55e' : game.metacritic >= 50 ? '#eab308' : '#ef4444',
-                    }}
-                  >
-                    {game.metacritic}
-                  </span>
-                </>
-              )}
             </span>
           )}
         </span>
@@ -803,13 +826,19 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                   if (remaining > 0 && remaining <= 8) {
                     return (
                       <span
-                        className="px-1.5 py-0.5 rounded text-xs font-medium"
+                        className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium"
                         style={{
                           backgroundColor: pct >= 85 ? 'rgba(34, 197, 94, 0.15)' : 'rgba(251, 191, 36, 0.15)',
                           color: pct >= 85 ? '#4ade80' : '#fcd34d',
                         }}
                       >
-                        {pct >= 85 ? '🏁' : '⏳'} ~{Math.round(remaining)}h left
+                        {pct >= 85 ? (
+                          <span aria-hidden="true">🏁</span>
+                        ) : (
+                          /* TODO: replace with dedicated stat-hourglass sprite when wave 2.1 lands; reusing skipTooLong (hourglass) for now */
+                          <PixelSprite name="skipTooLong" size={14} />
+                        )}
+                        ~{Math.round(remaining)}h left
                       </span>
                     );
                   }
@@ -817,16 +846,31 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                 })()}
                 <span className={`text-text-muted ${forceExpanded ? 'hidden sm:inline' : ''}`}>{SOURCE_LABELS[game.source]}</span>
                 {game.metacritic && (
-                  <span
-                    className={`px-1.5 py-0.5 rounded text-xs font-bold ${forceExpanded ? 'hidden sm:inline-block' : ''}`}
-                    style={{
-                      backgroundColor: game.metacritic >= 75 ? 'rgba(34,197,94,0.15)' : game.metacritic >= 50 ? 'rgba(234,179,8,0.15)' : 'rgba(239,68,68,0.15)',
-                      color: game.metacritic >= 75 ? '#22c55e' : game.metacritic >= 50 ? '#eab308' : '#ef4444',
-                    }}
-                    title="Critic score via Metacritic"
-                  >
-                    {game.metacritic}
-                  </span>
+                  forceExpanded ? (
+                    <span
+                      className="ml-auto rounded-full text-[16px] font-bold leading-none"
+                      style={{
+                        backgroundColor: '#2ee8c4',
+                        color: '#0a0a0f',
+                        fontWeight: 700,
+                        padding: '2px 8px',
+                      }}
+                      title="Critic score via Metacritic"
+                    >
+                      {game.metacritic}
+                    </span>
+                  ) : (
+                    <span
+                      className="px-1.5 py-0.5 rounded text-xs font-bold"
+                      style={{
+                        backgroundColor: game.metacritic >= 75 ? 'rgba(34,197,94,0.15)' : game.metacritic >= 50 ? 'rgba(234,179,8,0.15)' : 'rgba(239,68,68,0.15)',
+                        color: game.metacritic >= 75 ? '#22c55e' : game.metacritic >= 50 ? '#eab308' : '#ef4444',
+                      }}
+                      title="Critic score via Metacritic"
+                    >
+                      {game.metacritic}
+                    </span>
+                  )
                 )}
               </div>
 
@@ -975,12 +1019,14 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                   <label className="text-xs text-text-faint font-[family-name:var(--font-mono)]" htmlFor={`notes-${game.id}`}>
                     Notes
                   </label>
-                  <span
-                    className={`text-xs font-[family-name:var(--font-mono)] transition-colors ${notesSaved ? 'text-green-400' : 'text-text-faint'}`}
-                    aria-live="polite"
-                  >
-                    {notesSaved ? 'saved ✓' : 'auto-saves'}
-                  </span>
+                  {!forceExpanded && (
+                    <span
+                      className={`text-xs font-[family-name:var(--font-mono)] transition-colors ${notesSaved ? 'text-green-400' : 'text-text-faint'}`}
+                      aria-live="polite"
+                    >
+                      {notesSaved ? 'saved ✓' : 'auto-saves'}
+                    </span>
+                  )}
                 </div>
                 <textarea
                   id={`notes-${game.id}`}
@@ -1001,6 +1047,18 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                   className="w-full text-sm bg-bg-primary border border-border-subtle rounded-lg px-3 py-2 text-text-secondary placeholder-text-faint resize-none focus:outline-none focus:border-accent-purple"
                   rows={2}
                 />
+                {forceExpanded && (
+                  <div
+                    className="mt-2 pt-1.5 text-[11px] font-[family-name:var(--font-mono)]"
+                    style={{
+                      borderTop: '1px dashed var(--color-border-subtle)',
+                      color: 'var(--color-text-faint)',
+                    }}
+                    aria-live="polite"
+                  >
+                    {notesSaved ? 'saved ✓' : 'auto-saves'}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -1011,44 +1069,74 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               <a
                 href={`steam://run/${game.steamAppId}`}
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
-                style={{
-                  backgroundColor: 'rgba(124, 58, 237, 0.15)',
-                  color: '#a78bfa',
-                  border: '1px solid rgba(124, 58, 237, 0.3)',
-                }}
+                className={
+                  forceExpanded
+                    ? 'flex items-center justify-center w-full text-sm font-bold rounded-lg transition-all hover:brightness-110 active:scale-[0.99]'
+                    : 'inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98]'
+                }
+                style={
+                  forceExpanded
+                    ? {
+                        height: 48,
+                        backgroundColor: '#7c3aed',
+                        color: '#ffffff',
+                        fontWeight: 700,
+                      }
+                    : {
+                        backgroundColor: 'rgba(124, 58, 237, 0.15)',
+                        color: '#a78bfa',
+                        border: '1px solid rgba(124, 58, 237, 0.3)',
+                      }
+                }
                 title={`Opens in ${SOURCE_LABELS[game.source]} (or Steam Link on mobile)`}
               >
-                🚀 Launch in {SOURCE_LABELS[game.source]}
+                {forceExpanded ? `Launch in ${SOURCE_LABELS[game.source]}` : `🚀 Launch in ${SOURCE_LABELS[game.source]}`}
               </a>
             </div>
           )}
 
           {/* Row 4: Status-specific actions + bail + delete */}
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-3 pt-2 border-t" style={{ borderColor: 'var(--color-border-subtle)' }}>
+          <div
+            className={
+              forceExpanded
+                ? 'grid grid-cols-2 gap-2 mt-3 pt-3 border-t'
+                : 'flex flex-wrap items-center gap-1.5 sm:gap-2 mt-3 pt-2 border-t'
+            }
+            style={{ borderColor: 'var(--color-border-subtle)' }}
+          >
             {game.status === 'played' && (
               <>
                 <button
                   onClick={handlePlayAgain}
-                  className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer"
+                  className={
+                    forceExpanded
+                      ? 'flex items-center justify-center text-xs font-semibold rounded-lg transition-all hover:brightness-110 active:scale-[0.97] cursor-pointer'
+                      : 'px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer'
+                  }
                   style={{
                     backgroundColor: 'rgba(245, 158, 11, 0.1)',
                     color: '#f59e0b',
                     border: '1px solid rgba(245, 158, 11, 0.25)',
+                    ...(forceExpanded ? { height: 44 } : {}),
                   }}
                 >
-                  🔥 Replay?
+                  {forceExpanded ? 'Replay?' : '🔥 Replay?'}
                 </button>
                 <button
                   onClick={handleNewGamePlus}
-                  className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer"
+                  className={
+                    forceExpanded
+                      ? 'flex items-center justify-center text-xs font-semibold rounded-lg transition-all hover:brightness-110 active:scale-[0.97] cursor-pointer'
+                      : 'px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer'
+                  }
                   style={{
                     backgroundColor: 'rgba(56, 189, 248, 0.1)',
                     color: '#38bdf8',
                     border: '1px solid rgba(56, 189, 248, 0.25)',
+                    ...(forceExpanded ? { height: 44 } : {}),
                   }}
                 >
-                  🎯 DLC / New Game+?
+                  {forceExpanded ? 'DLC / New Game+?' : '🎯 DLC / New Game+?'}
                 </button>
               </>
             )}
@@ -1061,39 +1149,54 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                   e.stopPropagation();
                   showCelebration(game);
                 }}
-                className="px-3 py-1.5 text-xs font-semibold rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer"
+                className={
+                  forceExpanded
+                    ? 'flex items-center justify-center text-xs font-semibold rounded-lg transition-all hover:brightness-110 active:scale-[0.97] cursor-pointer'
+                    : 'px-3 py-1.5 text-xs font-semibold rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer'
+                }
                 style={{
                   backgroundColor: 'rgba(34, 197, 94, 0.12)',
                   color: '#22c55e',
                   border: '1px solid rgba(34, 197, 94, 0.35)',
+                  ...(forceExpanded ? { height: 44 } : {}),
                 }}
                 title="Mark this game as cleared. Bring on the confetti."
               >
-                🏁 I beat it
+                {forceExpanded ? 'I beat it' : '🏁 I beat it'}
               </button>
             )}
 
             {(game.status === 'playing' || game.status === 'on-deck') && (
               <button
                 onClick={handleShelve}
-                className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer"
+                className={
+                  forceExpanded
+                    ? 'flex items-center justify-center text-xs font-semibold rounded-lg transition-all hover:brightness-110 active:scale-[0.97] cursor-pointer'
+                    : 'px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer'
+                }
                 style={{
                   backgroundColor: STATUS_CONFIG.buried.bg,
                   color: STATUS_CONFIG.buried.color,
                   border: `1px solid ${STATUS_CONFIG.buried.color}40`,
+                  ...(forceExpanded ? { height: 44 } : {}),
                 }}
               >
-                📚 Return to The Pile
+                {forceExpanded ? 'Return to The Pile' : '📚 Return to The Pile'}
               </button>
             )}
 
             {game.status === 'bailed' && (
               <button
                 onClick={handleUnBail}
-                className="px-3 py-1.5 text-xs font-medium rounded-lg transition-colors"
+                className={
+                  forceExpanded
+                    ? 'col-span-2 flex items-center justify-center text-xs font-semibold rounded-lg transition-colors'
+                    : 'px-3 py-1.5 text-xs font-medium rounded-lg transition-colors'
+                }
                 style={{
                   backgroundColor: STATUS_CONFIG.buried.bg,
                   color: STATUS_CONFIG.buried.color,
+                  ...(forceExpanded ? { height: 44 } : {}),
                 }}
               >
                 Give it another shot?
@@ -1104,21 +1207,26 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
             {canBail && !showBailConfirm && (
               <button
                 onClick={() => setShowBailConfirm(true)}
-                className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97]"
+                className={
+                  forceExpanded
+                    ? 'flex items-center justify-center text-xs font-semibold rounded-lg transition-all hover:brightness-110 active:scale-[0.97]'
+                    : 'flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97]'
+                }
                 style={{
                   backgroundColor: 'rgba(239, 68, 68, 0.08)',
                   color: '#ef4444',
                   border: '1px dashed rgba(239, 68, 68, 0.3)',
+                  ...(forceExpanded ? { height: 44 } : {}),
                 }}
                 title="Draw the line on this one"
               >
-                🚪 Not for me
+                {forceExpanded ? 'Not for me' : '🚪 Not for me'}
               </button>
             )}
 
             {/* Bail confirmation inline */}
             {canBail && showBailConfirm && (
-              <div className="flex flex-wrap items-center gap-2">
+              <div className={forceExpanded ? 'col-span-2 flex flex-wrap items-center gap-2' : 'flex flex-wrap items-center gap-2'}>
                 <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">Drawing the line?</span>
                 <button
                   onClick={handleBail}
@@ -1149,15 +1257,22 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                   : `${game.name} won't be suggested anymore.`
                 );
               }}
-              className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97]"
+              className={
+                forceExpanded
+                  ? 'flex items-center justify-center text-xs font-semibold rounded-lg transition-all hover:brightness-110 active:scale-[0.97]'
+                  : 'px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97]'
+              }
               style={{
-                backgroundColor: game.ignored ? 'rgba(167, 139, 250, 0.1)' : 'rgba(255, 255, 255, 0.04)',
-                color: game.ignored ? '#a78bfa' : 'var(--color-text-faint)',
-                border: game.ignored ? '1px solid rgba(167, 139, 250, 0.25)' : '1px solid transparent',
+                backgroundColor: game.ignored ? 'rgba(167, 139, 250, 0.1)' : forceExpanded ? 'rgba(239, 68, 68, 0.08)' : 'rgba(255, 255, 255, 0.04)',
+                color: game.ignored ? '#a78bfa' : forceExpanded ? '#ef4444' : 'var(--color-text-faint)',
+                border: game.ignored ? '1px solid rgba(167, 139, 250, 0.25)' : forceExpanded ? '1px dashed rgba(239, 68, 68, 0.3)' : '1px solid transparent',
+                ...(forceExpanded ? { height: 44 } : {}),
               }}
               title={game.ignored ? 'Include in suggestions again' : 'Won\'t show up in What Should I Play'}
             >
-              {game.ignored ? '👁 Suggest again' : '🚫 Don\'t suggest'}
+              {game.ignored
+                ? (forceExpanded ? 'Suggest again' : '👁 Suggest again')
+                : (forceExpanded ? 'Don\'t suggest' : '🚫 Don\'t suggest')}
             </button>
 
             {/* Skip count reset (only visible when game has been skipped 3+ times) */}
@@ -1170,15 +1285,22 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                     resetSkipCount(game.id);
                     showToast(`${game.name} skip count cleared. Fresh start.`);
                   }}
-                  className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97]"
+                  className={
+                    forceExpanded
+                      ? 'col-span-2 flex items-center justify-center text-xs font-medium rounded-lg transition-all hover:brightness-110 active:scale-[0.97]'
+                      : 'px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97]'
+                  }
                   style={{
                     backgroundColor: 'rgba(251, 191, 36, 0.08)',
                     color: 'var(--color-text-faint)',
                     border: '1px solid transparent',
+                    ...(forceExpanded ? { height: 44 } : {}),
                   }}
                   title={`Skipped ${skipCount} times in the picker. ${skipCount >= 5 ? 'Currently hidden from suggestions.' : 'Showing less often in suggestions.'} Click to reset.`}
                 >
-                  🔄 {skipCount >= 5 ? 'Un-hide' : 'Reset'} ({skipCount} skips)
+                  {forceExpanded
+                    ? `${skipCount >= 5 ? 'Un-hide' : 'Reset'} (${skipCount} skips)`
+                    : <>🔄 {skipCount >= 5 ? 'Un-hide' : 'Reset'} ({skipCount} skips)</>}
                 </button>
               );
             })()}
@@ -1186,25 +1308,61 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
             {/* Delete from library — contained, pushed right. Subtle but
                 distinctly a destructive action. Matches row button shape so it
                 doesn't read as footer text, red tint signals danger without
-                shouting. */}
-            <div className="flex-1" />
-            {!showDeleteConfirm ? (
-              <button
-                onClick={() => setShowDeleteConfirm(true)}
-                className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97]"
-                style={{
-                  backgroundColor: 'rgba(239, 68, 68, 0.06)',
-                  color: '#f87171',
-                  border: '1px solid rgba(239, 68, 68, 0.2)',
-                }}
-                title="Permanently remove this game from your library"
-              >
-                🗑 Delete from library
-              </button>
-            ) : (
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1.5 sm:gap-2">
-                <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">Gone forever?</span>
-                <div className="flex gap-1.5">
+                shouting. In modal context: demoted to a ghost link below. */}
+            {!forceExpanded && <div className="flex-1" />}
+            {!forceExpanded && (
+              !showDeleteConfirm ? (
+                <button
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97]"
+                  style={{
+                    backgroundColor: 'rgba(239, 68, 68, 0.06)',
+                    color: '#f87171',
+                    border: '1px solid rgba(239, 68, 68, 0.2)',
+                  }}
+                  title="Permanently remove this game from your library"
+                >
+                  🗑 Delete from library
+                </button>
+              ) : (
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1.5 sm:gap-2">
+                  <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">Gone forever?</span>
+                  <div className="flex gap-1.5">
+                    <button
+                      onClick={() => {
+                        deleteGame(game.id);
+                        showToast(`${game.name} deleted. It was never here.`);
+                      }}
+                      className="px-2 py-1 text-xs font-medium rounded-md bg-red-500/15 text-red-400 hover:bg-red-500/25 transition-colors"
+                    >
+                      Delete
+                    </button>
+                    <button
+                      onClick={() => setShowDeleteConfirm(false)}
+                      className="px-2 py-1 text-xs text-text-dim hover:text-text-muted transition-colors"
+                    >
+                      Keep it
+                    </button>
+                  </div>
+                </div>
+              )
+            )}
+          </div>
+
+          {/* Modal: ghost-link delete at the very bottom */}
+          {forceExpanded && (
+            <div className="mt-3 flex justify-center">
+              {!showDeleteConfirm ? (
+                <button
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="text-xs font-[family-name:var(--font-mono)] text-text-faint hover:text-red-400 transition-colors underline-offset-2 hover:underline"
+                  title="Permanently remove this game from your library"
+                >
+                  Delete from library
+                </button>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">Gone forever?</span>
                   <button
                     onClick={() => {
                       deleteGame(game.id);
@@ -1221,9 +1379,9 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                     Keep it
                   </button>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>
