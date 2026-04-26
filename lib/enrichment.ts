@@ -155,17 +155,17 @@ export function inferTimeTier(hltbMainHours: number): TimeTier {
 /**
  * MOOD_TAG_CONFIG: Display labels, colors, and descriptions for mood tags.
  */
-export const MOOD_TAG_CONFIG: Record<MoodTag, { label: string; icon: string; color: string }> = {
-  'chill': { label: 'Chill', icon: '😌', color: '#34d399' },
-  'intense': { label: 'Intense', icon: '⚡', color: '#f87171' },
-  'story-rich': { label: 'Story Rich', icon: '📖', color: '#93c5fd' },
-  'brainless': { label: 'Brain Off', icon: '🧹', color: '#fbbf24' },
-  'atmospheric': { label: 'Atmospheric', icon: '🌌', color: '#a78bfa' },
-  'competitive': { label: 'Competitive', icon: '🏆', color: '#fb923c' },
-  'spooky': { label: 'Spooky', icon: '👻', color: '#6ee7b7' },
-  'creative': { label: 'Creative', icon: '🎨', color: '#f9a8d4' },
-  'strategic': { label: 'Strategic', icon: '♟️', color: '#38bdf8' },
-  'emotional': { label: 'Emotional', icon: '💔', color: '#e879f9' },
+export const MOOD_TAG_CONFIG: Record<MoodTag, { label: string; icon: string; spriteKey: string; color: string }> = {
+  'chill':       { label: 'Chill',       icon: '😌', spriteKey: 'chill',       color: '#34d399' },
+  'intense':     { label: 'Intense',     icon: '⚡', spriteKey: 'intense',     color: '#f87171' },
+  'story-rich':  { label: 'Story Rich',  icon: '📖', spriteKey: 'story',       color: '#93c5fd' },
+  'brainless':   { label: 'Brain Off',   icon: '🧹', spriteKey: 'brainoff',    color: '#fbbf24' },
+  'atmospheric': { label: 'Atmospheric', icon: '🌌', spriteKey: 'atmospheric', color: '#a78bfa' },
+  'competitive': { label: 'Competitive', icon: '🏆', spriteKey: 'competitive', color: '#fb923c' },
+  'spooky':      { label: 'Spooky',      icon: '👻', spriteKey: 'spooky',      color: '#6ee7b7' },
+  'creative':    { label: 'Creative',    icon: '🎨', spriteKey: 'creative',    color: '#f9a8d4' },
+  'strategic':   { label: 'Strategic',   icon: '♟️', spriteKey: 'strategic',   color: '#38bdf8' },
+  'emotional':   { label: 'Emotional',   icon: '💔', spriteKey: 'emotional',   color: '#e879f9' },
 };
 
 /**
