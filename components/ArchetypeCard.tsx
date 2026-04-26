@@ -48,7 +48,7 @@ export default function ArchetypeCard({
           <div className="flex items-center gap-2 mb-1">
             <span className="text-base font-bold text-text-primary">{currentArchetype.title}</span>
             <span
-              className="px-1.5 py-0.5 rounded text-xs font-bold uppercase font-[family-name:var(--font-mono)]"
+              className="px-1.5 py-0.5 rounded text-xs font-bold uppercase font-[family-name:var(--font-mono)] inline-flex items-center gap-1"
               style={{
                 backgroundColor: currentArchetype.tone === 'roast' ? 'rgba(239, 68, 68, 0.15)'
                   : currentArchetype.tone === 'respect' ? 'rgba(34, 197, 94, 0.15)'
@@ -58,7 +58,15 @@ export default function ArchetypeCard({
                   : '#a78bfa',
               }}
             >
-              {currentArchetype.tone === 'roast' ? '🔥 roast' : currentArchetype.tone === 'respect' ? '👑 respect' : '🔮 reading'}
+              {(() => {
+                const toneSprite = currentArchetype.tone === 'roast' ? 'toneBadgeRoast'
+                  : currentArchetype.tone === 'respect' ? 'toneBadgeRespect'
+                  : 'toneBadgeReading';
+                return hasSprite(toneSprite)
+                  ? <PixelSprite name={toneSprite} size={14} ariaLabel={currentArchetype.tone} />
+                  : <span aria-hidden="true">{currentArchetype.tone === 'roast' ? '🔥' : currentArchetype.tone === 'respect' ? '👑' : '🔮'}</span>;
+              })()}
+              <span>{currentArchetype.tone}</span>
             </span>
           </div>
           <p className="text-sm text-text-muted leading-relaxed">

@@ -2,6 +2,8 @@
 
 import { useCallback, useRef } from 'react';
 import { GameStatus } from '@/lib/types';
+import { hasSprite } from '@/lib/pixel/sprites';
+import PixelSprite from './PixelSprite';
 
 export type TabId = 'backlog' | 'up-next' | 'now-playing' | 'completed';
 
@@ -11,14 +13,15 @@ export interface TabDef {
   shortLabel: string;
   statuses: GameStatus[];
   icon: string;
+  spriteKey: string;
   color: string;
 }
 
 export const TABS: TabDef[] = [
-  { id: 'backlog', label: 'Backlog', shortLabel: 'Backlog', statuses: ['buried'], icon: '📚', color: '#64748b' },
-  { id: 'up-next', label: 'Up Next', shortLabel: 'Next', statuses: ['on-deck'], icon: '🎯', color: '#38bdf8' },
-  { id: 'now-playing', label: 'Playing Now', shortLabel: 'Now', statuses: ['playing'], icon: '▶️', color: '#f59e0b' },
-  { id: 'completed', label: 'Completed', shortLabel: 'Done', statuses: ['played', 'bailed'], icon: '✅', color: '#22c55e' },
+  { id: 'backlog', label: 'Backlog', shortLabel: 'Backlog', statuses: ['buried'], icon: '📚', spriteKey: 'statusBacklog', color: '#64748b' },
+  { id: 'up-next', label: 'Up Next', shortLabel: 'Next', statuses: ['on-deck'], icon: '🎯', spriteKey: 'statusUpNext', color: '#38bdf8' },
+  { id: 'now-playing', label: 'Playing Now', shortLabel: 'Now', statuses: ['playing'], icon: '▶️', spriteKey: 'statusPlayingNow', color: '#f59e0b' },
+  { id: 'completed', label: 'Completed', shortLabel: 'Done', statuses: ['played', 'bailed'], icon: '✅', spriteKey: 'statusCompleted', color: '#22c55e' },
 ];
 
 interface TabNavProps {
@@ -91,7 +94,11 @@ export default function TabNav({ activeTab, onTabChange, counts, flashingTab }: 
               ['--flash-color' as string]: tab.color,
             } as React.CSSProperties}
           >
-            <span className="text-xs" aria-hidden="true">{tab.icon}</span>
+            {hasSprite(tab.spriteKey) ? (
+              <PixelSprite name={tab.spriteKey} size={18} ariaLabel={tab.label} />
+            ) : (
+              <span className="text-xs" aria-hidden="true">{tab.icon}</span>
+            )}
             <span className="hidden sm:inline">{tab.label}</span>
             <span className="sm:hidden">{tab.shortLabel}</span>
             {count > 0 && (

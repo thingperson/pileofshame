@@ -269,12 +269,12 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
     doRoll(rollMode);
   }, [games, mode, moodFilters, doRoll, showToast, platformPreference]);
 
-  const SKIP_REASON_OPTIONS: { key: SkipReasonKey; label: string; icon: string }[] = [
-    { key: 'not-in-mood', label: 'Not in the mood', icon: '😴' },
-    { key: 'too-long', label: 'Too long', icon: '⏰' },
-    { key: 'played-recently', label: 'Played recently', icon: '🔁' },
-    { key: 'hit-a-wall', label: 'Hit a wall', icon: '🧱' },
-    { key: 'not-interested', label: 'Not interested', icon: '👎' },
+  const SKIP_REASON_OPTIONS: { key: SkipReasonKey; label: string; icon: string; spriteKey: string }[] = [
+    { key: 'not-in-mood', label: 'Not in the mood', icon: '😴', spriteKey: 'skipNotInMood' },
+    { key: 'too-long', label: 'Too long', icon: '⏰', spriteKey: 'skipTooLong' },
+    { key: 'played-recently', label: 'Played recently', icon: '🔁', spriteKey: 'skipPlayedRecently' },
+    { key: 'hit-a-wall', label: 'Hit a wall', icon: '🧱', spriteKey: 'skipHitWall' },
+    { key: 'not-interested', label: 'Not interested', icon: '👎', spriteKey: 'skipNotInterested' },
   ];
 
   const handleSkipFeedback = useCallback((reason: SkipReasonKey) => {
@@ -802,17 +802,22 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                       </button>
                     </div>
                     <div className="flex flex-wrap justify-center gap-1.5">
-                      {SKIP_REASON_OPTIONS.map(({ key, label, icon }) => (
+                      {SKIP_REASON_OPTIONS.map(({ key, label, icon, spriteKey }) => (
                         <button
                           key={key}
                           onClick={() => handleSkipFeedback(key)}
-                          className="px-2.5 py-1.5 rounded-full text-xs font-medium font-[family-name:var(--font-mono)] text-text-dim transition-all hover:text-text-muted hover:bg-white/10"
+                          className="px-2.5 py-1.5 rounded-full text-xs font-medium font-[family-name:var(--font-mono)] text-text-dim transition-all hover:text-text-muted hover:bg-white/10 inline-flex items-center gap-1.5"
                           style={{
                             backgroundColor: 'rgba(255,255,255,0.04)',
                             border: '1px solid rgba(255,255,255,0.06)',
                           }}
                         >
-                          {icon} {label}
+                          {hasSprite(spriteKey) ? (
+                            <PixelSprite name={spriteKey} size={14} ariaLabel={label} />
+                          ) : (
+                            <span aria-hidden="true">{icon}</span>
+                          )}
+                          <span>{label}</span>
                         </button>
                       ))}
                     </div>
