@@ -27,20 +27,21 @@ export default function ArchetypeCard({
         }`,
       }}
     >
-      <div className="flex items-start gap-3">
-        <div className="shrink-0 w-12 h-12 flex items-center justify-center">
+      <div className="flex items-start gap-3 sm:gap-4">
+        <div className="shrink-0 w-16 h-16 sm:w-24 sm:h-24 flex items-center justify-center">
           {(() => {
             const spriteKey = getArchetypeSpriteKey(currentArchetype);
             if (spriteKey && hasSprite(spriteKey)) {
               return (
                 <PixelSprite
                   name={spriteKey}
-                  size={48}
+                  size={96}
+                  className="w-full h-auto sm:max-w-none"
                   ariaLabel={currentArchetype.title}
                 />
               );
             }
-            return <span className="text-3xl">{currentArchetype.icon}</span>;
+            return <span className="text-3xl sm:text-5xl">{currentArchetype.icon}</span>;
           })()}
         </div>
         <div className="flex-1 min-w-0">

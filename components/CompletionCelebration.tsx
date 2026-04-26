@@ -7,6 +7,7 @@ import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
 import { trackGameCleared, trackShareClear, trackFirstCompletion, trackShareCardCreated } from '@/lib/analytics';
 import { loadCache, PRICE_CACHE_KEY, getCacheKey } from '@/lib/statsHelpers';
+import PixelSprite from './PixelSprite';
 
 interface CompletionCelebrationProps {
   game: Game | null;
@@ -621,7 +622,9 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
           </button>
           {stage === 'confirm' && (
             <>
-              <div className="text-5xl mb-4">🏆</div>
+              <div className="flex justify-center mb-4">
+                <PixelSprite name="cleared" size={96} ariaLabel="Cleared trophy" />
+              </div>
               <h2 className="text-2xl font-bold text-text-primary mb-2">
                 You beat {game.name}?
               </h2>

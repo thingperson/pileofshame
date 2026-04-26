@@ -5,6 +5,8 @@ import { Game, MoodTag } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { STATUS_CONFIG, REROLL_MESSAGES, TIME_TIER_CONFIG, MAX_PLAYING_NOW } from '@/lib/constants';
 import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
+import { hasSprite } from '@/lib/pixel/sprites';
+import PixelSprite from './PixelSprite';
 import { getGameDescriptor } from '@/lib/descriptors';
 import { REROLL_MODES, RerollMode, EnergyLevel, getDefaultEnergy, getEligibleGames, pickWeighted, pickSmartResume, getPickReasons } from '@/lib/reroll';
 import { SMART_PICK_LABELS, renderSmartPickHeadline, SmartPickType } from '@/lib/smartPickCopy';
@@ -550,14 +552,19 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                       <button
                         key={mood}
                         onClick={() => toggleMood(mood)}
-                        className={`px-3 py-2 rounded-full text-sm font-medium transition-all ${active ? 'scale-[1.02]' : 'hover:bg-white/10'}`}
+                        className={`px-3 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 ${active ? 'scale-[1.02]' : 'hover:bg-white/10'}`}
                         style={{
                           backgroundColor: active ? `${config.color}25` : 'rgba(255,255,255,0.05)',
                           color: active ? config.color : 'var(--color-text-muted)',
                           border: active ? `1px solid ${config.color}50` : '1px solid rgba(255,255,255,0.08)',
                         }}
                       >
-                        {config.icon} {config.label}
+                        {hasSprite(config.spriteKey) ? (
+                          <PixelSprite name={config.spriteKey} size={20} ariaLabel={config.label} />
+                        ) : (
+                          <span aria-hidden="true">{config.icon}</span>
+                        )}
+                        <span>{config.label}</span>
                       </button>
                     );
                   })}
