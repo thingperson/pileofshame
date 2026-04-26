@@ -637,7 +637,7 @@ export function getPlayerArchetype(games: Game[], opts?: ArchetypeOptions): Play
  * "<Genre> Addict" archetypes use the generic genreAddict sprite (handled
  * in getArchetypeSpriteKey).
  */
-const SPRITE_KEY_BY_TITLE: Record<string, string> = {
+export const SPRITE_KEY_BY_TITLE: Record<string, string> = {
   'Pure Collector': 'pureCollector',
   'The Hoarder': 'hoarder',
   'The Dabbler': 'dabbler',
