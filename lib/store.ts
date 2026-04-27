@@ -7,6 +7,7 @@ import { Game, GameStatus, LibraryState, FilterState, PlatformPreference } from 
 import { DEFAULT_CATEGORIES, STATUS_CYCLE } from './constants';
 import { SEED_GAMES } from './seedData';
 import { recordCompletion } from './genreCooldown';
+import { inferMoodTags } from './enrichment';
 
 interface StoreActions {
   // Game CRUD
@@ -355,7 +356,7 @@ export const useStore = create<LibraryState & StoreActions>()(
     }),
     {
       name: 'getplaying-library',
-      version: 2,
+      version: 3,
       migrate: (persisted: unknown, version: number) => {
         const state = persisted as Record<string, unknown>;
         if (version === 0) {
@@ -378,6 +379,21 @@ export const useStore = create<LibraryState & StoreActions>()(
           if (cats) {
             if (!cats.includes('Brain Off')) cats.push('Brain Off');
             if (!cats.includes('The Shame Wall')) cats.push('The Shame Wall');
+          }
+        }
+        if (version < 3) {
+          // Backfill moodTags for games imported before mood-tag enrichment
+          // shipped. Local-only inference from name + genres, no network.
+          // Without this, the new descriptor pool falls through to genre/score
+          // for older imports.
+          const games = state.games as Array<{ name?: string; genres?: string[]; moodTags?: string[] }> | undefined;
+          if (games) {
+            games.forEach((g) => {
+              if (!g.moodTags || g.moodTags.length === 0) {
+                const moods = inferMoodTags(g.name || '', g.genres);
+                if (moods.length > 0) g.moodTags = moods;
+              }
+            });
           }
         }
         return state;

@@ -19,20 +19,22 @@ export const STATUS_SPRITES: Record<string, string> = {
 ..KKKKKKKKKKKK..
 ................`,
 
+  // v2.1 (2026-04-26): rosette body G → t (#1a9e86) so it sits calmer
+  // in tab chrome next to muted gray UI. Yellow ray-burst preserved.
   statusCompleted: `
 ................
 .......Y........
 .....Y.Y.Y......
 ......YYY.......
-.....YGGGGY.....
-....KGGGGGGGK...
-...KGGGGGGGGGK..
-.YYKGGWGGGGGGKYY
-...KGGGWGGWGGK..
-...KGGGWWWGGGK..
-...KGGGGWGGGGK..
-....KGGGGGGGK...
-.....KGGGGGK....
+.....YttttY.....
+....KtttttttK...
+...KtttttttttK..
+.YYKttWttttttKYY
+...KtttWttWttK..
+...KtttWWWtttK..
+...KttttWttttK..
+....KtttttttK...
+.....KtttttK....
 ......Y.Y.Y.....
 .......Y........
 ................`,
@@ -73,6 +75,8 @@ export const STATUS_SPRITES: Record<string, string> = {
 ..pp..pp..pp.p..
 ..pp..pp..pp.p..`,
 
+  // v2.1 (2026-04-26): bullseye center T → t (#1a9e86) so the dot sits
+  // calmer next to muted gray UI chrome.
   statusUpNext: `
 ................
 ....KKKKKKKK....
@@ -80,9 +84,9 @@ export const STATUS_SPRITES: Record<string, string> = {
 ..KWKKKKKKKKWK..
 ..KWKLLLLLLKWK..
 .KWKLKKKKKKLKWK.
-.KWKLKTTTTKLKWK.
-.KWKLKTTTTKLKWK.
-.KWKLKTTTTKLKWK.
+.KWKLKttttKLKWK.
+.KWKLKttttKLKWK.
+.KWKLKttttKLKWK.
 .KWKLKKKKKKLKWK.
 ..KWKLLLLLLKWK..
 ..KWKKKKKKKKWK..
