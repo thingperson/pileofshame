@@ -10,6 +10,34 @@ paths:
 
 > **Deep-dive reference only.** The canonical enforcement doc is [`voice-charter.md`](./voice-charter.md) — 1 page, memorable, the ship-or-don't-ship bar. Load this file for messaging hierarchy, positioning rationale, or the extended social-copy examples. If this file contradicts the charter, the charter wins.
 
+## North Star — Mission Statement (Locked 2026-04-26)
+
+**Enjoy your games again.**
+
+This is the internal thesis. Not the public tagline (`get playing.` is — see below). Not user-facing copy yet. **Every product, design, copy, and distribution decision must defend itself against this line.**
+
+Three things the mission carries:
+
+1. **Enjoy** — not track, not manage, not catalog. The product exists so the user has fun. If we add a feature that doesn't terminate in actual joy at the controller, we're building the wrong thing.
+2. **Your games** — they already chose these. They already paid for them. They already decided these were worth it. We are not introducing new options. We are reuniting the user with what they own.
+3. **Again** — the most important word. It acknowledges the user used to love this. They got overwhelmed. We are returning them to themselves, not changing who they are.
+
+### How to apply this
+
+Before shipping a feature, copy line, or channel decision, ask:
+
+- Does this help the user enjoy a game they already own, or does it make Inventory Full a new thing to manage?
+- Does this respect the "again" — i.e., trust that they were already capable of choosing well, and that they just got buried — or does it treat them as needing to be taught what to like?
+- If we removed this from the app entirely, would users be more or less likely to actually play tonight?
+
+Anything that fails any of those three questions doesn't ship.
+
+### Why this isn't the public tagline
+
+`get playing.` is the action-oriented invitation — what we say at the door. "Enjoy your games again" is the deeper *why* — the reason we built the door. If the mission ever earns a public moment (app store description, hero subhead, launch-post opening line), that's downstream. First it has to live as the internal compass.
+
+---
+
 ## Brand Description (Master)
 
 Inventory Full is a new app for people with too many games, too many half-started campaigns, and too much decision paralysis. It helps you decide what to play now, make ongoing progress on the games you already own, and recover more value from your collection.

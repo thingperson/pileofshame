@@ -47,3 +47,40 @@ Also today: drafted + sent wave 2.1 designer feedback (dim greens on `statusUpNe
 ## Closing status
 
 End-of-day 2026-04-26 13:00 PDT. Three commits pushed today; all surfaces live. Wave 2.1 (designer dim-greens pass) is the next sprite-track item; persona-match feature scoping is open. Option A (stats card with bigger numbers) parked for post-launch if signal warrants.
+
+---
+
+## Next session — Inventory Full · launch sprint week 1
+
+**Thesis (top of mind, every decision):** **Enjoy your games again.** Locked as the internal mission 2026-04-26. Not "track them." Not "manage your library." Help users return to something they already chose, that they already love, that they got buried under. Every feature, copy line, and channel decision asks: does this serve that, or does it make Inventory Full a new thing to manage? See `.claude/rules/brand-messaging.md` "North Star" section + DECISIONS.md 2026-04-26 entry.
+
+**Where you are.** main @ HEAD (clean), Vercel deploying 2026-04-26 commits. ~12 days to soft launch.
+
+**First thing to check.**
+1. Live deploy: open `https://inventoryfull.gg/stats` with a real account, trigger a stats share card, view the OG unfurl in a Twitter or Bluesky preview. Confirm persona sprite renders at 360px on the actual deployed nodejs runtime (sprite SVG was a runtime switch — needs production verification).
+2. Sentry sweep for any post-deploy errors from the GameDetailModal layout pass (`83ab1c4`) or the `/pile/[id]` runtime change (`4837f3a`).
+
+**Three tracks for the session.**
+
+1. **Launch blockers + bug squashing** — Sentry sweep, anything surfaced from the live deploy, anything from the existing stale-review punch list (game-cover alt text was overflagged and skipped; AuthButton aria-label was already correctly labeled and skipped; GameSearch keyboard nav already shipped). Fresh review after the wave-2 + GameDetailModal landings.
+
+2. **Build + run `/psychology-redteam`** — new skill, doesn't exist yet. Spec:
+   - Reads `.claude/rules/user-psychology.md` (existing baseline) + any new research dropped in `notes/research/`.
+   - Walks every major surface (landing, onboarding, import, mood/time picker, reroll, completion, share) and audits against the user-psychology principles. Where do we serve the profile (decision paralysis / sunk cost / choice overload / commitment avoidance / reactance)? Where do we fight it?
+   - Estimates time-cost from "I want to play" → playing for each path, compares to the sub-60s axiom.
+   - Distribution-channel review: does the web app meet users *where they are*? Or does friction live at the channel layer (no native iOS / Android / Steam Deck / Steam-app-store presence) regardless of how good the in-app UX is?
+   - Research gap report: claims we make in the app that aren't backed by research yet. What to ingest next.
+   - Verdict + ranked interventions. May surface: feature rethink, new feature, dropped feature, channel addition, research-ingest task.
+   - **Built-in mission check:** test every shipped surface against the new "Enjoy your games again" north star. If the surface makes Inventory Full a new thing to manage instead of returning the user to a game they own, that's a finding.
+   - Output goes to `docs/psychology-redteam-2026-04-XX.md` for review + sprint planning.
+
+3. **Wave 2.1 sprite refresh** when designer responds. Drop in, wire, push. Diff against existing sprite strings — should only update `statusUpNext` + `statusCompleted`.
+
+**Parked / blocked.**
+- Persona-match feature (needs scoping decision: per-game match vs current-archetype-everywhere).
+- Italic-font drop-in for stats card flavor text (PT Serif Italic or similar).
+- Wave 2.1 sprites (waiting on designer).
+- `/distribution-review` skill (after psych red-team — channel review may be folded into red-team output).
+- `/feedback-synthesis` skill (waiting on feedback volume).
+
+**Don't drift.** "Less time in app = success" + "Enjoy your games again" are the two non-negotiables. If a proposed feature can't defend itself against both, it doesn't ship. If a proposed channel addition (iOS / Android / Deck / Steam) reduces friction enough to make the mission achievable, it's a feature too — not a polish item.

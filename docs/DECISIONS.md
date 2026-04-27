@@ -15,6 +15,33 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-26 — Mission statement locked: "Enjoy your games again"
+
+**Decision.** Inventory Full's internal mission statement is **"Enjoy your games again."** Not user-facing yet — this is the north star that informs every product, design, copy, and distribution decision going forward. Captured in `.claude/rules/brand-messaging.md` as a new "North Star — Mission Statement" section above the existing brand description.
+
+**Why.**
+- The product had a thesis ("less time in app = success") and a tagline (`get playing.` — locked Apr 17). What it lacked was a one-line *why* — the user state we're trying to restore. "Enjoy your games again" names that state precisely.
+- The word "again" carries the entire emotional arc. The user used to love these games. They got overwhelmed by their own collection. We're not introducing something new — we're reuniting them with something they already chose.
+- It works as a feature-decision filter: every proposed feature can be tested against "does this help them enjoy a game they own, or does it make Inventory Full a new thing they have to manage?" Features that fail this don't ship.
+- It works as a distribution filter too: if the *channel* (web app vs. native vs. Steam) introduces enough friction that the user can't actually return to their games, the channel decision matters as much as the feature decisions. This frames the upcoming psychology red-team review.
+- The phrase emerged organically during a session-close conversation about the upcoming psychology audit. Captured in the moment because that's when these things get crystallized; if we file it for later we'll forget the precise framing.
+
+**Implementation.**
+- `.claude/rules/brand-messaging.md` — new "North Star — Mission Statement" section added above the Brand Description block. Includes the three-word breakdown ("Enjoy" / "Your games" / "Again") and the three-question test for any new feature, copy, or channel.
+- The locked tagline (`get playing.`) is unchanged. Mission informs the tagline; doesn't replace it.
+
+**Rejected (alternative phrasings considered).**
+- **"Enjoy playing (again)"** — close, but loses the possessive ("your games"). The user's relationship to their own library is the load-bearing element; dropping it weakens the line.
+- **"Get back to enjoying something already fun that you like"** — descriptive but unwieldy. A mission statement has to be holdable in working memory.
+- **No mission statement at all** — leave the thesis ("less time in app = success") as the only internal compass. Rejected: the thesis tells us what success *looks like*, but doesn't name the user state we're restoring. The two complement each other.
+
+**Drift risk.**
+- **Mission creep upward.** If "enjoy your games again" gets promoted to user-facing copy without a deliberate decision, it dilutes the existing tagline (`get playing.`) and confuses the brand. Internal use only until a future Brady-approved promotion moment.
+- **Drift in interpretation.** "Enjoy" could be diluted to "engage with" — the word "engage" is the enemy. Engagement metrics push toward time-in-app; enjoyment terminates outside the app at the controller. Future copy reviews should challenge any "engagement" reframing.
+- **Channel friction blind spot.** The mission demands meeting users where they are. If we stay web-only when the user lives on iOS / Steam Deck / phone-while-watching-TV, the in-app UX excellence may not matter. The upcoming psychology red-team audit must check this honestly.
+
+---
+
 ## 2026-04-26 — Pixel sprite system replaces emoji as the primary brand iconography
 
 **Decision.** Inventory Full's user-facing chrome moves from emoji to a custom pixel-sprite system. Three sprite waves in two days fully cover archetypes, moods, status pipeline, tone badges, skip-feedback reasons, and the cleared-trophy celebration. Emoji stay for low-frequency surfaces (energy pills, time tiers, platform circles, copy-flavored decoration).
