@@ -15,6 +15,80 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-27 (PM) — Pivot: "Energy" → "Session Length" as the second pick-flow input
+
+**Supersedes the earlier 2026-04-27 entry below ("Energy replaces time").** The substitution stands as a *concept* — the picker should ask about state-at-pick-time, not impose a clock estimate — but the *content* of that input is changing back toward time, framed as session length.
+
+**Why the pivot.** The PDF ingest from `docs/psychology-research-ingest-2026-04-27.md` confirmed the research debt the earlier entry flagged. Two specific findings did the work:
+
+- **Loewenstein 1996 (p. 272–275):** visceral states are systematically misjudged by introspection. Asking users to self-report "energy" leans on exactly the introspection people are bad at.
+- **Mischel & Shoda 1995 (p. 249–251):** global self-categorization predicts behavior poorly (r ≈ .47 only for *if-then situation signatures*, not *dispositional levels*). "I'm low energy" is a dispositional self-categorization. It's the wrong question.
+
+Brady's read on the implication, locked in conversation: *"people can't quantify their own energy. that's understandable. they probably are more likely to be able to say 'i can play for 2 maybe 3 hours'. that's more tangible and it tracks."* Tangible commitment estimate > internal state introspection. Session length is what the user can answer.
+
+**New tier system (locked).**
+- **Small** — ~20 min. "I've got a few minutes."
+- **Medium** — ~1–2 hrs. "I've got an evening."
+- **Large** — 2+ hrs · *I'm in*. Owns the time without flinching, no shame-adjacent "don't ask why" framing. Reads as commitment, not concession.
+
+**Why "2+ hrs · I'm in" specifically.** Earlier draft was *"2+ hrs (I've got time, don't ask why)"*. Read aloud and against the voice charter: the parenthetical implies the user is bracing for judgment about their free time, which makes them the punchline of their own roast. Voice charter: *"in on the joke WITH the user, never AT them."* `I'm in` is two beats, declarative, matches the picker's `Let's go` voice. Locked.
+
+**What stays from the earlier entry.**
+- The 2-input ceiling (mood + the second axis). Unchanged.
+- HLTB-derived session length is still in the data — under the hood, the picker uses it to filter out 60-hour RPGs when the user picks Small. This is now a tighter coupling than before: the user is *directly* answering "how long," not "what energy."
+- The principle that mood does work the second axis can't (filters by *experience*, not by *commitment*). Mood + session-length covers both dimensions cleanly.
+
+**Implementation track (next session).**
+- Rename `EnergyLevel` type → `SessionLength` in `lib/reroll.ts` + downstream call sites.
+- Update picker UI labels in `components/Reroll.tsx` (energy drawer → session-length drawer).
+- Update `.claude/rules/user-psychology.md` §3 note to reflect the pivot (currently says energy is locked; needs to say session-length is locked).
+- Telemetry: existing events don't carry an energy dimension yet; if/when added, use `session_length: 'small' | 'medium' | 'large'` not `energy_level`.
+
+**Rejected.**
+- *Keep energy and add session-length as a 3rd axis.* Breaks the 2-input ceiling. Hard no.
+- *"2+ hrs (I've got time, don't ask why)".* Voice-charter fail; shame-adjacent.
+- *Revert all the way to "time" as a clock estimate ("how long do you have?").* Same problem the energy substitution was trying to solve — users can't reliably say "I have 47 minutes." Session-length tiers preserve the original substitution's user-friendly framing while restoring the empirical grounding.
+
+**The honest framing of how the research resolved.** Brady's read, recorded for future-Brady context: *"research did not resolve unfavorably. it resolved. it clarified our approach and tested our assumptions the right way."* The PDF ingest is doing exactly the job the redteam audit flagged it for — surfacing where shipped product is unsupported by its claimed research base, in time to adjust before launch.
+
+---
+
+## 2026-04-27 — Share-card content lockdown + Practical Value layer (Berger STEPPS)
+
+**Decision.** The share composer goes from "user customizes what's on the card" to "card is what it is, no customization." Two reasons: research-grounded (the psychology ingest flagged share cards as Social Currency only, no Practical Value, which means launch-spike not flywheel), and brand-grounded (a share card is a self-expression artifact, not a stat dashboard the user curates).
+
+**What's on the standardized card (locked).**
+- **Archetype** — name + behavior line. The persona summary is shareable; it's identity, not finance.
+- **Reclaimed value, framed as a plus** — "$N reclaimed" not "$N unplayed" and not "pile worth $N." If the user has reclaimed value, it shows. If they haven't yet, that field is omitted, not zero-filled. No shame surface area.
+- **Brand mark + URL** — `inventoryfull.gg`, the lockup, that's it.
+
+**What's NOT on the card.**
+- Pile dollar value (private; reveals spending behavior).
+- Hours wasted / hours unplayed (shame surface).
+- User-configurable text fields (defeats the lockdown).
+- Per-share customization controls in the composer.
+
+**Practical Value layer (Berger STEPPS — what makes the card useful to the recipient, not just signaling for the sender).**
+
+Berger's STEPPS framework: cards that hit Social Currency only (sender-benefit) decay; cards that hit Practical Value (recipient-benefit, useful info) compound. Our cards currently do Social Currency well, Practical Value not at all.
+
+**Plan, two phases.**
+
+**Phase 1 (ships first — the simplest layer):** every card carries a generic recipient-facing CTA on the footer. Working copy: *"Find out what your pile is worth → inventoryfull.gg/stats"* — invites the recipient into a self-discovery action they can take cold. Self-contained, no per-card customization, scales to every share. This is *Plan #3* from the conversation.
+
+**Phase 2 (later, conditional on enrichment richness):** game-completion cards include a one-line "worth it if X" recommendation auto-generated from the cleared game's metadata. Example: *"Brady cleared Disco Elysium. 30hr deep RPG, slow burn, worth it if you can carve the time."* This is Plan #1 from the conversation. Skipped for now because the auto-write needs reliable session-length + tone signal we don't have on every game yet.
+
+**What this means for the composer.** The customization controls in `CompletionCelebration.tsx` (lines 223–491 per the round-2 audit) come out, replaced by a fixed-content card with the standardized fields above and the Phase 1 footer CTA. The composer becomes opt-in (round-2 finding stands) — a "share this clear" button that opens the card preview, not a always-visible mid-celebration surface.
+
+**Rejected.**
+- *Let users edit fields per-share.* The lockdown intent is precisely this: standardize the artifact so it carries recognizable brand language, not 10,000 idiosyncratic versions.
+- *Skip Practical Value entirely; ship Social Currency only.* Berger's framework is empirical, not aesthetic — Social-Currency-only cards decay after the novelty cohort. Worth the lift to add the recipient-facing CTA.
+- *Phase 2 first.* The auto-write is the highest-impact version but it needs game-metadata signal we don't reliably have. Phase 1 footer CTA captures most of the Practical Value upside at a fraction of the engineering lift.
+
+**Evidence.** `docs/psychology-research-ingest-2026-04-27.md` Berger section. Round-2 redteam audit flagged the composer placement; this entry adds the content lockdown alongside the placement fix.
+
+---
+
 ## 2026-04-27 — "Energy" replaces "time" as the second pick-flow input
 
 **Decision.** The locked 2-input pick flow is now **mood + energy**, not mood + time. The shift was already in the shipped code as of the picker rebaseline; this entry documents the why so it doesn't get relitigated, and names the research debt the substitution carries.

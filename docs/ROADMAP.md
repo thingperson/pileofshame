@@ -377,29 +377,44 @@ Pixel sprite system replacing emoji as primary brand iconography.
 
 Captured from the round-1 + round-2 psychology audit (`docs/psychology-redteam-2026-04-27.md`). Picker rebaseline already shipped. Items below are real but deliberately deferred so the picker work stays surgical.
 
-**Native channel launch buttons (research complete).** Steam shipped. Outstanding:
-- Xbox Cloud Gaming launch buttons via `xbox.com/play/games/<slug>/<productId>`. Engineering blocker: OpenXBL gives `titleId`, we need Microsoft Store `productId`. Spin a subagent to research a one-time bulk resolver or per-game lookup. Mobile-friendly (browser-native cloud play, no app required).
-- Epic / Battle.net / Ubisoft deep links via `com.epicgames.launcher://` / `battlenet://` / `uplay://`. ID acquisition is the friction. Investigate whether community-maintained lookups (BoilR, NonSteamLaunchers data) are usable as a static bundled map.
-- Confirmed dead: PlayStation remote launch (no public URL scheme), EA App (no URL scheme — confirmed by their own forum), Steam friend chat bot (no API, ToS violation).
-- Steam Deck Decky Loader plugin: post-launch, after Deck cohort signal. Don't burn time on automated PWA-to-library install (manual path only).
+**Native channel launch buttons.** Steam shipped. Research complete in `docs/native-channel-research-2026-04-27.md`. Outstanding implementation:
+- **Xbox Cloud (priority #1)** — `https://xbox.com/<locale>/play/games/<slug>/<productId>`. Plain https, no protocol prompt. titleId → productId resolved at import via `displaycatalog.mp.microsoft.com` search-by-name, cache productId on game record. Skip Xbox PC native — `msxbox://` not stable per-game.
+- **Epic** — two-stage. Phase 1: `store/p/<slug>` (slug-only, ships today). Phase 2: `com.epicgames.launcher://apps/<SandboxID>:<CatalogID>:<ArtifactID>?action=launch` (needs catalog triple map from Epic GraphQL).
+- **Battle.net** — easiest. ~20 hardcoded codes (`d4`, `wow`, `pro`, etc.) cover Blizzard's catalog. `battlenet://<code>`.
+- **Ubisoft** — `uplay://launch/<id>/0`, Win-only. Snapshot community ID map (RizSavio/UplayGameIDs).
+- **GOG Galaxy verified** — `goggalaxy://launchGame/<id>` (play action) + `openGameView/<id>` (fallback). Community-verified, not formally documented.
+- **Confirmed dead:** PlayStation remote launch, EA App, Steam friend chat bot.
+- **Steam Deck Decky Loader plugin:** post-launch, after Deck cohort signal. Manual PWA-to-library path only for now.
 
-**Stats page reframes (round 2 finding).**
-- Reframe Value Calculator language from debt/guilt ("$4,200 unplayed") to opportunity ("$4,200 of fun ready to be won back"). Same data, opposite psychological frame.
-- Add a `Pick something` CTA to the stats page so users have an exit back to the picker. Currently stats is sticky — no clear path forward.
-- Instrument the rerollable archetype on the stats page so we can see whether reroll volume reads like character expression (1–3 per session) or sticky engagement (10+). Keep the feature; let the data adjudicate.
+**Stats page reframes — SHIPPED 2026-04-27 (commit `53e3bc4`).** Value Calculator reframe ("Fun ready to be won back"), `Pick something` CTA, archetype reroll instrumentation (`archetype_rerolled` GA4 event). Telemetry pending in production.
 
-**Share composer restructure (round 2 finding).**
-- Move the share-card composer in `CompletionCelebration.tsx` (lines 223–491) from opt-out (always visible during the celebration) to opt-in (a button that opens the composer if the user wants). The current placement converts a "ready for the next game" moment into a "post on social" moment.
+**Share composer restructure (round 2 finding) + content lockdown (2026-04-27 PM).**
+- Move composer in `CompletionCelebration.tsx` from opt-out → opt-in (round-2 finding stands).
+- **PLUS content lockdown:** standardize the card. No per-share customization. Locked fields: archetype + reclaimed value framed positive + brand mark. NOT on card: pile $ value, hours unplayed, anything shame-adjacent. See DECISIONS.md 2026-04-27 PM entry.
+- **Practical Value layer (Berger STEPPS):**
+  - **Phase 1 (ships first):** generic recipient-facing CTA on every card footer — *"Find out what your pile is worth → inventoryfull.gg/stats"*. No customization, scales to every share.
+  - **Phase 2 (later):** auto-generated "worth it if X" recommendation per cleared game. Skipped now because session-length + tone signal isn't reliable on every game yet.
 
 **OG share-hierarchy decision (round 2 finding).**
 - Pile/[id] (archetype reveal) and Clear/[id] (game cleared) OG cards both ship. Both are valid moments — Brady's call. Worth instrumenting share volume per type so we know which moment users actually want to share.
 
-**Instrumentation gap (round 1 finding, highest leverage).**
-- The Apr 9 instrumentation plan needs to ship before launch if we want to know whether returning users use the picker or default to TabNav-browsing. Specific events: `session_start`, `picker_opened`, `tab_clicked` (with tab name), `pick_delivered`, `pick_accepted`, `pick_rerolled`, `game_launched_externally` (proxy via `steam://` click).
+**Instrumentation — SHIPPED 2026-04-27 (commit `c9ae919`).** `picker_opened`, `tab_clicked`, `game_launched_externally` GA4 events live. Adjudicates the round-1 question: *"do returning users actually use the picker, or default to browsing tabs?"* Wait for ~1 week of post-launch data.
 
 **Picker rebaseline carry-overs.**
 - Watch telemetry on the new `⚙ Change roll settings` affordance. If it gets tapped immediately on every pick, the strip-and-collapse design failed.
-- Backfill `moodTags` for games imported before the mood-tag enrichment pass — otherwise the new mood-based descriptor pool falls through to genre/score for older games.
+- **moodTags backfill — SHIPPED 2026-04-27 (commit `6b6418b`).** Persist v3 migration runs `inferMoodTags()` on existing games with empty moodTags. Local-only, no network.
+
+**Energy → Session Length pivot (2026-04-27 PM, ships next session).**
+- The energy substitution shipped with research debt (per DECISIONS.md earlier 2026-04-27 entry). PDF ingest closed the debt unfavorably for "energy as a dispositional self-report" (Loewenstein, Mischel & Shoda).
+- Pivot to **session length tiers** — Small (~20 min), Medium (~1–2 hrs), Large (2+ hrs · *I'm in*). Tangible commitment estimate users can actually answer.
+- Implementation: rename `EnergyLevel` type → `SessionLength` in `lib/reroll.ts`, update picker UI labels in `components/Reroll.tsx`, update `.claude/rules/user-psychology.md` §3 note. ~60–90 min of focused work.
+- See DECISIONS.md 2026-04-27 PM entry for full rationale + rejected alternatives.
+
+**Inferred-features track (future differentiator, post-launch).**
+- Mischel & Shoda 1995 strengthens the case: *if-then situation signatures* are the empirically reliable behavioral predictor (r ≈ .47 stable), not dispositional self-reports. Archetypes are essentially if-then signatures, which the research validates.
+- Roadmap direction: lean harder on *inferred* features (archetype-fit, last-played, recent completions, time-of-day patterns) and *reduce* explicit user input where the inference is reliable. Goal is a picker that feels like it knows you — the kind of recommendation that makes the user say "how did it know."
+- This is the long-term differentiator vs every other "what to play next" tool. Don't ship piecemeal — needs a deliberate spec sprint after launch data lands.
+- Not a launch blocker. Logged here so it doesn't get reinvented as a one-off feature.
 
 **Celebration overlay imagery (post-launch polish).**
 - Brady's idea: add platform-aware imagery to the post-accept celebration. Hand reaching for controller, PS5 powering on, Xbox green-glow boot, Switch waking from sleep. Styled like the hero image so the brand language stays coherent. Optional per-platform variants (DualSense / Xbox controller / Joy-Con).

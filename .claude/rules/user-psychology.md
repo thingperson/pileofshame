@@ -48,7 +48,15 @@ Key finding: working memory is finite (~4 chunks). UI elements, copy density, an
 
 **Implication for us:** Every extra question at pick-time is a tax on the exact cognitive resource that's already depleted (that's why they came to us). Mood + energy = two inputs. That's the ceiling.
 
-**Note on the "energy" axis (locked 2026-04-27).** Originally this axis was *time* ("how long do you have?"). It was replaced with *energy* ("how are you feeling?") during the picker rebaseline. Reasoning: users repeatedly reported having time but no will to start a 40-hour RPG. Energy maps to visceral state at pick-time better than a clock estimate. The substitution carries a research debt — the cognitive-load research above grounds *number of inputs*, not the *content* of those inputs. Whether self-reported energy predicts behavior reliably is a separate question (Loewenstein 1996, Mischel & Shoda 1995 are under ingestion 2026-04-27). If those sources contradict the substitution, this decision is on the table for revision. See `docs/DECISIONS.md` 2026-04-27.
+**Note on the second axis (status: pivoting 2026-04-27 PM, implementation next session).** This axis has been through three shapes: *time* (original) → *energy* (picker rebaseline) → **session length** (current target, after research). The pivot trail:
+
+- *Time* ("how long do you have?") was replaced by *energy* because users couldn't reliably say "I have 47 minutes" and reported having time but no will.
+- *Energy* (Low / Medium / High) was contradicted by Loewenstein 1996 and Mischel & Shoda 1995 once those sources finished ingestion. Loewenstein: visceral states are systematically misjudged by introspection. Mischel & Shoda: dispositional self-categorization predicts behavior poorly (r ≈ .47 only for *if-then situation signatures*, not dispositional levels).
+- *Session length* (Small ~20 min / Medium ~1–2 hrs / Large 2+ hrs · *I'm in*) restores tangibility — a commitment estimate users can answer — without the introspection failure mode. HLTB-derived game length filters under the hood; the user just states their availability.
+
+The 2-input ceiling (mood + this axis) is unchanged through all three shapes. See `docs/DECISIONS.md` 2026-04-27 PM entry for the rejected alternatives (keep both, revert to clock estimate, ship "I've got time, don't ask why").
+
+Source for the pivot: `docs/psychology-research-ingest-2026-04-27.md`.
 
 **Derived rule:** *Pick flow must stay at 2 inputs max. Any new variable (genre, platform, mood sub-filter) must displace an existing one, not add to it.*
 
