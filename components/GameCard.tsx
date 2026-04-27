@@ -386,7 +386,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
       setShowBadgeHint(true);
     }
   }, [nextStatus]);
-  const descriptor = getGameDescriptor(game.name, game.metacritic, game.genres);
+  const descriptor = getGameDescriptor(game.name, game.metacritic, game.genres, game.moodTags);
 
   const handleStatusClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -1067,7 +1067,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
           {game.steamAppId && (
             <div className="mt-3">
               <a
-                href={`steam://run/${game.steamAppId}`}
+                href={`steam://rungameid/${game.steamAppId}`}
                 onClick={(e) => e.stopPropagation()}
                 className={
                   forceExpanded

@@ -72,7 +72,7 @@ const JustFiveMinutes = forwardRef<JustFiveMinutesHandle, JustFiveMinutesProps>(
   const startSession = useCallback(() => {
     const pick = pickFiveMinuteGame(games);
     if (!pick) {
-      showToast('No games in your pile to try. Add some first!');
+      showToast('No unplayed games yet. Import your library to get started.');
       return;
     }
     setGame(pick);
@@ -183,9 +183,9 @@ const JustFiveMinutes = forwardRef<JustFiveMinutesHandle, JustFiveMinutesProps>(
           onClick={startSession}
           className="shrink-0 px-3 sm:px-4 py-3 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl text-white transition-all hover:-translate-y-0.5 active:scale-[0.97] whitespace-nowrap"
           style={{ background: 'linear-gradient(135deg, #059669, #34d399)' }}
-          title="Try a game for 5 minutes. Then decide where it goes."
+          title="Five minutes is enough to feel a game. Not enough to second-guess yourself."
         >
-          ⚡ Just 5 Min
+          ⏱️ 5-min tryout
         </button>
       )}
 
@@ -205,9 +205,9 @@ const JustFiveMinutes = forwardRef<JustFiveMinutesHandle, JustFiveMinutesProps>(
           {/* Header */}
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider" style={{ color: '#34d399' }}>
-              ⚡ Just 5 Minutes
+              ⏱️ 5-min tryout
             </span>
-            <button onClick={handleClose} aria-label="Close Just 5 Minutes" className="text-text-dim hover:text-text-muted text-xs">✕</button>
+            <button onClick={handleClose} aria-label="Close 5-min tryout" className="text-text-dim hover:text-text-muted text-xs">✕</button>
           </div>
 
           {/* Game */}
@@ -218,7 +218,7 @@ const JustFiveMinutes = forwardRef<JustFiveMinutesHandle, JustFiveMinutesProps>(
             <div className="flex-1 min-w-0">
               <p className="text-base font-bold text-text-primary truncate">{game?.name}</p>
               <p className="text-xs text-text-dim mt-0.5">
-                {step === 'suggest' && 'Give it 5 minutes. Then decide where it goes.'}
+                {step === 'suggest' && 'Five minutes. Just feel it out. Then decide.'}
                 {step === 'triage' && 'You tried it. Now you know. Where does it belong?'}
               </p>
             </div>
@@ -232,7 +232,7 @@ const JustFiveMinutes = forwardRef<JustFiveMinutesHandle, JustFiveMinutesProps>(
                 className="flex-1 px-3 py-2.5 text-sm font-bold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
                 style={{ backgroundColor: 'rgba(5, 150, 105, 0.15)', color: '#34d399' }}
               >
-                ▶ Start 5 min timer
+                ▶ Start 5-min timer
               </button>
               <button
                 onClick={handleSkip}

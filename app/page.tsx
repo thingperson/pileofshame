@@ -538,7 +538,7 @@ function AppContent() {
           </div>
           <p className="text-xs text-[#222] font-[family-name:var(--font-mono)] mt-4">less deciding. more playing.</p>
         </div>
-        <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} onJustFiveMinutes={() => { setRerollOpen(false); setRerollMode(undefined); justFiveRef.current?.startSession(); }} onSubShuffle={() => { setRerollOpen(false); setRerollMode(undefined); setGamePassOpen(true); }} />
+        <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} onJustFiveMinutes={() => { setRerollOpen(false); setRerollMode(undefined); justFiveRef.current?.startSession(); }} onSubShuffle={() => { setRerollOpen(false); setRerollMode(undefined); setGamePassOpen(true); }} onCommit={() => setActiveTab('now-playing')} />
         <CompletionCelebration game={celebrationGame} onClose={() => { closeCelebration(); setActiveTab('completed'); }} onConfirm={() => { if (celebrationGame) cycleStatus(celebrationGame.id); }} />
         <CloudSync />
       </div>
@@ -989,7 +989,7 @@ function AppContent() {
       {/* ── Modals ── */}
       <AddGameModal open={addModalOpen} onClose={() => { setAddModalOpen(false); setAddModalInitialName(''); }} initialName={addModalInitialName} />
       <ImportHub open={importHubOpen} onClose={() => setImportHubOpen(false)} />
-      <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} onJustFiveMinutes={() => { setRerollOpen(false); setRerollMode(undefined); justFiveRef.current?.startSession(); }} onSubShuffle={() => { setRerollOpen(false); setRerollMode(undefined); setGamePassOpen(true); }} />
+      <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} onJustFiveMinutes={() => { setRerollOpen(false); setRerollMode(undefined); justFiveRef.current?.startSession(); }} onSubShuffle={() => { setRerollOpen(false); setRerollMode(undefined); setGamePassOpen(true); }} onCommit={() => setActiveTab('now-playing')} />
       <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
       <GamePassBrowse open={gamePassOpen} onClose={() => setGamePassOpen(false)} />
       {/* GridCard handles its own detail modal */}

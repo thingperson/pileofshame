@@ -54,9 +54,12 @@ interface RerollProps {
   onJustFiveMinutes?: () => void;
   /** Opens the GamePassBrowse (Sub Shuffle) modal. Closes Reroll first. */
   onSubShuffle?: () => void;
+  /** Fires when the user commits a pick ("Let's go"). Parent navigates the
+   *  user to the Playing Now tab so the picked game is where they expect. */
+  onCommit?: () => void;
 }
 
-export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, onSubShuffle }: RerollProps) {
+export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, onSubShuffle, onCommit }: RerollProps) {
   const [mode, setMode] = useState<RerollMode>('anything');
   const [moodFilters, setMoodFilters] = useState<MoodTag[]>([]);
   const [currentPick, setCurrentPick] = useState<Game | null>(null);
@@ -66,6 +69,16 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
   // modal opens at 2 CTAs + energy pills; secondary choices are one tap away.
   const [showMoreWays, setShowMoreWays] = useState(false);
   const [showVibes, setShowVibes] = useState(false);
+  // Pre-roll energy drawer — collapsed by default per the locked 2-input rule.
+  // Opens on tap; commits to the chosen energy until the modal is reset.
+  const [showEnergyDrawer, setShowEnergyDrawer] = useState(false);
+  // Post-pick "change roll settings" drawer — hides mode/mood/energy pill rows
+  // by default so the user reads the pick, not the picker. Opens on tap when
+  // they want to alter the roll parameters without resetting.
+  const [showRollSettings, setShowRollSettings] = useState(false);
+  // Post-pick "Why this one?" drawer — collapsed by default. The pick should
+  // explain itself; we only justify on demand.
+  const [showWhyThisOne, setShowWhyThisOne] = useState(false);
   const [rolling, setRolling] = useState(false);
   const [commitNudgeShown, setCommitNudgeShown] = useState(false);
   const [revealed, setRevealed] = useState(false);
@@ -126,9 +139,12 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
       pick = pickWeighted(pickPool, skippedIds, reroll.lastThreePicks, energy);
     }
     if (!pick) {
+      const moodMsg = moodFilters.length > 1
+        ? 'No games match those moods. Clear them and roll again.'
+        : 'No games match that mood. Clear it and roll again.';
       showToast(moodFilters.length > 0
-        ? 'No games match that mood. Try a different one.'
-        : 'No games match this mode. Add some games first.');
+        ? moodMsg
+        : 'No games match this mode. Try a different one.');
       return;
     }
 
@@ -195,6 +211,9 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
       setSmartPickType(pickedType);
       setRolling(false);
       setRevealed(true);
+      // Each new pick collapses Why This One — we want the next reveal to
+      // explain itself before the user reaches for justification.
+      setShowWhyThisOne(false);
       // Funnel: first-ever roll reveal (once per browser)
       trackFirstRoll();
     }, 500);
@@ -237,32 +256,47 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
       timestamp: new Date().toISOString(),
     });
 
-    // Show post-accept nudge instead of immediately closing
+    // Show post-accept celebration. No auto-dismiss — the user reads it,
+    // taps "Going to play", and we navigate them to Playing Now where the
+    // game now lives. The 3-second auto-close was punitive: it stripped
+    // the celebratory beat and pushed the user out before they'd absorbed
+    // the decision.
     setPostAccept(game);
     setCurrentPick(null);
+  }, [games, updateGame, mode, moodFilters, energy, showToast]);
 
-    // Auto-dismiss after 3 seconds
-    setTimeout(() => {
-      setPostAccept(null);
-      resetReroll();
-      onClose();
-    }, 3000);
-  }, [games, updateGame, resetReroll, onClose, mode, moodFilters, energy]);
+  // Dismiss handler for the post-accept celebration. Closes the modal,
+  // resets reroll state, and tells the parent to navigate to Playing Now.
+  const handlePostAcceptDismiss = useCallback(() => {
+    setPostAccept(null);
+    resetReroll();
+    onCommit?.();
+    onClose();
+  }, [resetReroll, onCommit, onClose]);
 
   const handleNotNow = useCallback(() => {
+    // If the user is dismissing while the post-accept celebration is showing,
+    // they already committed — fire onCommit so they land on Playing Now.
+    // Without this, hitting × or Escape after a commit drops them back on
+    // Backlog tab where the game just left, which breaks the loop promise.
+    const wasPostAccept = !!postAccept;
     resetReroll();
     setCurrentPick(null);
     setPostAccept(null);
     setRevealed(false);
+    if (wasPostAccept) onCommit?.();
     onClose();
-  }, [resetReroll, onClose]);
+  }, [resetReroll, onClose, onCommit, postAccept]);
 
   const handleFirstRoll = useCallback((overrideMode?: RerollMode) => {
     const rollMode = overrideMode || mode;
     const eligible = getEligibleGames(games, rollMode, platformPreference, moodFilters);
     if (eligible.length === 0) {
+      const moodMsg = moodFilters.length > 1
+        ? 'No games match those moods. Clear them and roll again.'
+        : 'No games match that mood. Clear it and roll again.';
       showToast(moodFilters.length > 0
-        ? 'No games match that mood. Try a different one.'
+        ? moodMsg
         : 'No games match this mode.');
       return;
     }
@@ -308,6 +342,9 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
       setSkipFeedbackVisible(false);
       setSkipFeedbackRecorded(false);
       skipFeedbackShownCount.current = 0;
+      setShowEnergyDrawer(false);
+      setShowRollSettings(false);
+      setShowWhyThisOne(false);
       if (skipFeedbackTimer.current) clearTimeout(skipFeedbackTimer.current);
       if (initialMode) {
         setMode(initialMode);
@@ -419,13 +456,9 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
           <h2 className="text-2xl font-extrabold text-text-primary tracking-tight">
             🎲 {currentPick ? 'Roll Again' : 'What Should I Play?'}
           </h2>
-          {currentPick ? (
+          {currentPick && (
             <p className="text-sm text-text-dim mt-1 font-[family-name:var(--font-mono)]">
               Roll {rollCount}
-            </p>
-          ) : (
-            <p className="text-sm text-text-dim mt-1 font-[family-name:var(--font-mono)]">
-              Tell us your session, pick a vibe, roll
             </p>
           )}
         </div>
@@ -433,32 +466,10 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
         {/* Mode Selector (only before first roll, skip if mode pre-selected) */}
         {!currentPick && !skipModePicker && (
           <div className="px-5 pb-4">
-            {/* Energy selector */}
-            <p className="text-xs text-text-dim font-[family-name:var(--font-mono)] uppercase tracking-wider mb-2">How&apos;s your energy?</p>
-            <div className="flex gap-2 mb-4">
-              {([
-                { level: 'low' as EnergyLevel, label: 'Low', icon: '🔋' },
-                { level: 'medium' as EnergyLevel, label: 'Medium', icon: '⚡' },
-                { level: 'high' as EnergyLevel, label: 'High', icon: '🔥' },
-              ]).map(({ level, label, icon }) => (
-                <button
-                  key={level}
-                  onClick={() => setEnergy(level)}
-                  className={`flex-1 px-3 py-2.5 rounded-xl text-sm font-medium transition-all border ${
-                    energy === level
-                      ? 'border-accent-purple'
-                      : 'border-border-subtle hover:border-border-active'
-                  }`}
-                  style={{ backgroundColor: energy === level ? 'rgba(124, 58, 237, 0.12)' : 'var(--color-bg-card)' }}
-                >
-                  {icon} {label}
-                </button>
-              ))}
-            </div>
-
             {/* Primary CTAs — clicking rolls immediately in that mode (no
-                separate Roll button). "Just 5 mins" closes the modal and
-                hands off to the JustFiveMinutes flow via the parent ref. */}
+                separate Roll button). "5-min tryout" closes the modal and
+                hands off to the JustFiveMinutes flow via the parent ref.
+                The picker should explain itself: 2 buttons, 1 decision. */}
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => { setMode('anything'); setTimeout(() => handleFirstRoll('anything'), 0); }}
@@ -472,10 +483,51 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                 className="px-4 py-5 rounded-xl text-lg font-bold text-white transition-all hover:-translate-y-0.5 active:scale-[0.98]"
                 style={{ background: 'linear-gradient(135deg, #059669, #34d399)' }}
                 disabled={!onJustFiveMinutes}
-                title="Try a game for 5 minutes. Then decide where it goes."
+                title="Five minutes is enough to feel a game. Not enough to second-guess yourself."
               >
-                ⚡ Just 5 mins
+                ⏱️ 5-min tryout
               </button>
+            </div>
+
+            {/* Energy drawer — collapsed by default. Shows current selection
+                in the header so the user can see at a glance what's set. */}
+            <div className="mt-3 rounded-xl border" style={{ borderColor: 'var(--color-border-subtle)' }}>
+              <button
+                type="button"
+                onClick={() => setShowEnergyDrawer((v) => !v)}
+                className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
+                aria-expanded={showEnergyDrawer}
+              >
+                <span>
+                  Energy
+                  <span className="ml-2 text-xs text-accent-purple font-[family-name:var(--font-mono)]">
+                    · {energy === 'low' ? '🔋 Low' : energy === 'high' ? '🔥 High' : '⚡ Medium'}
+                  </span>
+                </span>
+                <span className="text-text-dim text-xs">{showEnergyDrawer ? '▴' : '▾'}</span>
+              </button>
+              {showEnergyDrawer && (
+                <div className="px-3 pb-3 flex gap-2">
+                  {([
+                    { level: 'low' as EnergyLevel, label: 'Low', icon: '🔋' },
+                    { level: 'medium' as EnergyLevel, label: 'Medium', icon: '⚡' },
+                    { level: 'high' as EnergyLevel, label: 'High', icon: '🔥' },
+                  ]).map(({ level, label, icon }) => (
+                    <button
+                      key={level}
+                      onClick={() => setEnergy(level)}
+                      className={`flex-1 px-3 py-2.5 rounded-xl text-sm font-medium transition-all border ${
+                        energy === level
+                          ? 'border-accent-purple'
+                          : 'border-border-subtle hover:border-border-active'
+                      }`}
+                      style={{ backgroundColor: energy === level ? 'rgba(124, 58, 237, 0.12)' : 'var(--color-bg-card)' }}
+                    >
+                      {icon} {label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* More ways to play — Quick Session + Resume. Collapsed by default. */}
@@ -578,57 +630,76 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
         {currentPick && (
           <div className={`flex flex-col min-h-0 flex-1 transition-all duration-500 ${revealed ? 'opacity-100' : 'opacity-0'}`}>
           <div className="px-5 overflow-y-auto min-h-0 flex-1">
-            {/* Mode switcher pills */}
-            <div className="flex flex-wrap justify-center gap-1.5 mb-2">
-              {REROLL_MODES.map(({ mode: m, icon, label }) => (
-                <button
-                  key={m}
-                  onClick={() => { setMode(m); }}
-                  className={`px-3 py-2 rounded-full text-sm font-medium font-[family-name:var(--font-mono)] transition-all ${
-                    mode === m
-                      ? 'bg-white/10 text-text-primary'
-                      : 'text-text-dim hover:text-text-muted hover:bg-white/5'
-                  }`}
-                  title={label}
-                >
-                  {icon} {label}
-                </button>
-              ))}
+            {/* Roll settings — collapsed by default. Mode / energy / mood
+                controls live here, surfaced only when the user wants to alter
+                the roll without resetting the modal. The pick should be the
+                star of the screen; the controls don't compete unless asked. */}
+            <div className="mb-3 text-center">
               <button
-                onClick={() => {
-                  const levels: EnergyLevel[] = ['low', 'medium', 'high'];
-                  const next = levels[(levels.indexOf(energy) + 1) % levels.length];
-                  setEnergy(next);
-                }}
-                className="px-3 py-2 rounded-full text-sm font-medium font-[family-name:var(--font-mono)] text-text-dim hover:text-text-muted hover:bg-white/5 transition-all"
-                title={`Energy: ${energy}. Tap to change.`}
+                type="button"
+                onClick={() => setShowRollSettings((v) => !v)}
+                className="inline-flex items-center gap-1.5 text-xs font-[family-name:var(--font-mono)] text-text-faint hover:text-text-muted transition-colors"
+                aria-expanded={showRollSettings}
               >
-                {energy === 'low' ? '🔋 Low' : energy === 'high' ? '🔥 High' : '⚡ Medium'}
+                <span>⚙ {showRollSettings ? 'Hide' : 'Change'} roll settings</span>
+                <span className="text-text-dim">{showRollSettings ? '▴' : '▾'}</span>
               </button>
             </div>
-
-            {/* Mood filter pills (compact, inline) */}
-            <div className="flex flex-wrap justify-center gap-1.5 mb-4">
-              {ALL_MOODS.map((mood) => {
-                const config = MOOD_TAG_CONFIG[mood];
-                const active = moodFilters.includes(mood);
-                return (
+            {showRollSettings && (
+              <div className="mb-4 pb-3 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                {/* Mode switcher pills */}
+                <div className="flex flex-wrap justify-center gap-1.5 mb-2">
+                  {REROLL_MODES.map(({ mode: m, icon, label }) => (
+                    <button
+                      key={m}
+                      onClick={() => { setMode(m); }}
+                      className={`px-3 py-2 rounded-full text-sm font-medium font-[family-name:var(--font-mono)] transition-all ${
+                        mode === m
+                          ? 'bg-white/10 text-text-primary'
+                          : 'text-text-dim hover:text-text-muted hover:bg-white/5'
+                      }`}
+                      title={label}
+                    >
+                      {icon} {label}
+                    </button>
+                  ))}
                   <button
-                    key={mood}
-                    onClick={() => { toggleMood(mood); }}
-                    className={`px-2.5 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      active ? 'scale-[1.02]' : 'hover:bg-white/10'
-                    }`}
-                    style={{
-                      backgroundColor: active ? `${config.color}25` : 'rgba(255,255,255,0.03)',
-                      color: active ? config.color : 'var(--color-text-muted)',
+                    onClick={() => {
+                      const levels: EnergyLevel[] = ['low', 'medium', 'high'];
+                      const next = levels[(levels.indexOf(energy) + 1) % levels.length];
+                      setEnergy(next);
                     }}
+                    className="px-3 py-2 rounded-full text-sm font-medium font-[family-name:var(--font-mono)] text-text-dim hover:text-text-muted hover:bg-white/5 transition-all"
+                    title={`Energy: ${energy}. Tap to change.`}
                   >
-                    {config.icon} {config.label}
+                    {energy === 'low' ? '🔋 Low' : energy === 'high' ? '🔥 High' : '⚡ Medium'}
                   </button>
-                );
-              })}
-            </div>
+                </div>
+
+                {/* Mood filter pills (compact, inline) */}
+                <div className="flex flex-wrap justify-center gap-1.5">
+                  {ALL_MOODS.map((mood) => {
+                    const config = MOOD_TAG_CONFIG[mood];
+                    const active = moodFilters.includes(mood);
+                    return (
+                      <button
+                        key={mood}
+                        onClick={() => { toggleMood(mood); }}
+                        className={`px-2.5 py-1.5 rounded-full text-xs font-medium transition-all ${
+                          active ? 'scale-[1.02]' : 'hover:bg-white/10'
+                        }`}
+                        style={{
+                          backgroundColor: active ? `${config.color}25` : 'rgba(255,255,255,0.03)',
+                          color: active ? config.color : 'var(--color-text-muted)',
+                        }}
+                      >
+                        {config.icon} {config.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Game reveal */}
             <div
@@ -658,17 +729,10 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                 {currentPick.name}
               </h3>
               <div className="flex flex-wrap justify-center gap-3 text-xs text-text-dim font-[family-name:var(--font-mono)]">
-                {currentPick.metacritic && (
-                  <span
-                    className="px-1.5 py-0.5 rounded font-bold"
-                    style={{
-                      backgroundColor: currentPick.metacritic >= 75 ? 'rgba(34,197,94,0.15)' : currentPick.metacritic >= 50 ? 'rgba(234,179,8,0.15)' : 'rgba(239,68,68,0.15)',
-                      color: currentPick.metacritic >= 75 ? '#22c55e' : currentPick.metacritic >= 50 ? '#eab308' : '#ef4444',
-                    }}
-                  >
-                    {currentPick.metacritic}
-                  </span>
-                )}
+                {/* Metacritic deliberately omitted: a number nudges users toward
+                    other people's opinions of the game instead of their own. We
+                    say "try this — we have reason to believe you'll like it,"
+                    not "here's how it scored." */}
                 {currentPick.hltbMain && (
                   <span>🕐 ~{currentPick.hltbMain}h to beat</span>
                 )}
@@ -701,9 +765,20 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                   </div>
                 );
               })()}
-              {/* Descriptor */}
+              {/* Descriptor — curated prose for known games, mood-based fallback
+                  for the rest, with genre + score behind that. Mood-based lines
+                  describe the *experience* (what this feels like to play) rather
+                  than reception (how critics scored it), which is the move
+                  closer to the user's actual question: "is this for me right
+                  now?" Curated lines stay accent-purple to signal hand-written;
+                  the mood/genre/score tiers share the muted color. */}
               {(() => {
-                const desc = getGameDescriptor(currentPick.name, currentPick.metacritic, currentPick.genres);
+                const desc = getGameDescriptor(
+                  currentPick.name,
+                  currentPick.metacritic,
+                  currentPick.genres,
+                  currentPick.moodTags,
+                );
                 return desc ? (
                   <p
                     className="text-sm mt-3 leading-relaxed italic"
@@ -715,14 +790,18 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                   </p>
                 ) : null;
               })()}
-              {/* Why this game? Smart Pick trigger leads (accent-purple left border),
-                  remaining signals follow unstyled. */}
+              {/* Why this game? Collapsed by default — the pick should explain
+                  itself. We only justify on demand. The "Beatable in ~Xh" pill
+                  generated by getPickReasons is filtered out when hltbMain is
+                  already shown in the stat row above (no duplicates). */}
               {(() => {
-                const reasons = getPickReasons(currentPick);
-                // Build a Smart-Pick trigger reason — the thing that actually caused
-                // this game to surface. Sits as pill #1, visually distinguished so
-                // the user reads "because I'm 85% through" before the secondary
-                // signals (Metacritic, mood, backlog age).
+                // Suppress the time-to-beat reason when the same number is
+                // already in the stat row above. Avoids the user reading
+                // "~3.1h to beat" twice on the same screen.
+                const allReasons = getPickReasons(currentPick);
+                const reasons = currentPick.hltbMain
+                  ? allReasons.filter((r) => !r.label.startsWith('Beatable in'))
+                  : allReasons;
                 let trigger: { icon: string; label: string } | null = null;
                 if (smartPickType) {
                   const h = Math.round(currentPick.hoursPlayed);
@@ -740,30 +819,40 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                 if (!trigger && reasons.length === 0) return null;
                 return (
                   <div className="mt-3 pt-2 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                    <p className="text-xs text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider mb-1.5">Why this one?</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {trigger && (
-                        <span
-                          className="text-xs font-[family-name:var(--font-mono)] px-2 py-1 rounded-md"
-                          style={{
-                            backgroundColor: 'rgba(167, 139, 250, 0.12)',
-                            color: '#c4b5fd',
-                            borderLeft: '2px solid #a78bfa',
-                          }}
-                        >
-                          {trigger.icon} {trigger.label}
-                        </span>
-                      )}
-                      {reasons.map((r, i) => (
-                        <span
-                          key={i}
-                          className="text-xs text-text-muted font-[family-name:var(--font-mono)] px-2 py-1 rounded-md"
-                          style={{ backgroundColor: 'rgba(255,255,255,0.04)' }}
-                        >
-                          {r.icon} {r.label}
-                        </span>
-                      ))}
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowWhyThisOne((v) => !v)}
+                      className="w-full flex items-center justify-center gap-1.5 text-xs text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider mb-1.5 hover:text-text-muted transition-colors"
+                      aria-expanded={showWhyThisOne}
+                    >
+                      <span>Why this one?</span>
+                      <span className="text-text-dim normal-case">{showWhyThisOne ? '▴' : '▾'}</span>
+                    </button>
+                    {showWhyThisOne && (
+                      <div className="flex flex-wrap gap-1.5 justify-center">
+                        {trigger && (
+                          <span
+                            className="text-xs font-[family-name:var(--font-mono)] px-2 py-1 rounded-md"
+                            style={{
+                              backgroundColor: 'rgba(167, 139, 250, 0.12)',
+                              color: '#c4b5fd',
+                              borderLeft: '2px solid #a78bfa',
+                            }}
+                          >
+                            {trigger.icon} {trigger.label}
+                          </span>
+                        )}
+                        {reasons.map((r, i) => (
+                          <span
+                            key={i}
+                            className="text-xs text-text-muted font-[family-name:var(--font-mono)] px-2 py-1 rounded-md"
+                            style={{ backgroundColor: 'rgba(255,255,255,0.04)' }}
+                          >
+                            {r.icon} {r.label}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 );
               })()}
@@ -827,14 +916,11 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
             )}
 
             </div>
-            {/* Action buttons — pinned to bottom */}
+            {/* Action buttons — pinned to bottom. "Not now" was retired
+                2026-04-27: the close (×) in the modal header already serves
+                that exit. The picker only needs two answers from the user
+                here: "this one" or "show me another." */}
             <div className="flex gap-2 px-5 py-4 shrink-0 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)', backgroundColor: 'var(--color-bg-elevated)' }}>
-              <button
-                onClick={handleNotNow}
-                className="flex-1 px-3 py-3.5 sm:py-2.5 text-sm font-medium text-text-dim rounded-xl border border-border-subtle hover:text-text-muted transition-colors"
-              >
-                Not now
-              </button>
               <button
                 onClick={() => doRoll()}
                 className="flex-1 px-3 py-3.5 sm:py-2.5 text-sm font-medium rounded-xl border border-border-subtle text-text-secondary hover:border-accent-purple transition-all"
@@ -859,50 +945,77 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
             trapped users and read as punitive ("Pick one. No more rolls.").
             Replaced with a one-time soft toast at roll 8 in doRoll above. */}
 
-        {/* Post-accept nudge overlay */}
-        {postAccept && (
-          <div
-            className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm cursor-pointer"
-            onClick={() => {
-              setPostAccept(null);
-              resetReroll();
-              onClose();
-            }}
-          >
-            <div
-              className="text-center px-8 py-6 max-w-sm"
-              style={{ animation: 'scaleIn 300ms ease-out' }}
-            >
-              <p className="text-2xl font-extrabold text-text-primary mb-2">
-                {postAccept.name}
-              </p>
-              {(() => {
-                const est = getSessionEstimate(postAccept);
-                return est ? (
-                  <p className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-4">
-                    {est}
+        {/* Post-accept celebration overlay — fires on commit ("Let's go").
+            No auto-dismiss: the user reads it, taps the dismiss CTA, and the
+            parent navigates them to Playing Now. The job here is to release
+            the user from the app — we made the decision easy, the rest is
+            theirs. Steam button uses `steam://rungameid/` (canonical: handles
+            install-if-needed, supports non-Steam shortcuts). */}
+        {postAccept && (() => {
+          // Platform-specific encouragement when we can't deep-launch the game
+          // (everything except Steam, for now). Reads off `source` from import.
+          const platformLine: Record<string, string> = {
+            playstation: 'Fire up the PlayStation.',
+            xbox: 'Fire up the Xbox.',
+            switch: 'Wake up the Switch.',
+            epic: 'Open the Epic launcher.',
+            gog: 'Open GOG Galaxy.',
+            other: 'Open your launcher.',
+          };
+          const encourage = postAccept.source === 'steam'
+            ? null
+            : (platformLine[postAccept.source] || 'Time to play.');
+          return (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+              <div
+                className="text-center px-8 py-6 max-w-sm"
+                style={{ animation: 'scaleIn 300ms ease-out' }}
+              >
+                <p className="text-xs text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider mb-2">
+                  Decision made.
+                </p>
+                <p className="text-2xl font-extrabold text-text-primary mb-1">
+                  {postAccept.name}
+                </p>
+                {(() => {
+                  const est = getSessionEstimate(postAccept);
+                  return est ? (
+                    <p className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-4">
+                      {est}
+                    </p>
+                  ) : <div className="mb-4" />;
+                })()}
+                <p className="text-sm text-text-secondary mb-5 leading-relaxed">
+                  The hard part&apos;s behind you. Get the controller in your hands. Enjoying is the only next step.
+                </p>
+                {postAccept.steamAppId && (
+                  <a
+                    href={`steam://rungameid/${postAccept.steamAppId}`}
+                    className="inline-block w-full px-5 py-3 text-sm font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] mb-3"
+                    style={{ backgroundColor: 'var(--color-accent-purple)', color: '#0a0a0f' }}
+                  >
+                    🎮 Open in Steam
+                  </a>
+                )}
+                {encourage && (
+                  <p className="text-sm font-medium text-text-primary mb-3">
+                    {encourage}
                   </p>
-                ) : null;
-              })()}
-              <p className="text-sm text-text-muted mb-4">
-                {getPostAcceptLine(postAccept.name)}
-              </p>
-              {postAccept.steamAppId && (
-                <a
-                  href={`steam://run/${postAccept.steamAppId}`}
-                  className="inline-block px-5 py-2.5 text-sm font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] mb-2"
-                  style={{ backgroundColor: 'var(--color-accent-purple)', color: '#0a0a0f' }}
-                  onClick={(e) => e.stopPropagation()}
+                )}
+                <button
+                  onClick={handlePostAcceptDismiss}
+                  className="w-full px-5 py-2.5 text-sm font-medium rounded-xl border transition-colors"
+                  style={{
+                    borderColor: 'var(--color-border-subtle)',
+                    color: 'var(--color-text-secondary)',
+                  }}
                 >
-                  Launch on Steam
-                </a>
-              )}
-              <p className="text-[10px] text-text-faint font-[family-name:var(--font-mono)] mt-3">
-                tap anywhere to close
-              </p>
+                  Going to play
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Rolling animation overlay */}
         {rolling && (
