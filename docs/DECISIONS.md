@@ -15,6 +15,34 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-27 — "Energy" replaces "time" as the second pick-flow input
+
+**Decision.** The locked 2-input pick flow is now **mood + energy**, not mood + time. The shift was already in the shipped code as of the picker rebaseline; this entry documents the why so it doesn't get relitigated, and names the research debt the substitution carries.
+
+**Why.**
+- Users with full pile and zero time-pressure ("I have all weekend") still couldn't pick. Time-tier wasn't the load-bearing variable for the paralysis we built the app to solve.
+- "Energy" maps to the visceral state at pick-time. The user knows whether they want a brain-off 20-minute roguelite run or a slow story they can sink into; they often don't know whether they "have 20 minutes or 2 hours."
+- HLTB-derived session length is still in the data — the picker uses it under the hood to filter out 60-hour RPGs when energy is "low." We didn't lose time as a signal; we moved it from a question we ask to a constraint we apply.
+
+**What this means in practice.**
+- AGENTS.md axiom #4 now reads `(mood + energy)`. The 2-input ceiling is unchanged; the *content* of the second input changed.
+- `.claude/rules/user-psychology.md` §3 updated with the substitution and the open research question.
+- The picker UI uses energy pills (Low / Medium / High) collapsed into a drawer. The default visible state is still 2 inputs (mood + a roll button); energy is one tap away.
+
+**The research debt.** Cognitive-load research (Sweller) grounds the *number* of inputs, not the *content*. Whether self-reported energy predicts behavior reliably is a different question. Loewenstein 1996 ("Out of Control") and Mischel & Shoda 1995 are under ingestion 2026-04-27 to fill this gap. Possible outcomes:
+- Loewenstein supports visceral-state framing → energy is correctly preferred over time. Lock it.
+- Mischel & Shoda show self-reported state is unreliable → both energy AND time are weak signals. Picker may need to lean harder on inferred features (last played, recent completions, archetype fit) and reduce explicit user input further.
+- Mixed or contradictory → write a follow-up entry with the new framing.
+
+**Rejected.**
+- *Keep both time and energy as separate axes.* Adds a 3rd input, breaks the 2-input ceiling. Hard no per the cognitive-load rule.
+- *Keep time only.* Doesn't solve the paralysis case where time isn't the bottleneck (the most common user-reported bottleneck).
+- *Replace mood with energy.* Mood does work the energy tier doesn't — it filters by *what kind of experience* the user wants, which energy alone can't disambiguate (low energy + intense vs low energy + chill are very different picks).
+
+**Evidence.** Picker rebaseline commit `7400456`. The substitution was implicit in the rebaseline; this entry makes it explicit. Telemetry to validate ships under round-1 intervention #3 (`picker_opened`, `tab_clicked`, `game_launched_externally` — `c9ae919`).
+
+---
+
 ## 2026-04-27 — Picker rebaseline + "Let's go" closes the loop
 
 **Decision.** First wave of post-psychology-redteam interventions ships in one pass, all targeting the picker flow. Five user-visible changes:

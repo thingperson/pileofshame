@@ -57,7 +57,7 @@ Don't re-open without a specific reason:
 1. **Client-side data is authoritative.** localStorage holds truth. Supabase is opt-in sync. Don't flip polarity without a migration plan + Privacy Policy update.
 2. **Guest mode is first-class.** Works without an account, forever. New features need a guest path. "Sign in to use this" is a red flag.
 3. **Status cycle is ordered:** `Backlog → Up Next → Playing Now → Completed` (or `Moved On` as sibling exit). Internal keys: `buried`, `on-deck`, `playing`, `played`, `bailed`. Don't rename, reorder, or add intermediate states.
-4. **Pick flow stays at 2 inputs** (mood + time). Any new filter must displace one, not add. See `.claude/rules/user-psychology.md`.
+4. **Pick flow stays at 2 inputs** (mood + energy). Any new filter must displace one, not add. "Energy" replaced "time" 2026-04-27 — see `docs/DECISIONS.md` + `.claude/rules/user-psychology.md`.
 5. **No ads, no third-party data sharing, no cross-site tracking.** Hard lines in `.claude/rules/legal-compliance.md`.
 6. **Less time in app = success.** Changes that increase session length without terminating in play are usually wrong.
 

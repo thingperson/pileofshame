@@ -46,7 +46,9 @@ Key finding: more options increase regret and second-guessing even after a decis
 
 Key finding: working memory is finite (~4 chunks). UI elements, copy density, and decisions all draw from the same pool. Excess load causes abandonment regardless of intent.
 
-**Implication for us:** Every extra question at pick-time is a tax on the exact cognitive resource that's already depleted (that's why they came to us). Mood + time = two inputs. That's the ceiling.
+**Implication for us:** Every extra question at pick-time is a tax on the exact cognitive resource that's already depleted (that's why they came to us). Mood + energy = two inputs. That's the ceiling.
+
+**Note on the "energy" axis (locked 2026-04-27).** Originally this axis was *time* ("how long do you have?"). It was replaced with *energy* ("how are you feeling?") during the picker rebaseline. Reasoning: users repeatedly reported having time but no will to start a 40-hour RPG. Energy maps to visceral state at pick-time better than a clock estimate. The substitution carries a research debt — the cognitive-load research above grounds *number of inputs*, not the *content* of those inputs. Whether self-reported energy predicts behavior reliably is a separate question (Loewenstein 1996, Mischel & Shoda 1995 are under ingestion 2026-04-27). If those sources contradict the substitution, this decision is on the table for revision. See `docs/DECISIONS.md` 2026-04-27.
 
 **Derived rule:** *Pick flow must stay at 2 inputs max. Any new variable (genre, platform, mood sub-filter) must displace an existing one, not add to it.*
 
