@@ -157,14 +157,16 @@
 - Shows for visitors with empty library, redirects to app when library exists ✅
 - Design doc: `docs/landing-page-plan.md`
 
-### Custom Icon Set (ON HOLD — exploring alternatives)
-- DALL-E icons look great at large sizes but illegible below ~36px (too much illustrated detail)
-- **Current decision: emojis on production, icon experiments on `icon-preview` branch**
-- 20+ DALL-E assets in `public/icons/` on icon-preview branch (all mood + status + 2 reroll modes)
-- Preview branch has full wiring (CustomIcon component, iconMap, Reroll + page.tsx integration)
-- Exploring alternatives: Recraft.ai (icon-specific AI), SVG icon libraries (Phosphor/Lucide), Figma manual
-- See: `docs/IDEAS.md` → "Icon Generation Strategy" for full tool comparison
-- Still needed if pursuing custom icons: flat/bold silhouette style, 2-3 colors max, test at 16px before accepting
+### Custom Icon Set ✅ SHIPPED (2026-04-25 / 26)
+
+Pixel sprite system replacing emoji as primary brand iconography.
+- Wave 1 (2026-04-25): 42 personas, 13 mood pills, cleared trophy
+- Wave 2 (2026-04-26): 5 status pipeline, 3 tone badges, 6 skip-feedback
+- Pre-rendered SVGs in `public/sprites/`; runtime renderer at `components/PixelSprite.tsx`
+- Wave 2.1 parked: brightness adjustment on `statusUpNext` + `statusCompleted` greens — sent to designer
+- Emoji retained as fallback for low-frequency surfaces (energy pills, time tiers, platform circles, copy decoration)
+- See `docs/DECISIONS.md` 2026-04-26 entry "Pixel sprite system replaces emoji" for full rationale + rejected alternatives
+- DALL-E `icon-preview` branch superseded — safe to delete
 
 ### Enrichment Reliability Audit (MEDIUM)
 - Name normalization shipped ✅
@@ -239,7 +241,7 @@
 - Time-of-day awareness tuning
 
 ### Visual Identity Pass (MEDIUM)
-- Custom icon set replacing emojis (in progress — see Custom Icon Set above)
+- Custom icon set replacing emojis ✅ (see Custom Icon Set above)
 - Extend geometric element system beyond landing page into main app (reroll modal, stats, empty states)
 - Consider spot illustrations for key moments (import complete, first recommendation, completion)
 - One strong visual mark > 20 decorative elements — find the ONE thing
@@ -308,6 +310,7 @@
   - Post-celebration tab switch to Completed (Apr 12) ✅
 - Stats share cards: composable OG image for library stats, same architecture as clear cards ✅
   - `/pile/[id]` landing page with archetype, stats grid, value section, trophy case ✅
+  - `/pile/[id]/opengraph-image` redesigned 2026-04-26 as archetype reveal (persona sprite hero, stats grid removed) — see DECISIONS.md ✅
   - `/pile/[id]/opengraph-image` dynamic 1200x630 PNG via Satori ✅
   - StatsShareComposer with toggle checkboxes (archetype, value, trophies, hours, display name) ✅
   - Supabase `share_stats` table with public read RLS ✅

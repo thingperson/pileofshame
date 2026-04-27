@@ -15,6 +15,58 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-26 — Pixel sprite system replaces emoji as the primary brand iconography
+
+**Decision.** Inventory Full's user-facing chrome moves from emoji to a custom pixel-sprite system. Three sprite waves in two days fully cover archetypes, moods, status pipeline, tone badges, skip-feedback reasons, and the cleared-trophy celebration. Emoji stay for low-frequency surfaces (energy pills, time tiers, platform circles, copy-flavored decoration).
+
+**Why.**
+- Emoji set is inconsistent across platforms (Apple's renderings differ from Google's, etc.) — brand identity at the icon layer was leaking control.
+- Personas as emoji (one emoji per archetype) felt low-effort. The persona is supposed to be a personality moment.
+- Pixel sprites match the "indie, gaming-buddy, not taking itself too seriously" voice better than the Apple-illustration anime art (apr24 set) we'd briefly considered. The "jank" reads as deliberate retro-game charm, not unfinished — and matches the brand stance better than studio-quality illustration would.
+- Existing `PixelSprite` renderer + palette + sprite-string format was already scaffolded in the codebase; only the data was missing.
+
+**Implementation.**
+- Wave 1 (yesterday): 42 personas + 13 moods + 1 cleared trophy. Personas wired into `ArchetypeCard`. Mood pills swapped emoji for sprites. Cleared trophy on `CompletionCelebration` confirm screen.
+- Wave 2 (today): 5 status sprites (Backlog / Up Next / Playing Now / Completed / Moved On) + 3 tone badges (Roast / Respect / Reading) + 6 skip-feedback reasons. Wired into `TabNav`, `ArchetypeCard` tone badges, `Reroll` skip pills.
+- Pre-rendered SVGs land in `public/sprites/` for OG / share / external surfaces. Runtime renderer (`PixelSprite.tsx`) builds from sprite strings in `lib/pixel/data/`.
+- Wave 2.1 feedback parked: bright greens on `statusUpNext` and `statusCompleted` — sent to designer.
+
+**Rejected.**
+- **Apr24 anime illustrations.** Studio-Ghibli-tier art set expectations of a bigger, more expensive app than this is. Coverage was 23/36 — incomplete. Inconsistent style across the set. Brand mismatch.
+- **Wholesale theme-only deployment** (pixel sprites as opt-in theme). Defaults stay emoji, sprites only on a "pixel mode" theme. Cuts blast radius but doesn't capture the brand lift; emoji is the bigger problem.
+- **Hybrid (sprite only personas, leave moods + status as emoji).** Would still leave the chrome looking emoji-heavy. Brady opted for the full sweep.
+
+**Drift risk.** Brand consistency now depends on the palette in `lib/pixel/palette.ts` and the sprite strings staying in sync with the design bundle in `notes/`. If Claude Design ships v3 with new colors, the palette needs to grow — there's no automated check. Wave-2.1 brightness fix will exercise the update path.
+
+---
+
+## 2026-04-26 — Stats share card cut from a stat dashboard to an archetype reveal
+
+**Decision.** The stats share card (`app/pile/[id]/opengraph-image.tsx`) no longer renders a flex-wrap row of toggled stat highlights. The card is now a personality archetype reveal: pixel persona sprite (360×360) as the visual hero, archetype name + descriptor + flavor text as the message, inline brand wordmark + "get playing." tagline as the bottom signature. The composer's stat-toggle UI still works and still writes the data; the OG just stops rendering it.
+
+**Why.**
+- The chip row was unreadable in feed thumbnails. Label text at 13px renders as ~6px in a Twitter-card preview — the customization the user did was invisible to the audience.
+- The persona pixel sprite (shipped in wave 1) was the strongest brand asset we had and wasn't on the share surface. Using it makes the card emotionally legible at a glance.
+- Density grew linearly with toggles — the more the user customized, the worse it looked. Inverse of what we want.
+- "Either fix it or cut sharing" was the framing. Option C (use sprite, drop stats) preserves virality without doubling down on a layout that wasn't working.
+
+**Implementation.**
+- `app/pile/[id]/opengraph-image.tsx` — full rewrite, runtime switched edge → nodejs (needed `fs.readFile` for the persona SVG).
+- `lib/archetypes.ts` — `SPRITE_KEY_BY_TITLE` exported for the OG renderer's lookup.
+- Wordmark inlined as raw SVG paths (same pattern as the clear card), pink "get playing." rendered separately as text below.
+- `StatsCard` interface kept intact for type safety with the composer + API route — only the render layer dropped the unused fields.
+
+**Rejected.**
+- **Option A: redesign with bigger numbers + 2×2 stat grid.** Real work, no proof yet that stat-sharing drives anything. Solo builder, 2 weeks to launch — wrong time to iterate on share-card variants.
+- **Option B: drop stats sharing entirely.** Throws away virality lever for the personality reveal alongside the dashboard. The personality reveal is the part worth keeping.
+- **Keep both with mode toggle.** Two designs to maintain, two layouts to debug, no signal yet to justify the surface area.
+
+**Drift risk.** The composer (`StatsShareComposer.tsx`) still UI-toggles which stats to include, but the OG ignores them. If a future engineer sees the toggles and assumes they render somewhere, that's a confusion vector. Acceptable trade for now since it preserves the option to bring stats back later (Option A) without re-plumbing the API.
+
+**Italic font note.** next/og's satori needs an explicit italic font face for `fontStyle: 'italic'` to render. Outfit doesn't ship italic on gstatic, so the regular Outfit ttf is currently registered as the italic style — flavor text reads upright. Drop in a serif italic (PT Serif, etc.) when polish budget allows.
+
+---
+
 ## 2026-04-25 — Landing trimmed to hero-only; /about becomes the canonical product narrative
 
 **Decision.** The landing page (`/`) is now a fast decision funnel: hero + CTAs + footer, nothing else. The marketing narrative (How it works / Not another tracker / pull quote / "3 ways to pick") was deleted from `components/LandingPage.tsx` and lives only on `app/about/page.tsx`, which is now the canonical "what is this product" page.
