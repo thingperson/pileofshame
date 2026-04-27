@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { Game } from '@/lib/types';
 import { getAllMatchingArchetypes, getThemeUsage } from '@/lib/archetypes';
 import { useStore } from '@/lib/store';
 import { useToast } from './Toast';
-import { trackStatsExpand } from '@/lib/analytics';
+import { trackStatsExpand, trackArchetypeRerolled } from '@/lib/analytics';
 import {
   loadCache, saveCache, getCacheKey,
   getCurrentStreak, getOldestBacklogGame,
@@ -128,6 +129,7 @@ function DecisionEngineSection({ showToast }: { showToast: (msg: string) => void
 // --- Main Component ---
 
 export default function StatsPanel({ games }: StatsPanelProps) {
+  const router = useRouter();
   const [expanded, setExpanded] = useState(true);
   const [calculating, setCalculating] = useState(false);
   const [calculated, setCalculated] = useState(false);
@@ -346,6 +348,7 @@ export default function StatsPanel({ games }: StatsPanelProps) {
 
   const handleRerollArchetype = useCallback(() => {
     if (archetypes.length <= 1) return;
+    trackArchetypeRerolled();
     setArchetypeIndex((i) => (i + 1) % archetypes.length);
   }, [archetypes.length]);
 
@@ -536,6 +539,18 @@ export default function StatsPanel({ games }: StatsPanelProps) {
 
           {/* Decision Engine Stats */}
           <DecisionEngineSection showToast={showToast} />
+
+          {/* Stats is a mirror, not a destination. Release the user back
+              to the picker so the page has somewhere to go. */}
+          <div className="mt-8 flex justify-center">
+            <button
+              onClick={() => router.push('/?openPicker=1')}
+              className="px-6 py-3 rounded-xl text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98]"
+              style={{ backgroundColor: 'var(--color-accent-purple)', color: '#0a0a0f' }}
+            >
+              🎲 Pick something to play
+            </button>
+          </div>
         </div>
       )}
     </div>

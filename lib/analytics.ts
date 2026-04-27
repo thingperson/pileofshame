@@ -81,3 +81,8 @@ export const trackPickerOpened = (entry: string) => gtag('picker_opened', { entr
 export const trackTabClicked = (tab: string) => gtag('tab_clicked', { tab });
 export const trackGameLaunchedExternally = (platform: string) =>
   gtag('game_launched_externally', { platform });
+
+// Archetype reroll — distinguishes character-novelty (1–3/session) from
+// sticky engagement (10+). If reroll volume reads sticky we have an
+// engagement loop competing with "go play" on a stats page.
+export const trackArchetypeRerolled = () => gtag('archetype_rerolled');

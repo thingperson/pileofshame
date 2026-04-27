@@ -424,11 +424,22 @@ function AppContent() {
 
     // Auth callback lands on /?auth=ok — fire GA4 signup_completed once,
     // then strip the flag so a reload doesn't re-fire it.
+    // Stats page CTA lands on /?openPicker=1 — open the picker, then
+    // strip the flag so reload doesn't re-open it.
     try {
       const params = new URLSearchParams(window.location.search);
+      let mutated = false;
       if (params.get('auth') === 'ok') {
         trackSignupCompleted();
         params.delete('auth');
+        mutated = true;
+      }
+      if (params.get('openPicker') === '1') {
+        openReroll();
+        params.delete('openPicker');
+        mutated = true;
+      }
+      if (mutated) {
         const newSearch = params.toString();
         const newUrl = window.location.pathname + (newSearch ? `?${newSearch}` : '') + window.location.hash;
         window.history.replaceState({}, '', newUrl);

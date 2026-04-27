@@ -89,7 +89,7 @@ export default function ValueCalculator({
           }}
         >
           <div className="text-xs text-text-muted font-[family-name:var(--font-mono)] mb-1">
-            💎 Waiting to be reclaimed
+            💎 Fun ready to be won back
           </div>
           <div
             className="text-3xl sm:text-4xl font-bold font-[family-name:var(--font-mono)] tracking-tight"
