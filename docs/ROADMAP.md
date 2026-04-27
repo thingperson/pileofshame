@@ -373,6 +373,40 @@ Pixel sprite system replacing emoji as primary brand iconography.
 - Steam Deck compatibility indicators
 - Achievement hunting mode
 
+### Post-psychology-redteam follow-ups (logged 2026-04-27)
+
+Captured from the round-1 + round-2 psychology audit (`docs/psychology-redteam-2026-04-27.md`). Picker rebaseline already shipped. Items below are real but deliberately deferred so the picker work stays surgical.
+
+**Native channel launch buttons (research complete).** Steam shipped. Outstanding:
+- Xbox Cloud Gaming launch buttons via `xbox.com/play/games/<slug>/<productId>`. Engineering blocker: OpenXBL gives `titleId`, we need Microsoft Store `productId`. Spin a subagent to research a one-time bulk resolver or per-game lookup. Mobile-friendly (browser-native cloud play, no app required).
+- Epic / Battle.net / Ubisoft deep links via `com.epicgames.launcher://` / `battlenet://` / `uplay://`. ID acquisition is the friction. Investigate whether community-maintained lookups (BoilR, NonSteamLaunchers data) are usable as a static bundled map.
+- Confirmed dead: PlayStation remote launch (no public URL scheme), EA App (no URL scheme — confirmed by their own forum), Steam friend chat bot (no API, ToS violation).
+- Steam Deck Decky Loader plugin: post-launch, after Deck cohort signal. Don't burn time on automated PWA-to-library install (manual path only).
+
+**Stats page reframes (round 2 finding).**
+- Reframe Value Calculator language from debt/guilt ("$4,200 unplayed") to opportunity ("$4,200 of fun ready to be won back"). Same data, opposite psychological frame.
+- Add a `Pick something` CTA to the stats page so users have an exit back to the picker. Currently stats is sticky — no clear path forward.
+- Instrument the rerollable archetype on the stats page so we can see whether reroll volume reads like character expression (1–3 per session) or sticky engagement (10+). Keep the feature; let the data adjudicate.
+
+**Share composer restructure (round 2 finding).**
+- Move the share-card composer in `CompletionCelebration.tsx` (lines 223–491) from opt-out (always visible during the celebration) to opt-in (a button that opens the composer if the user wants). The current placement converts a "ready for the next game" moment into a "post on social" moment.
+
+**OG share-hierarchy decision (round 2 finding).**
+- Pile/[id] (archetype reveal) and Clear/[id] (game cleared) OG cards both ship. Both are valid moments — Brady's call. Worth instrumenting share volume per type so we know which moment users actually want to share.
+
+**Instrumentation gap (round 1 finding, highest leverage).**
+- The Apr 9 instrumentation plan needs to ship before launch if we want to know whether returning users use the picker or default to TabNav-browsing. Specific events: `session_start`, `picker_opened`, `tab_clicked` (with tab name), `pick_delivered`, `pick_accepted`, `pick_rerolled`, `game_launched_externally` (proxy via `steam://` click).
+
+**Picker rebaseline carry-overs.**
+- Watch telemetry on the new `⚙ Change roll settings` affordance. If it gets tapped immediately on every pick, the strip-and-collapse design failed.
+- Backfill `moodTags` for games imported before the mood-tag enrichment pass — otherwise the new mood-based descriptor pool falls through to genre/score for older games.
+
+**Celebration overlay imagery (post-launch polish).**
+- Brady's idea: add platform-aware imagery to the post-accept celebration. Hand reaching for controller, PS5 powering on, Xbox green-glow boot, Switch waking from sleep. Styled like the hero image so the brand language stays coherent. Optional per-platform variants (DualSense / Xbox controller / Joy-Con).
+- Source: ask Stitch or Claude Design for a small set in the existing hero illustration style.
+- Slot: above or beside the "Decision made." headline in the post-accept overlay, replacing or supplementing the current text-only platform line ("Fire up the PlayStation.").
+- Constraint: imagery shouldn't slow the celebration moment — keep file size tight, lazy-load if needed. The job is reinforcement, not eye candy.
+
 ---
 
 ## REVIEWS & AUDITS

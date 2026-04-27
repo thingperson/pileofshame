@@ -15,6 +15,45 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-27 — Picker rebaseline + "Let's go" closes the loop
+
+**Decision.** First wave of post-psychology-redteam interventions ships in one pass, all targeting the picker flow. Five user-visible changes:
+
+1. **Pre-roll header drops the subhead.** Was: `🎲 What Should I Play?` + *"Tell us your session, pick a vibe, roll"*. Now: `🎲 What Should I Play?` only. The picker should explain itself; the subhead taxed cognitive load before the user had decided anything.
+2. **Energy collapsed to a drawer in the pre-roll.** Default visible state is now header + 2 CTA buttons + 3 collapsed drawers (Energy / More ways / Vibes). Honors the locked 2-input rule at the default state. Energy still selectable, just not in the way.
+3. **Post-pick screen strips controls.** The mode/mood/energy pill rows that floated above the picked game are gone from default view, hidden behind a `⚙ Change roll settings` affordance. The pick is now the star of the screen, not the picker.
+4. **Stat row drops Metacritic. Why-This-One collapsed by default + dedupes the "Beatable in" pill** with the time already shown in the stat row. Reasoning per Brady: a Metacritic number nudges users toward other people's opinions instead of trusting our pick. We say "we have reason to believe you'll like this," not "here's how it scored."
+5. **`Not now` button retired.** The two answers from the picked screen are now `Roll Again` or `Let's go`. The modal × already serves the exit. "Not now" was a third undecided answer in a place that should be binary.
+
+**Plus the broken-promise fix.** `Let's go` now does three things atomically: sets the game's status to Playing Now, fires `steam://rungameid/<appid>` if the game is on Steam (canonical protocol — handles install-if-needed, supports non-Steam shortcuts), and navigates the user to the Playing Now tab via a new `onCommit` prop wired through `app/page.tsx`. The previous behavior — 3-second auto-dismiss inside the modal, then drop the user on the Backlog tab where the game just left — was the literal definition of breaking the loop the app promises.
+
+**Plus the celebration redesign.** Post-accept overlay rewritten with stronger framing: *"Decision made. The hard part's behind you. Get the controller in your hands. Enjoying is the only next step."* Platform-aware encouragement line for non-Steam games (PSN / Xbox / Switch / Epic / GOG / other). Auto-dismiss removed; explicit `Going to play` button is the exit. The job here is to release the user from the app, not loop them back in.
+
+**Plus the descriptor priority overhaul.** `getGameDescriptor` priority reordered: `curated → mood-based → genre fallback → metacritic-scored → edition-nudge`. Rationale: lines that describe what the game *feels like* land harder than lines that describe how critics rated it. New `MOOD_FLAVORS` pool (5 lines per mood across 10 moods = 50 unique flavors) covers non-curated games that have mood tags. The Metacritic-driven score lines (which produced the "A game with flaws and fans. Give it an hour." flavor Brady flagged as too generic) move to last-resort.
+
+**Plus copy fixes.**
+- Empty-state copy now plural-aware. *"No games match those moods. Clear them and roll again."* when filters > 1, *"...that mood. Clear it..."* when filters === 1.
+- `Just 5 Min` button renamed `5-min tryout` everywhere (button, header, tooltip, suggest copy). Tooltip now anchors the *why* in research-grounded phrasing: *"Five minutes is enough to feel a game. Not enough to second-guess yourself."*
+- AuthButton's `Continue without syncing` exit is now unconditional — was hidden for users with no local games (a fresh-device gotcha that left new users with no graceful exit).
+- Steam launch button on `GameCard.tsx` upgraded from `steam://run/` to `steam://rungameid/`.
+
+**Why all in one pass.** These changes together form the audit's #1 intervention: rebaseline the picker against its own locked rules and close the loop the app promises. Splitting them into separate commits would mean shipping a partial fix to a broken loop. Treating it as one coherent rebaseline is the honest move.
+
+**Rejected (alternative paths considered).**
+- **Per-platform launch buttons (Xbox Cloud, Epic, Battle.net, Ubisoft) in this same pass.** Deferred. The native-channel research surfaced real opportunities, but each requires an ID-resolver subagent (OpenXBL titleId → Microsoft Store productId for Xbox; community-maintained lookups for Epic / Battle.net / Ubisoft). Steam alone covers the largest cohort; the others are a follow-up sprint with focused scope. EA confirmed dead per their own forum — not pursuing.
+- **Removing the score-based descriptor pool entirely.** Rejected. With curated + mood + genre fallbacks now ahead of it, score-based fires only when no other path exists, which is rare. Keeping it as a true last-resort is fine.
+- **Killing the post-accept overlay and going straight to Playing Now tab.** Rejected. The celebration beat — *"decision made, hard part behind you"* — does meaningful work. Stripping it would technically reduce time-in-app by another second, but the psychological release matters: the user came in carrying the decision weight, and we want to verbally hand it back. Compressing past the celebration sells the moment short.
+
+**Rotting risks to watch.**
+- The `⚙ Change roll settings` affordance assumes the user reads the pick before reaching for controls. If telemetry shows users tap that affordance immediately on every pick, the strip-and-collapse design failed and we put the controls back in the wrong place.
+- The new mood-based descriptor pool depends on `moodTags` being populated. Games imported before the mood-tag enrichment pass won't have them; they'll fall through to genre or score. Worth a backfill check if the variety still feels weak post-launch.
+
+**Round 2 audit findings deferred to ROADMAP** (not this session): share composer opt-in restructure, stats-page reframes (value-calc as opportunity language, "go pick" CTA, archetype-reroll instrumentation), pile-vs-clear OG share-hierarchy review.
+
+**Native-channel research findings deferred to ROADMAP**: Xbox Cloud launch buttons, Epic / Battle.net / Ubisoft deep links (with ID-resolver scope), Steam Deck Decky Loader plugin (post-launch).
+
+---
+
 ## 2026-04-26 — Mission statement locked: "Enjoy your games again"
 
 **Decision.** Inventory Full's internal mission statement is **"Enjoy your games again."** Not user-facing yet — this is the north star that informs every product, design, copy, and distribution decision going forward. Captured in `.claude/rules/brand-messaging.md` as a new "North Star — Mission Statement" section above the existing brand description.
