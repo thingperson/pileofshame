@@ -72,3 +72,12 @@ export const trackFirstCompletion = () => fireOnce('if-ga-first-completion', () 
 // Share + auth conversion
 export const trackShareCardCreated = (game: string) => gtag('share_card_created', { game_name: game });
 export const trackSignupCompleted = () => gtag('signup_completed');
+
+// ── Round-1 redteam diagnostic events (2026-04-27) ─────────────────────
+// Answer: do returning users actually use the picker, or default to
+// browsing tabs? Without these we cannot adjudicate any other audit
+// finding from data. Anonymous, no game/user IDs, GA4-clean.
+export const trackPickerOpened = (entry: string) => gtag('picker_opened', { entry });
+export const trackTabClicked = (tab: string) => gtag('tab_clicked', { tab });
+export const trackGameLaunchedExternally = (platform: string) =>
+  gtag('game_launched_externally', { platform });

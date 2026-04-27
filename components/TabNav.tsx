@@ -3,6 +3,7 @@
 import { useCallback, useRef } from 'react';
 import { GameStatus } from '@/lib/types';
 import { hasSprite } from '@/lib/pixel/sprites';
+import { trackTabClicked } from '@/lib/analytics';
 import PixelSprite from './PixelSprite';
 
 export type TabId = 'backlog' | 'up-next' | 'now-playing' | 'completed';
@@ -35,6 +36,11 @@ interface TabNavProps {
 export default function TabNav({ activeTab, onTabChange, counts, flashingTab }: TabNavProps) {
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
+  const handleTabChange = useCallback((id: TabId) => {
+    trackTabClicked(id);
+    onTabChange(id);
+  }, [onTabChange]);
+
   const handleKeyDown = useCallback((e: React.KeyboardEvent, index: number) => {
     let newIndex = index;
 
@@ -54,9 +60,9 @@ export default function TabNav({ activeTab, onTabChange, counts, flashingTab }: 
       return;
     }
 
-    onTabChange(TABS[newIndex].id);
+    handleTabChange(TABS[newIndex].id);
     tabRefs.current[newIndex]?.focus();
-  }, [onTabChange]);
+  }, [handleTabChange]);
 
   return (
     <div
@@ -75,7 +81,7 @@ export default function TabNav({ activeTab, onTabChange, counts, flashingTab }: 
             role="tab"
             aria-selected={active}
             tabIndex={active ? 0 : -1}
-            onClick={() => onTabChange(tab.id)}
+            onClick={() => handleTabChange(tab.id)}
             onKeyDown={(e) => handleKeyDown(e, index)}
             className={`shrink-0 flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-t-lg sm:rounded-lg text-sm font-medium transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple relative sm:static -mb-px sm:mb-0 ${
               active

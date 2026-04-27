@@ -11,7 +11,7 @@ import { getGameDescriptor } from '@/lib/descriptors';
 import { REROLL_MODES, RerollMode, EnergyLevel, getDefaultEnergy, getEligibleGames, pickWeighted, pickSmartResume, getPickReasons } from '@/lib/reroll';
 import { SMART_PICK_LABELS, renderSmartPickHeadline, SmartPickType } from '@/lib/smartPickCopy';
 import { useToast } from './Toast';
-import { trackReroll, trackRerollCommit, trackFirstRoll, trackFirstCommit, trackSampleCompleted } from '@/lib/analytics';
+import { trackReroll, trackRerollCommit, trackFirstRoll, trackFirstCommit, trackSampleCompleted, trackPickerOpened, trackGameLaunchedExternally } from '@/lib/analytics';
 import { recordSkip } from '@/lib/skipTracking';
 import { recordSkipReason, SkipReasonKey } from '@/lib/skipReasons';
 import { recordDecision } from '@/lib/decisionHistory';
@@ -268,11 +268,18 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
   // Dismiss handler for the post-accept celebration. Closes the modal,
   // resets reroll state, and tells the parent to navigate to Playing Now.
   const handlePostAcceptDismiss = useCallback(() => {
+    // For non-Steam platforms there's no real launch URL to click — the
+    // dismiss button is the user declaring intent to play. Treat it as the
+    // launch signal for those sources. Steam fires its own event from the
+    // launch link itself, so don't double-count.
+    if (postAccept && postAccept.source !== 'steam') {
+      trackGameLaunchedExternally(postAccept.source);
+    }
     setPostAccept(null);
     resetReroll();
     onCommit?.();
     onClose();
-  }, [resetReroll, onCommit, onClose]);
+  }, [resetReroll, onCommit, onClose, postAccept]);
 
   const handleNotNow = useCallback(() => {
     // If the user is dismissing while the post-accept celebration is showing,
@@ -353,6 +360,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
         setMode('anything');
         setSkipModePicker(false);
       }
+      trackPickerOpened(initialMode || 'anything');
     }
   }, [open, initialMode]);
 
@@ -991,6 +999,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                 {postAccept.steamAppId && (
                   <a
                     href={`steam://rungameid/${postAccept.steamAppId}`}
+                    onClick={() => trackGameLaunchedExternally('steam')}
                     className="inline-block w-full px-5 py-3 text-sm font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] mb-3"
                     style={{ backgroundColor: 'var(--color-accent-purple)', color: '#0a0a0f' }}
                   >
