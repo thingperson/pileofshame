@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/useAuth';
-import { useStore } from '@/lib/store';
 
 /** Detect if running as installed PWA (Add to Home Screen) */
 function useIsPWA() {
@@ -25,7 +24,6 @@ export default function AuthButton() {
   const [emailError, setEmailError] = useState('');
   const [wantsUpdates, setWantsUpdates] = useState(false);
   const isPWA = useIsPWA();
-  const hasLocalGames = useStore((s) => s.games.length > 0);
 
   if (loading) {
     return (
@@ -161,17 +159,18 @@ export default function AuthButton() {
                   </span>
                 </label>
 
-                {hasLocalGames && (
-                  <>
-                    <div className="h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
-                    <button
-                      onClick={() => setShowSignIn(false)}
-                      className="w-full text-xs text-text-faint hover:text-text-muted transition-colors text-center"
-                    >
-                      Continue without syncing
-                    </button>
-                  </>
-                )}
+                {/* Continue-without-syncing exit is always visible. The
+                    earlier `hasLocalGames` gate hid it for new users on a
+                    fresh device, leaving them with no graceful way out of
+                    the auth panel. Sign-in is optional everywhere; the exit
+                    needs to match. */}
+                <div className="h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+                <button
+                  onClick={() => setShowSignIn(false)}
+                  className="w-full text-xs text-text-faint hover:text-text-muted transition-colors text-center"
+                >
+                  Continue without syncing
+                </button>
               </>
             )}
 
