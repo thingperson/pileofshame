@@ -580,7 +580,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
 
                 {/* Descriptor */}
                 {(() => {
-                  const desc = getGameDescriptor(currentPick.name, currentPick.metacritic, currentPick.genres);
+                  const desc = getGameDescriptor(currentPick.name, currentPick.metacritic, currentPick.genres, currentPick.moodTags);
                   return desc ? (
                     <p
                       className="text-sm mt-3 leading-relaxed italic"

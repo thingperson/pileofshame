@@ -1,15 +1,24 @@
 /**
  * Game Descriptors — opinionated one-liner recommendations
  *
- * Priority:
+ * Priority (revised 2026-04-27):
  * 1. Curated descriptor (hand-written for well-known games)
- * 2. Metacritic-based personality descriptor
- * 3. Genre-aware fallback
+ * 2. Mood-based descriptor (uses moodTags — describes the *experience*)
+ * 3. Genre-aware fallback (genre vibe when no mood)
+ * 4. Metacritic-based descriptor (last resort — describes reception, not game)
+ *
+ * Why this order: the picker's job is to convince the user this game is worth
+ * their next 20 minutes. Lines that describe what the game *feels like* land
+ * harder than lines that describe how critics rated it. A user with 200 games
+ * has already absorbed Metacritic's opinion; what they don't have is a sense
+ * of what THIS game would feel like for THEM tonight.
  */
+
+import type { MoodTag } from '@/lib/types';
 
 export interface GameDescriptor {
   line: string;
-  confidence: 'curated' | 'scored' | 'generic';
+  confidence: 'curated' | 'mood' | 'genre' | 'scored';
 }
 
 // --- Curated descriptors for well-known games ---
@@ -185,6 +194,96 @@ const CURATED: Record<string, string> = {
   'sonic mania plus': 'The definitive version of the definitive Sonic game.',
   'the gardens between': 'A short puzzle game about friendship and memory. Beautiful and bittersweet.',
 };
+
+// --- Mood-based descriptors ---
+// Each line describes the *experience* of playing in this mood, so a non-curated
+// game still gets a flavor that hints at what it feels like rather than how it
+// scored. 4–5 lines per mood gives variety across libraries; the same game gets
+// the same line on rerolls (deterministic hash by name) so the pick reads stable.
+
+const MOOD_FLAVORS: Record<MoodTag, string[]> = {
+  'chill': [
+    'Easy on the brain. No stress, no rush.',
+    'Cozy vibes. The kind of game that rewards going slow.',
+    'Built for low-stakes evenings. Pour something warm.',
+    'A quiet game. Lets you breathe between moves.',
+    'Soft edges, gentle pace. Recovery food for the mind.',
+  ],
+  'intense': [
+    'High-octane. Bring your reflexes.',
+    'Adrenaline-forward. Loud, fast, deliberate.',
+    'Asks for your full attention. Earns every second of it.',
+    'Aggressive energy. Built to grip and not let go.',
+    'Demanding in the way you want when you want demanding.',
+  ],
+  'story-rich': [
+    'A story you sit inside. Characters that earn their hours.',
+    'Heavy on plot. Light on filler.',
+    'The kind of game you remember the ending of years later.',
+    'Narrative-driven. Bring patience and curiosity.',
+    'The writing carries it. Worth slowing down for.',
+  ],
+  'brainless': [
+    'Pure muscle memory. Don\'t think — play.',
+    'Switch-off-and-go. The brain gets a break.',
+    'Background-podcast tier. Minimal cognitive load.',
+    'A game for tired hands and quiet minds.',
+    'No pressure to think hard. That\'s the appeal.',
+  ],
+  'atmospheric': [
+    'Vibe forward. The world is the point.',
+    'Sound, light, mood. A place more than a game.',
+    'A walking-around-a-feeling kind of game.',
+    'Atmospheric to the bone. Headphones recommended.',
+    'The texture is the experience. Let it wash over you.',
+  ],
+  'competitive': [
+    'Built for the deep end. Bring your A-game.',
+    'A skill-tester. The ladder rewards repetition.',
+    'Aggressive PvP energy. Win, lose, learn.',
+    'Either you\'re sweating or you\'re losing. Possibly both.',
+    'The kind of game where the loop is the whole point.',
+  ],
+  'spooky': [
+    'Dark and pulse-quickening. Lights low, headphones on.',
+    'Horror, but the kind that earns its scares.',
+    'Tense. Uncomfortable in the right way.',
+    'Built to make you flinch. Worth it.',
+    'Atmospheric dread. Don\'t play it tired.',
+  ],
+  'creative': [
+    'A sandbox. No goals, no clock — just play.',
+    'Make something. The game stays out of your way.',
+    'Open-ended. The expression IS the gameplay.',
+    'Tools-first design. Bring an idea.',
+    'A blank canvas with mechanics. Yours to fill.',
+  ],
+  'strategic': [
+    'Thinking the game. That\'s the game.',
+    'Long-form decisions. Rewards patience.',
+    'A puzzle you keep re-solving. In a good way.',
+    'Slow and deliberate. Bring coffee.',
+    'The kind of game where one good move feels earned.',
+  ],
+  'emotional': [
+    'Will hit you somewhere quiet.',
+    'Built to land emotionally. Set aside time.',
+    'A game that earns its tears. No shortcuts.',
+    'Stays with you. Pick a steady evening for it.',
+    'Heavy in the right way. Not for a tired night.',
+  ],
+};
+
+function getMoodFallback(moodTags: MoodTag[], gameName: string): string | null {
+  if (!moodTags || moodTags.length === 0) return null;
+  // Use the first mood as the primary; the others are absorbed into the
+  // "atmospheric and story-rich"-style framing the user's already seeing
+  // in the stat row pills above the descriptor.
+  const primary = moodTags[0];
+  const pool = MOOD_FLAVORS[primary];
+  if (!pool || pool.length === 0) return null;
+  return pickFromPool(pool, gameName.toLowerCase());
+}
 
 // --- Metacritic-based descriptors ---
 
@@ -563,6 +662,7 @@ export function getGameDescriptor(
   name: string,
   metacritic?: number | null,
   genres?: string[],
+  moodTags?: MoodTag[],
 ): GameDescriptor | null {
   // 1. Check curated list
   const key = name.trim().toLowerCase();
@@ -587,33 +687,36 @@ export function getGameDescriptor(
     }
   }
 
-  // 2. Check for edition nudge as primary descriptor
+  // 2. Mood-based descriptor (the user's first signal of "what's this game LIKE")
+  if (moodTags && moodTags.length > 0) {
+    const moodLine = getMoodFallback(moodTags, name);
+    if (moodLine) return { line: moodLine, confidence: 'mood' };
+  }
+
+  // 3. Genre-aware fallback
+  if (genres && genres.length > 0) {
+    const fallback = getGenreFallback(genres, name);
+    if (fallback) return { line: fallback, confidence: 'genre' };
+  }
+
+  // 4. Edition nudge as primary descriptor (e.g., "Definitive Edition" quips)
   const editionNudge = getEditionNudge(name);
 
-  // 3. Use metacritic score
+  // 5. Metacritic score — last resort. Describes reception, not the game itself.
   if (metacritic && metacritic > 0) {
     for (const tier of SCORE_DESCRIPTORS) {
       if (metacritic >= tier.range[0] && metacritic <= tier.range[1]) {
         const hash = key.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
         const scoreLine = tier.descriptors[hash % tier.descriptors.length];
-        // Combine score descriptor with edition nudge
         const line = editionNudge ? `${scoreLine} ${editionNudge}` : scoreLine;
         return { line, confidence: 'scored' };
       }
     }
   }
 
-  // 4. Edition nudge on its own
+  // 6. Edition nudge on its own
   if (editionNudge) {
     return { line: editionNudge, confidence: 'scored' };
-  }
-
-  // 5. Genre fallback
-  if (genres && genres.length > 0) {
-    const fallback = getGenreFallback(genres, name);
-    if (fallback) {
-      return { line: fallback, confidence: 'generic' };
-    }
   }
 
   return null;
