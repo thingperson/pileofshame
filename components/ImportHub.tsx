@@ -19,6 +19,7 @@ const PLATFORMS = [
     icon: '🟦',
     desc: 'Import via Steam username or profile URL',
     available: true,
+    recommended: true,
   },
   {
     id: 'steam-wishlist',
@@ -49,26 +50,26 @@ const PLATFORMS = [
     desc: 'Import via PSN login token. Takes 30 seconds',
     available: true,
   },
+] as const;
+
+const MANUAL_PLATFORMS = [
   {
     id: 'epic',
     name: 'Epic Games',
     icon: '⬛',
     desc: 'No public API. Use Playnite to export your Epic library',
-    available: false,
   },
   {
     id: 'gog',
     name: 'GOG',
     icon: '🟪',
     desc: 'No public API. Use Playnite to export your GOG library',
-    available: false,
   },
   {
     id: 'switch',
     name: 'Nintendo Switch',
     icon: '🟥',
     desc: 'No API exists. Add games manually',
-    available: false,
   },
 ] as const;
 
@@ -109,45 +110,62 @@ export default function ImportHub({ open, onClose }: ImportHubProps) {
       >
         <h2 className="text-lg font-bold text-text-primary">Import Games</h2>
         <p className="text-sm text-text-muted">
-          Connect a platform or upload an export file.
+          Pick your platform. Steam takes about 20 seconds.
         </p>
 
         <div className="space-y-2">
           {PLATFORMS.map((platform) => (
             <button
               key={platform.id}
-              onClick={() => {
-                if (platform.available) {
-                  setActiveImport(platform.id);
-                }
-              }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-colors ${
-                platform.available
-                  ? 'hover:bg-white/5 cursor-pointer'
-                  : 'opacity-50 cursor-default'
-              }`}
+              onClick={() => setActiveImport(platform.id)}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-colors hover:bg-white/5 cursor-pointer"
               style={{ backgroundColor: 'var(--color-bg-card)' }}
             >
               <span className="text-xl shrink-0">{platform.icon}</span>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-text-primary">
                   {platform.name}
-                  {!platform.available && (
-                    <span className="ml-2 text-xs text-text-faint font-[family-name:var(--font-mono)]">
-                      MANUAL
+                  {'recommended' in platform && platform.recommended && (
+                    <span className="ml-2 text-[10px] uppercase tracking-wide text-accent-purple font-[family-name:var(--font-mono)]">
+                      Most start here
                     </span>
                   )}
                 </p>
                 <p className="text-xs text-text-dim">{platform.desc}</p>
               </div>
-              {platform.available && (
-                <svg className="w-4 h-4 text-text-dim shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              )}
+              <svg className="w-4 h-4 text-text-dim shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
             </button>
           ))}
         </div>
+
+        <details className="group">
+          <summary className="text-xs text-text-dim hover:text-text-muted cursor-pointer list-none flex items-center gap-1 py-2">
+            <span>Don't see your platform?</span>
+            <span className="transition-transform group-open:rotate-90">→</span>
+          </summary>
+          <div className="space-y-2 pt-2">
+            {MANUAL_PLATFORMS.map((platform) => (
+              <div
+                key={platform.id}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl opacity-60"
+                style={{ backgroundColor: 'var(--color-bg-card)' }}
+              >
+                <span className="text-xl shrink-0">{platform.icon}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-text-primary">
+                    {platform.name}
+                    <span className="ml-2 text-xs text-text-faint font-[family-name:var(--font-mono)]">
+                      MANUAL
+                    </span>
+                  </p>
+                  <p className="text-xs text-text-dim">{platform.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </details>
 
         <button
           onClick={onClose}

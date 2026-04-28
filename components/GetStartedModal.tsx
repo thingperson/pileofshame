@@ -73,7 +73,7 @@ export default function GetStartedModal({ open, onClose }: GetStartedModalProps)
           <div className="text-center">
             <h2 className="text-lg font-bold text-text-primary">Sign in to sync</h2>
             <p className="text-xs text-text-muted mt-1">
-              Keep your library across devices. Free forever.
+              Keep your library across devices.
             </p>
           </div>
 

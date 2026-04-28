@@ -3,8 +3,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Game } from '@/lib/types';
 import { useStore } from '@/lib/store';
-import { MAX_PLAYING_NOW } from '@/lib/constants';
-import { useToast } from './Toast';
 
 /**
  * "Did you finish this?" Nudge — surfaces one game per session that
@@ -82,8 +80,8 @@ function getFinishMessage(game: Game): { question: string; subtext: string } {
 
   if (pct >= 130) {
     return {
-      question: `You've got ${hours} hours in this. Most people finish in ${game.hltbMain}h.`,
-      subtext: 'Did you actually get through it? That would be worth celebrating.',
+      question: `${hours} hours deep on this one. Did you finish?`,
+      subtext: 'That would be worth celebrating.',
     };
   }
   if (pct >= 100) {
@@ -109,7 +107,6 @@ export default function FinishCheckNudge({ games, onTabSwitch }: FinishCheckNudg
   const [expanded, setExpanded] = useState(false);
   const { showCelebration } = useStore();
   const updateGame = useStore((s) => s.updateGame);
-  const { showToast } = useToast();
 
   const candidates = useMemo(() => getFinishCandidates(games), [games]);
 
@@ -142,26 +139,6 @@ export default function FinishCheckNudge({ games, onTabSwitch }: FinishCheckNudg
     setSessionDismissed();
     setDismissed(true);
   }, [nudgeGame, updateGame, showCelebration, onTabSwitch]);
-
-  const handleNotYet = useCallback(() => {
-    if (!nudgeGame) return;
-    // Playing Now cap check
-    const { games } = useStore.getState();
-    const nowPlayingCount = games.filter((g) => g.status === 'playing').length;
-    if (nowPlayingCount >= MAX_PLAYING_NOW) {
-      showToast(`Playing Now is capped at ${MAX_PLAYING_NOW}. Finish or shelve something first.`);
-      return;
-    }
-    // Move to Playing Now to encourage finishing
-    updateGame(nudgeGame.id, {
-      status: 'playing',
-      updatedAt: new Date().toISOString(),
-    });
-    showToast(`${nudgeGame.name} → Playing Now. You're so close.`);
-    onTabSwitch?.('now-playing');
-    setSessionDismissed();
-    setDismissed(true);
-  }, [nudgeGame, updateGame, showToast, onTabSwitch]);
 
   if (dismissed || !nudgeGame) return null;
 
@@ -242,16 +219,6 @@ export default function FinishCheckNudge({ games, onTabSwitch }: FinishCheckNudg
               }}
             >
               🎉 Yes, I finished it
-            </button>
-            <button
-              onClick={handleNotYet}
-              className="flex-1 px-3 py-3 sm:py-2 rounded-lg text-sm font-semibold font-[family-name:var(--font-mono)] transition-all hover:brightness-110 active:scale-[0.97]"
-              style={{
-                backgroundColor: 'rgba(245, 158, 11, 0.15)',
-                color: '#fcd34d',
-              }}
-            >
-              ⏳ Not yet
             </button>
             <button
               onClick={handleDismiss}
