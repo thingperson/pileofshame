@@ -170,3 +170,13 @@ End-of-day 2026-04-27 PM PDT. Six commits this wave, all shipped to prod. Round-
 - `time → energy` substitution doc ✅ shipped this wave (then pivoted).
 
 **Don't drift.** Every implementation track this session traces back to a research finding or audit intervention. Maintain that bar — the launch sprint is not "ship more features," it's "ship what the audit + research said matters."
+
+---
+
+## Late-evening addition — `/regress-watch` skill (renamed + trimmed)
+
+Spun up after a `/insights` run as an experiment in autonomous visual regression. First version (`/visual-regression`) was over-scoped — 25 assertions, several duplicating `/theme-check`, `/mobile-best-practices`, `/pre-push-review`. Trimmed to 14 assertions covering only what those don't: named-bug regressions (`regress-*`), OG runtime split smoke checks, pixel-sprite render validation, and process patterns. Renamed to `/regress-watch` to clarify it's the bug-catalog skill, not a general visual checker.
+
+**Validate-in-real-use follow-up (next session):** run `/regress-watch` on the energy-rename and share-composer rebuild changes before commit. If it catches a regression Brady would have caught on review, it's earning its keep. If it stays silent or false-positives, trim further or absorb into `/pre-push-review` and delete the standalone skill.
+
+Commits: `497013f` (initial), `519cc76` (scroll-animation artifact rule), `*` (rename + trim).
