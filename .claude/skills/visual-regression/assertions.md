@@ -194,3 +194,8 @@ Contrast failures are blockers, not subjective. If a contrast assertion fails, s
 
 ### `process-describe-don't-summarize`
 On screenshot vision-checks, name the elements and their positions. "Looks aligned" is not enough. "Wordmark sits at x=120, header midline at x=128 — within ±2px tolerance, pass" is enough.
+
+### `process-trust-computed-style-on-mismatch`
+**Known artifact:** scroll-driven CSS animations (`animation-timeline: view()`, IntersectionObserver fade-ins, parent fade reveals) can render below-fold sections as washed-out / dimmed in `preview_screenshot` even when `getComputedStyle` reports `opacity: 1` and no filter/mix-blend-mode. The screenshot tool captures the JPEG mid-animation or before reveal triggers fire. Confirmed on `/about` 2026-04-27 — text read clean on real device, dim in screenshot.
+
+**Rule for future runs:** when `inspect`-based contrast on a section says pass and `vision` on the same section says fail, **trust the computed style and report as a screenshot artifact**, not a hard fail. Verify on real device only if both primitives flag the same issue, or if the section is above the fold and unlikely to be scroll-animated.
