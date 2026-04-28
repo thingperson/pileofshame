@@ -98,25 +98,27 @@ export function getEligibleGames(
   });
 }
 
-// ── Energy matching ───────────────────────────────────────────────
-// Replaces time-of-day weighting with explicit user energy selection.
-// Default energy is still derived from time-of-day, but users can override.
+// ── Session length matching ───────────────────────────────────────
+// Replaces time-of-day weighting with explicit user session-length selection.
+// Default is still derived from time-of-day, but users can override.
+// Renamed from "energy" 2026-04-28 — see docs/DECISIONS.md 2026-04-27 PM
+// entry for the research trail (time → energy → session length).
 
-export type EnergyLevel = 'low' | 'medium' | 'high';
+export type SessionLength = 'small' | 'medium' | 'large';
 
-export function getDefaultEnergy(): EnergyLevel {
+export function getDefaultSessionLength(): SessionLength {
   const hour = new Date().getHours();
-  if (hour >= 21 || hour < 6) return 'low';
-  if (hour >= 6 && hour < 11) return 'high';
+  if (hour >= 21 || hour < 6) return 'small';
+  if (hour >= 6 && hour < 11) return 'large';
   return 'medium';
 }
 
-function getEnergyWeight(game: Game, energy: EnergyLevel): number {
+function getSessionLengthWeight(game: Game, sessionLength: SessionLength): number {
   const moods = game.moodTags || [];
   const tier = game.timeTier;
   let multiplier = 1;
 
-  if (energy === 'low') {
+  if (sessionLength === 'small') {
     if (moods.includes('chill')) multiplier *= 1.8;
     if (moods.includes('brainless')) multiplier *= 1.8;
     if (moods.includes('atmospheric')) multiplier *= 1.4;
@@ -128,7 +130,7 @@ function getEnergyWeight(game: Game, energy: EnergyLevel): number {
     if (moods.includes('strategic')) multiplier *= 0.5;
     if (tier === 'marathon') multiplier *= 0.4;
     if (tier === 'deep-cut') multiplier *= 0.6;
-  } else if (energy === 'high') {
+  } else if (sessionLength === 'large') {
     if (moods.includes('intense')) multiplier *= 1.8;
     if (moods.includes('competitive')) multiplier *= 1.6;
     if (moods.includes('strategic')) multiplier *= 1.5;
@@ -184,7 +186,7 @@ function calculateWeight(
   game: Game,
   skippedIds: Set<string>,
   recentPickGenres: string[] = [],
-  energy: EnergyLevel = 'medium',
+  sessionLength: SessionLength = 'medium',
 ): number {
   let weight = 1;
 
@@ -217,8 +219,8 @@ function calculateWeight(
     weight *= 0.5; // Probably a comfort game, deprioritize for discovery
   }
 
-  // Energy matching
-  weight *= getEnergyWeight(game, energy);
+  // Session length matching
+  weight *= getSessionLengthWeight(game, sessionLength);
 
   // Genre balance: avoid same-genre streaks
   weight *= getGenreBalanceWeight(game, recentPickGenres);
@@ -319,11 +321,11 @@ export function pickWeighted(
   games: Game[],
   skippedIds: Set<string> = new Set(),
   recentPicks: Game[] = [],
-  energy?: EnergyLevel,
+  sessionLength?: SessionLength,
 ): Game | null {
   if (games.length === 0) return null;
 
-  const resolvedEnergy = energy || getDefaultEnergy();
+  const resolvedSessionLength = sessionLength || getDefaultSessionLength();
 
   // Collect genres from recent picks for balance scoring
   const recentGenres = recentPicks
@@ -331,7 +333,7 @@ export function pickWeighted(
 
   const weighted = games.map((game) => ({
     game,
-    weight: calculateWeight(game, skippedIds, recentGenres, resolvedEnergy),
+    weight: calculateWeight(game, skippedIds, recentGenres, resolvedSessionLength),
   }));
 
   const totalWeight = weighted.reduce((sum, w) => sum + w.weight, 0);
@@ -405,7 +407,7 @@ export function pickSmartResume(
   games: Game[],
   skippedIds: Set<string> = new Set(),
   recentPicks: Game[] = [],
-  energy?: EnergyLevel,
+  sessionLength?: SessionLength,
 ): { game: Game; smartPickType: SmartPickType } | null {
   if (games.length === 0) return null;
 
@@ -423,12 +425,12 @@ export function pickSmartResume(
 
   for (const type of SMART_PICK_PRIORITY) {
     if (buckets[type].length > 0) {
-      const game = pickWeighted(buckets[type], skippedIds, recentPicks, energy);
+      const game = pickWeighted(buckets[type], skippedIds, recentPicks, sessionLength);
       if (game) return { game, smartPickType: type };
     }
   }
 
-  const fallback = pickWeighted(games, skippedIds, recentPicks, energy);
+  const fallback = pickWeighted(games, skippedIds, recentPicks, sessionLength);
   return fallback ? { game: fallback, smartPickType: 'unfinished-business' } : null;
 }
 

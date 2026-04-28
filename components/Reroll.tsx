@@ -8,7 +8,7 @@ import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
 import { hasSprite } from '@/lib/pixel/sprites';
 import PixelSprite from './PixelSprite';
 import { getGameDescriptor } from '@/lib/descriptors';
-import { REROLL_MODES, RerollMode, EnergyLevel, getDefaultEnergy, getEligibleGames, pickWeighted, pickSmartResume, getPickReasons } from '@/lib/reroll';
+import { REROLL_MODES, RerollMode, SessionLength, getDefaultSessionLength, getEligibleGames, pickWeighted, pickSmartResume, getPickReasons } from '@/lib/reroll';
 import { SMART_PICK_LABELS, renderSmartPickHeadline, SmartPickType } from '@/lib/smartPickCopy';
 import { useToast } from './Toast';
 import { trackReroll, trackRerollCommit, trackFirstRoll, trackFirstCommit, trackSampleCompleted, trackPickerOpened, trackGameLaunchedExternally } from '@/lib/analytics';
@@ -69,12 +69,12 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
   // modal opens at 2 CTAs + energy pills; secondary choices are one tap away.
   const [showMoreWays, setShowMoreWays] = useState(false);
   const [showVibes, setShowVibes] = useState(false);
-  // Pre-roll energy drawer — collapsed by default per the locked 2-input rule.
-  // Opens on tap; commits to the chosen energy until the modal is reset.
-  const [showEnergyDrawer, setShowEnergyDrawer] = useState(false);
-  // Post-pick "change roll settings" drawer — hides mode/mood/energy pill rows
-  // by default so the user reads the pick, not the picker. Opens on tap when
-  // they want to alter the roll parameters without resetting.
+  // Pre-roll session-length drawer — collapsed by default per the locked
+  // 2-input rule. Opens on tap; commits to the chosen length until reset.
+  const [showSessionLengthDrawer, setShowSessionLengthDrawer] = useState(false);
+  // Post-pick "change roll settings" drawer — hides mode/mood/session-length
+  // pill rows by default so the user reads the pick, not the picker. Opens
+  // on tap when they want to alter the roll parameters without resetting.
   const [showRollSettings, setShowRollSettings] = useState(false);
   // Post-pick "Why this one?" drawer — collapsed by default. The pick should
   // explain itself; we only justify on demand.
@@ -86,7 +86,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
   const [skippedIds, setSkippedIds] = useState<Set<string>>(new Set());
   const [shownIds, setShownIds] = useState<Set<string>>(new Set());
   const [postAccept, setPostAccept] = useState<Game | null>(null);
-  const [energy, setEnergy] = useState<EnergyLevel>(getDefaultEnergy());
+  const [sessionLength, setSessionLength] = useState<SessionLength>(getDefaultSessionLength());
   const [skipFeedbackGame, setSkipFeedbackGame] = useState<Game | null>(null);
   const [skipFeedbackVisible, setSkipFeedbackVisible] = useState(false);
   const [skipFeedbackRecorded, setSkipFeedbackRecorded] = useState(false);
@@ -132,11 +132,11 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
     let pick: Game | null;
     let pickedType: SmartPickType | null = null;
     if (rollMode === 'continue') {
-      const result = pickSmartResume(pickPool, skippedIds, reroll.lastThreePicks, energy);
+      const result = pickSmartResume(pickPool, skippedIds, reroll.lastThreePicks, sessionLength);
       pick = result?.game ?? null;
       pickedType = result?.smartPickType ?? null;
     } else {
-      pick = pickWeighted(pickPool, skippedIds, reroll.lastThreePicks, energy);
+      pick = pickWeighted(pickPool, skippedIds, reroll.lastThreePicks, sessionLength);
     }
     if (!pick) {
       const moodMsg = moodFilters.length > 1
@@ -159,7 +159,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
         mode: rollMode,
         action: 'skip',
         moodFilters,
-        energy,
+        sessionLength,
         genres: (currentPick.genres || []).map(g => g.toLowerCase()),
         timeTier: currentPick.timeTier,
         timestamp: new Date().toISOString(),
@@ -183,8 +183,8 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
 
     // NOTE: incrementReroll (store) runs only on commit ("Let's go"), not on
     // rolls. Local rollCount drives the forced-choice gate and "Roll N" label.
-    // Mode / energy / mood-pill switches pass countAsRoll=false so browsing
-    // doesn't burn the 10-roll cap — only explicit Roll / Roll Again counts.
+    // Mode / session-length / mood-pill switches pass countAsRoll=false so
+    // browsing doesn't burn the 10-roll cap — only explicit Roll / Roll Again counts.
     trackReroll(rollMode);
     const newCount = countAsRoll ? rollCount + 1 : rollCount;
     if (countAsRoll) setRollCount(newCount);
@@ -217,7 +217,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
       // Funnel: first-ever roll reveal (once per browser)
       trackFirstRoll();
     }, 500);
-  }, [games, mode, moodFilters, currentPick, rollCount, pushLastPick, showToast, skippedIds, shownIds, platformPreference, energy, commitNudgeShown]);
+  }, [games, mode, moodFilters, currentPick, rollCount, pushLastPick, showToast, skippedIds, shownIds, platformPreference, sessionLength, commitNudgeShown]);
 
   const handleLetsGo = useCallback((game: Game) => {
     // Playing Now cap check
@@ -250,7 +250,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
       mode,
       action: 'accept',
       moodFilters,
-      energy,
+      sessionLength,
       genres: (game.genres || []).map(g => g.toLowerCase()),
       timeTier: game.timeTier,
       timestamp: new Date().toISOString(),
@@ -263,7 +263,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
     // the decision.
     setPostAccept(game);
     setCurrentPick(null);
-  }, [games, updateGame, mode, moodFilters, energy, showToast]);
+  }, [games, updateGame, mode, moodFilters, sessionLength, showToast]);
 
   // Dismiss handler for the post-accept celebration. Closes the modal,
   // resets reroll state, and tells the parent to navigate to Playing Now.
@@ -344,12 +344,12 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
       setSkippedIds(new Set());
       setShownIds(new Set());
       setMoodFilters([]);
-      setEnergy(getDefaultEnergy());
+      setSessionLength(getDefaultSessionLength());
       setSkipFeedbackGame(null);
       setSkipFeedbackVisible(false);
       setSkipFeedbackRecorded(false);
       skipFeedbackShownCount.current = 0;
-      setShowEnergyDrawer(false);
+      setShowSessionLengthDrawer(false);
       setShowRollSettings(false);
       setShowWhyThisOne(false);
       if (skipFeedbackTimer.current) clearTimeout(skipFeedbackTimer.current);
@@ -497,41 +497,45 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
               </button>
             </div>
 
-            {/* Energy drawer — collapsed by default. Shows current selection
-                in the header so the user can see at a glance what's set. */}
+            {/* Session length drawer — collapsed by default. Shows current
+                selection in the header so the user can see at a glance what's
+                set. Tier copy is locked (see .claude/rules/user-psychology.md
+                §3): Small ~20 min / Medium ~1–2 hrs / Large 2+ hrs · I'm in. */}
             <div className="mt-3 rounded-xl border" style={{ borderColor: 'var(--color-border-subtle)' }}>
               <button
                 type="button"
-                onClick={() => setShowEnergyDrawer((v) => !v)}
+                onClick={() => setShowSessionLengthDrawer((v) => !v)}
                 className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
-                aria-expanded={showEnergyDrawer}
+                aria-expanded={showSessionLengthDrawer}
               >
                 <span>
-                  Energy
+                  Session length
                   <span className="ml-2 text-xs text-accent-purple font-[family-name:var(--font-mono)]">
-                    · {energy === 'low' ? '🔋 Low' : energy === 'high' ? '🔥 High' : '⚡ Medium'}
+                    · {sessionLength === 'small' ? '🚣 Small' : sessionLength === 'large' ? '🚢 Large' : '⛵ Medium'}
                   </span>
                 </span>
-                <span className="text-text-dim text-xs">{showEnergyDrawer ? '▴' : '▾'}</span>
+                <span className="text-text-dim text-xs">{showSessionLengthDrawer ? '▴' : '▾'}</span>
               </button>
-              {showEnergyDrawer && (
+              {showSessionLengthDrawer && (
                 <div className="px-3 pb-3 flex gap-2">
                   {([
-                    { level: 'low' as EnergyLevel, label: 'Low', icon: '🔋' },
-                    { level: 'medium' as EnergyLevel, label: 'Medium', icon: '⚡' },
-                    { level: 'high' as EnergyLevel, label: 'High', icon: '🔥' },
-                  ]).map(({ level, label, icon }) => (
+                    { level: 'small' as SessionLength, label: 'Small', sub: '~20 min', icon: '🚣' },
+                    { level: 'medium' as SessionLength, label: 'Medium', sub: '~1–2 hrs', icon: '⛵' },
+                    { level: 'large' as SessionLength, label: 'Large', sub: <>2+ hrs · <em>I&apos;m in</em></>, icon: '🚢' },
+                  ]).map(({ level, label, sub, icon }) => (
                     <button
                       key={level}
-                      onClick={() => setEnergy(level)}
+                      onClick={() => setSessionLength(level)}
+                      aria-label={`Session length: ${label}`}
                       className={`flex-1 px-3 py-2.5 rounded-xl text-sm font-medium transition-all border ${
-                        energy === level
+                        sessionLength === level
                           ? 'border-accent-purple'
                           : 'border-border-subtle hover:border-border-active'
                       }`}
-                      style={{ backgroundColor: energy === level ? 'rgba(124, 58, 237, 0.12)' : 'var(--color-bg-card)' }}
+                      style={{ backgroundColor: sessionLength === level ? 'rgba(124, 58, 237, 0.12)' : 'var(--color-bg-card)' }}
                     >
-                      {icon} {label}
+                      <div>{icon} {label}</div>
+                      <div className="text-[10px] text-text-dim font-[family-name:var(--font-mono)] mt-0.5">{sub}</div>
                     </button>
                   ))}
                 </div>
@@ -673,14 +677,14 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                   ))}
                   <button
                     onClick={() => {
-                      const levels: EnergyLevel[] = ['low', 'medium', 'high'];
-                      const next = levels[(levels.indexOf(energy) + 1) % levels.length];
-                      setEnergy(next);
+                      const levels: SessionLength[] = ['small', 'medium', 'large'];
+                      const next = levels[(levels.indexOf(sessionLength) + 1) % levels.length];
+                      setSessionLength(next);
                     }}
                     className="px-3 py-2 rounded-full text-sm font-medium font-[family-name:var(--font-mono)] text-text-dim hover:text-text-muted hover:bg-white/5 transition-all"
-                    title={`Energy: ${energy}. Tap to change.`}
+                    title={`Session length: ${sessionLength}. Tap to change.`}
                   >
-                    {energy === 'low' ? '🔋 Low' : energy === 'high' ? '🔥 High' : '⚡ Medium'}
+                    {sessionLength === 'small' ? '🚣 Small' : sessionLength === 'large' ? '🚢 Large' : '⛵ Medium'}
                   </button>
                 </div>
 

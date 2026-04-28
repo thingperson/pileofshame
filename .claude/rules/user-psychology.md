@@ -46,9 +46,9 @@ Key finding: more options increase regret and second-guessing even after a decis
 
 Key finding: working memory is finite (~4 chunks). UI elements, copy density, and decisions all draw from the same pool. Excess load causes abandonment regardless of intent.
 
-**Implication for us:** Every extra question at pick-time is a tax on the exact cognitive resource that's already depleted (that's why they came to us). Mood + energy = two inputs. That's the ceiling.
+**Implication for us:** Every extra question at pick-time is a tax on the exact cognitive resource that's already depleted (that's why they came to us). Mood + session length = two inputs. That's the ceiling.
 
-**Note on the second axis (status: pivoting 2026-04-27 PM, implementation next session).** This axis has been through three shapes: *time* (original) → *energy* (picker rebaseline) → **session length** (current target, after research). The pivot trail:
+**Note on the second axis (status: locked + shipped 2026-04-28).** This axis has been through three shapes: *time* (original) → *energy* (picker rebaseline) → **session length** (current, shipped). The pivot trail:
 
 - *Time* ("how long do you have?") was replaced by *energy* because users couldn't reliably say "I have 47 minutes" and reported having time but no will.
 - *Energy* (Low / Medium / High) was contradicted by Loewenstein 1996 and Mischel & Shoda 1995 once those sources finished ingestion. Loewenstein: visceral states are systematically misjudged by introspection. Mischel & Shoda: dispositional self-categorization predicts behavior poorly (r ≈ .47 only for *if-then situation signatures*, not dispositional levels).

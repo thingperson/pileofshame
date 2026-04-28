@@ -1,5 +1,5 @@
 import { Game, MoodTag, TimeTier } from './types';
-import { RerollMode, EnergyLevel } from './reroll';
+import { RerollMode, SessionLength } from './reroll';
 
 const STORAGE_KEY = 'if-decision-history';
 const MAX_ENTRIES = 100;
@@ -10,7 +10,7 @@ export interface DecisionRecord {
   mode: RerollMode;
   action: 'accept' | 'skip';
   moodFilters: MoodTag[];
-  energy: EnergyLevel;
+  sessionLength: SessionLength;
   genres: string[];
   timeTier: TimeTier;
   timestamp: string;

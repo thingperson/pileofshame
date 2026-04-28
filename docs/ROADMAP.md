@@ -404,11 +404,16 @@ Captured from the round-1 + round-2 psychology audit (`docs/psychology-redteam-2
 - Watch telemetry on the new `⚙ Change roll settings` affordance. If it gets tapped immediately on every pick, the strip-and-collapse design failed.
 - **moodTags backfill — SHIPPED 2026-04-27 (commit `6b6418b`).** Persist v3 migration runs `inferMoodTags()` on existing games with empty moodTags. Local-only, no network.
 
-**Energy → Session Length pivot (2026-04-27 PM, ships next session).**
-- The energy substitution shipped with research debt (per DECISIONS.md earlier 2026-04-27 entry). PDF ingest closed the debt unfavorably for "energy as a dispositional self-report" (Loewenstein, Mischel & Shoda).
-- Pivot to **session length tiers** — Small (~20 min), Medium (~1–2 hrs), Large (2+ hrs · *I'm in*). Tangible commitment estimate users can actually answer.
-- Implementation: rename `EnergyLevel` type → `SessionLength` in `lib/reroll.ts`, update picker UI labels in `components/Reroll.tsx`, update `.claude/rules/user-psychology.md` §3 note. ~60–90 min of focused work.
+**Energy → Session Length pivot — SHIPPED 2026-04-28.**
+- Rename + UI labels + rule update all landed. Tiers: Small (~20 min), Medium (~1–2 hrs), Large (2+ hrs · *I'm in*).
+- Stock-emoji icons shipped as 🚣 → ⛵ → 🚢 (water-voyage progression — same-domain magnitude scaling, voyage-length culturally encodes duration).
 - See DECISIONS.md 2026-04-27 PM entry for full rationale + rejected alternatives.
+
+**Session-length picker iconography — pixel sprites (post-launch polish).**
+- Stock emoji is shipped, but the *intended* metaphor was kite → hot air balloon → rocket (each tier = a fun, whimsical "going somewhere" experience at increasing commitment level). No widely-supported hot air balloon emoji exists, so we shipped boats instead.
+- **Ask Claude Design / Stitch for three pixel sprites:** kite (Small), hot air balloon (Medium), rocket (Large). Match the existing pixel-sprite system style (`lib/pixel/data/`).
+- Keep all three "fun, whimsical, lift" — not utility transport (not a 747, not a helicopter). The Large tier should read "I'm in for the cinematic adventure," not "I'm catching a flight."
+- Slot: replace the three icons in `components/Reroll.tsx` (~lines 514, 522–524, 687).
 
 **Inferred-features track (future differentiator, post-launch).**
 - Mischel & Shoda 1995 strengthens the case: *if-then situation signatures* are the empirically reliable behavioral predictor (r ≈ .47 stable), not dispositional self-reports. Archetypes are essentially if-then signatures, which the research validates.
