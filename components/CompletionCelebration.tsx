@@ -213,23 +213,38 @@ function pickFlavor(ctx: FlavorContext, exclude?: string): string {
   return choose[Math.floor(Math.random() * choose.length)];
 }
 
-interface ShareToggle {
-  key: string;
-  label: string;
-  available: boolean;
-  enabled: boolean;
+function ShareThisClear(props: {
+  game: Game;
+  gamesCleared: number;
+  backlogSize: number;
+  hoursOnGame: number;
+  showToast: (msg: string) => void;
+}) {
+  const [opened, setOpened] = useState(false);
+  if (opened) return <GameClearShare {...props} />;
+  return (
+    <button
+      onClick={() => setOpened(true)}
+      className="mb-4 w-full px-4 py-2.5 rounded-lg text-sm font-bold font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.98]"
+      style={{
+        backgroundColor: 'rgba(167, 139, 250, 0.10)',
+        border: '1px solid rgba(167, 139, 250, 0.25)',
+        color: '#a78bfa',
+      }}
+    >
+      🔗 Share this clear
+    </button>
+  );
 }
 
 function GameClearShare({
   game,
-  rating,
   gamesCleared,
   backlogSize,
   hoursOnGame,
   showToast,
 }: {
   game: Game;
-  rating: number;
   gamesCleared: number;
   backlogSize: number;
   hoursOnGame: number;
@@ -238,14 +253,6 @@ function GameClearShare({
   const [creating, setCreating] = useState(false);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
 
-  // Share composer is intentionally minimal — the only two stats worth sharing
-  // are: dollar value reclaimed, and HLTB-faster-than-average (a real flex).
-  // Everything else dilutes the brag or shares data that doesn't carry
-  // emotional weight outside our app. Keeping it to 1–2 toggles also respects
-  // the "less time in app" product axiom.
-  const [showDollar, setShowDollar] = useState(true);
-  const [showHltb, setShowHltb] = useState(true);
-
   const timeInPileDays = useMemo(() => {
     if (!game.addedAt) return null;
     const added = new Date(game.addedAt).getTime();
@@ -253,9 +260,8 @@ function GameClearShare({
     return Math.floor((now - added) / (1000 * 60 * 60 * 24));
   }, [game.addedAt]);
 
-  // Pull the cached retail price for this specific game if we have one.
-  // The price cache is populated by StatsPanel / ValueCalculator, so users
-  // who've already computed their library value will see the dollar variant.
+  // Cached retail price (populated by StatsPanel / ValueCalculator). Auto-included
+  // on the card when present, omitted when not — no toggle, no shame fallback.
   const gamePrice = useMemo(() => {
     try {
       const cache = loadCache<number>(PRICE_CACHE_KEY);
@@ -266,8 +272,10 @@ function GameClearShare({
     }
   }, [game.name]);
 
-  const flavorCtx = useMemo(
-    () => ({
+  // Flavor text auto-picked once. The user can't reroll — the card is what it
+  // is. Per DECISIONS 2026-04-27 share-card lockdown.
+  const flavorText = useMemo(
+    () => pickFlavor({
       name: game.name,
       daysInPile: timeInPileDays,
       hoursOnGame,
@@ -277,40 +285,14 @@ function GameClearShare({
     }),
     [game.name, timeInPileDays, hoursOnGame, gamesCleared, backlogSize, gamePrice],
   );
-  const [flavorText, setFlavorText] = useState(() => pickFlavor(flavorCtx));
-  const rerollFlavor = () => setFlavorText((current) => pickFlavor(flavorCtx, current));
 
   // HLTB "faster than average" — only a brag when the player actually beat it
-  // below the average. Slower/thorough isn't share-worthy per Brady 2026-04-21.
+  // below the average. Slower/thorough isn't share-worthy.
   const hltbFasterHours = useMemo(() => {
     if (!game.hltbMain || !hoursOnGame || game.hltbMain <= 0) return null;
     const diff = Math.round(game.hltbMain - hoursOnGame);
     return diff > 0 ? diff : null;
   }, [game.hltbMain, hoursOnGame]);
-
-  const toggles: ShareToggle[] = [
-    {
-      key: 'dollar',
-      label: gamePrice ? `$${Math.round(gamePrice)} reclaimed from the pile` : '$ reclaimed',
-      available: !!gamePrice,
-      enabled: showDollar,
-    },
-    {
-      key: 'hltb',
-      label: hltbFasterHours ? `${hltbFasterHours}h faster than average` : '',
-      available: !!hltbFasterHours,
-      enabled: showHltb,
-    },
-  ];
-
-  const availableToggles = toggles.filter(t => t.available);
-
-  const handleToggle = (key: string) => {
-    switch (key) {
-      case 'dollar': setShowDollar(v => !v); break;
-      case 'hltb': setShowHltb(v => !v); break;
-    }
-  };
 
   const handleCreateCard = async () => {
     setCreating(true);
@@ -327,12 +309,12 @@ function GameClearShare({
           timeInPileDays,
           totalCleared: gamesCleared + 1,
           backlogRemaining: backlogSize,
-          dollarValue: showDollar && gamePrice ? gamePrice : null,
+          dollarValue: gamePrice,
           showHours: false,
-          showHltbCompare: showHltb && !!hltbFasterHours,
+          showHltbCompare: !!hltbFasterHours,
           showPileTime: false,
           showStats: false,
-          showDollarValue: showDollar && !!gamePrice,
+          showDollarValue: !!gamePrice,
           flavorText,
         }),
       });
@@ -367,48 +349,16 @@ function GameClearShare({
       }}
     >
       <p className="text-xs text-text-faint font-[family-name:var(--font-mono)]">
-        {availableToggles.length > 0 ? 'Pick what to include. ' : ''}Creates a link that unfurls with a card when pasted.
+        Creates a link that unfurls with a card when pasted.
       </p>
 
-      {/* Flavor text preview */}
+      {/* Flavor preview — auto-picked, no reroll. The card is what it is. */}
       <div
-        className="rounded-lg p-2.5 pr-10 relative text-sm text-text-muted italic leading-relaxed"
+        className="rounded-lg p-2.5 text-sm text-text-muted italic leading-relaxed"
         style={{ backgroundColor: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.04)' }}
       >
         {flavorText}
-        <button
-          type="button"
-          onClick={rerollFlavor}
-          aria-label="Try another line"
-          title="Try another line"
-          className="absolute top-1.5 right-1.5 w-7 h-7 rounded-md flex items-center justify-center text-text-faint hover:text-text-primary hover:bg-white/5 transition-colors cursor-pointer"
-        >
-          🎲
-        </button>
       </div>
-
-      {/* Toggle checkboxes — hidden entirely when no optional stats exist,
-          so the composer collapses to flavor preview + share button. */}
-      {availableToggles.length > 0 && (
-        <div className="space-y-1.5">
-        {availableToggles.map((t) => (
-          <label
-            key={t.key}
-            className="flex items-center gap-2.5 cursor-pointer group"
-          >
-            <input
-              type="checkbox"
-              checked={t.enabled}
-              onChange={() => handleToggle(t.key)}
-              className="w-4 h-4 rounded accent-purple-500"
-            />
-            <span className={`text-xs font-[family-name:var(--font-mono)] ${t.enabled ? 'text-text-secondary' : 'text-text-faint'} group-hover:text-text-muted transition-colors`}>
-              {t.label}
-            </span>
-          </label>
-        ))}
-        </div>
-      )}
 
       {/* Action buttons */}
       {!shareUrl ? (
@@ -739,10 +689,11 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
                 )}
               </div>
 
-              {/* Share this clear */}
-              <GameClearShare
+              {/* Share this clear — opt-in. Composer only mounts after the
+                  user asks for it, so the celebration doesn't double as a
+                  share-prompt by default. */}
+              <ShareThisClear
                 game={game}
-                rating={rating}
                 gamesCleared={gamesCleared}
                 backlogSize={backlogSize}
                 hoursOnGame={hoursOnGame}

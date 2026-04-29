@@ -93,7 +93,7 @@ function pickSubtitle(card: ShareCard): string {
   if (card.show_hltb_compare && card.hours_played && card.hltb_main && card.hltb_main > 0) {
     const diff = Math.round(card.hltb_main - card.hours_played);
     if (diff > 0) return `${diff}h faster than average.`;
-    if (diff < 0) return `${Math.abs(diff)}h more. you took your time.`;
+    // Slower-than-average is not a brag. Fall through to evergreen.
   }
   if (card.show_stats && card.total_cleared) {
     return `game #${card.total_cleared} off the pile.`;
@@ -323,16 +323,22 @@ export default async function Image({ params }: { params: Promise<{ id: string }
             padding: '0 48px',
           }}
         >
+          {/* Phase 1 Practical Value (Berger STEPPS) — recipient-facing CTA so
+              the card carries utility for the viewer, not just signaling for
+              the sender. Per DECISIONS 2026-04-27 share-card lockdown. */}
           <div
             style={{
-              fontSize: '16px',
-              color: '#7c6a9a',
+              fontSize: '18px',
+              color: '#d8c8f5',
               fontFamily: 'Outfit, sans-serif',
               fontWeight: 700,
               display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
             }}
           >
-            {card.show_display_name && card.display_name ? `cleared by ${card.display_name}` : ''}
+            <span>find out what your pile is worth</span>
+            <span style={{ color: '#a78bfa' }}>→ inventoryfull.gg/stats</span>
           </div>
           {/* Wordmark — inline paths from public/if-logos/wordmark-alone.svg so
               satori renders actual brand glyphs (external SVG <img> is unreliable
