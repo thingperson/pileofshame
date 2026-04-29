@@ -15,6 +15,25 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-04-28 — Landing partial restoration: trust-build sections back, long pitch stays at /about
+
+**Decision.** The Apr 25 full-trim (`ce5fc7d`) of the landing marketing narrative is partially reversed. Two sections come back to landing: "It's really just three things" (Import → Match → Play) and "Not another backlog tracker" (anti-cataloguing one-liner). The pull quote ("your backlog should feel exciting...") and "4 ways to pick today's game" stay on /about.
+
+**Why.**
+- The Apr 25 trim was logically defensible (less time in app = success, /about already had the same content) but went too far — hero + CTA alone read gutted, not focused. Brady review on prod flagged the gap on both mobile + desktop.
+- The two restored sections are trust-build, not pitch. "Three things" names the loop in three steps so first-time visitors know what they're buying into before clicking Import. "Not another tracker" positions us against the obvious-adjacent category in one beat.
+- The pull quote and "4 ways" are product-detail concerns, not landing-funnel concerns — they belong on /about.
+
+**Implementation.** `components/LandingPage.tsx` — restored the two sections from `app/about/page.tsx` (byte-identical JSX), added the `StepCard` sub-component back. Comment block at the section gap flags the partial restoration. Commit `2a76716`.
+
+**Rejected.**
+- *Restore everything from the Apr 25 trim.* Would re-bloat landing and re-create the duplicate-with-/about problem the original trim solved.
+- *Leave landing hero-only and rely on the "Open app" CTA bar to carry the visitor.* What Brady saw on prod after the trim — gutted, unfinished. Failed the eye test.
+
+**Drift risk.** /about and landing now duplicate the two restored sections byte-for-byte. Edits to one need to mirror to the other. `StepCard` exists in two places (LandingPage.tsx + about/page.tsx) — fine for now, candidate for shared component if a third use appears.
+
+---
+
 ## 2026-04-27 (PM) — Pivot: "Energy" → "Session Length" as the second pick-flow input
 
 **Supersedes the earlier 2026-04-27 entry below ("Energy replaces time").** The substitution stands as a *concept* — the picker should ask about state-at-pick-time, not impose a clock estimate — but the *content* of that input is changing back toward time, framed as session length.

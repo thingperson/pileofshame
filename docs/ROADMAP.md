@@ -388,12 +388,18 @@ Captured from the round-1 + round-2 psychology audit (`docs/psychology-redteam-2
 
 **Stats page reframes — SHIPPED 2026-04-27 (commit `53e3bc4`).** Value Calculator reframe ("Fun ready to be won back"), `Pick something` CTA, archetype reroll instrumentation (`archetype_rerolled` GA4 event). Telemetry pending in production.
 
-**Share composer restructure (round 2 finding) + content lockdown (2026-04-27 PM).**
-- Move composer in `CompletionCelebration.tsx` from opt-out → opt-in (round-2 finding stands).
-- **PLUS content lockdown:** standardize the card. No per-share customization. Locked fields: archetype + reclaimed value framed positive + brand mark. NOT on card: pile $ value, hours unplayed, anything shame-adjacent. See DECISIONS.md 2026-04-27 PM entry.
-- **Practical Value layer (Berger STEPPS):**
-  - **Phase 1 (ships first):** generic recipient-facing CTA on every card footer — *"Find out what your pile is worth → inventoryfull.gg/stats"*. No customization, scales to every share.
-  - **Phase 2 (later):** auto-generated "worth it if X" recommendation per cleared game. Skipped now because session-length + tone signal isn't reliable on every game yet.
+**Round-3 cold-start interventions — SHIPPED 2026-04-28 (commit `4a90fcf`).** Five of eight findings from `docs/psychology-redteam-round3-2026-04-28.md` shipped pre-launch:
+- ✅ `ImportHub`: Steam-first with "Most start here" tag; manual platforms (Epic/GOG/Switch) hidden behind disclosure. Choice load 8 → 5 visible.
+- ✅ `GetStartedModal`: dropped "Free forever." marketing claim from a fulfillment surface.
+- ✅ `FinishCheckNudge`: dropped 130%+ population shame trigger, retired the third "Not yet" button (which was hiding a status mutation behind a deferral label — reactance/autonomy violation). Behavior change: no more auto-promote to Playing Now via "Not yet."
+- **Items #6–8 deferred to post-launch sprint:** updates-checkbox relocation, sample-library tertiary, SignInModal rename.
+
+**Share composer restructure (round 2 finding) + content lockdown — Phase 1 SHIPPED 2026-04-28 (commit `1d51760`).**
+- ✅ Composer in `CompletionCelebration.tsx` flipped from opt-out → opt-in. "🔗 Share this clear" button mounts the composer on demand.
+- ✅ Content lockdown for clear-card surface: per-share customization stripped (dollar / HLTB toggles + flavor reroll dice removed). Reclaimed-value and HLTB-faster auto-include when present, omit when not. The card is what it is.
+- ✅ **Practical Value Phase 1 (Berger STEPPS) shipped on the OG card footer:** *"find out what your pile is worth → inventoryfull.gg/stats"*. Recipient-facing CTA so the card carries utility for the viewer, not just signaling for the sender.
+- **Phase 2 (still pending):** auto-generated "worth it if X" recommendation per cleared game. Conditional on game-metadata signal reliability — scope after a few days of GA4 share data.
+- Note: archetype-card content lockdown spec (DECISIONS 2026-04-27 PM) applies to the pile/archetype share surface, not the clear card. Clear card kept its game-cleared visual identity.
 
 **OG share-hierarchy decision (round 2 finding).**
 - Pile/[id] (archetype reveal) and Clear/[id] (game cleared) OG cards both ship. Both are valid moments — Brady's call. Worth instrumenting share volume per type so we know which moment users actually want to share.
