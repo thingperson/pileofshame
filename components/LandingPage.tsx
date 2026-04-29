@@ -212,10 +212,89 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
         </div>
       </section>
 
-      {/* Marketing-narrative sections (How it works / Not another tracker /
-          Pull quote / 3 ways to pick) moved to /about on 2026-04-25 to keep
-          the landing as a fast decision funnel. The /about page is now the
-          canonical "what is this product" surface. */}
+      {/* Trust-build narrative — partial restoration 2026-04-28. The Apr-25
+          trim moved everything to /about for a fast funnel; landing felt
+          gutted on review. We restore "It's really just three things" +
+          "Not another backlog tracker" only — the pull quote and "4 ways
+          to pick" stay on /about as the long-form pitch. */}
+
+      {/* ═══════════════════════════════════════════
+          HOW IT WORKS — three steps
+          ═══════════════════════════════════════════ */}
+      <section className="relative px-6 py-12 sm:py-16">
+        <div className="max-w-4xl mx-auto">
+          <Reveal>
+            <h2
+              className="text-3xl sm:text-4xl font-bold text-center mb-4 tracking-tight"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              It&apos;s really just three things:
+            </h2>
+            <p
+              className="text-center text-sm sm:text-base mb-10 sm:mb-14 font-[family-name:var(--font-mono)]"
+              style={{ color: 'var(--color-text-faint)' }}
+            >
+              from &quot;I own 300 games&quot; to &quot;I&apos;m playing one&quot;
+            </p>
+          </Reveal>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
+            <Reveal delay={0}>
+              <StepCard
+                number="01"
+                title="Import"
+                description="Connect Steam, PlayStation, Xbox, or paste a CSV. We grab everything while you do nothing."
+              />
+            </Reveal>
+            <Reveal delay={120}>
+              <StepCard
+                number="02"
+                title="Match today's vibe"
+                description="Tell us your mood and how much time you've got, and we'll match you to a game that fits right now."
+              />
+            </Reveal>
+            <Reveal delay={240}>
+              <StepCard
+                number="03"
+                title="Play"
+                description="We pick, you play. Clear it, drop it, or just move on without guilt. Moving on is deciding too."
+              />
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          NOT ANOTHER TRACKER
+          ═══════════════════════════════════════════ */}
+      <section className="relative px-6 py-12 sm:py-16">
+        <div className="max-w-xs mx-auto mb-16 flex items-center gap-4">
+          <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+          <svg className="w-4 h-4 opacity-30" viewBox="0 0 20 20" style={{ color: 'var(--color-accent-purple)' }}>
+            <rect x="5" y="5" width="10" height="10" fill="currentColor" transform="rotate(45 10 10)" />
+          </svg>
+          <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+        </div>
+
+        <Reveal>
+          <div className="max-w-2xl mx-auto text-center">
+            <h2
+              className="text-3xl sm:text-4xl font-bold tracking-tight mb-6"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Not another backlog tracker.
+            </h2>
+
+            <div className="space-y-5">
+              <p className="text-lg sm:text-xl leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+                More library managing = less playing.
+                <br />
+                <strong style={{ color: 'var(--color-text-primary)' }}>We help you pick. You get playing.</strong>
+              </p>
+            </div>
+          </div>
+        </Reveal>
+      </section>
 
       {/* ═══════════════════════════════════════════
           BOTTOM CTA
@@ -333,6 +412,23 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
 /* ─────────────────────────────────────────────
    Sub-components
    ───────────────────────────────────────────── */
+
+function StepCard({ number, title, description }: { number: string; title: string; description: string }) {
+  return (
+    <div
+      className="rounded-xl p-6 sm:p-8 border transition-all duration-200 hover:border-accent-purple group"
+      style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border-subtle)' }}
+    >
+      <div className="flex items-center gap-3 mb-4">
+        <span className="text-xs font-bold font-[family-name:var(--font-mono)]" style={{ color: 'var(--color-accent-purple)' }}>
+          {number}
+        </span>
+      </div>
+      <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>{title}</h3>
+      <p className="text-base leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>{description}</p>
+    </div>
+  );
+}
 
 /**
  * Reveal: fade + translateY scroll-in using IntersectionObserver.
