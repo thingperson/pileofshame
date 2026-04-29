@@ -342,7 +342,7 @@ export const useStore = create<LibraryState & StoreActions>()(
             settings: data.settings || {
               showPlayed: false,
               showBailed: false,
-              viewMode: 'list',
+              viewMode: 'grid',
               theme: 'dark',
               platformPreference: 'any',
             },

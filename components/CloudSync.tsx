@@ -39,7 +39,7 @@ export default function CloudSync() {
           games: [],
           categories: [...DEFAULT_CATEGORIES],
           customVibes: [],
-          settings: { showPlayed: false, showBailed: false, viewMode: 'list', theme: 'dark', platformPreference: 'any' },
+          settings: { showPlayed: false, showBailed: false, viewMode: 'grid', theme: 'dark', platformPreference: 'any' },
           lastSaved: new Date().toISOString(),
         }));
       }

@@ -8,10 +8,11 @@ interface WordmarkProps extends Omit<SVGProps<SVGSVGElement>, 'children' | 'view
 }
 
 // Brand colors — overridable via CSS custom properties so themes can retint.
-// --wordmark-in   → the "IN" letters (default brand purple)
+// --wordmark-in   → the "IN" letters (white by default — app defaults to dark theme;
+//                   .theme-light + per-theme rules in globals.css retint when needed)
 // --wordmark-body → "VENTORY FULL" (default brand teal)
 // --wordmark-tagline → "get playing." (default brand pink)
-const FILL_IN = 'var(--wordmark-in, #320b5e)';
+const FILL_IN = 'var(--wordmark-in, #ffffff)';
 const FILL_BODY = 'var(--wordmark-body, #1ae2c0)';
 const FILL_TAGLINE = 'var(--wordmark-tagline, #ea2de1)';
 
