@@ -32,13 +32,36 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "Inventory Full - get playing.",
-  description: "Inventory Full helps you pick the right game from your backlog by mood and time. Import Steam, Xbox, PlayStation. Free, no sign-up required.",
+  description: "Can't decide what to play? Inventory Full picks the right game from your backlog based on mood and session length. Import Steam, Xbox, PlayStation. Free, no sign-up.",
   metadataBase: new URL('https://inventoryfull.gg'),
-  keywords: ['gaming backlog', 'backlog manager', 'game tracker', 'inventory full', 'steam backlog', 'xbox backlog', 'gaming queue', 'what to play next', 'game randomizer', 'backlog tracker', 'backlog payback'],
+  keywords: [
+    // High-intent queries (the user's actual mental state)
+    'what game should I play',
+    'decide what to play',
+    'what to play next',
+    'game decision paralysis',
+    'too many games not enough time',
+    'pile of shame',
+    // Category / tool queries
+    'gaming backlog',
+    'gaming backlog tool',
+    'backlog manager',
+    'backlog tracker',
+    'game randomizer',
+    'game picker',
+    // Library / platform queries
+    'steam backlog',
+    'xbox backlog',
+    'playstation backlog',
+    'steam library randomizer',
+    // Brand
+    'inventory full',
+    'backlog payback',
+  ],
   authors: [{ name: 'Inventory Full' }],
   openGraph: {
     title: 'Inventory Full - get playing.',
-    description: 'Inventory Full helps you pick the right game from your backlog by mood and time. Import Steam, Xbox, PlayStation. Free, no sign-up required.',
+    description: "Can't decide what to play? Inventory Full picks the right game from your backlog based on mood and session length. Import Steam, Xbox, PlayStation. Free, no sign-up.",
     url: 'https://inventoryfull.gg',
     siteName: 'Inventory Full',
     type: 'website',
@@ -55,7 +78,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Inventory Full - get playing.',
-    description: 'Inventory Full helps you pick the right game from your backlog by mood and time. Import Steam, Xbox, PlayStation. Free, no sign-up required.',
+    description: "Can't decide what to play? Inventory Full picks the right game from your backlog based on mood and session length. Import Steam, Xbox, PlayStation. Free, no sign-up.",
     images: ['https://inventoryfull.gg/opengraph-image'],
   },
   other: {
@@ -139,6 +162,66 @@ export default function RootLayout({
                 'Multiple themes including retro modes',
                 'PWA — Add to Home Screen',
                 'Mobile-first responsive design',
+              ],
+              creator: {
+                '@type': 'Person',
+                name: 'Brady Whitteker',
+                sameAs: ['https://twitter.com/WhittekerBrady'],
+              },
+              sameAs: ['https://twitter.com/WhittekerBrady'],
+            }),
+          }}
+        />
+        {/* FAQPage schema — targets the queries our user actually types when
+            they're stuck staring at their library. Each Q is a real-world
+            phrasing of decision paralysis / backlog overload. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: [
+                {
+                  '@type': 'Question',
+                  name: 'What game should I play?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: "Inventory Full picks one game from your library based on your current mood and how much time you have. Import your Steam, Xbox, or PlayStation library, tell us how you feel and how long you've got, and we'll pick. One game. No browsing, no shortlists.",
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  name: 'How do I decide what game to play next?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: "Stop browsing your library. Pick two inputs — a mood and a session length — and let Inventory Full filter your collection down to one match. The only decision left is whether to start. If it's not the right pick, reroll.",
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  name: "I have too many games and can't decide. What do I do?",
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: "That's exactly what Inventory Full is for. A library of 100+ games is the jam-wall problem from Iyengar's choice-overload research — more options means less action. We cut your library down to one pick so you can stop browsing and start playing.",
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  name: 'What is a pile of shame?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: "It's gamer slang for the unplayed games piling up in your library — usually bought during sales or bundles. Inventory Full helps you actually play them by removing the decision paralysis that keeps you closing the launcher without picking anything.",
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  name: 'Is Inventory Full free?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'Yes. No sign-up required, no ads, no tracking. Your library data stays on your device unless you opt into cloud sync.',
+                  },
+                },
               ],
             }),
           }}
