@@ -50,21 +50,23 @@ const PLATFORMS = [
     desc: 'Import via PSN login token. Takes 30 seconds',
     available: true,
   },
-] as const;
-
-const MANUAL_PLATFORMS = [
   {
     id: 'epic',
     name: 'Epic Games',
     icon: '⬛',
-    desc: 'No public API. Use Playnite to export your Epic library',
+    desc: 'No public API. Import via a Playnite CSV export',
+    available: true,
   },
   {
     id: 'gog',
     name: 'GOG',
     icon: '🟪',
-    desc: 'No public API. Use Playnite to export your GOG library',
+    desc: 'No public API. Import via a Playnite CSV export',
+    available: true,
   },
+] as const;
+
+const MANUAL_PLATFORMS = [
   {
     id: 'switch',
     name: 'Nintendo Switch',
@@ -90,6 +92,12 @@ export default function ImportHub({ open, onClose }: ImportHubProps) {
   }
   if (activeImport === 'playnite') {
     return <PlayniteImportModal open={true} onClose={() => { setActiveImport(null); onClose(); }} />;
+  }
+  if (activeImport === 'epic') {
+    return <PlayniteImportModal open={true} context="epic" onClose={() => { setActiveImport(null); onClose(); }} />;
+  }
+  if (activeImport === 'gog') {
+    return <PlayniteImportModal open={true} context="gog" onClose={() => { setActiveImport(null); onClose(); }} />;
   }
   if (activeImport === 'playstation') {
     return <PSNImportModal open={true} onClose={() => { setActiveImport(null); onClose(); }} />;

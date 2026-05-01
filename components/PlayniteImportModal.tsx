@@ -126,9 +126,22 @@ function parseCSVLine(line: string): string[] {
 interface PlayniteImportModalProps {
   open: boolean;
   onClose: () => void;
+  context?: 'epic' | 'gog';
 }
 
-export default function PlayniteImportModal({ open, onClose }: PlayniteImportModalProps) {
+const CONTEXT_COPY = {
+  epic: {
+    title: 'Import from Epic Games',
+    preface: 'Epic doesn\'t expose a public library API. The cleanest path is Playnite. Its Epic plugin pulls your full library, then exports as CSV.',
+  },
+  gog: {
+    title: 'Import from GOG',
+    preface: 'GOG doesn\'t expose a public library API. The cleanest path is Playnite. Its GOG plugin pulls your full library, then exports as CSV.',
+  },
+} as const;
+
+export default function PlayniteImportModal({ open, onClose, context }: PlayniteImportModalProps) {
+  const contextCopy = context ? CONTEXT_COPY[context] : null;
   const [step, setStep] = useState<'upload' | 'select'>('upload');
   const [games, setGames] = useState<ParsedGame[]>([]);
   const [error, setError] = useState('');
@@ -236,12 +249,16 @@ export default function PlayniteImportModal({ open, onClose }: PlayniteImportMod
           borderColor: 'var(--color-border-active)',
         }}
       >
-        <h2 className="text-lg font-bold text-text-primary">Import from Playnite</h2>
+        <h2 className="text-lg font-bold text-text-primary">{contextCopy?.title ?? 'Import from Playnite'}</h2>
 
         {step === 'upload' && (
           <div className="space-y-4">
             <div className="space-y-3 text-sm text-text-secondary">
-              <p>Playnite can export your entire library, including games from Steam, GOG, Epic, PlayStation, Xbox, and more.</p>
+              {contextCopy ? (
+                <p>{contextCopy.preface}</p>
+              ) : (
+                <p>Playnite can export your entire library, including games from Steam, GOG, Epic, PlayStation, Xbox, and more.</p>
+              )}
               <div className="space-y-2 text-xs text-text-muted">
                 <p className="font-medium text-text-secondary">How to export:</p>
                 <ol className="list-decimal list-inside space-y-1">
