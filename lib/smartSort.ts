@@ -145,41 +145,6 @@ export function sortBestForYou(gamesToSort: Game[], fullLibrary: Game[]): Game[]
 }
 
 /**
- * Determine smart status for a game on import based on playtime + HLTB data.
- * Returns the status the game should be assigned to.
- */
-export function getSmartImportStatus(
-  hoursPlayed: number,
-  hltbMain: number | undefined,
-  isNonFinishable: boolean | undefined,
-  genres?: string[],
-): 'buried' | 'on-deck' | 'played' {
-  // No playtime = pure backlog
-  if (!hoursPlayed || hoursPlayed === 0) return 'buried';
-
-  // Non-finishable games (multiplayer, roguelikes, sandboxes) with significant hours = completed
-  if (isNonFinishable && hoursPlayed >= 50) return 'played';
-
-  // Genre-based non-finishable detection (backup if isNonFinishable isn't set)
-  const nonFinishableGenres = ['Massively Multiplayer', 'MMO', 'Battle Royale'];
-  if (genres && genres.some((g) => nonFinishableGenres.includes(g)) && hoursPlayed >= 50) {
-    return 'played';
-  }
-
-  // If we have HLTB data, use 1.3x threshold for completion
-  if (hltbMain && hltbMain > 0) {
-    const completionThreshold = hltbMain * 1.3;
-    if (hoursPlayed >= completionThreshold) return 'played';
-  }
-
-  // 5+ hours = started, worth surfacing as Up Next candidate
-  if (hoursPlayed >= 5) return 'on-deck';
-
-  // 1-5 hours = tried it, still backlog but will be flagged as "started"
-  return 'buried';
-}
-
-/**
  * Smart status for Xbox imports — only auto-assigns 'played' when achievements
  * are 100% complete (unambiguous evidence). Up Next / Playing Now are user-only
  * statuses; the importer never guesses them.
