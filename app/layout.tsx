@@ -132,6 +132,17 @@ export default function RootLayout({
             __html: `try{if(localStorage.getItem('if-text-size')==='comfortable')document.documentElement.classList.add('comfortable')}catch(e){}`,
           }}
         />
+        {/* GA4 init (privacy-safe — only creates dataLayer + queue function;
+            no cookies, no network requests until gtag.js loads, which is
+            still consent-gated by CookieBanner). MUST run before any useEffect
+            that calls trackLandingView etc., or the early events queue without
+            a configured property and get dropped silently when gtag.js
+            eventually processes the dataLayer. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-98B24MRQZS');`,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

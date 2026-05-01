@@ -75,22 +75,15 @@ export default function CookieBanner() {
 
   return (
     <>
-      {/* GA only loads after explicit consent — no cookies set before opt-in */}
+      {/* gtag.js loads only after explicit consent — sets cookies + sends data.
+          The dataLayer/gtag stub + gtag('config') call live in app/layout.tsx
+          <head> so they run before hydration; pre-consent that just creates an
+          in-memory queue (no cookies, no requests). */}
       {consent === 'accepted' && (
-        <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-            strategy="afterInteractive"
-          />
-          <Script id="gtag-init" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${GA_ID}');
-            `}
-          </Script>
-        </>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
       )}
 
       {consent === null && (

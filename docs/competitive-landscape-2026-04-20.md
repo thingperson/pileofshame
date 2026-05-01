@@ -67,6 +67,14 @@ Apps whose stated job is reducing pick-time friction from an existing library.
 - **What:** General activity suggester with a Game Mode (time limit + mood).
 - **Weaknesses:** Not backlog-scoped. Catalogue-broad.
 
+### PlayNext (tryplaynext.com) — *added 2026-05-01*
+- **What:** Steam-library recommender that profiles taste from playtime + completion patterns and surfaces categorized rows ("Because you replay fast combat", "Low commitment tonight", "No filler action") with match-percentage scores per game.
+- **Platforms:** Web. Steam only.
+- **Pricing:** Appears free.
+- **Differentiator:** Closest thesis match to ours yet found ("Steam is great when you want to shop. PlayNext is for when you want an answer"). Net-flix-style multi-row UX with auto-categorization.
+- **Weaknesses:** UX is the literal opposite of our thesis — shows shortlists/rows, which is the choice-overload problem (Iyengar) we're explicitly removing. Steam-only. No traction signals visible (no user count, no testimonials). Solo/early-stage feel.
+- **Watch for:** if they pivot from rows to a single pick, they're directly on our line. Until then, their UX choice means our differentiator (one-pick decisive delivery) holds.
+
 ---
 
 ## 2. Adjacent / indirect competitors
