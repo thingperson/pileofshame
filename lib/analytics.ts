@@ -10,13 +10,31 @@ type GTagFn = (...args: unknown[]) => void;
 type ParamValue = string | number | boolean | undefined | null;
 
 function gtag(eventName: string, params?: Record<string, ParamValue>) {
-  if (typeof window !== 'undefined' && typeof (window as unknown as { gtag?: GTagFn }).gtag === 'function') {
-    // Strip undefined/null so GA4 doesn't store empty values that bloat reports.
-    const clean = params
-      ? Object.fromEntries(Object.entries(params).filter(([, v]) => v !== undefined && v !== null))
-      : undefined;
-    (window as unknown as { gtag: GTagFn }).gtag('event', eventName, clean);
+  if (typeof window === 'undefined') return;
+
+  const w = window as unknown as { gtag?: GTagFn; dataLayer?: unknown[] };
+
+  // Lazy-init gtag stub. Without this, any tracker called before
+  // gtag.js finishes loading silently no-ops (e.g. trackLandingView
+  // in a useEffect that runs during hydration, before the consent-
+  // gated afterInteractive script). The stub queues calls into
+  // window.dataLayer; when gtag.js eventually loads (post-consent),
+  // it drains that queue. Privacy-safe — dataLayer is an in-memory
+  // array. If user declines consent, gtag.js never loads and the
+  // queue is GC'd on unload. No data leaves the browser pre-consent.
+  if (typeof w.gtag !== 'function') {
+    w.dataLayer = w.dataLayer || [];
+    w.gtag = function () {
+      // eslint-disable-next-line prefer-rest-params
+      (w.dataLayer as unknown[]).push(arguments);
+    };
   }
+
+  // Strip undefined/null so GA4 doesn't store empty values that bloat reports.
+  const clean = params
+    ? Object.fromEntries(Object.entries(params).filter(([, v]) => v !== undefined && v !== null))
+    : undefined;
+  w.gtag('event', eventName, clean);
 }
 
 // Auth
