@@ -137,10 +137,15 @@ export default function RootLayout({
             still consent-gated by CookieBanner). MUST run before any useEffect
             that calls trackLandingView etc., or the early events queue without
             a configured property and get dropped silently when gtag.js
-            eventually processes the dataLayer. */}
+            eventually processes the dataLayer.
+
+            ?ga_debug=1 enables debug_mode for the whole session — events
+            route to GA4 DebugView for testing instrumentation. Sticks via
+            sessionStorage so same-tab navigation keeps it on. Real visitors
+            without the param are unaffected. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-98B24MRQZS');`,
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());var __ifd=false;try{if(location.search.indexOf('ga_debug=1')!==-1){sessionStorage.setItem('if-ga-debug','1');}__ifd=sessionStorage.getItem('if-ga-debug')==='1';}catch(e){}gtag('config','G-98B24MRQZS',__ifd?{debug_mode:true}:undefined);`,
           }}
         />
         <script
