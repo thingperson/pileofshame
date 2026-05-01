@@ -1,5 +1,37 @@
 # Session Resume — 2026-05-01 (Friday, PDT)
 
+**Type:** TWO sessions today. AM was design infra (H2 sprites). PM was launch-track sweep — B3 reroll QA, psych red-team Round 4, accessibility audit, sample library expansion. **Two production deploys** at 12:50 PM PDT (`0599778`) and 1:15 PM PDT (`32e654d`).
+
+## PM session (launch-track) — what shipped
+
+Two deploys, both passing pre-push gates (build, voice, legal, axiom):
+
+**Commit `0599778` — fix(a11y, voice): launch-ready sweep**
+- A11y: GetStartedModal + ImportHub focus traps with return-focus; Reroll post-accept `<p>` → `<h3>` (screen readers now announce the picked game); FinishCheckNudge `aria-expanded`; email input `aria-label`
+- Theme contrast (4 critical fails): 90s body fallback to white; Minimal `text-faint` `#606060` → `#7a7a7a` (was 2.95:1, failed UI 3:1); Cozy text-dim/text-faint darkened to ~4.8:1; Light `text-faint` to 6.51:1
+- Voice (Round 4 red-team): Reroll roll-8 toast → "You're deciding and that's everything."; post-accept → "Just go enjoy."; email opt-in → "Email me only stuff I'd want to hear about."; ImportHub "Most start here" label removed
+
+**Commit `32e654d` — feat(sample): expand library 39 → 63**
+- Fixed dead-ends: story-rich × Quick Session 0 → 3, brainless 1 → 10, competitive 1 → 6, quick-hit tier 3 → 13
+- Modernity additions per Brady's picks: Pragmata, Saros (PS5), Crimson Desert, PWS2, Vampire Crawlers, Slay the Spire 2, Helldivers 2, Marvel Rivals, Marathon, Minecraft, Split Fiction, Dispatch, Clair Obscur (with Steam IDs verified by Brady)
+
+## Verification harnesses (kept in `/tmp`, not committed)
+
+- `/tmp/b3-reroll-qa.ts` — 16,200 simulated picks across mode×session×mood, both libraries. **Zero CRITICAL violations** on picker logic. Re-runnable via `npx tsx`.
+- `/tmp/b5-mood-audit.ts` — sample library mood distribution. Re-run after any sampleLibrary.ts changes.
+
+## Deferred / parked
+
+- **8 vibe-themes contrast bumps** (80s, Future, Dino, Weird, Ultra, Tropical, Campfire) — body 4.5:1 fails but pass large 3:1. Token tweaks, week-2 work.
+- **"Try a sample first" outline button border** non-text contrast 1.4:1 fails 3:1. Week-2.
+- **Switch via Nintendo Parental Controls API** — agreed post-launch. Real effort 1.5–2 weeks; not Playnite-easy. Add to ROADMAP as elevated priority.
+- **Comfort-breaker as structured concept** — Phase 2 idea (`vibes: ['comfort-breaker']` + a "you haven't picked a comfort game in 4 weeks" surface).
+- **Hades 2 in sample library** — skipped, didn't have a verified Steam ID. Brady can add later.
+- **Discord OG cache** — confirmed stale, not a production bug. Twitter/Bluesky/iMessage/Slack render correctly. Workaround: append `?v=N` cache-buster.
+- **GA4 setup verification** — Brady has dashboard open, asked for review. Not blocking; can pair on post-launch.
+
+## AM session (design infra)
+
 **Type:** Design infra session — H2 archetype sprite set extended from 6 → 41, bundled, integration spec drafted. No production code touched. No deploy.
 
 ⚡ **START HERE for prior context:** [docs/session-resume-2026-04-30.md](session-resume-2026-04-30.md) — root OG card rebrand, FAQPage schema, SEO foundation.
