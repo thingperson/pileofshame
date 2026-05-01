@@ -198,7 +198,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
     // the user can keep rolling. Replaces the old hard 10-roll forced-
     // choice modal which violated "less time in app = success."
     if (countAsRoll && newCount === 8 && !commitNudgeShown) {
-      showToast("You've seen a lot. Trust your gut.");
+      showToast("You're deciding and that's everything.");
       setCommitNudgeShown(true);
     }
 
@@ -986,9 +986,9 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                 <p className="text-xs text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider mb-2">
                   Decision made.
                 </p>
-                <p className="text-2xl font-extrabold text-text-primary mb-1">
+                <h3 className="text-2xl font-extrabold text-text-primary mb-1">
                   {postAccept.name}
-                </p>
+                </h3>
                 {(() => {
                   const est = getSessionEstimate(postAccept);
                   return est ? (
@@ -998,7 +998,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                   ) : <div className="mb-4" />;
                 })()}
                 <p className="text-sm text-text-secondary mb-5 leading-relaxed">
-                  The hard part&apos;s behind you. Get the controller in your hands. Enjoying is the only next step.
+                  The hard part&apos;s behind you. Get the controller in your hands. Just go enjoy.
                 </p>
                 {postAccept.steamAppId && (
                   <a

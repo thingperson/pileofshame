@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SteamImportModal from './SteamImportModal';
 import SteamWishlistModal from './SteamWishlistModal';
 import XboxImportModal from './XboxImportModal';
@@ -104,9 +104,56 @@ export default function ImportHub({ open, onClose }: ImportHubProps) {
   }
 
   return (
+    <ImportHubModal open={open} onClose={onClose} setActiveImport={setActiveImport} />
+  );
+}
+
+function ImportHubModal({ open, onClose, setActiveImport }: { open: boolean; onClose: () => void; setActiveImport: (id: string) => void }) {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<Element | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    triggerRef.current = document.activeElement;
+
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { onClose(); return; }
+      if (e.key === 'Tab') {
+        const modal = modalRef.current;
+        if (!modal) return;
+        const focusable = modal.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      }
+    };
+    document.addEventListener('keydown', handler);
+
+    const firstFocusable = modalRef.current?.querySelector<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    firstFocusable?.focus();
+
+    return () => {
+      document.removeEventListener('keydown', handler);
+      (triggerRef.current as HTMLElement | null)?.focus?.();
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       <div
+        ref={modalRef}
         role="dialog"
         aria-modal="true"
         aria-label="Import Games"
@@ -133,11 +180,6 @@ export default function ImportHub({ open, onClose }: ImportHubProps) {
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-text-primary">
                   {platform.name}
-                  {'recommended' in platform && platform.recommended && (
-                    <span className="ml-2 text-[10px] uppercase tracking-wide text-accent-purple font-[family-name:var(--font-mono)]">
-                      Most start here
-                    </span>
-                  )}
                 </p>
                 <p className="text-xs text-text-dim">{platform.desc}</p>
               </div>

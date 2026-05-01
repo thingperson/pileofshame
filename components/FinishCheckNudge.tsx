@@ -157,6 +157,7 @@ export default function FinishCheckNudge({ games, onTabSwitch }: FinishCheckNudg
         <div className="flex items-center justify-between gap-3">
           <button
             onClick={() => setExpanded(!expanded)}
+            aria-expanded={expanded}
             className="flex items-center gap-2 min-w-0 flex-1 text-left"
           >
             <span className="text-lg shrink-0">🏁</span>

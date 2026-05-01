@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '@/lib/useAuth';
 
 interface GetStartedModalProps {
@@ -20,6 +20,8 @@ export default function GetStartedModal({ open, onClose }: GetStartedModalProps)
   const [emailError, setEmailError] = useState('');
   const [wantsUpdates, setWantsUpdates] = useState(false);
   const [visible, setVisible] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<Element | null>(null);
 
   useEffect(() => {
     if (open) {
@@ -34,12 +36,41 @@ export default function GetStartedModal({ open, onClose }: GetStartedModalProps)
     setTimeout(() => onClose(), 200);
   }, [onClose]);
 
-  // Close on Escape
+  // Escape to close + focus trap + return focus on close
   useEffect(() => {
     if (!open) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') handleClose(); };
+    triggerRef.current = document.activeElement;
+
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { handleClose(); return; }
+      if (e.key === 'Tab') {
+        const modal = modalRef.current;
+        if (!modal) return;
+        const focusable = modal.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      }
+    };
     document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+
+    const modal = modalRef.current;
+    const firstFocusable = modal?.querySelector<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    firstFocusable?.focus();
+
+    return () => {
+      document.removeEventListener('keydown', handler);
+      (triggerRef.current as HTMLElement | null)?.focus?.();
+    };
   }, [open, handleClose]);
 
   if (!open) return null;
@@ -49,6 +80,7 @@ export default function GetStartedModal({ open, onClose }: GetStartedModalProps)
       <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={handleClose} />
 
       <div
+        ref={modalRef}
         role="dialog"
         aria-modal="true"
         aria-label="Sign in to sync"
@@ -128,7 +160,7 @@ export default function GetStartedModal({ open, onClose }: GetStartedModalProps)
                     className="mt-0.5 w-3.5 h-3.5 accent-accent-purple cursor-pointer shrink-0"
                   />
                   <span className="text-[11px] leading-snug text-text-muted group-hover:text-text-secondary transition-colors">
-                    Email me when we ship something worth knowing. No spam.
+                    Email me only stuff I&apos;d want to hear about.
                   </span>
                 </label>
               </div>
@@ -146,6 +178,7 @@ export default function GetStartedModal({ open, onClose }: GetStartedModalProps)
             }} className="space-y-2">
               <input
                 type="email"
+                aria-label="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@email.com"
