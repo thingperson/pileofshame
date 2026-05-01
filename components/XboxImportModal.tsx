@@ -116,14 +116,12 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
 
   const handleImport = () => {
     const toImport = games.filter((g) => selected.has(g.titleId));
-    const breakdown = { total: 0, backlog: 0, started: 0, upNext: 0, completed: 0 };
+    let completedCount = 0;
 
     for (const game of toImport) {
       const earned = game.achievements?.earned ?? 0;
       const total = game.achievements?.total ?? 0;
-      const smartStatus = getSmartImportStatusFromAchievements(earned, total, game.lastPlayed);
-      // Cap Up Next at 5 — overflow stays in Backlog
-      const status = smartStatus === 'on-deck' && breakdown.upNext >= 5 ? 'buried' : smartStatus;
+      const status = getSmartImportStatusFromAchievements(earned, total);
 
       const gamerscoreNote = game.achievements && game.achievements.totalGamerscore > 0
         ? `Xbox · ${game.achievements.gamerscore}/${game.achievements.totalGamerscore}G`
@@ -147,11 +145,7 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
         completedAt: status === 'played' && game.lastPlayed ? game.lastPlayed : undefined,
       });
 
-      breakdown.total++;
-      if (status === 'played') breakdown.completed++;
-      else if (status === 'on-deck') breakdown.upNext++;
-      else if (earned > 0) breakdown.started++;
-      else breakdown.backlog++;
+      if (status === 'played') completedCount++;
     }
 
     trackImport('xbox', toImport.length);
@@ -166,11 +160,8 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
       }
     }
 
-    const smartParts: string[] = [];
-    if (breakdown.completed > 0) smartParts.push(`${breakdown.completed} already beaten`);
-    if (breakdown.upNext > 0) smartParts.push(`${breakdown.upNext} ready to jump back into`);
-    const smartMsg = smartParts.length > 0 ? ` ${smartParts.join(', ')}.` : '';
-    showToast(`Imported ${toImport.length} Xbox games.${smartMsg}`);
+    const summaryTail = completedCount > 0 ? ` ${completedCount} already beaten.` : '';
+    showToast(`Imported ${toImport.length} Xbox games.${summaryTail}`);
     handleClose();
   };
 

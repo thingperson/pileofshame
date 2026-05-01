@@ -180,36 +180,14 @@ export function getSmartImportStatus(
 }
 
 /**
- * Smart status for Xbox imports — uses achievement progress + last-played recency
- * since the OpenXBL API doesn't expose aggregate playtime hours.
- *
- * 100% achievements → Completed.
- * Some achievement progress AND played in last 60 days → Up Next.
- * No achievements but played in last 60 days → Up Next (newer game / no achievements available).
- * Otherwise → Backlog.
+ * Smart status for Xbox imports — only auto-assigns 'played' when achievements
+ * are 100% complete (unambiguous evidence). Up Next / Playing Now are user-only
+ * statuses; the importer never guesses them.
  */
 export function getSmartImportStatusFromAchievements(
   earned: number,
   total: number,
-  lastPlayedISO: string | null,
-): 'buried' | 'on-deck' | 'played' {
-  const hasAchievementData = total > 0;
-  const recentlyPlayed = (() => {
-    if (!lastPlayedISO) return false;
-    const ts = Date.parse(lastPlayedISO);
-    if (Number.isNaN(ts)) return false;
-    const daysAgo = (Date.now() - ts) / (1000 * 60 * 60 * 24);
-    return daysAgo <= 60;
-  })();
-
-  // Fully completed achievements = treat as Completed
-  if (hasAchievementData && earned >= total) return 'played';
-
-  // Started + recent activity = Up Next
-  if (hasAchievementData && earned > 0 && recentlyPlayed) return 'on-deck';
-
-  // No achievement signal but recent play = Up Next
-  if (!hasAchievementData && recentlyPlayed) return 'on-deck';
-
+): 'buried' | 'played' {
+  if (total > 0 && earned >= total) return 'played';
   return 'buried';
 }
