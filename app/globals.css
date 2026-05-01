@@ -594,8 +594,8 @@ button:active:not(:disabled) {
   --color-text-primary: #f0e4ff;
   --color-text-secondary: #d4b8ff;
   --color-text-muted: #a878e8;
-  --color-text-dim: #7c4dbe;
-  --color-text-faint: #8a63c9;
+  --color-text-dim: #9670cb;       /* was #7c4dbe (3.17:1 fail) → 4.73:1 PASS */
+  --color-text-faint: #936fcd;     /* was #8a63c9 (4.07:1 fail) → 4.66:1 PASS */
   --color-accent-purple: #ff6ec7;
   --color-accent-pink: #ff2975;
 
@@ -789,7 +789,7 @@ button:active:not(:disabled) {
   --color-text-primary: #e0f4ff;
   --color-text-secondary: #a0d4f0;
   --color-text-muted: #6aadcc;
-  --color-text-dim: #3d7a99;
+  --color-text-dim: #4c84a1;       /* was #3d7a99 (4.01:1 fail) → 4.62:1 PASS */
   --color-text-faint: #5a90b8;
   --color-accent-purple: #00f0ff;
   --color-accent-pink: #ff00aa;
@@ -1091,7 +1091,7 @@ button:active:not(:disabled) {
   --color-text-primary: #e8f5e8;
   --color-text-secondary: #c4dcc4;
   --color-text-muted: #8fb88f;
-  --color-text-dim: #6d9a6d;
+  --color-text-dim: #78a278;       /* was #6d9a6d (4.14:1 fail) → 4.61:1 PASS */
   --color-text-faint: #7ab07a;
   --color-accent-purple: #6dbf6d;
   --color-accent-pink: #d4a24e;
@@ -1320,7 +1320,7 @@ button:active:not(:disabled) {
   --color-text-primary: #d0e8d8;
   --color-text-secondary: #b0c9b8;
   --color-text-muted: #809a88;
-  --color-text-dim: #587060;
+  --color-text-dim: #728679;       /* was #587060 (3.47:1 fail) → 4.81:1 PASS */
   --color-text-faint: #707a70;
   --color-accent-purple: #cc5588;
   --color-accent-pink: #5588aa;
@@ -1514,8 +1514,8 @@ button:active:not(:disabled) {
   --color-text-primary: #ffffff;
   --color-text-secondary: #e0e0e0;
   --color-text-muted: #aaaaaa;
-  --color-text-dim: #777777;
-  --color-text-faint: #6a6a22;
+  --color-text-dim: #7c7c7c;       /* was #777777 (4.50:1 borderline) → 4.83:1 safety margin */
+  --color-text-faint: #7b7b3c;     /* was #6a6a22 (3.55:1 fail) → 4.55:1 PASS */
   --color-accent-purple: #BFFF00;
   --color-accent-pink: #BFFF00;
 
@@ -2126,7 +2126,7 @@ body.theme-minimal {
   --color-text-primary: #F7FFF7 !important;
   --color-text-secondary: #D0EDE9 !important;
   --color-text-muted: #8BBEB7 !important;
-  --color-text-dim: #5E9A92 !important;
+  --color-text-dim: #77aaa3 !important;       /* was #5E9A92 (3.73:1 fail) → 4.61:1 PASS */
   --color-text-faint: #6fa59c !important;
   --color-accent-purple: #4ECDC4 !important;
   --color-accent-pink: #FF6B6B !important;
@@ -2246,7 +2246,7 @@ body.theme-tropical {
   --color-text-primary: #F0E8D8 !important;
   --color-text-secondary: #D4C9B4 !important;
   --color-text-muted: #A89880 !important;
-  --color-text-dim: #7A6E5A !important;
+  --color-text-dim: #afa89c !important;       /* was #7A6E5A (2.28:1 fail) → 4.82:1 PASS */
   --color-text-faint: #a39885 !important;
   --color-accent-purple: #FE7F2D !important;
   --color-accent-pink: #FCCA46 !important;

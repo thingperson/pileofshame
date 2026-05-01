@@ -1233,6 +1233,19 @@ export const SAMPLE_GAMES: Game[] = [
 
   // Marathons / modernity
   {
+    id: sampleId(), name: 'Hades II', source: 'steam',
+    steamAppId: 1145350,
+    coverUrl: 'https://cdn.akamai.steamstatic.com/steam/apps/1145350/header.jpg',
+    metacritic: 92, genres: ['Action', 'Indie', 'RPG'],
+    hoursPlayed: 0, installed: false, timeTier: 'deep-cut',
+    category: 'The Pile', vibes: ['challenge'], priority: 0, status: 'on-deck',
+    notes: '',
+    moodTags: ['intense', 'story-rich'],
+    description: 'Goddess Melinoë vs. Chronos. Same compulsion as Hades, sharper edges.',
+    hltbMain: 27, hltbComplete: 90, isNonFinishable: true,
+    enrichedAt: now, addedAt: daysAgo(50), updatedAt: daysAgo(8),
+  },
+  {
     id: sampleId(), name: 'Slay the Spire 2', source: 'steam',
     steamAppId: 2868840,
     coverUrl: 'https://cdn.akamai.steamstatic.com/steam/apps/2868840/header.jpg',
