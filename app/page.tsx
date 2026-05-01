@@ -770,9 +770,9 @@ function AppContent() {
                 <option value="smart">✨ Best for You</option>
                 <option value="a-z">A → Z</option>
                 <option value="z-a">Z → A</option>
-                <option value="newest">Newest first</option>
-                <option value="oldest">Oldest first</option>
-                <option value="closest-to-done">🏁 Closest to Done</option>
+                <option value="newest">Recently added</option>
+                <option value="oldest">Earliest added</option>
+                <option value="closest-to-done">🏁 Quick to clear</option>
                 <option value="most-playtime">Most playtime</option>
                 <option value="least-playtime">Least playtime</option>
               </select>
