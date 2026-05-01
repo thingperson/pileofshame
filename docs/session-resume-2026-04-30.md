@@ -50,3 +50,59 @@ Two commits, both pushed to origin/main.
 ## Closing status
 
 End-of-day 2026-04-30 PM PDT. Two ship commits, distribution-prep through-line. No feature work. Site is now technically ready to receive search traffic and tweet shares — what's missing is the traffic itself (backlinks, GSC verification, first social mentions). ~6 days to soft launch. Next session can pick up native-channel implementation, Practical Value Phase 2 scoping, or distribution execution depending on what Brady wants to push on.
+
+---
+
+## Second wave — late evening 2026-04-30 PDT
+
+Type: Import-parity sweep + sort labels. Triggered by an audit of "are we leaving Xbox/Epic/GOG users in the cold." Surfaced a deeper issue: the importers were silently making status assumptions for the user. Cleaned up across all platforms.
+
+### What shipped this wave
+
+Six commits, all pushed to origin/main.
+
+- `7394afc` **Xbox smart status from achievements (initial)** — Replaced hardcoded `status: 'buried'` with achievement-derived mapping: 100% achievements → Completed, partial + recent → Up Next (capped at 5), else Backlog. Added "Xbox · 850/1000G" notes and warm post-import summary mirroring Steam's "X already beaten, Y ready to jump back into."
+- `a516df3` **Xbox revert: never auto-assign Up Next** — Brady caught the principle: Up Next and Playing Now are user-only statuses; the importer must not guess them. Stripped the on-deck heuristic. Only 100% achievements → Completed remains (evidence, not inference).
+- `68ff806` **Steam: same fix applied** — Removed `getSmartImportStatus` (deleted from `lib/smartSort.ts`). Steam imports now always land in Backlog. Killed the HLTB-based and 50h-non-finishable Completed mappings — both were assumption-based ("time spent ≠ completed"). PSN was already correct (only platinum trophy → Completed). Playnite mirrors the user's own explicit Playnite status, which is user-declared, so unchanged.
+- `177990e` **Epic + GOG promoted to first-class import entries** — Both move out of the "Don't see your platform?" disclosure into the main list. Click-through routes to `PlayniteImportModal` with a new optional `context: 'epic' | 'gog'` prop that swaps the heading and shows a one-line preface explaining why Playnite is the path. Same CSV upload flow, no new parsing.
+- `6914f54` **Sort label honesty** — Renamed in `app/page.tsx`: "Newest first" → "Recently added", "Oldest first" → "Earliest added", "Closest to Done" → "Quick to clear". Math unchanged; the labels were overpromising (especially "Closest to Done" which had a tier-3 fallback that surfaced unplayed short games at top).
+
+### Investigated but not shipped
+
+- **Heroic JSON file upload (Epic + GOG Tier 2)** — Researched feasibility. Both `legendaryLibrary.json` and `gog_store.json` shapes vary across Heroic versions; shipping parsers blind would be debt. Brady doesn't use Heroic, so deferred. Will revisit if launch-week feedback surfaces non-Playnite users wanting Epic/GOG support.
+- **GA4 user_properties wiring** — Brady asked about the funnel-event setup (sample_started, import_completed, first_*, etc.) — explained that the events are already firing as their own gtag custom events; just need to be marked as Key Events in GA4 Admin (no parameter conditions needed) and have parameters registered as custom dimensions. `archetype` / `library_size_bucket` / `primary_platform` user_properties NOT yet wired in code — ~20-line addition pending if/when Brady wants segmentation. Skipped this session.
+
+### New principle locked (worth surfacing in DECISIONS next session if Brady agrees)
+
+**Importers never assume status beyond "Completed when there's unambiguous platform-reported evidence."** Up Next and Playing Now are user-only states. Time spent in a game ≠ completion or readiness to resume. HLTB math is rejected as a completion signal. Achievements at 100% / platinum trophies are kept as the only auto-Completed signal (they're evidence, not inference).
+
+### Verify on next session start
+
+- **Vercel deploys of the six commits** — should all be live. Spot-check: Xbox import on a real Gamertag should now show `Imported N Xbox games. M already beaten.` toast (M = 100%-achievement count), and games should land in Backlog except the 100%-completed ones.
+- **Sort dropdown** in Backlog tab should read "Recently added / Earliest added / Quick to clear" (not "Newest/Oldest/Closest to Done").
+- **Import Hub** should show Epic + GOG as clickable buttons (no longer in the "Don't see your platform?" disclosure).
+
+### Rotting gotchas accumulated this wave
+
+- **Non-Steam imports still pass through `addedAt = now`** (store.ts:122) — bulk imports give every game a near-identical timestamp, so "Recently added / Earliest added" sort within a batch silently reflects API response order. Mostly harmless given the rename but worth knowing if a user complains the sort feels arbitrary. Fix path: jitter `addedAt` by index during bulk import.
+- **`hoursPlayed` only populated on Steam imports.** Xbox/PSN don't expose aggregate playtime (only achievements / trophy progress). Most playtime / Least playtime sorts will show alphabetical-secondary for non-Steam libraries. Working as designed but easy to misread as "broken sort."
+- **One untracked asset:** `public/inventoryfull-logomark-trimmed.png` — Brady dropped it in, not referenced in code yet. Left untracked.
+
+### Open design questions carried forward
+
+- **GA4 user_properties wiring** — small code add when Brady wants segmentation by archetype.
+- **Heroic JSON support for Epic/GOG** — only worth building if launch-week feedback says non-Playnite users exist.
+- **Native Xbox Cloud launch buttons** — separate problem (needs OpenXBL titleId → MS Store productId resolver). Deferred from earlier session, still deferred.
+- **42-vs-37 archetype count reconciliation** — design folder handoff claims 42; live `lib/archetypes.ts` has 37. Pre-H2-upsampling work needs this resolved.
+- **Wordmark direction** — 8 options exist in design folder, pending Brady's pick.
+- **`/about` SEO differentiation from landing** — carry-over.
+- **Practical Value Phase 2** — carry-over.
+
+### Health snapshot (refreshed)
+
+- **Build:** clean across all six commits.
+- **Tip of main (local + origin):** `6914f54`.
+- **Branches:** `main`. Stale parked branches unchanged.
+- **Known bugs:** none new this wave.
+- **Vercel:** all commits pushed; deploys expected live.
+- **Sentry:** still not checked this session.
