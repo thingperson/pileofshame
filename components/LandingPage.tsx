@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import AuthButton from '@/components/AuthButton';
 import Wordmark from '@/components/Wordmark';
+import { trackLandingView } from '@/lib/analytics';
+import { useStore } from '@/lib/store';
 
 interface LandingPageProps {
   onImport: () => void;
@@ -12,10 +14,18 @@ interface LandingPageProps {
 
 export default function LandingPage({ onImport, onLoadSample }: LandingPageProps) {
   const [visible, setVisible] = useState(false);
+  const gameCount = useStore((s) => s.games.length);
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 50);
     return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    trackLandingView({ has_library: gameCount > 0 });
+    // Fire once on mount; sessionStorage guard inside trackLandingView
+    // prevents duplicate sends within a tab session.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

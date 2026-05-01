@@ -460,11 +460,17 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
 
   const handleConfirm = useCallback(() => {
     onConfirm();
-    trackGameCleared();
+    trackGameCleared({
+      game_name: game?.name,
+      hours_played: hoursOnGame,
+      hltb_main: game?.hltbMain,
+      time_tier: game?.timeTier,
+      rating: rating || undefined,
+    });
     // Funnel: first-ever completion (once per browser)
     trackFirstCompletion();
     setStage('celebrate');
-  }, [onConfirm]);
+  }, [onConfirm, game, hoursOnGame, rating]);
 
   const handleClose = useCallback(() => {
     if (rating > 0 && game) {

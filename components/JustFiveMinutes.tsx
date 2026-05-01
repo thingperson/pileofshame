@@ -77,7 +77,7 @@ const JustFiveMinutes = forwardRef<JustFiveMinutesHandle, JustFiveMinutesProps>(
     }
     setGame(pick);
     setActive(true);
-    trackJust5Min();
+    trackJust5Min({ game_name: pick.name, time_tier: pick.timeTier });
     resetTimer();
   }, [games, showToast, resetTimer]);
 

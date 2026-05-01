@@ -7,10 +7,15 @@
  */
 
 type GTagFn = (...args: unknown[]) => void;
+type ParamValue = string | number | boolean | undefined | null;
 
-function gtag(eventName: string, params?: Record<string, string | number>) {
+function gtag(eventName: string, params?: Record<string, ParamValue>) {
   if (typeof window !== 'undefined' && typeof (window as unknown as { gtag?: GTagFn }).gtag === 'function') {
-    (window as unknown as { gtag: GTagFn }).gtag('event', eventName, params);
+    // Strip undefined/null so GA4 doesn't store empty values that bloat reports.
+    const clean = params
+      ? Object.fromEntries(Object.entries(params).filter(([, v]) => v !== undefined && v !== null))
+      : undefined;
+    (window as unknown as { gtag: GTagFn }).gtag('event', eventName, clean);
   }
 }
 
@@ -23,13 +28,34 @@ export const trackLogout = () => gtag('logout');
 export const trackImport = (source: string, count: number) => gtag('import_library', { source, game_count: count });
 export const trackGameAdded = (source: string) => gtag('game_added', { source });
 export const trackStatusChange = (from: string, to: string) => gtag('status_change', { from_status: from, to_status: to });
-export const trackGameCleared = () => gtag('game_cleared');
+export const trackGameCleared = (params?: {
+  game_name?: string;
+  hours_played?: number;
+  hltb_main?: number;
+  time_tier?: string;
+  rating?: number;
+}) => gtag('game_cleared', params);
 export const trackGameBailed = () => gtag('game_bailed');
 
 // Engagement
-export const trackReroll = (mode: string) => gtag('reroll', { mode });
-export const trackRerollCommit = () => gtag('reroll_commit');
-export const trackJust5Min = () => gtag('just_5_min');
+export const trackReroll = (
+  mode: string,
+  params?: { mood?: string; session_length?: string; roll_index?: number },
+) => gtag('reroll', { mode, ...params });
+
+export const trackRerollCommit = (params?: {
+  mode?: string;
+  mood?: string;
+  session_length?: string;
+  game_name?: string;
+  time_tier?: string;
+  smart_pick_type?: string;
+  hltb_main?: number;
+  rolls_until_commit?: number;
+}) => gtag('reroll_commit', params);
+
+export const trackJust5Min = (params?: { game_name?: string; time_tier?: string }) =>
+  gtag('just_5_min', params);
 export const trackDealCheck = (game: string) => gtag('deal_check', { game_name: game });
 export const trackShareStats = (platform: string) => gtag('share_stats', { platform });
 export const trackShareStatsCard = (action: string) => gtag('share_stats_card', { action });
@@ -85,4 +111,24 @@ export const trackGameLaunchedExternally = (platform: string) =>
 // Archetype reroll — distinguishes character-novelty (1–3/session) from
 // sticky engagement (10+). If reroll volume reads sticky we have an
 // engagement loop competing with "go play" on a stats page.
-export const trackArchetypeRerolled = () => gtag('archetype_rerolled');
+export const trackArchetypeRerolled = (params?: {
+  from_archetype?: string;
+  to_archetype?: string;
+}) => gtag('archetype_rerolled', params);
+
+// Top-of-funnel — fires once per browser tab session when LandingPage
+// mounts. has_library distinguishes returning users from cold visitors,
+// which is the funnel signal we actually care about. Without this event,
+// landing → sample-load and landing → import-start are unmeasurable.
+export const trackLandingView = (params?: { has_library?: boolean }) => {
+  if (typeof window === 'undefined') return;
+  try {
+    if (sessionStorage.getItem('if-ga-landing-view') === '1') return;
+    sessionStorage.setItem('if-ga-landing-view', '1');
+  } catch {
+    // sessionStorage unavailable — fire anyway, GA4 will dedupe by session
+  }
+  gtag('landing_view', {
+    has_library: params?.has_library ? 1 : 0,
+  });
+};

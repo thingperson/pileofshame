@@ -185,7 +185,11 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
     // rolls. Local rollCount drives the forced-choice gate and "Roll N" label.
     // Mode / session-length / mood-pill switches pass countAsRoll=false so
     // browsing doesn't burn the 10-roll cap — only explicit Roll / Roll Again counts.
-    trackReroll(rollMode);
+    trackReroll(rollMode, {
+      mood: moodFilters[0],
+      session_length: sessionLength,
+      roll_index: countAsRoll ? rollCount + 1 : rollCount,
+    });
     const newCount = countAsRoll ? rollCount + 1 : rollCount;
     if (countAsRoll) setRollCount(newCount);
 
@@ -228,7 +232,16 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
     }
     updateGame(game.id, { status: 'playing' });
     incrementReroll();
-    trackRerollCommit();
+    trackRerollCommit({
+      mode,
+      mood: moodFilters[0],
+      session_length: sessionLength,
+      game_name: game.name,
+      time_tier: game.timeTier,
+      smart_pick_type: smartPickType ?? undefined,
+      hltb_main: game.hltbMain,
+      rolls_until_commit: rollCount,
+    });
     // Funnel: first-ever commit (once per browser)
     trackFirstCommit();
     // Funnel: if this commit came out of the sample onboarding flow, count

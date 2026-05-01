@@ -348,9 +348,12 @@ export default function StatsPanel({ games }: StatsPanelProps) {
 
   const handleRerollArchetype = useCallback(() => {
     if (archetypes.length <= 1) return;
-    trackArchetypeRerolled();
-    setArchetypeIndex((i) => (i + 1) % archetypes.length);
-  }, [archetypes.length]);
+    const fromArchetype = currentArchetype?.title;
+    const nextIndex = (archetypeIndex + 1) % archetypes.length;
+    const toArchetype = archetypes[nextIndex]?.title;
+    trackArchetypeRerolled({ from_archetype: fromArchetype, to_archetype: toArchetype });
+    setArchetypeIndex(nextIndex);
+  }, [archetypes, archetypeIndex, currentArchetype]);
 
   if (games.length === 0) return null;
 
