@@ -506,3 +506,11 @@ Completed features, for historical reference. Phase 1 (MVP) and Phase 2 (Post-MV
 - Hero illustration: `inventoryfull-hero.png` (hand rising from game pile) as main visual
 - Top banner: logomark + "Inventory Full" in bold responsive text (60% of hero headline scale)
 - Per-theme DALL-E prompt files: 12 files in `docs/dalle-prompts/` for future asset generation
+
+### 94. H2 Archetype Sprite Set Complete ✅ (2026-05-01)
+- 41 painted-pixel archetype sprites at 128×128, 24-color palette — full coverage of `lib/archetypes.ts:SPRITE_KEY_BY_TITLE` plus 4 bundle extras (retroKids, grindGhost, lateBloomer, genreAddict)
+- Builders in `notes/Inventory Full-claude code resume package from design/archetypes-hifi.js` (~2,650 lines)
+- Bundle at `notes/.../bundle-archetype-h2/` — per-archetype folders with SVG + PNG@1x/2x/4x + sprite-string.txt + style.css, plus manifest.json + README. 5.2MB, 123 PNGs
+- Style spec locked: hue-shifted shadows, no outlines, atmospheric motes, brand accents, varied skeletons (humanoid, creature, object, environment, abstract)
+- Live integration spec at [docs/h2-archetype-integration-spec.md](h2-archetype-integration-spec.md) — **not wired into app yet**, deliberate. Three integration options documented (PNG-only / sprite-string / hybrid)
+- 3 alias gaps to resolve at wire-time: app keys `quickDraw`/`cozy`/`dino` map to bundle keys `speedrunner`/`cozyCraver`/`dinoRider`

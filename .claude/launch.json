@@ -6,6 +6,12 @@
       "runtimeExecutable": "bash",
       "runtimeArgs": ["-c", "export PATH=\"$HOME/.fnm:$HOME/.fnm/node-versions/v22.22.2/installation/bin:$PATH\" && npm run dev"],
       "port": 3000
+    },
+    {
+      "name": "design-studies",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd '/Users/bradywhitteker/Desktop/getplaying/notes/Inventory Full-claude code resume package from design' && exec python3 -m http.server 4321 --bind 127.0.0.1"],
+      "port": 4321
     }
   ]
 }

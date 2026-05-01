@@ -15,6 +15,23 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-05-01 — H2 archetype skeleton variety rule
+
+**Decision.** Extend the H2 archetype style spec: the *art style* (24-color palette, hue-shifted shadows, no outlines, motes, brand accent) stays locked across all 42 archetypes; the *skeleton/composition* is deliberately varied per archetype. An archetype can be a humanoid, a creature, an object, an environment, or an atmospheric scene — whichever reads its concept best. The original Hoarder/Critic/Speedrunner/Cozy/Webmaster pattern of "frontal humanoid + prop" is now one option among many, not the default.
+
+**Why.**
+- First three new builders (Pure Collector, Optimizer, Wishful Thinker) all defaulted to the templated pose and felt repetitive. Brady flagged it.
+- Reshape with structural variance (vitrine, top-down workspace, atmospheric-with-tiny-figure) immediately read as more distinct without losing family resemblance.
+- 41-sprite set now spans top-down, action, side-profile, POV-macro, building-as-character, creature, glitchy-digital, abstract-pattern, silhouette-cutout, and back-view skeletons. Cohesion holds via palette/lighting/atmosphere, not pose.
+
+**Implementation.** `notes/Inventory Full-claude code resume package from design/archetypes-hifi.js` (41 builders) and bundle at `notes/.../bundle-archetype-h2/`. Live integration spec at [docs/h2-archetype-integration-spec.md](h2-archetype-integration-spec.md) — not wired into app yet.
+
+**Rejected.** Keeping the templated humanoid recipe as default and varying only props — produces visually similar set, fails the "same artist, but doesn't all look like the same person" test.
+
+**Drift risk.** A future builder pass could regress to "easy default = humanoid in front of prop." Counter: when adding archetypes, list 2–3 candidate skeletons before committing, and bias toward non-overlapping shapes vs. existing 41.
+
+---
+
 ## 2026-04-28 — Landing partial restoration: trust-build sections back, long pitch stays at /about
 
 **Decision.** The Apr 25 full-trim (`ce5fc7d`) of the landing marketing narrative is partially reversed. Two sections come back to landing: "It's really just three things" (Import → Match → Play) and "Not another backlog tracker" (anti-cataloguing one-liner). The pull quote ("your backlog should feel exciting...") and "4 ways to pick today's game" stay on /about.
