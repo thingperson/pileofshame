@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Wordmark from '@/components/Wordmark';
+import { StayInTouch } from '@/components/StayInTouch';
 
 export default function AboutPage() {
   const [visible, setVisible] = useState(false);
@@ -261,6 +262,10 @@ export default function AboutPage() {
         >
           Open Inventory Full
         </a>
+
+        <div className="mt-16 max-w-2xl mx-auto">
+          <StayInTouch source="about" />
+        </div>
 
         <div className="mt-12 space-y-3">
           <p

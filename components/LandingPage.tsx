@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import AuthButton from '@/components/AuthButton';
 import Wordmark from '@/components/Wordmark';
+import { StayInTouch } from '@/components/StayInTouch';
 import { trackLandingView } from '@/lib/analytics';
 import { useStore } from '@/lib/store';
 
@@ -371,8 +372,15 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
           </div>
         </Reveal>
 
+        {/* Stay in touch — email capture + Discord */}
+        <Reveal delay={120}>
+          <div className="mt-16 max-w-2xl mx-auto">
+            <StayInTouch source="landing" />
+          </div>
+        </Reveal>
+
         {/* Footer */}
-        <div className="mt-16 space-y-4">
+        <div className="mt-12 space-y-4">
           <p
             className="text-xs font-[family-name:var(--font-mono)]"
             style={{ color: 'var(--color-text-faint)', opacity: 0.5 }}

@@ -18,7 +18,7 @@ export default function PrivacyPage() {
 
         <h1 className="text-3xl font-bold mb-2">Privacy Policy</h1>
         <p className="text-sm text-text-dim font-[family-name:var(--font-mono)] mb-8">
-          Last updated: April 21, 2026
+          Last updated: May 2, 2026
         </p>
 
         <div className="space-y-8 text-text-secondary text-[15px] leading-relaxed">
@@ -109,6 +109,17 @@ export default function PrivacyPage() {
                   includes a one-click unsubscribe. Opting out revokes the consent immediately.
                   Auth emails (magic links, password reset, email change confirmation) are transactional
                   and are sent regardless of this setting because you asked for them.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-text-primary mb-1">If you subscribe to product updates from the landing page</h3>
+                <p>
+                  If you submit your email through the &ldquo;Hear when we ship something good&rdquo;
+                  form on the landing or about pages, we store your email address, the page you
+                  submitted it from, your browser user-agent, and the timestamp of your consent.
+                  We use this only to send occasional product-update emails (new features, major
+                  changes). Every such email includes a one-click unsubscribe. We will not share,
+                  sell, or rent this list to anyone, ever.
                 </p>
               </div>
               <div>
