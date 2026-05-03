@@ -2,8 +2,6 @@ import { ImageResponse } from 'next/og';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 import { findArchetypeBySlug } from '@/lib/archetypeRegistry';
-import { ALL_SPRITES } from '@/lib/pixel/sprites';
-import { IF_PALETTE, type PaletteKey } from '@/lib/pixel/palette';
 
 // Node runtime so we can read fonts off disk — same pattern as /clear/[id].
 export const runtime = 'nodejs';
@@ -20,33 +18,15 @@ async function loadFonts() {
   return { bungee, outfitBold };
 }
 
-// Parse the ASCII sprite into per-color rect lists. Same algorithm as
-// components/PixelSprite.tsx — duplicated here to avoid importing a 'use client'
-// module from a Node-runtime route.
-function parseSprite(spriteKey: string): { rows: string[]; w: number; h: number } | null {
-  const str = ALL_SPRITES[spriteKey];
-  if (!str) return null;
-  const lines = str.split('\n').map((l) => l.replace(/\r$/, ''));
-  while (lines.length && !lines[0].trim()) lines.shift();
-  while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
-  const w = Math.max(...lines.map((l) => l.length));
-  const rows = lines.map((l) => l.padEnd(w, '.'));
-  return { rows, w, h: rows.length };
-}
-
-interface Rect { x: number; y: number; color: string; }
-function spriteRects(rows: string[], w: number, h: number): Rect[] {
-  const out: Rect[] = [];
-  for (let y = 0; y < h; y++) {
-    const row = rows[y];
-    for (let x = 0; x < w; x++) {
-      const ch = row[x];
-      if (ch === '.' || ch === ' ') continue;
-      if (!(ch in IF_PALETTE)) continue;
-      out.push({ x, y, color: IF_PALETTE[ch as PaletteKey] });
-    }
+// Load the H2 painted-pixel sprite for an archetype. PNG@4x = 512×512.
+// Falls back to null so the OG renderer can substitute an emoji.
+async function loadH2Sprite(spriteKey: string): Promise<string | null> {
+  try {
+    const bytes = await readFile(join(process.cwd(), 'public/sprites/h2', `${spriteKey}.png`));
+    return `data:image/png;base64,${bytes.toString('base64')}`;
+  } catch {
+    return null;
   }
-  return out;
 }
 
 export default async function Image({
@@ -65,13 +45,7 @@ export default async function Image({
     : a?.tone === 'respect' ? '#a78bfa'
     : '#1ae2c0';
 
-  const sprite = !fallback ? parseSprite(a!.spriteKey) : null;
-
-  // Sprite rendering — scale each pixel up. 32×32 sprites at 12px/cell ≈ 384px.
-  const PIXEL = sprite ? Math.floor(380 / Math.max(sprite.w, sprite.h)) : 12;
-  const spritePxW = sprite ? sprite.w * PIXEL : 0;
-  const spritePxH = sprite ? sprite.h * PIXEL : 0;
-  const rects = sprite ? spriteRects(sprite.rows, sprite.w, sprite.h) : [];
+  const spriteDataUrl = !fallback ? await loadH2Sprite(a!.spriteKey) : null;
 
   // Fit title to width — column is 600px wide, Bungee char ≈ 0.6 × fontSize.
   // Size against the longest word so multi-word titles wrap cleanly without
@@ -152,18 +126,15 @@ export default async function Image({
             justifyContent: 'center',
           }}
         >
-          {sprite ? (
-            <svg
-              width={spritePxW}
-              height={spritePxH}
-              viewBox={`0 0 ${sprite!.w} ${sprite!.h}`}
-              xmlns="http://www.w3.org/2000/svg"
-              style={{ display: 'block' }}
-            >
-              {rects.map((r, i) => (
-                <rect key={i} x={r.x} y={r.y} width={1} height={1} fill={r.color} />
-              ))}
-            </svg>
+          {spriteDataUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={spriteDataUrl}
+              alt=""
+              width={380}
+              height={380}
+              style={{ width: '380px', height: '380px', objectFit: 'contain', imageRendering: 'pixelated' }}
+            />
           ) : (
             <div style={{ display: 'flex', fontSize: '180px' }}>🎮</div>
           )}
