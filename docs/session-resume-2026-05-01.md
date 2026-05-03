@@ -1,6 +1,95 @@
 # Session Resume — 2026-05-01 (Friday, PDT)
 
-**Type:** TWO sessions today. AM was design infra (H2 sprites). PM was launch-track sweep — B3 reroll QA, psych red-team Round 4, accessibility audit, sample library expansion. **Two production deploys** at 12:50 PM PDT (`0599778`) and 1:15 PM PDT (`32e654d`).
+**Type:** THREE sessions today. AM = design infra (H2 sprites, no deploy). Midday = launch-track sweep (a11y, voice, sample lib — 2 deploys). Late PM = GA4 instrumentation rescue + competitor doc + debug toggle (4 more deploys, 9 total commits today). All-clear for soft launch May 6.
+
+## Late PM session (GA4 + competitor doc) — what shipped
+
+Four deploys in sequence as we debugged GA4. Each landed clean.
+
+**Commit `eb7bc29` — fix(a11y): vibe-theme contrast bumps + Hades II**
+- 8 vibe-themes (80s, Future, Dino, Weird, Ultra, Tropical, Campfire) text-dim/text-faint bumped from body 4.5:1 fails to 4.55–4.83:1 PASS. Hue/saturation preserved, only lightness lifted. All 13 themes now WCAG AA body-text compliant.
+- Hades II added to sample library (Steam appId 1145350, deep-cut, on-deck).
+
+**Commit `364d30b` — feat(analytics): landing_view + enriched event params**
+- New `trackLandingView()` (was completely missing from `lib/analytics.ts`); fires on LandingPage mount with `has_library` param via sessionStorage guard.
+- `reroll`, `reroll_commit`, `game_cleared`, `archetype_rerolled`, `just_5_min` enriched with mood, session_length, game_name, time_tier, smart_pick_type, hltb_main, rolls_until_commit, rating, etc. Param-cleaning in gtag wrapper strips undefined/null.
+
+**Commit `629919d` — fix(sample, analytics): playing-now cap + gtag stub**
+- Sample library: 3 → 1 `status: 'playing'` games. Demoted Marvel Rivals + Clair Obscur to `on-deck` so MAX_PLAYING_NOW=3 cap doesn't reject first commits.
+- Added defensive lazy-stub for `window.gtag` in `lib/analytics.ts`. Helped queue events but didn't fix the actual root cause (next commit).
+
+**Commit `7eaa02f` — fix(analytics): move gtag init to layout `<head>`**
+- The real fix. GA4 was silently dropping events queued before `gtag('config', GA_ID)` because afterInteractive timing inside CookieBanner ran the config AFTER React hydration, while LandingPage's useEffect fired `landing_view` DURING hydration. Synchronous inline init in `app/layout.tsx <body>` top now guarantees config precedes any tracker call. Privacy unchanged — pre-consent the inline script only creates an in-memory dataLayer, no cookies/requests.
+- Side payload: `docs/competitive-landscape-2026-04-20.md` — added PlayNext (tryplaynext.com) under direct competitors. Closest thesis match seen yet, but Netflix-row UX = literal choice-overload problem. Their UX is our differentiator.
+
+**Commit `921f4b9` — feat(analytics): `?ga_debug=1` URL toggle**
+- Append `?ga_debug=1` to any inventoryfull.gg URL to set `debug_mode: true` for that browser session. Routes events to GA4 DebugView for testing instrumentation. Sticks via sessionStorage. Real users without the param: zero impact.
+
+## Midday session (launch-track sweep) — what shipped
+
+**Commit `0599778` — fix(a11y, voice): launch-ready sweep**
+- A11y: GetStartedModal + ImportHub focus traps with return-focus; Reroll post-accept `<p>` → `<h3>` (screen readers now announce the picked game); FinishCheckNudge `aria-expanded`; email input `aria-label`
+- Theme contrast (4 critical fails): 90s body fallback to white; Minimal `text-faint` `#606060` → `#7a7a7a` (was 2.95:1, failed UI 3:1); Cozy text-dim/text-faint darkened to ~4.8:1; Light `text-faint` to 6.51:1
+- Voice (Round 4 red-team): Reroll roll-8 toast → "You're deciding and that's everything."; post-accept → "Just go enjoy."; email opt-in → "Email me only stuff I'd want to hear about."; ImportHub "Most start here" label removed
+
+**Commit `32e654d` — feat(sample): expand library 39 → 63**
+- Fixed dead-ends: story-rich × Quick Session 0 → 3, brainless 1 → 10, competitive 1 → 6, quick-hit tier 3 → 13
+- Modernity additions per Brady's picks: Pragmata, Saros (PS5), Crimson Desert, PWS2, Vampire Crawlers, Slay the Spire 2, Helldivers 2, Marvel Rivals, Marathon, Minecraft, Split Fiction, Dispatch, Clair Obscur (Steam IDs verified by Brady).
+
+**Commit `f49d5ff` — docs:** session-resume midday wave (this file, first version).
+
+## Decisions logged today
+
+- `2026-05-01 — GA4 dataLayer init moves to root layout <head>` — order-of-operations bug fix. See DECISIONS.md.
+- `2026-05-01 — Sample library mood/tier floors` — two-floor invariant for sample lib. See DECISIONS.md.
+- `2026-05-01 — H2 archetype skeleton variety rule` (AM session) — already logged.
+
+## Verification harnesses (kept in `/tmp`, not committed)
+
+- `/tmp/b3-reroll-qa.ts` — 16,200 simulated picks across mode×session×mood, both libraries. **Zero CRITICAL violations** on picker logic. Re-runnable via `npx tsx /tmp/b3-reroll-qa.ts`.
+- `/tmp/b5-mood-audit.ts` — sample library mood distribution. Re-run after any `sampleLibrary.ts` changes to verify floors hold.
+
+## Verify on next session start
+
+- **Latest deploy** is `921f4b9`. Confirm with `curl -sI https://inventoryfull.gg/ | grep x-vercel-id`.
+- **`landing_view` is firing** in production. Verify by visiting `https://inventoryfull.gg/?ga_debug=1` (forces debug_mode for the session) → cookies accept → GA4 → Admin → Data display → DebugView. Should show `landing_view` with `has_library: 0` within ~10s. Without the URL flag, check Realtime → Events instead.
+- **Sample library has exactly 1 `status: 'playing'` game** (BG3). New visitors must be able to accept first commit without hitting MAX_PLAYING_NOW=3.
+- **All 13 themes pass WCAG AA body** (4.5:1+). Was a regression risk if any token edits land without re-checking.
+
+## Rotting gotchas accumulated today
+
+- **`?ga_debug=1` flag** is sticky via sessionStorage (`if-ga-debug` key). To turn off mid-tab: `sessionStorage.removeItem('if-ga-debug')` or close tab.
+- **`landing_view` sessionStorage flag** (`if-ga-landing-view`) — fires once per tab session by design. Testing it requires fresh incognito *window* (new tab in same window inherits sessionStorage).
+- **Sample library 'playing' cap** — only 1 sample game in `playing` status now. If anyone re-promotes Marvel Rivals or Clair Obscur, MAX_PLAYING_NOW=3 will reject first user commits. Comment in `lib/sampleLibrary.ts` near the demoted entries explains why.
+- **GA4 Key event over-flagging** (19 of 20 events flagged as Key) — not auto-fixed yet. Brady's call which to demote (recommended set: import_library, first_completion, game_cleared, sample_completed, share_card_created, sign_up, game_launched_externally).
+- **Discord OG cache** is stale from pre-Apr-30 deploys. Workaround: `?v=N` cache-buster on share URLs. Twitter/Bluesky/iMessage/Slack are clean.
+
+## Deferred / parked
+
+- **GA4 Key event pruning** — 12-13 events to demote from Key to plain. Brady's call, no code change needed.
+- **GA4 custom dimensions registration** — to surface mood/session_length/etc params in standard reports, register them under Admin → Custom definitions before launch traffic so they backfill.
+- **Switch via Nintendo Parental Controls API** — agreed post-launch. Real effort 1.5–2 weeks (auth flow + token mgmt); not Playnite-easy. Elevate priority on ROADMAP, not pre-May-6.
+- **Comfort-breaker as structured concept** — Phase 2 idea (`vibes: ['comfort-breaker']` tag + a "you haven't picked a comfort game in 4 weeks" surface).
+- **"Try a sample first" outline button border** — non-text contrast 1.4:1 fails 3:1 (WCAG 1.4.11). Week-2 token tweak.
+- **Mobile cross-browser sweep** — Brady's task, recipe in chat. iOS Safari, iPhone SE CTA, Brave/Chromium themes.
+- **B4 OG unfurl per platform** — Brady's task. Twitter/Bluesky/iMessage/Slack ✓. Reddit deferred (no easy test sub). Discord stale-cache acknowledged not-a-bug.
+
+## Open design questions for next session
+
+- Whether to add a `landing_view` re-fire path for users whose library got cleared (rare edge case — consent reset, library wipe).
+- Whether to gate the `gtag-init` inline script behind `localStorage.getItem('if-cookie-consent') !== 'declined'` for marginal additional caution. Current behavior queues events for consent-declined users (memory only, never sent). Probably fine, but worth a sanity check before launch traffic.
+- Whether to log `picker_opened` and `tab_clicked` as GA4 funnel events worth retaining as Key events (not currently flagged).
+
+## Health snapshot
+
+- Build state: ✓ compiled cleanly on `921f4b9` (last verification).
+- `main` tip: `921f4b9 feat(analytics): ?ga_debug=1 URL toggle routes session to DebugView`.
+- Production: live and responding 200, FAQPage schema present, OG metadata correct.
+- Known bugs: none introduced today. The `landing_view` "bug" was instrumentation, not user-facing.
+
+---
+
+# AM + Midday wave (earlier in this session)
 
 ## PM session (launch-track) — what shipped
 

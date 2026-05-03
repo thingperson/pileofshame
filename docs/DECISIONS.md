@@ -15,6 +15,44 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-05-01 — GA4 dataLayer init moves to root layout `<head>`
+
+**Decision.** The GA4 dataLayer init + `gtag('config', GA_ID)` runs as a synchronous inline `<script>` in `app/layout.tsx` `<body>` top, BEFORE hydration. The `gtag.js` library load itself remains consent-gated in `CookieBanner.tsx`.
+
+**Why.**
+- GA4 silently drops events queued in `dataLayer` before `gtag('config')`. With init inside CookieBanner using `strategy="afterInteractive"`, any tracker called from a useEffect (e.g. `trackLandingView` on LandingPage mount) queued an event into dataLayer *before* config arrived. When `gtag.js` processed dataLayer, the event had no destination property and was dropped.
+- Symptom: `landing_view` had "No stream data detected" in GA4 admin Events for 28 days, while `reroll`/`picker_opened` (which fire after user interaction, well after init has run) appeared normally.
+- Privacy stance unchanged: pre-consent, the inline init script only creates an in-memory `dataLayer` array and a queue function. No cookies, no requests. Actual `googletagmanager.com/gtag/js` library still loads only after explicit consent.
+
+**Implementation.** `app/layout.tsx` (inline `<script dangerouslySetInnerHTML>` in `<body>` top, commit `7eaa02f`); `components/CookieBanner.tsx` (only `gtag.js` src `<Script>` remains consent-gated). `lib/analytics.ts` retains a defensive lazy-stub for `window.gtag` in case the order is ever inverted again.
+
+**Rejected.**
+- Keeping init consent-gated in CookieBanner — the original setup. Failed because afterInteractive timing made early events undeliverable.
+- React-side stub creation in `lib/analytics.ts` gtag wrapper alone (commit `629919d`). Helped queue events, but didn't fix the underlying *order* bug — config still arrived after the queued event.
+
+**Drift risk.** A future contributor could move the inline init script into a client component or wrap it in a consent gate, reintroducing the timing bug. The comment block in `layout.tsx` explains why it can't move. If consent rules change so the dataLayer queue itself is forbidden pre-consent, this approach needs revisiting (would require deferring all early trackers via a consent-change event listener instead).
+
+---
+
+## 2026-05-01 — Sample library mood/tier floors
+
+**Decision.** The sample library must satisfy two floors before ship: (1) every `MoodTag` has ≥ 5 games at the raw-presence level, and (2) every `(reroll mode × mood)` intersection has ≥ 3 eligible games. No dead-ends — every mood pick under any mode must return at least one game with reasonable variety.
+
+**Why.**
+- Pre-expansion audit (39 games) found `story-rich × Quick Session = 0 eligible` (literal dead-end — empty state for new visitors), `brainless = 1 game`, `competitive = 1 game`. Niche moods returned the same game on every roll because the eligible pool was 1.
+- Without floors, niche mood picks degrade to repetitive same-game loops or empty states — exactly the failure mode the picker is supposed to remove (Iyengar choice-overload becomes Iyengar zero-choice frustration).
+- Two-floor rule (raw + intersection) catches two distinct failure shapes: thin mood overall, AND thin tier-within-mood that the raw count alone misses.
+
+**Implementation.** `lib/sampleLibrary.ts` expanded 39 → 63 games (commit `32e654d` + Hades II in `eb7bc29`). Verification harness at `/tmp/b5-mood-audit.ts` is re-runnable via `npx tsx /tmp/b5-mood-audit.ts` after any sample-library change. Post-expansion: brainless 1→10, competitive 1→6, story-rich × Quick Session 0→3, every (mode × mood) ≥ 3.
+
+**Rejected.**
+- Single raw-mood floor (Brady's initial instinct: 5 per mood). Insufficient — raw count of 5 doesn't guarantee any are Quick-Session-eligible if all 5 are marathon-tier.
+- Procedurally generated sample games. Felt fake, broke the "real-person backlog" feel and the curation that gives the library its character.
+
+**Drift risk.** Adding new MoodTags to `types.ts` without expanding sample library breaks the floor invisibly — the harness would catch it on next run, but only if someone runs it. Worth adding a CI check post-launch if mood schema continues to grow.
+
+---
+
 ## 2026-05-01 — H2 archetype skeleton variety rule
 
 **Decision.** Extend the H2 archetype style spec: the *art style* (24-color palette, hue-shifted shadows, no outlines, motes, brand accent) stays locked across all 42 archetypes; the *skeleton/composition* is deliberately varied per archetype. An archetype can be a humanoid, a creature, an object, an environment, or an atmospheric scene — whichever reads its concept best. The original Hoarder/Critic/Speedrunner/Cozy/Webmaster pattern of "frontal humanoid + prop" is now one option among many, not the default.

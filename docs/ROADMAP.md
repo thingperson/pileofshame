@@ -120,7 +120,7 @@
 - Supabase auth + cloud sync ✅
 - Google + GitHub OAuth ✅
 - OG image for Discord/Twitter/SMS unfurls (v3: hero illustration, landing headline, Outfit + JetBrains Mono fonts, purple glow) ✅
-- GA4 analytics (reroll, commit, import events) ✅
+- GA4 analytics — full event set incl. `landing_view`, with `mood`/`session_length`/`archetype`/`smart_pick_type` params ✅
 - PWA manifest + 192/512px icons + apple-icon fix ✅
 - Token efficiency restructure (plan file 94% reduction, path-scoped rules) ✅
 
