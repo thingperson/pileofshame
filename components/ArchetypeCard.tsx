@@ -1,4 +1,8 @@
+'use client';
+
+import { useState } from 'react';
 import { PlayerArchetype, getArchetypeSpriteKey } from '@/lib/archetypes';
+import { findArchetypeByTitle } from '@/lib/archetypeRegistry';
 import { hasSprite } from '@/lib/pixel/sprites';
 import PixelSprite from './PixelSprite';
 
@@ -15,6 +19,33 @@ export default function ArchetypeCard({
   archetypesLength,
   onReroll,
 }: ArchetypeCardProps) {
+  const [shareState, setShareState] = useState<'idle' | 'copied'>('idle');
+  const registryEntry = findArchetypeByTitle(currentArchetype.title);
+  const shareUrl = registryEntry
+    ? (typeof window !== 'undefined' ? `${window.location.origin}/archetype/${registryEntry.slug}` : `/archetype/${registryEntry.slug}`)
+    : null;
+
+  async function handleShare() {
+    if (!shareUrl) return;
+    const text = `I'm ${currentArchetype.title} on Inventory Full.`;
+    // Prefer native share where available (mobile), fall back to clipboard copy.
+    if (typeof navigator !== 'undefined' && 'share' in navigator) {
+      try {
+        await navigator.share({ title: currentArchetype.title, text, url: shareUrl });
+        return;
+      } catch {
+        // User cancelled or share rejected — fall through to clipboard.
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setShareState('copied');
+      setTimeout(() => setShareState('idle'), 2000);
+    } catch {
+      window.prompt('Copy your archetype link:', shareUrl);
+    }
+  }
+
   return (
     <div
       className="rounded-lg p-4 mb-3 relative overflow-hidden"
@@ -74,19 +105,34 @@ export default function ArchetypeCard({
           </p>
         </div>
       </div>
-      {archetypesLength > 1 && (
-        <button
-          onClick={onReroll}
-          className="mt-3 w-full py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-          style={{
-            backgroundColor: 'rgba(167, 139, 250, 0.08)',
-            border: '1px solid rgba(167, 139, 250, 0.2)',
-            color: '#a78bfa',
-          }}
-        >
-          🔮 Read me again ({archetypeIndex % archetypesLength + 1}/{archetypesLength})
-        </button>
-      )}
+      <div className="mt-3 flex flex-col sm:flex-row gap-2">
+        {archetypesLength > 1 && (
+          <button
+            onClick={onReroll}
+            className="flex-1 py-2 rounded-lg text-xs font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+            style={{
+              backgroundColor: 'rgba(167, 139, 250, 0.08)',
+              border: '1px solid rgba(167, 139, 250, 0.2)',
+              color: '#a78bfa',
+            }}
+          >
+            🔮 Read me again ({archetypeIndex % archetypesLength + 1}/{archetypesLength})
+          </button>
+        )}
+        {shareUrl && (
+          <button
+            onClick={handleShare}
+            className="flex-1 py-2 rounded-lg text-xs font-bold font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+            style={{
+              background: 'linear-gradient(135deg, var(--color-accent-purple) 0%, var(--color-accent-pink) 100%)',
+              color: '#fff',
+              border: '1px solid transparent',
+            }}
+          >
+            {shareState === 'copied' ? '✓ Link copied' : '↗ Share your type'}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
