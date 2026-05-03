@@ -27,6 +27,7 @@ None. Working tree clean, all commits pushed.
 - **All 38 archetype pages reachable.** Spot-check 2–3 slugs from `lib/archetypeRegistry.ts`. Each should render with H1 = title, H2 sprite below, flavor line, and "Open Inventory Full" CTA.
 - **Email subscribe round-trip works on prod.** Submit `your+test@email.com` from the landing form. Should return `{ ok: true }`. Verify the row landed in Supabase: `SELECT * FROM email_subscribers ORDER BY consented_at DESC LIMIT 5`. (Locally returns 503 because no Supabase env in dev — that's expected.)
 - **Discord invite link** is non-expiring, unlimited uses. If it ever stops working, regenerate from the server (Server name dropdown → Invite People → Edit invite link → Never / No limit) and update `DISCORD_INVITE_URL` in `lib/social.ts`.
+- **Sentry issue `JAVASCRIPT-NEXTJS-4`** (TypeError `undefined is not an object (evaluating 'a[H.D.Od]')`) on `/stats`. First seen 2026-05-01 (lines up with GA4 init move to `<head>`, commit `7eaa02f`). 16 events / **0 users** / 100% Safari 26.4 / 100% prod. Almost certainly bot/unfurler triggering gtag.js internals — not real user impact. Re-check on next session start: if `Users (30d)` climbs above 0 OR User-Agent on a sample event is a real (non-bot) Safari UA, dig in (likely fix: try/catch the gtag init since we can't patch Google's library). Until then, ignore.
 
 ## Rotting gotchas accumulated
 
