@@ -292,6 +292,15 @@ Pixel sprite system replacing emoji as primary brand iconography.
 - Cozy + Minimal theme WCAG contrast fixes ✅
 - Mobile Google login testing (real device) — still needed
 
+### Distribution & Community (pre-launch) — SHIPPED ✅
+- Discord server live (`https://discord.gg/gJdmmymGg3`), Community mode enabled with 5 channels (welcome, currently-tackling, 🏆-cleared, pick-receipts, feedback-and-bugs, announcements). Onboarding asks platform; assigns role. ✅
+- Discord link in landing footer + about page footer (`lib/social.ts` single source of truth) ✅
+- Unauthenticated email capture on landing + about (`StayInTouch.tsx`, `email_subscribers` table, `/api/subscribe` rate-limited 3/10min/IP) ✅
+- Privacy Policy updated with new data category (commit `4e3b676`) ✅
+- Standalone `/archetype/[slug]` share pages — 38 SSG'd routes, evergreen flavor lines, OG cards with tone-tinted glow (commit `490157c`) ✅
+- "Share your type" button in `ArchetypeCard.tsx` — native share sheet on mobile, clipboard fallback on desktop ✅
+- H2 painted-pixel sprites (PNG@4x) wired into archetype OG cards (`public/sprites/h2/`, hybrid integration per spec, commit `5643774`) ✅
+
 ### Share & Polish (MEDIUM — from external feedback review)
 - PWA install prompt in Settings menu (uses beforeinstallprompt API) ✅
 - Bail animation: 300ms scale-down + fade on bail action ✅
@@ -342,7 +351,7 @@ Pixel sprite system replacing emoji as primary brand iconography.
 - From user feedback: "I like data breakdowns on my own behaviour over time"
 
 ### Phase 4: Social & Sharing (LOW priority for now)
-- Public profile route (/u/username)
+- Public profile route (/u/username) — `/archetype/[slug]` is the lighter-weight precursor (no DB writes, identity-only, anyone can land on it). Full per-user profile would add cloud-stored library snapshots, friend comparisons, etc.
 - OG link previews for shared profiles
 - Share image cards (PNG generation via /api/share-card exists but UI stripped — restore when prioritized)
 - Friend comparisons ("your pile vs. theirs")

@@ -31,7 +31,7 @@ If a feature adds catalogue management, organization tools, or "engagement" that
 - Auth: Supabase via `@supabase/ssr`. Guest mode is first-class.
 - Integrations: `psn-api`, Steam public API, Xbox (OpenXBL), RAWG, HLTB.
 - Observability: Sentry (`@sentry/nextjs`), live in prod.
-- OG images: `next/og` ImageResponse. Clear card on Node runtime + `fs.readFile`; root + pile still on edge with gstatic fonts.
+- OG images: `next/og` ImageResponse. Clear + archetype cards on Node runtime + `fs.readFile` (archetype loads PNG@4x H2 sprites from `public/sprites/h2/`); root + pile still on edge with gstatic fonts.
 - Tests: Playwright e2e (`npm run test:e2e`). No unit tests.
 - Deploy: `git push` to `main` → Vercel. No `gh` / `vercel` CLI. Node via `fnm`.
 

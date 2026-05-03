@@ -15,6 +15,45 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-05-02 — Archetype share architecture: static evergreen registry, not per-share DB snapshot
+
+**Decision.** `/archetype/[slug]` pages and their OG cards render from a static registry (`lib/archetypeRegistry.ts`) of de-personalized archetype flavor lines — NOT from a per-user DB row capturing their personalized in-app description. Every visitor to `/archetype/the-archaeologist` sees the same generic "Games from years ago are still waiting for you" copy, regardless of whose share link they followed.
+
+**Why.**
+- The in-app archetype descriptions in `lib/archetypes.ts` interpolate user stats (`${s.totalGames} games, ${s.completedCount} finished`). Those numbers are stale the moment the user adds a game — and the share URL would have to be regenerated to stay accurate, which nobody does.
+- Identity is the share-worthy part, not the stat numbers. *"I'm The Hoarder"* lands harder than *"I have 247 games and 4 cleared"*. The former says something about you; the latter is a leaderboard entry.
+- Static = zero DB writes, zero new tables, full SSG via `generateStaticParams()`. All 38 pages pre-rendered at build time and served from CDN cache. Free, fast, and the OG image route stays Node-runtime + `fs.readFile` like `/clear/[id]`.
+
+**Implementation.** `lib/archetypeRegistry.ts` (38 entries — title, slug, spriteKey, tone, evergreen flavor lifted from in-app descriptions with stat interpolations stripped). `app/archetype/[slug]/page.tsx` + `opengraph-image.tsx` (commits `490157c`, `5643774`). `findArchetypeByTitle()` maps in-app archetype titles to registry slugs; "Genre Addict" dynamic archetypes route to a generic `/archetype/genre-addict` page.
+
+**Rejected.**
+- DB-backed per-share snapshot mirroring `/clear/[id]` (`share_cards` table). Costs a write on every share, requires GC, makes URLs ephemeral, and gains nothing because the personalized stat numbers are not what makes the share interesting.
+- Personalized OG via query string (`/archetype/hoarder?games=247`). URL parameters expose user data per `<user_privacy>` (would also pollute analytics), and the personalized framing competes with the identity framing for what the recipient takes away.
+
+**Drift risk.** If new archetypes are added to `lib/archetypes.ts` without corresponding entries in `archetypeRegistry.ts`, the in-app share button silently doesn't render (no slug match → no share URL). Counter: a CI check that verifies every `SPRITE_KEY_BY_TITLE` title has a registry entry would catch this. For now, the convention lives in the comment block at the top of `archetypeRegistry.ts`.
+
+---
+
+## 2026-05-02 — H2 sprite integration: hybrid (Option C), aliases resolved at copy-time
+
+**Decision.** Per the `docs/h2-archetype-integration-spec.md` recommendation, OG share cards use H2 PNG@4x via `fs.readFile` (Node runtime); in-app sprite renders stay on the lo-fi 32×32 sprite-string system (`lib/pixel/sprites.ts`). Three alias keys (`quickDraw` / `cozy` / `dino` in app vs. `speedrunner` / `cozy-craver` / `dino-rider` in bundle) are resolved by copying the bundle PNG to the app-keyed filename in `public/sprites/h2/` — NOT via a runtime alias map.
+
+**Why.**
+- Hybrid was the spec's recommended path. OG cards benefit from the painted-pixel detail (large render, recipient-facing, social-feed crucial); in-app thumbnails are 64–96px where lo-fi reads cleaner anyway, and re-painting all in-app sprite usages is a separate, larger surface to test.
+- File-naming as the alias mechanism is the simplest invariant: `ls public/sprites/h2/` shows whether `quickDraw.png` exists. If it does, the system works. Runtime alias maps hide the mapping behind indirection that future-Brady (or future-Claude) would have to reverse-engineer.
+- Visual mismatch between in-app card and OG card is acceptable because (a) the user will rarely see both side-by-side, (b) each renders well in its own context, (c) "jank is a voice" — Brady's call.
+
+**Implementation.** 38 PNGs copied from `notes/Inventory Full-claude code resume package from design/bundle-archetype-h2/{bundle-key}/archetype-{bundle-key}@4x.png` to `public/sprites/h2/{app-key}.png` (216K total). `app/archetype/[slug]/opengraph-image.tsx` reads the PNG by app sprite key, base64-encodes it as a data URL, and renders inline at 380×380 with `imageRendering: pixelated` (commit `5643774`).
+
+**Rejected.**
+- Option A (PNG drop-in across all surfaces) — bigger surface, more places to break, no benefit for the in-app thumbnail use case.
+- Option B (sprite-string runtime with extended palette) — defeats the painted-pixel quality the H2 set was made for; rendering 24-color hand-shaded art via per-pixel `<rect>` lists in satori would be slow and visually flat compared to the source PNG.
+- Runtime alias map (`H2_ALIASES` record) — adds a layer of lookup that's only there to bridge a naming mismatch, when renaming the destination file accomplishes the same thing with one less indirection.
+
+**Drift risk.** If new H2 sprites land in the bundle with names that don't already match an app key, the copy needs to be re-run with the new mapping. The `PAIRS` array in the original copy script (in commit `5643774` body) is the source of truth for the mapping but isn't checked in. If the H2 set expands, save the script to `scripts/copy-h2-sprites.sh` so the mapping is reproducible.
+
+---
+
 ## 2026-05-01 — GA4 dataLayer init moves to root layout `<head>`
 
 **Decision.** The GA4 dataLayer init + `gtag('config', GA_ID)` runs as a synchronous inline `<script>` in `app/layout.tsx` `<body>` top, BEFORE hydration. The `gtag.js` library load itself remains consent-gated in `CookieBanner.tsx`.
