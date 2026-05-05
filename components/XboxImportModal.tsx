@@ -65,7 +65,7 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
       setProfile(data.profile);
       setStep('confirm');
     } catch {
-      setError('Failed to connect. Try again.');
+      setError('Xbox is dodging the call. Try again in a sec?');
     }
     setLoading(false);
   }, [gamertag]);
@@ -80,7 +80,7 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Could not load games.');
+        setError(data.error || 'Xbox is dodging the call. Try again in a sec?');
         setLoading(false);
         return;
       }
@@ -97,7 +97,7 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
       setSelected(newSelected);
       setStep('select');
     } catch {
-      setError('Failed to fetch games.');
+      setError('Xbox is dodging the call. Try again in a sec?');
     }
     setLoading(false);
   }, [profile, existingGames]);

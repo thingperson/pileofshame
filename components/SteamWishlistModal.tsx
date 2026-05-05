@@ -59,7 +59,7 @@ export default function SteamWishlistModal({ open, onClose }: SteamWishlistModal
       setProfile(data.profile);
       setStep('confirm');
     } catch {
-      setError('Network error. Try again.');
+      setError('Steam ghosted us. Try again in a sec?');
     }
     setLoading(false);
   }, [steamId]);
@@ -74,7 +74,7 @@ export default function SteamWishlistModal({ open, onClose }: SteamWishlistModal
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Failed to fetch wishlist');
+        setError(data.error || 'Steam ghosted us. Try again in a sec?');
         setLoading(false);
         return;
       }
@@ -90,7 +90,7 @@ export default function SteamWishlistModal({ open, onClose }: SteamWishlistModal
       setSelected(new Set(newGames.map((g: WishlistGame) => g.appid)));
       setStep('select');
     } catch {
-      setError('Network error. Try again.');
+      setError('Steam ghosted us. Try again in a sec?');
     }
     setLoading(false);
   }, [profile, existingGames]);

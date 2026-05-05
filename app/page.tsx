@@ -699,8 +699,8 @@ function AppContent() {
           }}
         >
           <span>
-            You&apos;re exploring a sample library.{' '}
-            <span style={{ color: 'var(--color-text-dim)' }}>Poke around, try the features - it&apos;s all fake data.</span>
+            This is a sample pile.{' '}
+            <span style={{ color: 'var(--color-text-dim)' }}>Poke at it. None of this is yours yet.</span>
           </span>
           <div className="flex items-center gap-2 shrink-0">
             <button
@@ -890,7 +890,7 @@ function AppContent() {
               <p className="text-3xl mb-3">{activeTabDef.icon}</p>
               {activeTab === 'backlog' && (
                 <>
-                  <p className="text-sm text-text-muted">Backlog is empty. You did it.</p>
+                  <p className="text-sm text-text-muted">Pile&apos;s empty. Brag about it later.</p>
                   <p className="text-xs text-text-faint mt-1">Or import some games to get started.</p>
                 </>
               )}
@@ -963,7 +963,7 @@ function AppContent() {
                 onClick={() => setBacklogLimit((prev) => prev + 10)}
                 className="px-6 py-2.5 text-sm font-medium rounded-xl border border-border-subtle text-text-muted hover:text-text-primary hover:border-accent-purple transition-all"
               >
-                Show more ({tabGames.length - backlogLimit} remaining)
+                Show {tabGames.length - backlogLimit} more skeletons in the closet
               </button>
             </div>
           )}
@@ -971,7 +971,7 @@ function AppContent() {
           {/* Backlog "Best for You" explainer (first load only, smart sort) */}
           {activeTab === 'backlog' && tabGames.length > 0 && backlogLimit <= 10 && backlogSort === 'smart' && (
             <p className="text-xs text-text-faint text-center mt-3 font-[family-name:var(--font-mono)]">
-              Sorted by what deserves your attention: games you&apos;re close to finishing, genres you gravitate toward, and buried gems worth resurfacing.
+              Sorted by what&apos;s actually pullable tonight. Close-to-done, your usual genres, and quiet gems.
             </p>
           )}
         </div>

@@ -51,7 +51,7 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Failed to fetch PlayStation games');
+        setError(data.error || "PSN didn't pick up. Try again in a sec?");
         setLoading(false);
         return;
       }
@@ -68,7 +68,7 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
       setSelected(new Set(newGames.map((g: PSNGameData) => g.name)));
       setStep('select');
     } catch {
-      setError('Network error. Try again.');
+      setError("PSN didn't pick up. Try again in a sec?");
     }
     setLoading(false);
   }, [npsso, existingGames]);

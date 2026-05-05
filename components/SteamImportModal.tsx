@@ -63,7 +63,7 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
       setProfile(data.profile);
       setStep('confirm');
     } catch {
-      setError('Network error. Try again.');
+      setError('Steam ghosted us. Try again in a sec?');
     }
     setLoading(false);
   }, [steamId]);
@@ -78,7 +78,7 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Failed to fetch games');
+        setError(data.error || 'Steam ghosted us. Try again in a sec?');
         setLoading(false);
         return;
       }
@@ -91,7 +91,7 @@ export default function SteamImportModal({ open, onClose }: SteamImportModalProp
       setSelected(new Set(newGames.map((g: SteamGameData) => g.appid)));
       setStep('select');
     } catch {
-      setError('Network error. Try again.');
+      setError('Steam ghosted us. Try again in a sec?');
     }
     setLoading(false);
   }, [profile, existingGames]);

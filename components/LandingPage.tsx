@@ -239,7 +239,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
               className="text-3xl sm:text-4xl font-bold text-center mb-4 tracking-tight"
               style={{ color: 'var(--color-text-primary)' }}
             >
-              It&apos;s really just three things:
+              Three steps. The third one is &apos;play&apos;.
             </h2>
             <p
               className="text-center text-sm sm:text-base mb-10 sm:mb-14 font-[family-name:var(--font-mono)]"
@@ -367,7 +367,7 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
               className="mt-4 text-xs font-[family-name:var(--font-mono)]"
               style={{ color: 'var(--color-text-faint)' }}
             >
-              Free. No account required.
+              Free. No account. No hassle. We barely want your email.
             </p>
           </div>
         </Reveal>

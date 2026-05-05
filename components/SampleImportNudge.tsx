@@ -94,9 +94,7 @@ export default function SampleImportNudge({ isSampleLibrary, onImport }: SampleI
           className="text-sm leading-relaxed mb-5"
           style={{ color: 'var(--color-text-muted)' }}
         >
-          That was one pick from fake data.
-          <br />
-          Now do it with yours.
+          That pick was fake. Yours will be real.
         </p>
 
         <div className="flex flex-col sm:flex-row-reverse gap-2">
@@ -127,7 +125,7 @@ export default function SampleImportNudge({ isSampleLibrary, onImport }: SampleI
           className="mt-4 text-xs font-[family-name:var(--font-mono)] text-center"
           style={{ color: 'var(--color-text-faint)' }}
         >
-          Free. No account required.
+          Free. No account. No hassle. We barely want your email.
         </p>
       </div>
     </div>
