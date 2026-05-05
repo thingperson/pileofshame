@@ -147,3 +147,57 @@ On screenshot vision-checks, name the elements and their positions. "Looks align
 **Known artifact:** scroll-driven CSS animations (`animation-timeline: view()`, IntersectionObserver fade-ins, parent fade reveals) can render below-fold sections as washed-out / dimmed in `preview_screenshot` even when `getComputedStyle` reports `opacity: 1` and no filter/mix-blend-mode. The screenshot tool captures the JPEG mid-animation or before reveal triggers fire. Confirmed on `/about` 2026-04-27 — text read clean on real device, dim in screenshot.
 
 **Rule for future runs:** when `inspect`-based contrast on a section says pass and `vision` on the same section says fail, **trust the computed style and report as a screenshot artifact**, not a hard fail. Verify on real device only if both primitives flag the same issue, or if the section is above the fold and unlikely to be scroll-animated.
+
+---
+
+## Locked decisions (decision-drift checks)
+
+These verify that LOCKED entries in `docs/DECISIONS.md` are still reflected in shipped code. Run via `decisions-audit` mode (see SKILL.md). Each `decision-*` cites the DECISIONS entry it audits — drift may be intentional, but should be a deliberate update to DECISIONS.md, not a silent regression.
+
+If an audited line has changed in code AND there is no corresponding DECISIONS entry overriding it, that's a hard fail. If DECISIONS was updated to authorize the change but this assertion wasn't, update the assertion (and note what changed).
+
+### `decision-status-cycle-locked`
+**Cites:** `docs/DECISIONS.md` 2026-04-09 — status cycle locked as `Backlog → Up Next → Playing Now → Completed` with `Moved On` as sibling exit.
+**Surface:** `lib/types.ts`, `lib/store.ts`, `components/GameCard.tsx`, `components/GridCard.tsx`.
+**Check:** internal status keys remain `buried | on-deck | playing | played | bailed`; user-facing labels remain `Backlog | Up Next | Playing Now | Completed | Moved On`. No reintroduction of retired labels: `Play Next`, `On Deck`, `Buried`, `Queue`, `Active`, `Cleared`, `Beaten`, `Bailed`, `Dropped`, `Abandoned`.
+**Method:** `Bash` grep on `lib/` and `components/` for retired labels in user-facing strings; `eval` on live preview to confirm tab labels match.
+
+### `decision-picker-cta-pick-my-game`
+**Cites:** `docs/DECISIONS.md` 2026-05-05 — picker CTA renamed from "What Should I Play?" to "Pick My Game" with full Iyengar/Brehm/SDT/Loewenstein rationale.
+**Surface:** hero CTA on `/`, post-import CTA, Reroll modal header, JSON-LD feature list.
+**Check:** primary CTA text is exactly `Pick My Game` (with the dice glyph); old label `What Should I Play?` does not appear in any user-facing context. The `R` keyboard shortcut opens the picker with no modal open.
+**Method:** `Bash` grep for `What Should I Play` outside `.claude/rules/voice-and-tone.md`'s "do not use" column; `vision` on hero; live keypress test for `R`.
+
+### `decision-moving-on-canon`
+**Cites:** `.claude/rules/voice-charter.md` — "Moving on is deciding too" is the canonical anchor for the Moved On status. Sentiment locked; variations OK.
+**Surface:** components rendering Moved On state copy.
+**Check:** Moved On state surfaces a sentence-level affirmation of agency (anchor: "Moving on is deciding too"). Never frames Moved On as failure, regret, or shame. No retired vocabulary: "Bailed", "Dropped", "Abandoned", "Quit on it".
+**Method:** `Bash` grep on `components/GameCard.tsx`, `components/Reroll.tsx`, `components/CompletionCelebration.tsx` for moved-on copy; verify present + sentiment-positive.
+
+### `decision-pick-flow-two-inputs`
+**Cites:** `docs/DECISIONS.md` + `.claude/rules/user-psychology.md` — pick flow stays at 2 inputs (mood + session length). Shipped 2026-04-28. Any new variable must displace, not add.
+**Surface:** `components/Reroll.tsx`.
+**Check:** the picker pre-roll surfaces exactly two user-facing input groups: a mood selector and a session-length selector. No genre filter, no platform filter, no length filter visible at default.
+**Method:** `eval` on live preview (count input groups in pre-roll modal), or `Bash` read of `components/Reroll.tsx` to inventory rendered controls.
+
+### `decision-playing-now-cap-3`
+**Cites:** `docs/DECISIONS.md` 2026-04-06 — Playing Now cap of 3 simultaneous games (locked).
+**Surface:** `lib/store.ts` (action that promotes a game to `playing`).
+**Check:** the action either prevents 4th promotion or auto-demotes oldest. Cap = 3 is enforced somewhere in the store, not just hinted in copy.
+**Method:** `Bash` grep on `lib/store.ts` for `playing` cap logic; if no enforcement found, hard fail.
+
+### `decision-tagline-canon`
+**Cites:** `.claude/rules/voice-charter.md` — primary tagline is `get playing.` (lowercase, with period). Landing subhead is "Your pile's not gonna play itself." Celebration tagline is "Less shame. More game." Retired: "Stop stalling. Get playing."
+**Surface:** landing (`/`), `/about`, share cards, footers.
+**Check:** primary tagline appears exactly as `get playing.`; landing subhead matches; "Stop stalling" not present anywhere user-facing.
+**Method:** `Bash` grep across `components/`, `app/` for each tagline variant; `vision` confirm on landing.
+
+### How to add a new `decision-*` assertion
+
+When a new entry is appended to `docs/DECISIONS.md` and marked LOCKED, add a corresponding `decision-*` here. Format:
+- Cite the DECISIONS entry (date + short title).
+- Name the surface(s) where the decision is implemented.
+- Define the check in terms a verification primitive can answer.
+- Pick the cheapest primitive (grep > eval > vision).
+
+If a decision can't be expressed as a check (e.g. "anti-gamification posture" — too abstract), don't add a `decision-*` for it. Those belong in `feature-creep-audit` or `psychology-redteam` instead.

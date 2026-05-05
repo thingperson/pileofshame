@@ -1,6 +1,13 @@
+---
+name: regress-watch
+description: Named-bug regression catalog + locked-decision drift audit (Agent B). Two modes — (1) named-bug regression check on changed surfaces (default), and (2) decisions-audit mode that reads docs/DECISIONS.md and verifies LOCKED entries still hold in code. Trigger on "regress watch", "regression check", "decisions audit", "drift check", "canon check", or when scheduled weekly to write docs/audits/audit-YYYY-MM-DD.md.
+---
+
 # Regress Watch
 
 Named-bug regression catalog for Inventory Full. Encodes specific visual + structural failures that have shipped to production and Brady caught on review, so they can't slip in again.
+
+A second mode — **decisions-audit** — reads `docs/DECISIONS.md` LOCKED entries and verifies they still hold in current code. This is Agent B from `docs/testing-agents-spec.md`.
 
 **Scope intentionally narrow.** This skill is *not* a general visual checker. It's the institutional-memory layer: every assertion either (a) names a specific prior bug as a `regress-*` check, (b) covers a surface no other skill touches (OG card runtime split, pixel-sprite render), or (c) encodes a process pattern (read the asset before describing, never punt contrast as "designer's call").
 
@@ -50,8 +57,29 @@ One of:
 - **Changed-files mode** (default) — read `git diff` since last main, list modified files, derive which `regress-*` assertions apply.
 - **Full mode** — run every assertion in `assertions.md` against every listed page. Slow. Use before deploys that touch UI broadly.
 - **Page-targeted mode** — Brady names a page or component, run assertions for that surface only.
+- **Decisions-audit mode** (Agent B) — run every `decision-*` assertion in the "Locked decisions" section against current code. Designed for weekly cadence, not changed-files. Output is a one-screen drift report.
 
 Confirm scope with Brady before running full mode.
+
+### Decisions-audit mode (Agent B)
+
+Triggered manually with "decisions audit", "drift check", "canon check", or by a scheduled `regress-watch decisions-audit` invocation.
+
+The run:
+1. Read `docs/DECISIONS.md`. Filter to entries marked LOCKED + entries from the past 30 days that touch surfaces likely under `components/`, `app/`, `lib/`.
+2. For each locked entry, find the matching `decision-*` assertion in `assertions.md`. If none exists, report as "no assertion yet — add one if this should be audited."
+3. Run each `decision-*` against current code via the cheapest primitive named in the assertion.
+4. Classify each result:
+   - ✅ **Holds** — code still matches the locked decision.
+   - ❌ **Drift (unauthorized)** — code diverged AND no DECISIONS entry overrides it. Hard fail.
+   - ⚠️ **Drift (authorized)** — code diverged but a newer DECISIONS entry explicitly supersedes the old one. Update or retire the assertion.
+   - 🔍 **Can't tell** — assertion needs a human read.
+
+5. Output to `docs/audits/audit-YYYY-MM-DD.md` (create the dir if missing). Include: scope (locked entries audited), per-assertion verdict, and a tail section "Suggested follow-ups" — assertions to add, retire, or refine.
+
+This mode never auto-fixes. It surfaces drift so Brady decides intentional-vs-regression on his own.
+
+**Why this mode exists:** decisions are the canon. Without periodic verification, locked decisions silently rot when later refactors miss the rationale. Brady catches drift in review when he happens to look; this mode catches drift on a cadence.
 
 ---
 

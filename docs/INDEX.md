@@ -35,13 +35,17 @@
 | [monetization-plan.md](monetization-plan.md) | Tip jar, supporter tiers, mascot eval | LOCKED | Multiple per-stream triggers (see doc) |
 | [distribution-plan.md](distribution-plan.md) | Reddit + Twitter + Bluesky strategy, channel readiness | LOCKED | Move 1 (Reddit) when subagent recommendation arrives; Move 2 (socials) anytime |
 | [bot-character-spec.md](bot-character-spec.md) | Pip — bot character bible, GPT prompt library, placement plan | LOCKED | When generating new Pip art or wiring Pip into app/Discord/merch |
-| [testing-agents-spec.md](testing-agents-spec.md) | "Won't suck" + "Didn't strip a feature" testing agents — design, cadence, recon plan | PLANNING | When Brady has 30–60 min for the dedicated session |
+| [testing-agents-spec.md](testing-agents-spec.md) | "Won't suck" + "Didn't strip a feature" testing agents — design, cadence, recon plan | PARTIAL — phases 1+3 shipped 2026-05-05 | Phase 4 (scheduling Agent B weekly) when ready |
 
 ## Session resumes
 
 `docs/session-resume-YYYY-MM-DD.md` — current-state pointer, written at session close. Always read the latest at session start.
 
 Latest: [`session-resume-2026-05-04.md`](session-resume-2026-05-04.md) (when written).
+
+## Audits
+
+`docs/audits/audit-YYYY-MM-DD.md` — weekly drift audits from `regress-watch decisions-audit` (Agent B). Brady reads Monday morning. The audit dir is for ephemeral review artifacts — old audits can be pruned freely; the input (DECISIONS.md) is the source of truth.
 
 ## Notes folder (raw materials, not planning)
 
