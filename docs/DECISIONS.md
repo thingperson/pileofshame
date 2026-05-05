@@ -15,6 +15,21 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-05-05 — picker CTA renamed "What Should I Play?" → "Pick My Game"
+
+**Decision.** The primary picker CTA across `app/page.tsx`, `components/Reroll.tsx` (header + dialog `aria-label`), `components/PostImportSummary.tsx`, and the `app/layout.tsx` JSON-LD feature list now reads "Pick My Game". Voice-and-tone terminology table updated to lock the new label and demote the old one to the "do not use" column.
+
+**Why.** "What Should I Play?" frames the moment as a question the user is still answering — it puts the decision back on them at the exact moment they came to the app to be relieved of it. That's misaligned with the in-product fulfillment voice in `voice-charter.md` (landing/marketing uses "we'll help"; pick-time uses "here's your game"). Three research threads compounded:
+- **Iyengar 2000** (choice overload, the jam study): under decision paralysis, more options reduce action; the right delegation is to a single pick, not "let's think about it together."
+- **Brehm 1966 / SDT (Deci & Ryan 1985):** autonomy preserved by keeping the user as the grammatical subject ("Pick **my** game") instead of barking ("Decide for me" was the leading alternative — the verb is meeker and shifts subject to the app, which mildly reads as "because you can't").
+- **Loewenstein 1996** (visceral-state misjudgment): the user can't reliably introspect what they want — asking "What Should I Play?" demands exactly that. Better to short-circuit it.
+
+**Rejected alternatives.** "Decide for me" — softer verb than the rest of our CTAs, slightly subordinate. "Just pick one" — risks reading as exasperated. "We pick. You play." — locked tagline echo, but too declarative for a button. Kept "Pick My Game" because the imperative + possessive does the autonomy/delegation balance in three words.
+
+**Supersedes.** The 2026-04-03 decision (DECISIONS.md, "What Should I Play? must dominate the main page") on label content only — the gravity/dominance principle is unchanged.
+
+---
+
 ## 2026-05-05 — navigator.share text payload dropped from archetype share
 
 **Decision.** `components/ArchetypeCard.tsx`'s share function passes only `{ title, url }` to `navigator.share()`, NOT a `text` field. OG metadata on the page (`og:title` "I'm The Eclectic. What's your gaming archetype?" + description with CTA) handles the unfurl preview at recipient end.

@@ -455,7 +455,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
         ref={modalRef}
         role="dialog"
         aria-modal="true"
-        aria-label="What Should I Play"
+        aria-label="Pick My Game"
         className="relative w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl border overflow-hidden flex flex-col max-h-[85dvh] sm:max-h-[85vh]"
         style={{
           backgroundColor: 'var(--color-bg-elevated)',
@@ -475,7 +475,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
         {/* Header */}
         <div className="px-5 pt-5 pb-3 text-center">
           <h2 className="text-2xl font-extrabold text-text-primary tracking-tight">
-            🎲 {currentPick ? 'Roll Again' : 'What Should I Play?'}
+            🎲 {currentPick ? 'Roll Again' : 'Pick My Game'}
           </h2>
           {currentPick && (
             <p className="text-sm text-text-dim mt-1 font-[family-name:var(--font-mono)]">

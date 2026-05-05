@@ -140,7 +140,7 @@ export default function PostImportSummary({ breakdown, onDismiss, onPlay }: Post
                 color: '#fff',
               }}
             >
-              🎲&nbsp; What Should I Play?
+              🎲&nbsp; Pick My Game
             </button>
             <button
               onClick={handleDismiss}

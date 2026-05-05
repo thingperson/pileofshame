@@ -169,7 +169,7 @@ export default function RootLayout({
                 'Steam wishlist import',
                 'Xbox library import',
                 'Playnite CSV import',
-                'Game randomizer (What Should I Play?)',
+                'Game randomizer (Pick My Game)',
                 'Backlog tracking with 5-status pipeline',
                 'Backlog Payback — value recovered tracking',
                 'Deal checking via IsThereAnyDeal',

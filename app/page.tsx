@@ -37,6 +37,7 @@ import FinishCheckNudge from '@/components/FinishCheckNudge';
 import { trackThemeSession } from '@/lib/archetypes';
 import { trackSampleStarted, trackImportCompleted, trackSignupCompleted } from '@/lib/analytics';
 import { useAuth } from '@/lib/useAuth';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 
 // ── Inline Search ──────────────────────────────────────────────────
 
@@ -54,6 +55,15 @@ function InlineSearch({ onAddManual }: { onAddManual: () => void }) {
       setExpanded(false);
     }
   };
+
+  useEffect(() => {
+    const open = () => {
+      setExpanded(true);
+      setTimeout(() => inputRef.current?.focus(), 50);
+    };
+    window.addEventListener('inventory-full:focus-search', open);
+    return () => window.removeEventListener('inventory-full:focus-search', open);
+  }, []);
 
   return (
     <div className="flex items-center gap-1">
@@ -458,6 +468,11 @@ function AppContent() {
     openReroll(mode);
   };
 
+  useKeyboardShortcuts({
+    onRoll: () => handleOpenReroll('anything'),
+    onTab: setActiveTab,
+  });
+
   const isEmpty = games.length === 0;
   const isSampleLibrary = games.length > 0 && games.every(g => g.id.startsWith('sample-'));
   const isVoid = currentTheme === 'void' && !isEmpty;
@@ -734,7 +749,7 @@ function AppContent() {
             className={`w-full px-4 sm:px-6 py-4 sm:py-3.5 text-lg sm:text-lg font-bold rounded-xl text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98] ${(mounted && !hasUsedReroll) || pulseReroll ? 'animate-[pulse_2s_ease-in-out_infinite]' : ''}`}
             style={{ background: 'linear-gradient(135deg, #7c3aed, #a78bfa)' }}
           >
-            🎲&nbsp; What Should I Play?
+            🎲&nbsp; Pick My Game
           </button>
           {(mounted && !hasUsedReroll) || pulseReroll ? (
             <p className="text-center text-xs text-text-dim mt-1 font-[family-name:var(--font-mono)] animate-[fadeIn_500ms_ease-out]">

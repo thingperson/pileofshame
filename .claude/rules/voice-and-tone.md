@@ -122,7 +122,7 @@ Locked Apr 9, 2026. The user-facing status cycle is: **Backlog > Up Next > Playi
 | Genre labels | Tags / Genres | Categories, Labels |
 | Mood descriptors | Moods | Vibes, Tags |
 | Time commitment | Session length | Time tier, Time commitment |
-| The randomizer/picker | What Should I Play? | Reroll (internal code only) |
+| The randomizer/picker | Pick My Game | What Should I Play?, Reroll (internal code only) |
 | Game list/collection | Shelf | Playlist, List |
 
 ### The Not-for-me / Moved On flow
