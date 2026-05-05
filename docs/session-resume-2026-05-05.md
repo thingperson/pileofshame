@@ -41,35 +41,49 @@ None. Working tree clean. All 8 commits pushed.
 - **Email unsubscribe's auth-user path is unfinished.** Route only flips `email_subscribers.unsubscribed_at`. Auth users with `profiles.wants_updates=true` manage via in-app toggle today. When Resend lands, extend `/api/unsubscribe` to do an admin lookup against `auth.users` by email. Comment in the route flags this.
 - **No release-year enrichment.** Blocking `retroKids` archetype trigger. RAWG returns `released` field; we don't pull it. Adding it = ~30 min of work in `lib/enrichment.ts` (new field on `Game`, populate on enrichment, backfill via re-enrichment cycle). Worth doing whenever the in-flight queue is dry.
 
-## Delta — early-AM 2026-05-05 follow-on session (~03:30 PDT)
+## Wave 2 — early-AM 2026-05-05 follow-on session (~03:30–04:15 PDT)
 
-Three quick-win modal items shipped (uncommitted at time of writing):
+Three commits, all live on `main`. Working tree clean at close.
 
-- **"WHY WE PICKED THIS"** label above the descriptor in `forceExpanded` (modal context only), only when descriptor confidence is `curated` or `scored`. Weak-signal `mood`/`genre` fallbacks render unlabeled as before. `components/GameCard.tsx` ~922.
-- **HLTB nudge softened + scoped to `status === 'playing'`.** Was assuming steady progress and showing for any played game. Now only Playing Now, copy reframed as crowd data: `≥85%` → "Most are done by now", otherwise → "~Xh to typical finish". Title attribute spells out the variance disclaimer. `GameCard.tsx` ~823.
-- **"💬 Stuck? Ask the Discord →"** ghost link below Notes auto-saves indicator, modal-only, `status === 'playing'` only. Uses `DISCORD_INVITE_URL` from `lib/social`. `GameCard.tsx` ~1073.
+### Shipped (in commit order)
 
-Verified in preview against the sample-library Baldur's Gate 3 (47h / ~55h HLTB). All three render cleanly. `npm run build` green. Not yet committed/pushed.
+- **`39f8797` — feat(modal): "Why we picked this", humble HLTB framing, Discord affordance.** "WHY WE PICKED THIS" small-caps label above the descriptor in modal context only when confidence is `curated`/`scored` (weak fallbacks render unlabeled). HLTB nudges reframed as crowd data, not personal prediction, across THREE surfaces: (1) modal/expanded card chip in `GameCard.tsx:823` ("Most are done by now" / "~Xh to typical finish", scoped to `status === 'playing'`); (2) JumpBackIn block `GameCard.tsx:141,146` ("Most finish within ~Xh from here. Could be your last session." / "~Xh more for most players. Past the typical halfway mark."); (3) GridCard chip `GridCard.tsx:187` ("🏁 Near typical finish" / "⏳ ~Xh to typical", also gated to `status === 'playing'`). Title attributes spell out the variance disclaimer everywhere. `FinishCheckNudge.tsx:95` deliberately untouched — its assertion may be load-bearing as a finish-check prompt. "💬 Stuck? Ask the Discord →" ghost link below Notes auto-saves indicator, modal + Playing Now only.
+- **`ec4a9cd` — feat: rename picker CTA "What Should I Play?" → "Pick My Game" + keyboard shortcuts.** Hero CTA, post-import CTA, Reroll modal header + dialog `aria-label`, JSON-LD feature list, and the locked terminology row in `voice-and-tone.md` all swapped. Old label demoted to "do not use" column. New `hooks/useKeyboardShortcuts.ts` page-level handler: `R` opens picker (via `handleOpenReroll('anything')`), `1-4` switch tabs (backlog / up-next / now-playing / completed), `/` focuses search via `inventory-full:focus-search` custom event the InlineSearch component listens for. Esc-to-close already worked on modals app-wide. Guards: modal-open blocks all shortcuts; editing context (input/textarea/contenteditable) blocks `R` + `1-4` but not `/`. All four key paths verified in preview (sent KeyboardEvent with each key, confirmed dialog/tab/focus state changes). Decision logged in `DECISIONS.md` with full Iyengar/Brehm/SDT/Loewenstein rationale + rejected alternatives ("Decide for me", "Just pick one", "We pick. You play.").
+- **`5a65eee` — docs(planning): testing-agents spec.** New `docs/testing-agents-spec.md` (PLANNING status) capturing Brady's late-night ask about standing up testing agents that run with regularity. Two-agent design (forward-looking "won't suck" Agent A, backward-looking "canon keeper" Agent B), DECISIONS.md-as-baseline insight, inventory of existing skills, cadence options, 5 open questions, 4-phase next-session plan (recon → decision → build → first-run validation). Linked from `docs/INDEX.md`. Trigger to act: 30–60 min focused session.
 
-## Open design questions for next session
+### Verify on next session start
 
-- **Game detail modal redesign — remaining items.** Quick wins (1-3 above) shipped this session. Still owed: collapsed-by-default destructive actions (likely already partially done — verify), adaptive primary CTA (platform/device/status aware — current status-aware buttons are partial; needs design pass), "more like this from your library" on Completed only. Real surgery — own session.
+- **Latest deploy is `5a65eee`.** Vercel auto-deploy. Confirm with `curl -sI https://inventoryfull.gg/ | grep x-vercel-id`.
+- **Hero CTA reads "Pick My Game"** on the live site (the rename is the most user-visible change).
+- **Press `R` on the live site with no modal open → picker should open.** Testing in dev with synthetic KeyboardEvents passed; validate against a real keypress in production.
+- **Playing Now game with HLTB data** should show "🏁 Near typical finish" on the card chip and "Most finish within ~Xh from here. Could be your last session." in the JumpBackIn block when expanded.
+
+### Wave 2 rotting gotchas
+
+- **`hooks/useKeyboardShortcuts.ts` listens at `document` level on every page-load.** The handler is cheap (mostly key-string match + early returns), but if we add more shortcuts later we should batch them in this hook rather than spawning sibling listeners. The pattern of "InlineSearch listens for `inventory-full:focus-search`" is the right escape valve for shortcuts that need to reach into a child component's local state — copy it for any future cases.
+- **`FinishCheckNudge.tsx:95` is the one HLTB-prediction site that still asserts user state.** Intentionally left this session. If a designer reviews and flags it, the fix pattern is the same as the other three sites — swap "Only ~Xh left" for crowd-attributed copy. But the prompt's job is to *check* whether they're nearly done, so the assertion is structurally different from a passive nudge.
+- **GridCard chip is now gated to `status === 'playing'`.** Before, it fired for any game with `hoursPlayed > 0` and HLTB data within 8 hours of completion. The gating is correct (the chip claims live progress, which only makes sense for games being actively played) but it's a behavior change worth knowing — if Brady screenshots a Backlog or Completed game expecting the chip and it's gone, this is why.
+
+### Open design questions — updated for next session
+
+(Picker label swap and keyboard shortcuts moved off the list — both shipped this session.)
+
+- **Game detail modal redesign — remaining items.** Quick wins shipped (Why we picked, humble HLTB, Discord affordance). Still owed: verify destructive-action collapse is current (recon suggests partial), adaptive primary CTA (platform/device/status aware — current status-aware buttons are partial; needs design pass), "more like this from your library" on Completed only. Real surgery — own session.
+- **Testing agents.** Full spec at [`docs/testing-agents-spec.md`](testing-agents-spec.md). Brady greenlit pursuing this as a dedicated future session. The spec is the brief; don't restart the design conversation.
 - **Roll modal hierarchy.** Collapse filters to one-line summary by default, gate "why'd you skip?" until after a skip, demote "Roll Again" to ghost button. Smaller surgery; pairs with modal redesign.
-- **"Decide for me" picker label swap.** Brady greenlit. Needs a one-line addition to `DECISIONS.md` citing the Iyengar/Brehm/SDT research synthesized this session.
 - **Stats hero metric pattern.** Cleared count + value reclaimed (ROI framing — "money you sunk into games you've now played"). Move "Share Your Type" up. Delete duplicate post/repost/copy buttons.
 - **Moved On undo toast.** 5s undo, NOT on Cleared (celebration is sacred). Industry-standard UX pattern + reinforces "Moving on is deciding too" framing.
-- **Keyboard shortcuts.** `R` (roll), `1-4` (tabs), `/` (search), `Esc` (close).
 - **Ko-fi progress widget reality check.** Free-tier Ko-fi doesn't have an embeddable progress widget anymore (Gold-only or removed). Options: link to the public goal page, or build our own component scraping the goal page server-side. Option 3 (do nothing while we're at $0/$60) is currently the pragmatic call.
 
-## Health snapshot
+### Health snapshot — updated
 
-- Build state: green at `5153d4b`. `npm run build` clean throughout the session.
-- `main` tip: `5153d4b fix(archetypes): add missing H2 PNG sprites for late-bloomer, grind-ghost, retro-kids`.
-- Known bugs: none introduced. Twitter unfurl cache is a Twitter problem, not ours.
-- Production deploy: live at `5153d4b` as of session close (~01:30 AM PDT 2026-05-05). Vercel auto-deploy from push.
+- Build state: green at `5a65eee`. `npm run build` clean after each commit.
+- `main` tip: `5a65eee docs(planning): testing-agents spec — design, cadence, next-session plan`.
+- Known bugs: none introduced. Twitter unfurl cache still a Twitter problem.
+- Production deploy: live at `5a65eee` as of session close (~04:15 AM PDT 2026-05-05). Vercel auto-deploy.
 - Supabase migrations: no schema changes this session.
-- Free-tier proximity: not measured. The unsub route + new sprites are negligible additions.
+- Free-tier proximity: unchanged. New code is one tiny hook + textual edits.
 
 ---
 
-*Session ended 2026-05-05 ~01:30 AM PDT.*
+*Session ended 2026-05-05 ~01:30 AM PDT (Wave 1) and ~04:15 AM PDT (Wave 2).*
