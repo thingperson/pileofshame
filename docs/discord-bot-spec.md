@@ -4,11 +4,15 @@
 
 ---
 
-## TL;DR — Brady's pushback section, read first
+## TL;DR — Status: SOON, not LATER (revised 2026-05-05)
 
-**Don't build the bot yet.** The server has 1 person in it (you). A bot exists to amplify a community, not summon one. Ship effort here is wasted until there are at least ~25 active humans posting unprompted. Recommendation: **delay until Inventory Full hits 25 active Discord members OR 1,000 weekly active web users — whichever comes first.** Until then, the highest-leverage work is getting people into the server, not giving the empty room a butler.
+Original spec recommended waiting for ~25 Discord members. **Revised after Brady review:** the bot is cheaper to build than expected (~3 days, ~$0–2/mo hosting on Fly.io) AND the lead feature `/pick` is no-OAuth and works in any gaming Discord — meaning the bot can drive members to OUR server instead of the other way around. That flips the threshold logic.
 
-That said — when the threshold hits, this is the spec. The lead feature is `/pick`, hosted on Fly.io free tier, ~$0–5/mo, ~3 days of focused build for a Tier 1 MVP. The rest of this document assumes the threshold has been met.
+**New recommendation:** build Tier 1 (`/pick` + `/archetype` + clear-celebration webhook) when there's a clear ~3-day window of focused time. Don't gate on community size; gate on Brady having uninterrupted time. Skip Tier 2 (OAuth/library access) until 1k WAU.
+
+The lead distribution feature is `/pick`. Other gaming Discords install the bot for the random-pick utility; members discover Inventory Full through the embed footer. This is bottom-up distribution that doesn't require us to have a community first.
+
+**Avatar manipulation:** confirmed not possible. Discord locks bot avatar control. Workaround is archetype roles + a downloadable archetype PNG sized for Discord. See section 4.
 
 ---
 
