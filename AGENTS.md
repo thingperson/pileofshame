@@ -60,6 +60,16 @@ Don't re-open without a specific reason:
 4. **Pick flow stays at 2 inputs** (mood + session length). Any new filter must displace one, not add. The second axis pivoted twice on 2026-04-27 (time → energy → session length) after Loewenstein/Mischel research contradicted the dispositional energy framing — see `docs/DECISIONS.md` + `.claude/rules/user-psychology.md`.
 5. **No ads, no third-party data sharing, no cross-site tracking.** Hard lines in `.claude/rules/legal-compliance.md`.
 6. **Less time in app = success.** Changes that increase session length without terminating in play are usually wrong.
+7. **User agency is sacred.** Never auto-assign status fields (Up Next, Completed, Moved On) based on heuristics or external data (HLTB, playtime, achievements, last-played timestamps). Imports default to neutral/Backlog; the user decides everything else. Don't infer intent from data signals when the user hasn't asked you to. *Recurring violation pattern: Xbox heuristics auto-set Completed; Steam HLTB inference auto-set Completed. Both rolled back. The pattern is "data looks Completed → mark it Completed" — that's exactly the agency theft we don't do.*
+
+---
+
+## Visual assets & branding
+
+- **Always use the actual brand SVG wordmark** from `public/brand/`. Never substitute a font (Bungee, Inter, system) or generate a stand-in even temporarily. If the brand SVG doesn't render in the runtime (e.g. satori OG cards), surface the constraint — don't paper over it with a font.
+- **Read the source file before describing a comp.** No inferring subject from filename, surrounding copy, or vibe. Open the asset, look at it, then describe.
+- **When wiring new archetypes/characters, verify the asset files are copied to the correct directory before considering the task done.** Past slip: trigger logic shipped without the PNG → archetype rendered as 404. Check `public/sprites/h2/` (or relevant dir) before declaring done.
+- Recurring slips this section addresses: Bungee font instead of brand wordmark on early OG card, hallucinated "dino mascot" in a comp that was a controller, missing late-bloomer/grindGhost/retroKids PNGs, redundant wordmark on LandingPage. Patterns repeat — these aren't one-offs.
 
 ---
 
