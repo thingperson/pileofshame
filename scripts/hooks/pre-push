@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+#
+# Inventory Full — pre-push nag
+# Reminds Brady to run /pre-push-review when user-facing code is in the diff.
+# Never blocks. Press Enter to continue, or ^C to abort and run the review.
+#
+# Scope: any changed file matching components/**, app/**, lib/**, .claude/rules/**.
+# Skips when the diff only touches docs/, scripts/, supabase/, *.md outside rules/, etc.
+
+set -e
+
+# Range pushed = remote-ref..local-ref. Default to comparing against origin/main if remote ref is empty.
+remote="$1"
+remote_url="$2"
+
+# Read stdin lines: <local_ref> <local_sha> <remote_ref> <remote_sha>
+while read local_ref local_sha remote_ref remote_sha; do
+  if [ "$local_sha" = "0000000000000000000000000000000000000000" ]; then
+    # Branch deletion. Skip.
+    continue
+  fi
+
+  if [ "$remote_sha" = "0000000000000000000000000000000000000000" ]; then
+    # New branch. Compare against origin/main.
+    range="origin/main..$local_sha"
+  else
+    range="$remote_sha..$local_sha"
+  fi
+
+  changed=$(git diff --name-only "$range" 2>/dev/null || true)
+
+  if echo "$changed" | grep -qE '^(components/|app/|lib/|\.claude/rules/)'; then
+    echo ""
+    echo "─────────────────────────────────────────────────────────"
+    echo "  pre-push: user-facing code in this push."
+    echo ""
+    echo "  Did /pre-push-review run? (build + voice + a11y + legal)"
+    echo "  See .claude/rules/deploy-gates.md."
+    echo ""
+    echo "  Files in scope:"
+    echo "$changed" | grep -E '^(components/|app/|lib/|\.claude/rules/)' | sed 's/^/    /'
+    echo "─────────────────────────────────────────────────────────"
+    echo ""
+    # Don't block. This hook nags, doesn't gate.
+    exit 0
+  fi
+done
+
+exit 0

@@ -31,3 +31,10 @@ Run the full `/pre-push-review` skill which bundles all of the above plus access
 
 ## Why this exists
 The voice sweep and product axiom check were skipped on a deploy (2026-04-02) because nothing enforced them. The user caught it. These are not optional nice-to-haves — they are quality gates.
+
+## Pre-push hook (Agent A)
+A non-blocking git pre-push hook lives at `.git/hooks/pre-push` (canonical source: `scripts/hooks/pre-push`). It nags when the diff touches `components/`, `app/`, `lib/`, or `.claude/rules/` — i.e. user-facing code or the rules that govern it. The nag prints a reminder + the in-scope files; it does not block the push.
+
+If you cloned fresh and don't see the nag, run `bash scripts/hooks/install.sh` from the repo root.
+
+The hook is the trigger; `/pre-push-review` is the work. The hook reminds you to invoke the skill — it does not invoke the skill itself (skills require Claude judgment, not a shell loop).
