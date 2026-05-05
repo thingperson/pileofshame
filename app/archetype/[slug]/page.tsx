@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import PixelSprite from '@/components/PixelSprite';
+import Image from 'next/image';
 import Wordmark from '@/components/Wordmark';
+import { DISCORD_INVITE_URL } from '@/lib/social';
 import { findArchetypeBySlug, ARCHETYPE_REGISTRY } from '@/lib/archetypeRegistry';
 
 export const dynamicParams = false;
@@ -20,18 +21,23 @@ export async function generateMetadata({
 
   // OG image is co-located at /archetype/[slug]/opengraph-image.tsx and Next
   // wires it into og:image automatically. We only set title/description here.
+  // Add a CTA suffix to the description so it pushes the unfurl above the
+  // 110-char "good" threshold and tells the reader what to do next.
+  const ctaTitle = `I'm ${a.title}. What's your gaming archetype?`;
+  const ctaDescription = `${a.flavor} Find yours at inventoryfull.gg. Free, no signup.`;
+
   return {
     title: `${a.title} | Inventory Full`,
-    description: a.flavor,
+    description: ctaDescription,
     openGraph: {
-      title: `I'm ${a.title}.`,
-      description: a.flavor,
+      title: ctaTitle,
+      description: ctaDescription,
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: `I'm ${a.title}.`,
-      description: a.flavor,
+      title: ctaTitle,
+      description: ctaDescription,
     },
   };
 }
@@ -86,7 +92,19 @@ export default async function ArchetypePage({
           </h1>
 
           <div className="flex justify-center mb-8">
-            <PixelSprite name={a.spriteKey} size={224} ariaLabel={a.title} shadow />
+            <Image
+              src={`/sprites/h2/${a.spriteKey}.png`}
+              alt={a.title}
+              width={256}
+              height={256}
+              priority
+              style={{
+                width: 256,
+                height: 256,
+                imageRendering: 'pixelated',
+                filter: `drop-shadow(0 8px 32px ${a.tone === 'roast' ? 'rgba(255, 90, 138, 0.25)' : a.tone === 'respect' ? 'rgba(167, 139, 250, 0.25)' : 'rgba(26, 226, 192, 0.25)'})`,
+              }}
+            />
           </div>
 
           <p
@@ -118,6 +136,9 @@ export default async function ArchetypePage({
         </div>
 
         <div className="mt-12 flex items-center justify-center gap-4">
+          <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="text-xs hover:text-text-dim transition-colors font-[family-name:var(--font-mono)]" style={{ color: 'var(--color-text-faint)' }}>
+            Discord
+          </a>
           <a href="/privacy" className="text-xs hover:text-text-dim transition-colors font-[family-name:var(--font-mono)]" style={{ color: 'var(--color-text-faint)' }}>
             Privacy
           </a>

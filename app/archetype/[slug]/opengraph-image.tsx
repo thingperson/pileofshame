@@ -51,7 +51,7 @@ export default async function Image({
   // Size against the longest word so multi-word titles wrap cleanly without
   // overflowing the column ("THE ARCHAEOLOGIST" → wrap on "ARCHAEOLOGIST" width).
   const longestWord = title.split(/\s+/).reduce((m, w) => Math.max(m, w.length), 1);
-  const titleSize = Math.min(96, Math.max(44, Math.floor(560 / (longestWord * 0.6))));
+  const titleSize = Math.min(76, Math.max(44, Math.floor(540 / (longestWord * 0.6))));
 
   return new ImageResponse(
     (
@@ -151,7 +151,7 @@ export default async function Image({
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            gap: '24px',
+            gap: '32px',
           }}
         >
           <div

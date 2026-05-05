@@ -40,40 +40,40 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
         {/* Large ring - top right */}
         <svg className="absolute -top-20 -right-20 w-80 h-80 opacity-[0.04] animate-[spin_60s_linear_infinite]" viewBox="0 0 200 200">
-          <circle cx="100" cy="100" r="80" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--color-accent-purple)' }} />
-          <circle cx="100" cy="100" r="60" fill="none" stroke="currentColor" strokeWidth="0.5" style={{ color: 'var(--color-accent-pink)' }} />
+          <circle cx="100" cy="100" r="80" fill="none" stroke="var(--color-accent-purple)" strokeWidth="1.5" />
+          <circle cx="100" cy="100" r="60" fill="none" stroke="var(--color-accent-pink)" strokeWidth="0.5" />
         </svg>
 
         {/* Small diamond - left side */}
         <svg className="absolute top-[30%] -left-6 w-24 h-24 opacity-[0.06]" viewBox="0 0 100 100" style={{ animation: 'float 8s ease-in-out infinite' }}>
-          <rect x="25" y="25" width="50" height="50" fill="none" stroke="currentColor" strokeWidth="1.5" transform="rotate(45 50 50)" style={{ color: 'var(--color-accent-purple)' }} />
+          <rect x="25" y="25" width="50" height="50" fill="none" stroke="var(--color-accent-purple)" strokeWidth="1.5" transform="rotate(45 50 50)" />
         </svg>
 
         {/* Dots cluster - right side mid */}
         <svg className="absolute top-[55%] right-8 w-32 h-32 opacity-[0.05]" viewBox="0 0 100 100">
-          <circle cx="20" cy="20" r="2" fill="currentColor" style={{ color: 'var(--color-accent-purple)' }} />
-          <circle cx="50" cy="15" r="1.5" fill="currentColor" style={{ color: 'var(--color-accent-pink)' }} />
-          <circle cx="75" cy="30" r="2.5" fill="currentColor" style={{ color: 'var(--color-accent-purple)' }} />
-          <circle cx="30" cy="55" r="1.5" fill="currentColor" style={{ color: 'var(--color-accent-pink)' }} />
-          <circle cx="65" cy="60" r="2" fill="currentColor" style={{ color: 'var(--color-accent-purple)' }} />
-          <circle cx="45" cy="80" r="1.5" fill="currentColor" style={{ color: 'var(--color-accent-pink)' }} />
-          <circle cx="80" cy="75" r="2" fill="currentColor" style={{ color: 'var(--color-accent-purple)' }} />
+          <circle cx="20" cy="20" r="2" fill="var(--color-accent-purple)" />
+          <circle cx="50" cy="15" r="1.5" fill="var(--color-accent-pink)" />
+          <circle cx="75" cy="30" r="2.5" fill="var(--color-accent-purple)" />
+          <circle cx="30" cy="55" r="1.5" fill="var(--color-accent-pink)" />
+          <circle cx="65" cy="60" r="2" fill="var(--color-accent-purple)" />
+          <circle cx="45" cy="80" r="1.5" fill="var(--color-accent-pink)" />
+          <circle cx="80" cy="75" r="2" fill="var(--color-accent-purple)" />
         </svg>
 
         {/* Triangle - bottom left */}
         <svg className="absolute bottom-[25%] left-12 w-20 h-20 opacity-[0.05]" viewBox="0 0 100 100" style={{ animation: 'float 10s ease-in-out infinite reverse' }}>
-          <polygon points="50,15 85,85 15,85" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--color-accent-pink)' }} />
+          <polygon points="50,15 85,85 15,85" fill="none" stroke="var(--color-accent-pink)" strokeWidth="1.5" />
         </svg>
 
         {/* Cross/plus - right side low */}
         <svg className="absolute bottom-[40%] right-20 w-16 h-16 opacity-[0.04]" viewBox="0 0 100 100" style={{ animation: 'float 12s ease-in-out infinite' }}>
-          <line x1="50" y1="20" x2="50" y2="80" stroke="currentColor" strokeWidth="2" style={{ color: 'var(--color-accent-purple)' }} />
-          <line x1="20" y1="50" x2="80" y2="50" stroke="currentColor" strokeWidth="2" style={{ color: 'var(--color-accent-purple)' }} />
+          <line x1="50" y1="20" x2="50" y2="80" stroke="var(--color-accent-purple)" strokeWidth="2" />
+          <line x1="20" y1="50" x2="80" y2="50" stroke="var(--color-accent-purple)" strokeWidth="2" />
         </svg>
 
         {/* Hexagon - far bottom right */}
         <svg className="absolute bottom-[10%] right-[15%] w-28 h-28 opacity-[0.03]" viewBox="0 0 100 100" style={{ animation: 'float 14s ease-in-out infinite' }}>
-          <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="currentColor" strokeWidth="1" style={{ color: 'var(--color-accent-purple)' }} />
+          <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="var(--color-accent-purple)" strokeWidth="1" />
         </svg>
       </div>
 
@@ -281,8 +281,8 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
       <section className="relative px-6 py-12 sm:py-16">
         <div className="max-w-xs mx-auto mb-16 flex items-center gap-4">
           <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
-          <svg className="w-4 h-4 opacity-30" viewBox="0 0 20 20" style={{ color: 'var(--color-accent-purple)' }}>
-            <rect x="5" y="5" width="10" height="10" fill="currentColor" transform="rotate(45 10 10)" />
+          <svg className="w-4 h-4 opacity-30" viewBox="0 0 20 20">
+            <rect x="5" y="5" width="10" height="10" fill="var(--color-accent-purple)" transform="rotate(45 10 10)" />
           </svg>
           <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
         </div>
@@ -314,8 +314,8 @@ export default function LandingPage({ onImport, onLoadSample }: LandingPageProps
         {/* Decorative divider */}
         <div className="max-w-xs mx-auto mb-16 flex items-center gap-4">
           <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
-          <svg className="w-4 h-4 opacity-30" viewBox="0 0 20 20" style={{ color: 'var(--color-accent-pink)' }}>
-            <circle cx="10" cy="10" r="4" fill="currentColor" />
+          <svg className="w-4 h-4 opacity-30" viewBox="0 0 20 20">
+            <circle cx="10" cy="10" r="4" fill="var(--color-accent-pink)" />
           </svg>
           <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
         </div>

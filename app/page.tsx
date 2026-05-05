@@ -18,6 +18,7 @@ import ViewToggle from '@/components/ViewToggle';
 import AuthButton from '@/components/AuthButton';
 import CloudSync from '@/components/CloudSync';
 import CompletionCelebration from '@/components/CompletionCelebration';
+import { DISCORD_INVITE_URL } from '@/lib/social';
 import HelpModal from '@/components/HelpModal';
 import { ToastProvider, useToast } from '@/components/Toast';
 import EnrichmentIndicator from '@/components/EnrichmentIndicator';
@@ -1031,6 +1032,7 @@ function AppContent() {
           ❤️ Free forever. Tips keep the servers running and new features coming.
         </p>
         <div className="flex items-center justify-center gap-4 mt-3">
+          <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] py-3 sm:py-1">Discord</a>
           <a href="/privacy" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] py-3 sm:py-1">Privacy</a>
           <a href="/terms" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] py-3 sm:py-1">Terms</a>
         </div>

@@ -67,6 +67,10 @@ interface PlayerStats {
   quickHitCount: number;
   marathonCount: number;
   comfortGameCount: number; // games with 50h+ playtime
+  // Single-game grind: hours in the most-played game.
+  maxHoursInOneGame: number;
+  // "Late bloomer" signal: count of games completed 2+ years after they were added.
+  lateBloomerCount: number;
 }
 
 function computeStats(games: Game[]): PlayerStats {
@@ -135,6 +139,12 @@ function computeStats(games: Game[]): PlayerStats {
     quickHitCount: games.filter((g) => g.timeTier === 'quick-hit').length,
     marathonCount: games.filter((g) => g.timeTier === 'marathon').length,
     comfortGameCount: games.filter((g) => g.hoursPlayed >= 50).length,
+    maxHoursInOneGame: games.reduce((m, g) => Math.max(m, g.hoursPlayed || 0), 0),
+    lateBloomerCount: completed.filter((g) => {
+      if (!g.completedAt || !g.addedAt) return false;
+      const ownedDays = (new Date(g.completedAt).getTime() - new Date(g.addedAt).getTime()) / 86400000;
+      return ownedDays >= 730;
+    }).length,
   };
 }
 
@@ -471,6 +481,28 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     };
     return null;
   },
+
+  // Grind Ghost — disappeared into one game for 200+ hours
+  (s) => {
+    if (s.maxHoursInOneGame >= 200) return {
+      title: 'Grind Ghost',
+      icon: '👻',
+      description: `${Math.round(s.maxHoursInOneGame)} hours in a single game. You vanished into it. The pile barely knows you're here. Worth every minute. Maybe one new thing this month?`,
+      tone: 'roast',
+    };
+    return null;
+  },
+
+  // Late Bloomer — finally cleared a game owned 2+ years
+  (s) => {
+    if (s.lateBloomerCount >= 1) return {
+      title: 'Late Bloomer',
+      icon: '🌱',
+      description: `You bought it years ago. You finished it this year. ${s.lateBloomerCount === 1 ? 'A game' : `${s.lateBloomerCount} games`} that waited a long time, and you got there. That's the whole thesis.`,
+      tone: 'respect',
+    };
+    return null;
+  },
 ];
 
 // --- Theme archetypes (based on usage frequency) ---
@@ -675,6 +707,8 @@ export const SPRITE_KEY_BY_TITLE: Record<string, string> = {
   'The Lighthouse': 'lighthouse',
   'The Minimalist': 'minimalist',
   'The Gamer': 'gamer',
+  'Grind Ghost': 'grindGhost',
+  'Late Bloomer': 'lateBloomer',
 };
 
 export function getArchetypeSpriteKey(archetype: PlayerArchetype): string | undefined {

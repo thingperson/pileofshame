@@ -108,6 +108,11 @@ export const ARCHETYPE_REGISTRY: ArchetypeRegistryEntry[] = [
 
   { slug: 'gamer', title: 'The Gamer', spriteKey: 'gamer', tone: 'neutral',
     flavor: "You've got a pile. It's growing. Every gamer's does. You're here, which means you're ready to play some of them." },
+
+  { slug: 'grind-ghost', title: 'Grind Ghost', spriteKey: 'grindGhost', tone: 'roast',
+    flavor: "You sank hundreds of hours into one game and disappeared. The pile barely knows you're here. Worth every minute. Maybe one new thing this month?" },
+  { slug: 'late-bloomer', title: 'Late Bloomer', spriteKey: 'lateBloomer', tone: 'respect',
+    flavor: "You bought it years ago. You finished it this year. That game waited a long time, and you got there. That's the whole thesis." },
 ];
 
 export function findArchetypeBySlug(slug: string): ArchetypeRegistryEntry | undefined {

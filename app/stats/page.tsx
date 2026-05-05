@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useStore } from '@/lib/store';
 import { ToastProvider } from '@/components/Toast';
 import StatsPanel from '@/components/StatsPanel';
+import { DISCORD_INVITE_URL } from '@/lib/social';
 
 function StatsContent() {
   const games = useStore((s) => s.games);
@@ -43,6 +44,9 @@ function StatsContent() {
       {/* Footer */}
       <footer className="border-t border-border-subtle mt-12">
         <div className="max-w-[960px] mx-auto px-4 py-6 flex gap-4 text-sm text-text-dim">
+          <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="hover:text-accent-purple transition-colors">
+            Discord
+          </a>
           <Link href="/privacy" className="hover:text-accent-purple transition-colors">
             Privacy
           </Link>

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Wordmark from '@/components/Wordmark';
 import { StayInTouch } from '@/components/StayInTouch';
+import { DISCORD_INVITE_URL } from '@/lib/social';
 
 export default function AboutPage() {
   const [visible, setVisible] = useState(false);
@@ -275,6 +276,9 @@ export default function AboutPage() {
             and we have a dino theme. come on.
           </p>
           <div className="flex items-center justify-center gap-4">
+            <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="text-xs hover:text-text-dim transition-colors font-[family-name:var(--font-mono)]" style={{ color: 'var(--color-text-faint)' }}>
+              Discord
+            </a>
             <a href="/privacy" className="text-xs hover:text-text-dim transition-colors font-[family-name:var(--font-mono)]" style={{ color: 'var(--color-text-faint)' }}>
               Privacy
             </a>
