@@ -29,7 +29,7 @@ Don't delete a `regress-*` without a DECISIONS entry — they're load-bearing in
 
 | State | How to reach |
 |---|---|
-| Picker pre-roll | Click "What Should I Play?" |
+| Picker pre-roll | Click "Pick My Game" (or press R) |
 | Picker post-pick | After Roll fires |
 | Post-accept overlay | After "Let's go" |
 | Share composer | Inside CompletionCelebration |
