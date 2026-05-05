@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { Game, GameStatus } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { STATUS_CONFIG, SOURCE_LABELS, MAX_PLAYING_NOW, MAX_UP_NEXT } from '@/lib/constants';
+import { getLaunchTarget } from '@/lib/launch';
 import { useToast } from './Toast';
 import { getGameDescriptor } from '@/lib/descriptors';
 import { MOOD_TAG_CONFIG, getPlaytimeRoast } from '@/lib/enrichment';
@@ -1087,36 +1088,40 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
           </div>
 
           {/* Row 2: Launch button */}
-          {game.steamAppId && (
-            <div className="mt-3">
-              <a
-                href={`steam://rungameid/${game.steamAppId}`}
-                onClick={(e) => e.stopPropagation()}
-                className={
-                  forceExpanded
-                    ? 'flex items-center justify-center w-full text-sm font-bold rounded-lg transition-all hover:brightness-110 active:scale-[0.99]'
-                    : 'inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98]'
-                }
-                style={
-                  forceExpanded
-                    ? {
-                        height: 48,
-                        backgroundColor: '#7c3aed',
-                        color: '#ffffff',
-                        fontWeight: 700,
-                      }
-                    : {
-                        backgroundColor: 'rgba(124, 58, 237, 0.15)',
-                        color: '#a78bfa',
-                        border: '1px solid rgba(124, 58, 237, 0.3)',
-                      }
-                }
-                title={`Opens in ${SOURCE_LABELS[game.source]} (or Steam Link on mobile)`}
-              >
-                {forceExpanded ? `Launch in ${SOURCE_LABELS[game.source]}` : `🚀 Launch in ${SOURCE_LABELS[game.source]}`}
-              </a>
-            </div>
-          )}
+          {(() => {
+            const launch = getLaunchTarget(game);
+            if (!launch) return null;
+            return (
+              <div className="mt-3">
+                <a
+                  href={launch.url}
+                  onClick={(e) => e.stopPropagation()}
+                  className={
+                    forceExpanded
+                      ? 'flex items-center justify-center w-full text-sm font-bold rounded-lg transition-all hover:brightness-110 active:scale-[0.99]'
+                      : 'inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98]'
+                  }
+                  style={
+                    forceExpanded
+                      ? {
+                          height: 48,
+                          backgroundColor: '#7c3aed',
+                          color: '#ffffff',
+                          fontWeight: 700,
+                        }
+                      : {
+                          backgroundColor: 'rgba(124, 58, 237, 0.15)',
+                          color: '#a78bfa',
+                          border: '1px solid rgba(124, 58, 237, 0.3)',
+                        }
+                  }
+                  title={launch.title}
+                >
+                  {forceExpanded ? launch.label : `🚀 ${launch.label}`}
+                </a>
+              </div>
+            );
+          })()}
 
           {/* Row 4: Status-specific actions + bail + delete */}
           <div
