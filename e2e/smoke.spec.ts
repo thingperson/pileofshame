@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 // One smoke test. Covers the critical onboarding path:
-// landing -> load sample -> open "What Should I Play?" -> close.
+// landing -> load sample -> open "Pick My Game" -> close.
 // If this breaks, we do not ship.
 test('landing -> sample -> roll modal opens', async ({ page }) => {
   await page.goto('/');
@@ -15,14 +15,14 @@ test('landing -> sample -> roll modal opens', async ({ page }) => {
   await sampleBtn.click();
 
   // Main app is now showing — the hero CTA should be present
-  const rollBtn = page.getByRole('button', { name: /what should i play/i }).first();
+  const rollBtn = page.getByRole('button', { name: /pick my game/i }).first();
   await expect(rollBtn).toBeVisible({ timeout: 15_000 });
 
   // Open the roll modal
   await rollBtn.click();
 
-  // Roll modal is open (role="dialog", aria-label="What Should I Play")
-  const modal = page.getByRole('dialog', { name: /what should i play/i });
+  // Roll modal is open (role="dialog", aria-label="Pick My Game")
+  const modal = page.getByRole('dialog', { name: /pick my game/i });
   await expect(modal).toBeVisible();
 
   // Modal has a close button we can reach
