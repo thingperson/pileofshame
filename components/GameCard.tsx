@@ -10,6 +10,7 @@ import { MOOD_TAG_CONFIG, getPlaytimeRoast } from '@/lib/enrichment';
 import { trackStatusChange } from '@/lib/analytics';
 import { getSkipCount, resetSkipCount, isSoftIgnored } from '@/lib/skipTracking';
 import { getReentryTips } from '@/lib/reentryPacks';
+import { DISCORD_INVITE_URL } from '@/lib/social';
 import PixelSprite from './PixelSprite';
 import { hasSprite } from '@/lib/pixel/sprites';
 
@@ -134,15 +135,15 @@ function JumpBackIn({ game }: { game: Game }) {
             </div>
           )}
 
-          {/* Progress-based nudge */}
+          {/* Progress-based nudge — HLTB is crowd data, not a personal prediction. */}
           {progressPct !== null && progressPct >= 75 && game.hltbMain && (
             <p className="text-xs text-green-400/80 font-medium font-[family-name:var(--font-mono)]">
-              ~{Math.max(1, Math.round(game.hltbMain - game.hoursPlayed))}h left. One more session might finish this.
+              Most finish within ~{Math.max(1, Math.round(game.hltbMain - game.hoursPlayed))}h from here. Could be your last session.
             </p>
           )}
           {progressPct !== null && progressPct >= 40 && progressPct < 75 && game.hltbMain && (
             <p className="text-xs text-amber-300/60 font-[family-name:var(--font-mono)]">
-              ~{Math.round(game.hltbMain - game.hoursPlayed)}h to go. You&apos;re past the halfway mark.
+              ~{Math.round(game.hltbMain - game.hoursPlayed)}h more for most players. Past the typical halfway mark.
             </p>
           )}
 
@@ -820,7 +821,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                 {game.hoursPlayed > 0 && (
                   <span className="text-text-primary font-semibold">{game.hoursPlayed}h played</span>
                 )}
-                {game.hoursPlayed > 0 && game.hltbMain && game.hltbMain > 0 && (() => {
+                {game.status === 'playing' && game.hoursPlayed > 0 && game.hltbMain && game.hltbMain > 0 && (() => {
                   const remaining = Math.max(game.hltbMain - game.hoursPlayed, 0);
                   const pct = Math.min(Math.round((game.hoursPlayed / game.hltbMain) * 100), 100);
                   if (remaining > 0 && remaining <= 8) {
@@ -831,6 +832,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                           backgroundColor: pct >= 85 ? 'rgba(34, 197, 94, 0.15)' : 'rgba(251, 191, 36, 0.15)',
                           color: pct >= 85 ? '#4ade80' : '#fcd34d',
                         }}
+                        title="Most players finish around this point — your mileage may vary."
                       >
                         {pct >= 85 ? (
                           <span aria-hidden="true">🏁</span>
@@ -838,7 +840,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                           /* TODO: replace with dedicated stat-hourglass sprite when wave 2.1 lands; reusing skipTooLong (hourglass) for now */
                           <PixelSprite name="skipTooLong" size={14} />
                         )}
-                        ~{Math.round(remaining)}h left
+                        {pct >= 85 ? `Most are done by now` : `~${Math.round(remaining)}h to typical finish`}
                       </span>
                     );
                   }
@@ -921,15 +923,22 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
 
               {/* Descriptor — opinionated one-liner (elevated above synopsis) */}
               {descriptor && (
-                <div
-                  className="text-sm leading-relaxed italic"
-                  style={{
-                    color: descriptor.confidence === 'curated' ? '#a78bfa'
-                      : descriptor.confidence === 'scored' ? 'var(--color-text-muted)'
-                      : 'var(--color-text-dim)',
-                  }}
-                >
-                  &ldquo;{descriptor.line}&rdquo;
+                <div className="space-y-0.5">
+                  {forceExpanded && (descriptor.confidence === 'curated' || descriptor.confidence === 'scored') && (
+                    <div className="text-[10px] uppercase tracking-wider font-[family-name:var(--font-mono)] text-text-faint">
+                      Why we picked this
+                    </div>
+                  )}
+                  <div
+                    className="text-sm leading-relaxed italic"
+                    style={{
+                      color: descriptor.confidence === 'curated' ? '#a78bfa'
+                        : descriptor.confidence === 'scored' ? 'var(--color-text-muted)'
+                        : 'var(--color-text-dim)',
+                    }}
+                  >
+                    &ldquo;{descriptor.line}&rdquo;
+                  </div>
                 </div>
               )}
 
@@ -1060,6 +1069,20 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                   </div>
                 )}
               </div>
+
+              {/* Stuck? Ask the Discord — Playing Now only, modal context */}
+              {forceExpanded && game.status === 'playing' && (
+                <a
+                  href={DISCORD_INVITE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-flex items-center gap-1.5 text-xs font-[family-name:var(--font-mono)] text-text-dim hover:text-accent-purple transition-colors"
+                >
+                  <span aria-hidden="true">💬</span>
+                  <span>Stuck? Ask the Discord →</span>
+                </a>
+              )}
             </div>
           </div>
 

@@ -175,16 +175,16 @@ export default function GridCard({ game }: GridCardProps) {
                 {game.hoursPlayed}h
               </span>
             )}
-            {remainingHours !== null && remainingHours > 0 && remainingHours <= 8 && (
+            {game.status === 'playing' && remainingHours !== null && remainingHours > 0 && remainingHours <= 8 && (
               <span
                 className="text-xs font-[family-name:var(--font-mono)] px-1 py-0 rounded"
                 style={{
                   backgroundColor: progressPct! >= 85 ? 'rgba(34, 197, 94, 0.15)' : 'rgba(251, 191, 36, 0.15)',
                   color: progressPct! >= 85 ? '#4ade80' : '#fcd34d',
                 }}
-                title={`~${progressPct}% through (${game.hoursPlayed}h / ${game.hltbMain}h)`}
+                title={`HLTB-typical pacing: ${game.hoursPlayed}h played of ~${game.hltbMain}h average. Your run will vary.`}
               >
-                {progressPct! >= 85 ? '🏁' : '⏳'} ~{Math.round(remainingHours)}h left
+                {progressPct! >= 85 ? '🏁 Near typical finish' : `⏳ ~${Math.round(remainingHours)}h to typical`}
               </span>
             )}
             {game.moodTags && game.moodTags.slice(0, 2).map((mood) => {

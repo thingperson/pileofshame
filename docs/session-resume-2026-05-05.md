@@ -41,9 +41,19 @@ None. Working tree clean. All 8 commits pushed.
 - **Email unsubscribe's auth-user path is unfinished.** Route only flips `email_subscribers.unsubscribed_at`. Auth users with `profiles.wants_updates=true` manage via in-app toggle today. When Resend lands, extend `/api/unsubscribe` to do an admin lookup against `auth.users` by email. Comment in the route flags this.
 - **No release-year enrichment.** Blocking `retroKids` archetype trigger. RAWG returns `released` field; we don't pull it. Adding it = ~30 min of work in `lib/enrichment.ts` (new field on `Game`, populate on enrichment, backfill via re-enrichment cycle). Worth doing whenever the in-flight queue is dry.
 
+## Delta — early-AM 2026-05-05 follow-on session (~03:30 PDT)
+
+Three quick-win modal items shipped (uncommitted at time of writing):
+
+- **"WHY WE PICKED THIS"** label above the descriptor in `forceExpanded` (modal context only), only when descriptor confidence is `curated` or `scored`. Weak-signal `mood`/`genre` fallbacks render unlabeled as before. `components/GameCard.tsx` ~922.
+- **HLTB nudge softened + scoped to `status === 'playing'`.** Was assuming steady progress and showing for any played game. Now only Playing Now, copy reframed as crowd data: `≥85%` → "Most are done by now", otherwise → "~Xh to typical finish". Title attribute spells out the variance disclaimer. `GameCard.tsx` ~823.
+- **"💬 Stuck? Ask the Discord →"** ghost link below Notes auto-saves indicator, modal-only, `status === 'playing'` only. Uses `DISCORD_INVITE_URL` from `lib/social`. `GameCard.tsx` ~1073.
+
+Verified in preview against the sample-library Baldur's Gate 3 (47h / ~55h HLTB). All three render cleanly. `npm run build` green. Not yet committed/pushed.
+
 ## Open design questions for next session
 
-- **Game detail modal redesign.** Brady greenlit collapsed-by-default for destructive actions, plus the "Stuck? Ask the Discord" affordance, plus adaptive primary CTA (platform/device/status aware), plus "Why we picked this" (collapsed, one-line explanation), plus HLTB nudge for Playing Now games (data not prediction), plus "more like this from your library" only on Cleared. Real surgery — own session.
+- **Game detail modal redesign — remaining items.** Quick wins (1-3 above) shipped this session. Still owed: collapsed-by-default destructive actions (likely already partially done — verify), adaptive primary CTA (platform/device/status aware — current status-aware buttons are partial; needs design pass), "more like this from your library" on Completed only. Real surgery — own session.
 - **Roll modal hierarchy.** Collapse filters to one-line summary by default, gate "why'd you skip?" until after a skip, demote "Roll Again" to ghost button. Smaller surgery; pairs with modal redesign.
 - **"Decide for me" picker label swap.** Brady greenlit. Needs a one-line addition to `DECISIONS.md` citing the Iyengar/Brehm/SDT research synthesized this session.
 - **Stats hero metric pattern.** Cleared count + value reclaimed (ROI framing — "money you sunk into games you've now played"). Move "Share Your Type" up. Delete duplicate post/repost/copy buttons.
