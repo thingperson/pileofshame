@@ -35,6 +35,7 @@
 | [monetization-plan.md](monetization-plan.md) | Tip jar, supporter tiers, mascot eval | LOCKED | Multiple per-stream triggers (see doc) |
 | [distribution-plan.md](distribution-plan.md) | Reddit + Twitter + Bluesky strategy, channel readiness | LOCKED | Move 1 (Reddit) when subagent recommendation arrives; Move 2 (socials) anytime |
 | [bot-character-spec.md](bot-character-spec.md) | Pip — bot character bible, GPT prompt library, placement plan | LOCKED | When generating new Pip art or wiring Pip into app/Discord/merch |
+| [testing-agents-spec.md](testing-agents-spec.md) | "Won't suck" + "Didn't strip a feature" testing agents — design, cadence, recon plan | PLANNING | When Brady has 30–60 min for the dedicated session |
 
 ## Session resumes
 
