@@ -27,6 +27,7 @@ interface EnrichmentResult {
   hltbComplete?: number;
   timeTier?: TimeTier;
   isNonFinishable?: boolean;
+  releaseYear?: number;
   enrichedAt: string;
 }
 
@@ -133,6 +134,10 @@ export async function enrichGame(game: Game): Promise<EnrichmentResult | null> {
           genres = rawgData.genres;
         }
         if (rawgData.description) result.description = rawgData.description;
+        if (!game.releaseYear && rawgData.released) {
+          const year = parseInt(rawgData.released.slice(0, 4), 10);
+          if (!isNaN(year) && year > 1970 && year < 2100) result.releaseYear = year;
+        }
 
         // If we got a slug from search but don't have a description yet,
         // do a follow-up slug fetch for the full description

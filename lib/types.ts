@@ -46,6 +46,7 @@ export interface Game {
   hltbComplete?: number;       // Hours to 100% from HLTB
   enrichedAt?: string;         // ISO date of last enrichment
   isNonFinishable?: boolean;   // Auto-detected: MMOs, multiplayer-only, roguelikes, sandboxes
+  releaseYear?: number;        // Year of original release (from RAWG `released` field)
   ignored?: boolean;           // User-dismissed from decision engine recommendations
 }
 

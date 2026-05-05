@@ -71,6 +71,9 @@ interface PlayerStats {
   maxHoursInOneGame: number;
   // "Late bloomer" signal: count of games completed 2+ years after they were added.
   lateBloomerCount: number;
+  // Retro ratio: fraction of played/playing games with releaseYear <= 2010 (among those with data).
+  retroGamesRatio: number;
+  retroGamesWithData: number;
 }
 
 function computeStats(games: Game[]): PlayerStats {
@@ -145,6 +148,15 @@ function computeStats(games: Game[]): PlayerStats {
       const ownedDays = (new Date(g.completedAt).getTime() - new Date(g.addedAt).getTime()) / 86400000;
       return ownedDays >= 730;
     }).length,
+    ...(() => {
+      const playedOrPlaying = games.filter((g) => g.status === 'played' || g.status === 'playing');
+      const withYear = playedOrPlaying.filter((g) => g.releaseYear != null);
+      const retroCount = withYear.filter((g) => g.releaseYear! <= 2010).length;
+      return {
+        retroGamesWithData: withYear.length,
+        retroGamesRatio: withYear.length >= 5 ? retroCount / withYear.length : 0,
+      };
+    })(),
   };
 }
 
@@ -503,6 +515,17 @@ const ARCHETYPES: ((s: PlayerStats) => PlayerArchetype | null)[] = [
     };
     return null;
   },
+
+  // Retro Kids — 40%+ of played games released 2010 or earlier
+  (s) => {
+    if (s.retroGamesRatio >= 0.4) return {
+      title: 'Retro Kids',
+      icon: '🕹️',
+      description: `${Math.round(s.retroGamesRatio * 100)}% of the games you play came out before 2011. The classics didn't stop being good. They just stopped being marketed.`,
+      tone: 'neutral',
+    };
+    return null;
+  },
 ];
 
 // --- Theme archetypes (based on usage frequency) ---
@@ -709,6 +732,7 @@ export const SPRITE_KEY_BY_TITLE: Record<string, string> = {
   'The Gamer': 'gamer',
   'Grind Ghost': 'grindGhost',
   'Late Bloomer': 'lateBloomer',
+  'Retro Kids': 'retroKids',
 };
 
 export function getArchetypeSpriteKey(archetype: PlayerArchetype): string | undefined {
