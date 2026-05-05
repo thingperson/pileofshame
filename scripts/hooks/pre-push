@@ -41,8 +41,30 @@ while read local_ref local_sha remote_ref remote_sha; do
     echo "$changed" | grep -E '^(components/|app/|lib/|\.claude/rules/)' | sed 's/^/    /'
     echo "─────────────────────────────────────────────────────────"
     echo ""
-    # Don't block. This hook nags, doesn't gate.
-    exit 0
+  fi
+
+  # Lint gate — only run if a relevant code file changed (not docs/skills/scripts).
+  # Lint failures DO block the push. This is the one gate that's non-negotiable —
+  # eslint catches things Vercel's build also catches, but earlier (saving a broken
+  # deploy). If a lint failure is wrong/intentional, fix the rule, don't bypass.
+  if echo "$changed" | grep -qE '^(components/|app/|lib/|hooks/)' && echo "$changed" | grep -qE '\.(ts|tsx|js|jsx)$'; then
+    if [ -x "$(command -v npm)" ]; then
+      echo "pre-push: running lint on staged code…"
+      if ! npm run --silent lint > /tmp/inventory-full-lint.log 2>&1; then
+        echo ""
+        echo "─────────────────────────────────────────────────────────"
+        echo "  ❌ pre-push: lint FAILED. Push blocked."
+        echo ""
+        echo "  Last 30 lines of lint output:"
+        tail -30 /tmp/inventory-full-lint.log | sed 's/^/    /'
+        echo ""
+        echo "  Full log: /tmp/inventory-full-lint.log"
+        echo "  Fix the errors and try again. Do NOT push with --no-verify."
+        echo "─────────────────────────────────────────────────────────"
+        exit 1
+      fi
+      echo "pre-push: lint passed."
+    fi
   fi
 done
 
