@@ -101,6 +101,20 @@ Legibility is non-negotiable. All text/background combinations must meet WCAG AA
 
 ---
 
+## Audit / critique behavior
+
+Before running any audit, critique, or review (psychology, voice, a11y, design critique, code review, etc.):
+
+1. **List the surfaces** you plan to evaluate (specific pages/components/files).
+2. **Name the lens** — what framing or rubric you'll apply.
+3. **Wait for confirmation** before the deep dive.
+
+This saves a redirect cycle. Past slips: the psychology audit overcooked "dark pattern" framing and missed surfaces (landing, completion, share, stats); the launch-prep session misread a share-card comp before reading it. Front-loading scope catches both.
+
+This rule does NOT apply to small, scoped review requests where the surface is named in the prompt ("review the Reroll modal copy"). Use judgment — if the ask is broad ("review the app"), pause and scope.
+
+---
+
 ## How Brady works
 
 - Solo builder, fast iterations, little patience for ceremony.
