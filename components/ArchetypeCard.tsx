@@ -27,11 +27,12 @@ export default function ArchetypeCard({
 
   async function handleShare() {
     if (!shareUrl) return;
-    const text = `I'm ${currentArchetype.title} on Inventory Full.`;
     // Prefer native share where available (mobile), fall back to clipboard copy.
+    // Pass url only (no text) — desktop "Copy" actions concatenate text+url and
+    // break the link. The og: title/description on the page handles unfurl preview.
     if (typeof navigator !== 'undefined' && 'share' in navigator) {
       try {
-        await navigator.share({ title: currentArchetype.title, text, url: shareUrl });
+        await navigator.share({ title: currentArchetype.title, url: shareUrl });
         return;
       } catch {
         // User cancelled or share rejected — fall through to clipboard.
