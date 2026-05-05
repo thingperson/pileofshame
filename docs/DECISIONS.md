@@ -15,6 +15,87 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-05-05 — navigator.share text payload dropped from archetype share
+
+**Decision.** `components/ArchetypeCard.tsx`'s share function passes only `{ title, url }` to `navigator.share()`, NOT a `text` field. OG metadata on the page (`og:title` "I'm The Eclectic. What's your gaming archetype?" + description with CTA) handles the unfurl preview at recipient end.
+
+**Why.**
+- Desktop browsers' native share-sheet "Copy" action concatenates `text + url` into the clipboard, producing junk like `https://inventoryfull.gg/archetype/eclectic\nI'm The Enthusiast on Inventory Full.` that breaks the link when pasted.
+- The `text` field's job (telling the recipient what the link is) is now done by the OG metadata at unfurl time. Redundant.
+
+**Implementation.** Commit `273783f`. `components/ArchetypeCard.tsx:33`.
+
+**Rejected.** Inline the URL into the `text` field instead of passing url separately — some browsers still concatenate, doesn't reliably fix the issue across all share targets.
+
+---
+
+## 2026-05-04 — Pip (bot character) is NOT the Inventory Full mascot
+
+**Decision.** The pixel-bot character introduced via ChatGPT generation gets the name "Pip" and a defined role: Discord bot avatar, occasional in-app Easter-egg appearances, future merch (mug, hat, sticker pack co-star, controller-skin giveaway prize). Pip is a **sidekick**, never elevated to brand mascot. The brand center stays "your archetype is the protagonist."
+
+**Why.**
+- Inventory Full's identity is the user's archetype-as-personality. A brand mascot competes with that — promotes us, not them. Wrong story.
+- Pip works as a quiet recurring presence: shows up rarely enough that finding him feels like a discovery, not a nag. Backed by an opt-out toggle ("Hide Pip") for users who don't want even the rare appearances. Anti-shame, full user control.
+- The crown-on-a-character-named-Pip joke doesn't survive elevation — once Pip becomes "official," the contrast collapses.
+
+**Implementation.** `docs/bot-character-spec.md` (commit `8397b99`) — character bible, 23 GPT prompts for further generation, placement plan, "don't generate" list. No code changes yet; this is a brand decision, art generation continues, in-app placement happens in a future session.
+
+**Rejected.**
+- Adopt Pip as the IF mascot (most obvious move, most obviously wrong — collapses the archetype framing).
+- Multiple mascots / mascot-per-archetype (defeats the single-shared-experience point of having a mascot at all).
+- Loud "FANTABULOUS / HYPEBOT" framing from the original GPT mockup — wrong voice, wrong decade.
+
+---
+
+## 2026-05-04 — Discord bot threshold revised: build when there's time, not when community is "ready"
+
+**Decision.** Build the Discord bot's Tier 1 (`/pick`, `/archetype`, clear-celebration webhook) when Brady has a focused 3-day window, NOT when Discord membership crosses 25 or WAU crosses 1k. Tier 2 (OAuth + library access features like `/myarchetype`, `/duel`) stays gated on 1k WAU.
+
+**Why.**
+- Original spec recommended waiting for community size. That was wrong: `/pick` is no-OAuth and works in ANY gaming Discord, meaning the bot drives members to OUR server bottom-up rather than requiring a community to amplify. Build-then-distribute, not gather-then-build.
+- Total cost is much smaller than feared: ~3 days for Tier 1 MVP, $0–2/mo Fly.io hosting at small scale.
+- Tier 2 still gates on real WAU because OAuth flow + cross-user library state has zero value when nobody has a library imported anyway.
+
+**Implementation.** `docs/discord-bot-spec.md` (commit `6507c94`). Threshold logic flipped in TL;DR section.
+
+**Rejected.** Wait for 25 Discord members (original recommendation, contradicted by the bottom-up `/pick` distribution mechanic). Skip Tier 2 entirely (OAuth features still earn their keep at scale; just not yet).
+
+---
+
+## 2026-05-04 — Archetype share page renders H2 PNG, supersedes lo-fi PixelSprite for that surface
+
+**Decision.** `/archetype/[slug]` page now renders the painted-pixel H2 PNG (via `<Image src="/sprites/h2/${spriteKey}.png">`), matching the OG card. Previously rendered the lo-fi 32×32 PixelSprite, creating a visual mismatch between the in-page hero and the unfurled card. Supersedes the "hybrid acceptable per 05-02" stance for THIS surface only — in-app archetype card thumbnails (`components/ArchetypeCard.tsx`) still use lo-fi PixelSprite per the original hybrid call.
+
+**Why.**
+- The 05-03 handoff flagged "two outputs from one URL" as a rotting visual mismatch. It WAS jarring: visit the share URL, see a chibi 32px sprite; share the same URL, see the painted H2. Recipients seeing both side-by-side reads as inconsistency, not voice.
+- The archetype share page is *itself* a share landing. Its job is to be the destination of an unfurl click. Visual continuity with the unfurl matters more here than internal consistency with in-app card surfaces.
+- In-app card thumbnails stay lo-fi because they render at 64–96px where the lo-fi reads cleaner anyway, and the in-app context is "your library" not "your shareable identity."
+
+**Implementation.** `app/archetype/[slug]/page.tsx` swaps `PixelSprite` import for `next/image` reading from `/sprites/h2/{spriteKey}.png`. Tone-tinted drop shadow matches the OG card's glow color. Commit `8ead582`.
+
+**Rejected.** Swap in-app card thumbnails to H2 too (would touch every archetype display surface for marginal gain at small render sizes — separate, larger pass).
+
+---
+
+## 2026-05-04 — retroKids archetype trigger deferred, sprite shipped anyway
+
+**Decision.** Of the 3 unwired H2 archetypes from the 05-03 handoff (`retroKids`, `grindGhost`, `lateBloomer`), only `grindGhost` and `lateBloomer` got triggers wired this session. `retroKids` waits for release-year enrichment to land. Sprite copied to `public/sprites/h2/retroKids.png` regardless, so wiring is a 3-line edit when the data arrives.
+
+**Why.**
+- `retroKids` was always going to be "library skews old" — owns a lot of games released X years ago. We don't store game release year (RAWG returns `released` field; we don't currently pull it through `lib/enrichment.ts`).
+- Workarounds considered (Steam appid as proxy for release year, `addedAt` as "longtime user" signal) all measure something other than what `retroKids` is *about*. Better to ship nothing than ship a misleading trigger.
+- `grindGhost` (200+ hr in one game) and `lateBloomer` (cleared a game owned 2+ years) trigger from data we already have. Shipped both.
+- Copying the sprite to disk now (with the right filename `retroKids.png`) means the rest of the wiring is trivial when enrichment lands. Avoids re-discovering the alias at that point.
+
+**Implementation.** `lib/archetypes.ts` adds `maxHoursInOneGame` and `lateBloomerCount` to `PlayerStats` + the two new archetype trigger functions. `lib/archetypeRegistry.ts` adds the two slugs. `SPRITE_KEY_BY_TITLE` adds both. `public/sprites/h2/retroKids.png` shipped without app-side trigger. Commits `8ead582` (wiring) + `5153d4b` (missing PNGs).
+
+**Rejected.**
+- Wire retroKids with `addedAt`-based proxy ("a lot of games owned 3+ years"). Measures user tenure, not game age — wrong concept.
+- Wire retroKids with Steam appid heuristic (low appid = old game). Steam-only, breaks for non-Steam libraries, brittle.
+- Wait to ship grindGhost + lateBloomer until all three are ready. They were ready; gating them on retroKids would have wasted the H2 art that's already on disk.
+
+---
+
 ## 2026-05-02 — Archetype share architecture: static evergreen registry, not per-share DB snapshot
 
 **Decision.** `/archetype/[slug]` pages and their OG cards render from a static registry (`lib/archetypeRegistry.ts`) of de-personalized archetype flavor lines — NOT from a per-user DB row capturing their personalized in-app description. Every visitor to `/archetype/the-archaeologist` sees the same generic "Games from years ago are still waiting for you" copy, regardless of whose share link they followed.
