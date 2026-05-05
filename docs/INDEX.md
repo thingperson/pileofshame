@@ -36,6 +36,8 @@
 | [distribution-plan.md](distribution-plan.md) | Reddit + Twitter + Bluesky strategy, channel readiness | LOCKED | Move 1 (Reddit) when subagent recommendation arrives; Move 2 (socials) anytime |
 | [bot-character-spec.md](bot-character-spec.md) | Pip — bot character bible, GPT prompt library, placement plan | LOCKED | When generating new Pip art or wiring Pip into app/Discord/merch |
 | [testing-agents-spec.md](testing-agents-spec.md) | "Won't suck" + "Didn't strip a feature" testing agents — design, cadence, recon plan | PARTIAL — phases 1+3 shipped 2026-05-05 | Phase 4 (scheduling Agent B weekly) when ready |
+| [modal-redesign-spec.md](modal-redesign-spec.md) | Game-detail modal: destructive collapse, adaptive CTA, more like this | PLANNING — recon done 2026-05-05 | Pick any of 3 items per dedicated session |
+| [smaller-surgeries.md](smaller-surgeries.md) | Queue of self-contained ~30–60 min surgeries (roll modal, stats, undo toast, retroKids, etc.) | PLANNING | Pick any when window opens |
 
 ## Session resumes
 
