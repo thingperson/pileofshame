@@ -141,3 +141,57 @@ Five commits, all live on `main`. Working tree clean at close. Through-line: tes
 ---
 
 *Session ended 2026-05-05 ~12:30 PM PDT (Wave 3).*
+
+---
+
+## Wave 4 — Tuesday afternoon 2026-05-05 PDT (~14:30 – 16:00)
+
+Five commits, all live on `main`. Working tree clean at close. Through-line: extending the testing-agents work into a full meta-tooling layer (asset-check skill, lint gate, audit-scope rule, on-the-horizon planning), then wiring Playwright MCP at project scope.
+
+### Shipped (in commit order)
+
+- **`2acc87d` — docs(rules): user-agency + visual-assets rules to AGENTS.md.** Two new behavioral rules from a Claude Insights / Claude Chat audit. User Agency added as locked decision #7 (never auto-assign status from heuristics; imports default neutral; cites Xbox + Steam HLTB violations). Visual Assets & Branding new section before Evergreen gotchas (always brand SVG from `public/if-logos/`, read source before describing comps, verify PNG copy before declaring archetype work done — cites Bungee, dino mascot, missing late-bloomer/grindGhost/retroKids slips). Skipped Accessibility & Contrast and Session Close Ritual since both already in AGENTS.md.
+- **`32e6552` — feat(skills): asset-check.** New `/asset-check` skill catches recurring visual slips: wordmark font substitutes (Bungee), missing archetype PNGs, hallucinated comp descriptions, contrast misses on theme/palette changes. Six steps, named-bug pattern, hands off to `/accessibility-review` and `/theme-check` for broader audits. Cites real paths (`public/if-logos/`, `public/sprites/h2/`) — insights report's `public/brand/` doesn't exist.
+- **`d0d9ab1` — feat(hooks): pre-push lint gate (blocking).** Extended `.git/hooks/pre-push` (canonical `scripts/hooks/pre-push`) with a blocking eslint step. Fires only when TS/TSX/JS/JSX in components/, app/, lib/, hooks/ changes. Skips for docs/skills/scripts diffs. Output on failure: tails 30 lines + path to full log at `/tmp/inventory-full-lint.log`. Rationale: eslint catches what Vercel's build catches, but earlier — saves the broken-deploy round-trip. Voice/a11y nag stays informational; lint is the ONE blocking gate.
+- **`60a6e31` — docs: audit-scope rule + on-the-horizon planning doc.** AGENTS.md gains "Audit / critique behavior" section: list surfaces + name lens + wait for confirmation before deep audits (cites psychology audit overcooking dark-pattern framing + launch-prep misreading a share-card comp). New `docs/on-the-horizon.md` banks three larger workflow builds with triggers, MCP needs, risks, LOC estimates: (1) Autonomous Visual Regression Loop, (2) Parallel Sprint Agents With Test Gates, (3) Self-Healing Site Integrity Agent. Each explicitly "not next-up" — sits behind modal redesign + smaller surgeries + testing-agents Phase 4. INDEX.md updated.
+- **`528da01` — chore: add Playwright MCP at project scope.** New `.mcp.json` at repo root with Playwright wired via `npx @playwright/mcp@latest`. Took 4 paths to find the right one: (1) CCD Connectors UI doesn't list Playwright, (2) remote marketplace MCPs are Anthropic-managed and Playwright isn't there, (3) `npm install -g @anthropic-ai/claude-code` failed on Brady's fnm setup with `claude not found` after install, (4) project-scope `.mcp.json` was the working path. CCD reads `.mcp.json` directly and prompts for approval on first session start. Verified `npx @playwright/mcp@latest --help` resolves cleanly before committing.
+
+### Banked (not shipped, ready when triggered)
+
+- `docs/on-the-horizon.md` (3 builds with explicit triggers).
+- 3 DECISIONS.md entries appended this Wave covering testing agents, /deploy refactor, and Playwright add (visible at top of DECISIONS.md as the newest cluster).
+
+### Verify on next session start
+
+- **Latest deploy is `5a65eee` (Wave 2). NO app code touched in Waves 3 or 4.** Production behavior identical to yesterday. Site at https://inventoryfull.gg is unchanged.
+- **Playwright MCP is in `.mcp.json`.** On next CCD session start, you'll see an approval prompt for the project-scoped MCP. **Click approve.** Then ask "is playwright loaded?" and Claude will check the deferred-tool registry. First load downloads ~30–60s (cached after).
+- **Pre-push lint gate is live.** Test: stage a TS file with an eslint error and try to push. The hook should block with the lint output. The non-blocking voice/a11y nag is unchanged.
+- **Weekly Agent B audit is scheduled** for Monday 2026-05-11 ~08:09 AM PDT. **Click "Run now" once in the CCD Scheduled sidebar before then** to pre-approve Read/Write/Bash permissions. Otherwise the first auto-run pauses on prompts.
+
+### Wave 4 rotting gotchas
+
+- **MCP tooling has THREE config systems on this machine:** CCD Extensions (`.mcpb` bundles, `Claude Extensions/` dir), remote marketplace (Anthropic-managed, UUID-keyed in deferred-tools), and Claude Code-style mcpServers (project `.mcp.json` or user `~/.claude.json`). Future MCP installs: try CCD UI first; if not present, project `.mcp.json` next; user `~/.claude.json` as last resort (currently has no `mcpServers` key — touching it risks corrupting 23KB of session state).
+- **Claude Code CLI install path is unresolved.** `npm install -g @anthropic-ai/claude-code` failed with OS-level rejection on Brady's fnm setup. Didn't dig further since `.mcp.json` worked. If a future need requires the CLI (e.g. `claude mcp add` for user-scope additions), this'll resurface.
+- **`asset-check` skill hasn't been invoked yet.** First real run will reveal whether the named-bug catalog is too narrow or too broad. Run when next visual change is in scope; iterate from there.
+- **/deploy "surface contradictions" step (2.5) is informal.** Branch points (when to ask vs. flag-and-continue) aren't specified. If a real contradiction surfaces during a `/deploy` invocation and the skill auto-decides instead of asking, that's a refinement opportunity.
+
+### Open design questions — updated for next session
+
+- **Playwright wiring validation.** After approval prompt + first session load, confirm Playwright tools appear in the deferred-tool registry. If they don't, debug.
+- **First weekly Agent B audit.** Monday 2026-05-11 — read the output, refine assertions if false-positive rate is high.
+- **Modal redesign + smaller surgeries** — full queue still banked, untouched. See `docs/modal-redesign-spec.md` and `docs/smaller-surgeries.md`. Recommended order unchanged: Modal Item 2 Phase 1 (extract launch logic, ~30 min, reversible) → Item 1 (disclosure) → Item 2 Phases 2–4 → Item 3.
+
+### Health snapshot — updated
+
+- Build state: green at `528da01`. No app code touched in Wave 4 (skills/hooks/docs/config only).
+- `main` tip after this session-close push will include the 3 DECISIONS entries + this Wave 4 append.
+- Known bugs: none introduced.
+- Production deploy: live at `5a65eee` from Wave 2. Wave 3 + Wave 4 didn't touch app code.
+- Supabase migrations: no schema changes.
+- Free-tier proximity: unchanged.
+- Scheduled tasks: 1 (Agent B weekly) — pending pre-approval before first auto-fire.
+- MCPs (post-Brady-trim): Sentry, Supabase, Drive, Claude Preview, Claude in Chrome, scheduled-tasks, computer-use, ccd_directory/session_mgmt, mcp-registry; PLUS pending Playwright on next start. Trimmed this session: Vercel/v0/Stagewise hybrid, Canva, Mermaid (note: Mermaid + Context7 reconnected briefly, may have been re-enabled).
+
+---
+
+*Session ended 2026-05-05 ~16:00 PM PDT (Wave 4 — full meta-tooling day).*

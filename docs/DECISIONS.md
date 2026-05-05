@@ -15,6 +15,68 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-05-05 — Playwright MCP added at project scope via .mcp.json
+
+**Decision.** Playwright MCP wired via `/Users/bradywhitteker/Desktop/getplaying/.mcp.json` at project scope. Used `npx @playwright/mcp@latest` shape; verified package resolves cleanly. File committed (solo dev — no reason to gitignore project-specific MCP config).
+
+**Why.**
+- Visual regression loop spec (`docs/on-the-horizon.md` item 1) names Playwright as the right pixel-diff engine vs. vision-model diffing.
+- CCD Connectors UI doesn't list Playwright; remote-marketplace MCPs (Sentry, Supabase, etc.) are managed by Anthropic and Playwright isn't on offer there. CCD Extensions (`.mcpb` bundles) don't include it either.
+- Direct `.mcp.json` was the only path that didn't require installing Claude Code CLI globally (which hit `claude not found` after `npm install -g` attempts on Brady's fnm setup).
+
+**Implementation.** Commit `528da01`. `.mcp.json` at repo root.
+
+**Rejected.**
+- Install Claude Code CLI to use `claude mcp add` — hit OS-level rejection during `npm install -g`, fnm shim issue suspected.
+- Edit `~/.claude.json` user-scope — file has no `mcpServers` key currently; touching it risks corrupting 23KB of session state.
+- Wait for CCD Connectors UI to add Playwright — no signal it's coming.
+
+**Drift risk.** First load downloads Playwright lazily via npx (~30–60s). If that ever times out at session start, we'll see Playwright tools fail to register. Cache lives in npx local cache. CCD will prompt to approve the project-scoped MCP on next session start — must be approved or it won't run.
+
+---
+
+## 2026-05-05 — `/deploy` is the orchestrator, not a monolith
+
+**Decision.** `/deploy` skill rewritten as scope-aware orchestrator. Step 1 detects what changed (user-facing / server / schema / rules / config / scripts), Step 2 picks Full vs Quick mode based on scope, delegates to `/pre-push-review` rather than duplicating voice-sweep logic. New post-push verify step (curl x-vercel-id twice, smoke-check, glance Sentry). Boundaries explicit: `/deploy` is NOT `/session-close`, NOT regress-watch decisions-audit.
+
+**Why.**
+- Pre-push gates existed but didn't reliably fire. The fix is workflow default-inclusion, not human discipline.
+- Forcing every gate on every push was the wrong shape — kills velocity on docs-only or hotfix changes, trains avoidance.
+- Scope detection makes the orchestrator cheap when nothing applies and thorough when it matters.
+
+**Implementation.** Commit `fe20dab`. `.claude/skills/deploy/SKILL.md`.
+
+**Rejected.**
+- Bundle pre-push gates into `/session-close` — wrong ritual; close is end-of-session housekeeping, not push verification.
+- One monolithic deploy command that runs every gate every time — bloat that gets skipped.
+- CI/GitHub Actions enforcement — solo dev, no PR workflow today; new infra to maintain for marginal gain.
+
+**Drift risk.** "Surface contradictions" step (2.5) isn't formalized as explicit branch points in the skill. If post-push verify times out when Brady walks away mid-deploy, the skill's claim is overstated — revisit if it bites.
+
+---
+
+## 2026-05-05 — Testing agents (A + B) shipped, with cadence
+
+**Decision.** Two testing agents go live for Inventory Full:
+- **Agent A** (forward-looking, fires on push): non-blocking git pre-push hook at `.git/hooks/pre-push` (canonical: `scripts/hooks/pre-push`) nags when user-facing code is in the diff. The same hook also runs `npm run lint` as a BLOCKING gate when TS/TSX/JS/JSX in components/, app/, lib/, hooks/ changes — lint failures block the push outright. Skill `/pre-push-review` carries the bundle (build + voice + a11y + legal).
+- **Agent B** (backward-looking, fires weekly): `/regress-watch` extended with a `decisions-audit` mode. Six `decision-*` assertions encode LOCKED DECISIONS entries; weekly cron at Mondays ~08:09 AM PDT writes `docs/audits/audit-YYYY-MM-DD.md`. Surfaces drift only — never auto-fixes.
+
+**Why.**
+- Voice-sweep was skipped on a 2026-04-02 deploy because nothing enforced it. Agent A makes the gate hard to skip.
+- Locked decisions silently rot when later refactors miss the rationale. Agent B catches that on a cadence Brady doesn't have to remember.
+- Both lean on artifacts that already exist (rule files, DECISIONS.md); no new spec to maintain.
+
+**Implementation.** Commits `cdc6563` (pre-push-review terminology fix), `0a16130` (Agent A hook), `59cfc48` (Agent B mode + assertions), `d0d9ab1` (lint gate), plus scheduled task `inventory-full-decisions-audit-weekly` in `~/.claude/scheduled-tasks/`. Spec: `docs/testing-agents-spec.md`.
+
+**Rejected.**
+- CronCreate (session-only) for Agent B — dies when Claude Code exits; doesn't satisfy "I won't remember to run these."
+- Blocking voice/a11y in the hook — false positives during quick fixes would train Brady to `--no-verify`. Lint-only is the right blocking scope.
+- One unified skill for both — different cadences, different inputs; forcing them together would muddle each.
+
+**Drift risk.** First Agent B fire is Monday 2026-05-11; tool permissions need pre-approval via "Run now" in CCD Scheduled sidebar before then or the auto-run pauses. If false-positive rate is high after first real run, refine assertions in `.claude/skills/regress-watch/assertions.md`.
+
+---
+
 ## 2026-05-05 — picker CTA renamed "What Should I Play?" → "Pick My Game"
 
 **Decision.** The primary picker CTA across `app/page.tsx`, `components/Reroll.tsx` (header + dialog `aria-label`), `components/PostImportSummary.tsx`, and the `app/layout.tsx` JSON-LD feature list now reads "Pick My Game". Voice-and-tone terminology table updated to lock the new label and demote the old one to the "do not use" column.
