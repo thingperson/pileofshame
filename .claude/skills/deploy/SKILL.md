@@ -1,87 +1,105 @@
 ---
 name: deploy
-description: Build, verify, and deploy to Vercel production. Supports two modes — full (with review) and quick (feature push). Use when changes are ready to go live.
+description: Build, verify, push, and confirm production deploy to Vercel. Orchestrator that detects what changed, runs the right gates (build + voice + a11y + legal as applicable), handles surprises by asking before deciding, pushes to main, and verifies the live deploy. Two modes — full (review-heavy) and quick (build + voice if copy changed). Trigger on "deploy", "ship it", "let's push", "deploy to prod".
 ---
 
 # Deploy to Production
 
-## Project Info
+`/deploy` is the orchestrator for getting work to production. It does not duplicate other skills — it invokes them with the right scope. End-of-session housekeeping (handoffs, decision logs, doc tidy) belongs to `/session-close`, not here.
+
+## Project info
+
 - **Local codebase:** `/Users/bradywhitteker/Desktop/getplaying`
-- **Live URL:** https://inventoryfull.gg (Vercel) — also accessible at pileofsha.me (legacy redirect)
-- **Git remote:** `origin` → `github.com:thingperson/pileofshame.git` (main branch)
-- **Deploy method:** Push to `main` triggers Vercel auto-deploy. No manual `vercel deploy` needed.
-- **Git push command:** `GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519" git -c credential.helper= push origin main`
-- **Node path:** `$HOME/.fnm/node-versions/v22.22.2/installation/bin` (fnm-managed)
-- **Plan doc:** `/Users/bradywhitteker/.claude/plans/partitioned-fluttering-flurry.md`
-- **Voice guide:** `.claude/rules/voice-and-tone.md`
-- **User personas:** `.claude/rules/user-persona.md`
+- **Live URL:** https://inventoryfull.gg (Vercel auto-deploys from `main`)
+- **Git remote:** `origin` → `github.com:thingperson/pileofshame.git`
+- **Push command:** `GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519" git -c credential.helper= push origin main`
+- **Node:** `$HOME/.fnm/node-versions/v22.22.2/installation/bin` (via fnm)
+- **Pre-push hook:** `.git/hooks/pre-push` nags non-blockingly when user-facing code is in scope. Canonical source: `scripts/hooks/pre-push`. Re-install via `bash scripts/hooks/install.sh`.
 
-## Deploy Modes
+## Step 1 — Scope detection
 
-### Full Deploy (end of sprint, big push, multiple features)
-Use this when shipping multiple features, after a sprint, or when explicitly asked for a full review.
+Read `git diff --name-only origin/main..HEAD` (or staged changes if not yet committed). Bucket files:
 
-1. **Pre-push review** — Run the `pre-push-review` skill (build, voice/copy, accessibility, code efficiency, plan update)
-2. **Fix any issues** found by the review. Do NOT deploy if build fails or secrets are exposed.
-3. **Stage and commit** — Use descriptive commit message with `Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>`. Use heredoc format for multi-line messages.
-4. **Push to main** — Use the SSH git push command above. This triggers Vercel auto-deploy.
-5. **Verify** — Confirm push succeeded. Vercel deploys automatically on push to main.
-6. **Update plan doc** — Mark completed items, add new TODOs if discovered during review.
+- **User-facing code** — `components/**`, `app/**` (excluding `app/api/**`)
+- **Server/data** — `app/api/**`, `lib/**` (handlers, store, enrichment)
+- **Schema** — `supabase/migrations/**`, `lib/types.ts` if Game shape changed
+- **Rules / skills / docs** — `.claude/**`, `docs/**`, `*.md`
+- **Config / build** — `next.config.*`, `package.json`, `tsconfig.json`, `tailwind.config.*`
+- **Scripts** — `scripts/**`
 
-### Quick Deploy (single feature, hotfix, minor change)
-Use this for small, focused changes where a full review would be overkill.
+Scope determines what gates run. Don't run a voice sweep on a server-only change.
 
-1. **Build check only** — Run `npm run build` in the project directory. If it fails, stop.
-2. **Voice/lingo sweep** — MANDATORY if any user-facing copy was written or modified. See "Voice/Lingo Sweep" section below.
-3. **Stage, commit, push** — Same git workflow as full deploy.
-4. **Skip** accessibility audit, code efficiency check, and plan update unless the change touches those areas.
+## Step 2 — Pick mode
 
-## Policy Guardrails
-The pre-push-review skill checks these, but know the hard rules:
-- **No-sell rule**: We NEVER recommend games users don't already own or have wishlisted. If a new feature breaks this, it requires coordinated updates to privacy policy, HelpModal FAQ, DealBadge disclosures, and voice guide. See pre-push-review Section 5 for the full file list.
-- **Affiliate disclosures**: Every deal link needs FTC disclosure near it, not just in privacy policy.
-- **Data collection**: New data collection = privacy policy update before deploy.
+### Full mode — multiple features, end of sprint, or anything risky
 
-## Voice/Lingo Sweep (Mandatory for Copy Changes)
+Use when:
+- Multiple feature areas changed
+- User-facing code AND server/data changed in the same push
+- Schema changed
+- Legal-sensitive surfaces touched (privacy, deals, profiling, notifications)
+- Brady asks for "full review"
 
-Run this on EVERY deploy where user-facing copy was written or modified. This is non-negotiable.
+Run, in order:
+1. **Build verification** — `npm run build` from repo root. If it fails, stop and report.
+2. **`/pre-push-review`** — bundle: build (already passed), voice/copy, a11y, terminology, code efficiency. Voice review uses `.claude/rules/voice-charter.md` as the gate.
+3. **Legal compliance** — if data/deals/profiling/notifications changed, walk through `.claude/rules/legal-compliance.md` triggers explicitly.
+4. **Product axiom** — if features were added/modified, ask: "does this serve `Import → Mood → Pick → Play → Celebrate` in <60s?" If it adds friction without serving the loop, surface for go/no-go.
+5. **Surface contradictions** — if the diff and `.claude/rules/` or `docs/DECISIONS.md` LOCKED entries disagree, **ask before pushing**. Drift may be intentional, but never silent.
 
-### What to check
-Grep all changed files with user-facing strings for these banned patterns (from `.claude/rules/voice-and-tone.md`):
+### Quick mode — single small change
 
-1. **"You don't X, you Y"** / **"That's not X, that's Y"** / **"You're not X, you're Y"** — the most common AI tell. Grep for: `You don't |You're not |That's not `
-2. **Em dashes (—) for dramatic pauses** — use periods, colons, or commas instead. OK as UI placeholder for empty values.
-3. **"Dive into" / "Elevate your" / "Unlock the power of"** — generic marketing slop
-4. **"Whether you're X or Y"** — hedge-y AI construction
-5. **Banned words in copy**: "delve", "tapestry", "landscape", "journey" (unless about the game Journey)
-6. **Starting with "Ah," or "Well,"** — filler AI openers
-7. **Triple adjective lists** ("sleek, powerful, and intuitive")
-8. **Overly parallel structures** — "You X. You Y. You Z." in sequence
+Use when:
+- One feature area, small diff
+- Hotfix
+- Copy tweak
+- Docs only (skip voice; rules/skills count as "user-facing" if they govern shipped copy)
 
-### How to run it
-```bash
-# Check changed files for the most common violations
-git diff --name-only HEAD~1 | xargs grep -n "You don't \|You're not \|That's not \|— \|dive into\|delve\|tapestry\|landscape\|journey\|Whether you're\|Ah,\|Well," 2>/dev/null
-```
+Run:
+1. **Build check** — `npm run build`. If it fails, stop.
+2. **Voice sweep** — only if user-facing copy changed. Use `voice-charter.md` (not the long voice-and-tone.md).
+3. Skip a11y, code efficiency, plan update unless the change touches those areas.
 
-Or use `Grep` tool on each changed file. Focus on string literals and JSX text, not code comments.
+## Step 3 — Stage, commit, push
 
-### Judgment calls
-Not everything flagged is a violation. The voice guide encourages personality, roasts, and wit. "The backlog fears you now" is personality, not AI slop. Use judgment: the test is "would a human gaming buddy say this, or does it sound like ChatGPT wrote a marketing page?"
+- Read `git status` first. Never stage `.env`, credentials, or unrelated files.
+- Commit messages: heredoc format, descriptive, with the standard `Co-Authored-By: Claude Opus 4.6` trailer.
+- Atomic commits when shipping multiple distinct things — easier to revert one piece.
+- Push with the SSH command above. HTTPS auth doesn't work in this environment.
 
-## Common Pitfalls
-- Always use the SSH push command — HTTPS auth doesn't work in this environment
-- Never use `vercel deploy --prod` directly — we deploy via git push to trigger Vercel's GitHub integration
-- Node path must be added to PATH for build: `export PATH="$HOME/.fnm/node-versions/v22.22.2/installation/bin:$PATH"`
-- Commit messages: use heredoc to avoid shell escaping issues with apostrophes
-- Don't push `.env` or credential files — check `git status` before staging
+## Step 4 — Post-push verify
 
-## Review Skills Reference
-- **`pre-push-review`** — Full review bundle (build + voice + a11y + code efficiency + plan update). Run before full deploys.
-- **Voice guide** at `.claude/rules/voice-and-tone.md` — Banned patterns, terminology table, personality examples.
-- **User personas** at `.claude/rules/user-persona.md` — Who we're building for. Check new copy against these.
+After the push completes, in parallel:
 
-## After Deploy
-- Vercel build logs visible at https://vercel.com (if needed)
-- Live site at https://inventoryfull.gg
-- If deploy fails on Vercel side, check build logs — most common issue is TypeScript errors that `next build` would catch locally
+1. **`curl -sI https://inventoryfull.gg/ | grep x-vercel-id`** — confirm Vercel served a deploy. The ID won't match the new commit immediately (build takes ~30–90s) but proves the site is up.
+2. **Wait ~60s, re-curl** — confirm the deploy ID changed (means Vercel finished building the new commit). If it hasn't changed after 3 min, check Vercel build logs.
+3. **Smoke-check the live site** for any user-visible change Brady mentioned (hero CTA copy, new modal section, etc.) via `mcp__Claude_in_Chrome__navigate` + screenshot.
+4. **Sentry** — glance for new error spike post-deploy. Skip if the change is server-only or trivial.
+
+If anything looks wrong, surface it. Don't auto-revert; ask Brady.
+
+## Step 5 — Update session-resume (light)
+
+If a `docs/session-resume-YYYY-MM-DD.md` exists for today, append a one-line note: what was deployed + commit SHA. Full session-close housekeeping is `/session-close`'s job.
+
+## Common pitfalls
+
+- HTTPS auth doesn't work — use the SSH push command
+- Don't use `vercel deploy --prod` — we deploy via git push
+- Node path must be on PATH for build: `export PATH="$HOME/.fnm/node-versions/v22.22.2/installation/bin:$PATH"`
+- Heredoc commit messages avoid shell escaping issues with apostrophes
+- Never `--no-verify` to bypass the pre-push hook — the hook is non-blocking; if it nagged, address the nag
+
+## Hard guardrails (never override)
+
+- **No-sell rule** — never recommend games the user doesn't already own/wishlist. Hard line. See `.claude/rules/legal-compliance.md`.
+- **Affiliate disclosures** — every deal link gets FTC disclosure adjacent, not just in privacy policy.
+- **Data collection changes** — Privacy Policy update ships WITH or BEFORE the feature, never after.
+- **Force-pushing main** — never. Don't even offer it.
+- **Skipping the pre-push hook** — never with `--no-verify`. The hook is informational; if it fires, address it.
+
+## Boundaries
+
+- This skill orchestrates `/pre-push-review` — it does not duplicate the bundle.
+- This skill does NOT do session-close work (handoffs, decision logging, ROADMAP scan, AGENTS.md drift). That's `/session-close`. Running both back-to-back is the correct end-of-day pattern.
+- This skill does NOT run weekly drift audits (`/regress-watch decisions-audit`). That fires on its own cadence via the schedule, not on push.
