@@ -87,3 +87,57 @@ Three commits, all live on `main`. Working tree clean at close.
 ---
 
 *Session ended 2026-05-05 ~01:30 AM PDT (Wave 1) and ~04:15 AM PDT (Wave 2).*
+
+---
+
+## Wave 3 — Tuesday morning 2026-05-05 PDT (~10:15 AM – 12:30 PM)
+
+Five commits, all live on `main`. Working tree clean at close. Through-line: testing-agents recon → autonomous build of Agents A + B → /deploy refactor → modal redesign specs banked → docs tidy.
+
+### Shipped (in commit order)
+
+- **`cdc6563` — fix(skills): pre-push-review terminology table was inverted.** Critical recon find: skill was telling Claude to use *retired* terms ("Play Next not Up Next", "Bailed not Dropped", "Cleared not Completed", "What Should I Play?", "Moods not Vibes"). All five reversals were locked decisions Brady had already made (status cycle 2026-04-09, picker rename 2026-05-05). Skill now points at voice-charter.md as canonical gate, has correct terminology table, and lists retired terms as flags-on-reintroduction. Stale plan-doc reference replaced with session-resume + DECISIONS.md flow. Frontmatter advertises auto-invoke trigger. `regress-watch/assertions.md` "What Should I Play?" reference also fixed.
+- **`0a16130` — feat(hooks): non-blocking git pre-push hook (Agent A trigger).** Nags when diff touches `components/`, `app/`, `lib/`, or `.claude/rules/`. Source tracked at `scripts/hooks/pre-push`. Install via `bash scripts/hooks/install.sh`. Local install done. Self-validated when its own commit triggered the nag. `deploy-gates.md` documents the install. Hook is informational only — does not gate the push.
+- **`59cfc48` — feat(skills): regress-watch decisions-audit mode (Agent B).** Six `decision-*` assertions encoding LOCKED entries: status-cycle-locked, picker-cta-pick-my-game, moving-on-canon, pick-flow-two-inputs, playing-now-cap-3, tagline-canon. New mode reads DECISIONS.md, classifies each as Holds / Drift unauthorized / Drift authorized / Can't tell, writes weekly output to `docs/audits/`. Skill frontmatter added (was missing — CLI showed just "Regress Watch"). New "How to add a new decision-* assertion" guide in assertions.md.
+- **`00f2688` — docs(planning): modal-redesign + smaller-surgeries specs.** Three Explore subagents recon'd the modal redesign remaining items. Output:
+  - `docs/modal-redesign-spec.md` — Item 1 (destructive-action collapse, ~40-60 LOC, recommend disclosing Delete + Don't suggest only — keep Bail at top tier per Moving On canon), Item 2 (adaptive primary CTA, full platform×device matrix, ~340 LOC across 4 phases), Item 3 (more like this from your library, ~110 LOC, weighted similarity heuristic).
+  - `docs/smaller-surgeries.md` — six lined-up surgeries: roll modal hierarchy, stats hero (value reclaimed framing), Moved On undo toast, retroKids release-year enrichment, FinishCheckNudge (parked), Ko-fi widget (parked at do-nothing).
+  - INDEX.md updated to point at both.
+- **`fe20dab` — feat(skills): /deploy as scope-aware orchestrator.** Brady's strategic question: should pre-push gates live in /deploy or /session-close, and is consolidating bloat or smart? Answer: smart, IF /deploy detects scope and delegates rather than forcing every gate on every push. Step 1 = scope detection (bucket diff into user-facing / server / schema / rules / config / scripts). Step 2 = Full vs Quick mode with explicit "use when" criteria. Inline voice-sweep logic deleted (was duplicating pre-push-review against retired voice-and-tone.md patterns) — now delegates to /pre-push-review. New Step 4 = post-push verify (curl x-vercel-id twice, smoke-check, glance Sentry). Stale paths purged (partitioned-fluttering-flurry.md, user-persona.md). Boundaries section: /deploy is NOT /session-close, NOT regress-watch decisions-audit.
+
+### Scheduled
+
+- **Weekly Agent B cron** via `anthropic-skills:schedule` → task `inventory-full-decisions-audit-weekly`. Fires every Monday ~08:09 AM PDT. Writes `docs/audits/audit-YYYY-MM-DD.md`. First fire: Monday 2026-05-11. Lives in `/Users/bradywhitteker/.claude/scheduled-tasks/`.
+- **Recommended:** manually fire once via Scheduled sidebar "Run now" before the first auto-run, to pre-approve tool permissions (Read, Write, Bash). Future runs then don't pause on prompts.
+
+### Verify on next session start
+
+- **Latest deploy is `fe20dab`.** No app code touched in Wave 3 — all changes are skills, hooks, scheduled tasks, and docs. Vercel deploy unchanged from `5a65eee` (Wave 2 production state). Site behavior is identical to Wave 2.
+- **Pre-push hook is installed.** Test: `git push` after touching a `components/` file should print the nag block. Hook is informational; does not block push.
+- **Weekly audit task exists.** Verify in Scheduled sidebar (left rail). Should show "inventory-full-decisions-audit-weekly" with next fire = next Monday ~08:09 AM PDT.
+
+### Wave 3 rotting gotchas
+
+- **Tool permissions for the weekly audit are unapproved.** First auto-run (Monday) will likely prompt for Read/Write/Bash permissions. If Brady misses the prompt, the audit pauses indefinitely. Mitigate by clicking "Run now" once in the Scheduled sidebar this week — approvals stick to the task.
+- **Agent B output volume.** With 6 `decision-*` assertions, the weekly audit doc will be small (~30 lines). If we add many more, format may need a short summary header so Brady doesn't have to scan a wall of ✅. Watch when audit doc grows past ~100 lines.
+- **`/deploy` skill description-vs-behavior gap.** The new `/deploy` says it does post-push verify, but in practice the post-push curl needs ~60-90s wait between fires. If Brady invokes `/deploy` and walks away, the verify step may not complete cleanly. Acceptable for now — flag for revisit if it bites.
+
+### Open design questions — updated for next session
+
+- **Modal redesign (3 items).** Specs banked in `docs/modal-redesign-spec.md`. Recommended order: Item 2 Phase 1 (extract launch logic) → Item 1 (disclosure) → Item 2 Phases 2–4 → Item 3.
+- **Smaller surgeries (6 items).** Queue in `docs/smaller-surgeries.md`. Pick any when window opens. Roll-modal hierarchy is the most user-visible polish.
+- **First weekly audit validation.** After Monday 2026-05-11 fires, read the output. If false-positive rate is high or assertions are too literal, refine.
+
+### Health snapshot — updated
+
+- Build state: green at `fe20dab`. Last app-code build was `5a65eee` (Wave 2, Vercel green).
+- `main` tip: `fe20dab feat(skills): /deploy as scope-aware orchestrator`.
+- Known bugs: none introduced this wave (all skill/docs/hook changes).
+- Production deploy: live at `5a65eee` from Wave 2. Wave 3 didn't touch app code.
+- Supabase migrations: no schema changes.
+- Free-tier proximity: unchanged.
+- Scheduled tasks: 1 (Agent B weekly).
+
+---
+
+*Session ended 2026-05-05 ~12:30 PM PDT (Wave 3).*

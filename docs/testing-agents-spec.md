@@ -1,8 +1,26 @@
 # Testing Agents — Spec & Handoff
 
-**Status:** PLANNING — designed late 2026-05-05, awaiting dedicated session.
-**Trigger to build:** Brady has 30–60 min for the recon + small-build pass described under "Recommended next-session plan."
+**Status:** MOSTLY SHIPPED 2026-05-05 PDT. Agent A (pre-push hook + pre-push-review skill) and Agent B (regress-watch decisions-audit mode + weekly schedule) both live. See "What shipped" below for commit refs. Open question: whether to auto-pre-approve Agent B's tool permissions via a manual "Run now" first.
+**Trigger to build (originally):** Brady has 30–60 min for the recon + small-build pass described under "Recommended next-session plan."
 **Why this exists:** Brady asked late on 2026-05-05 about standing up testing agents that run with regularity to (a) catch shipped code that "sucks" and (b) detect when good features get stripped while shipping new ones. Two postures, two agents. This spec preserves the design conversation so the next session doesn't start cold.
+
+## What shipped (2026-05-05 PDT)
+
+- **Agent A trigger:** non-blocking git pre-push hook at `.git/hooks/pre-push` (canonical: `scripts/hooks/pre-push`). Nags when diff touches user-facing code. Commit `0a16130`.
+- **Agent A skill:** `/pre-push-review` terminology table fixed (was inverted — telling Claude to use retired terms). Now points at `voice-charter.md` as canonical gate. Frontmatter description updated to advertise auto-invoke triggers. Commit `cdc6563`.
+- **Agent B mode:** `regress-watch` extended with `decisions-audit` mode. Six `decision-*` assertions encoding LOCKED entries (status cycle, picker CTA, Moving On canon, 2-input pick flow, Playing Now cap, tagline canon). New `docs/audits/` dir for weekly outputs. Commit `59cfc48`.
+- **Agent B cadence:** scheduled task `inventory-full-decisions-audit-weekly` fires every Monday ~08:09 AM PDT. Writes `docs/audits/audit-YYYY-MM-DD.md`. Brady reads with coffee. Surfaces only — never auto-fixes.
+- **/deploy refactored** as scope-aware orchestrator that delegates to `/pre-push-review` instead of duplicating voice-sweep logic. Commit `fe20dab`.
+
+## Still TBD (small)
+
+- Manually invoke the weekly Agent B task once via "Run now" in the Scheduled sidebar to pre-approve any tool permissions it needs (mostly Read + Write + Bash). Otherwise the first real run may pause on permission prompts.
+- After the first real audit fires, validate output quality. If false-positive rate is high, refine assertions in `.claude/skills/regress-watch/assertions.md`.
+- Scope expansion: when new LOCKED entries land in DECISIONS.md, add a corresponding `decision-*` assertion. The pattern is documented in `assertions.md` ("How to add a new decision-* assertion").
+
+The rest of this doc is preserved as the historical brief that drove the build.
+
+---
 
 ---
 
