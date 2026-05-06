@@ -1,6 +1,5 @@
 import { PlayerArchetype } from '@/lib/archetypes';
-import { plural, shareToTwitter, shareToReddit, generateShareText, getDiscordText } from '@/lib/statsHelpers';
-import { trackShareStats } from '@/lib/analytics';
+import { plural } from '@/lib/statsHelpers';
 import StatsShareComposer from './StatsShareComposer';
 
 interface ValueCalculatorProps {
@@ -213,93 +212,13 @@ export default function ValueCalculator({
         </button>
       )}
 
-      {/* Share buttons */}
+      {/* Share as OG card */}
       {calculated && (
         <div className="mt-4 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
           <div className="text-xs text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider mb-2 text-center">
             Share your stats
           </div>
-          <div className="flex flex-col sm:flex-row gap-2">
-            <button
-              onClick={() => {
-                trackShareStats('twitter');
-                const text = generateShareText({
-                  backlogSize: stats.backlogSize,
-                  gamesCleared: stats.gamesCleared,
-                  bailedCount: stats.bailedCount,
-                  unplayedValue: countedUnplayed,
-                  playedValue: countedPlayed,
-                  oldest: stats.oldest,
-                  streak: stats.streak,
-                  backlogHours: backlogHours,
-                  confidence: confidencePct,
-                });
-                shareToTwitter(text);
-              }}
-              className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-              style={{
-                backgroundColor: 'rgba(29, 161, 242, 0.1)',
-                border: '1px solid rgba(29, 161, 242, 0.2)',
-                color: '#1da1f2',
-              }}
-            >
-              𝕏 Post
-            </button>
-            <button
-              onClick={() => {
-                trackShareStats('reddit');
-                const text = generateShareText({
-                  backlogSize: stats.backlogSize,
-                  gamesCleared: stats.gamesCleared,
-                  bailedCount: stats.bailedCount,
-                  unplayedValue: countedUnplayed,
-                  playedValue: countedPlayed,
-                  oldest: stats.oldest,
-                  streak: stats.streak,
-                  backlogHours: backlogHours,
-                  confidence: confidencePct,
-                });
-                shareToReddit(text);
-              }}
-              className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-              style={{
-                backgroundColor: 'rgba(255, 69, 0, 0.1)',
-                border: '1px solid rgba(255, 69, 0, 0.2)',
-                color: '#ff4500',
-              }}
-            >
-              📮 Reddit
-            </button>
-            <button
-              onClick={() => {
-                trackShareStats('discord');
-                const text = generateShareText({
-                  backlogSize: stats.backlogSize,
-                  gamesCleared: stats.gamesCleared,
-                  bailedCount: stats.bailedCount,
-                  unplayedValue: countedUnplayed,
-                  playedValue: countedPlayed,
-                  oldest: stats.oldest,
-                  streak: stats.streak,
-                  backlogHours: backlogHours,
-                  confidence: confidencePct,
-                });
-                navigator.clipboard.writeText(getDiscordText(text));
-                showToast('Copied! Paste it wherever you want.');
-              }}
-              className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-              style={{
-                backgroundColor: 'rgba(88, 101, 242, 0.1)',
-                border: '1px solid rgba(88, 101, 242, 0.2)',
-                color: '#5865f2',
-              }}
-            >
-              📋 Copy
-            </button>
-          </div>
-
-          {/* Share as OG card */}
-          <div className="mt-3">
+          <div>
             <StatsShareComposer
               stats={stats}
               totalGames={totalGames}

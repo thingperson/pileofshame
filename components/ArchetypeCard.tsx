@@ -1,8 +1,6 @@
 'use client';
 
-import { useState } from 'react';
 import { PlayerArchetype, getArchetypeSpriteKey } from '@/lib/archetypes';
-import { findArchetypeByTitle } from '@/lib/archetypeRegistry';
 import { hasSprite } from '@/lib/pixel/sprites';
 import PixelSprite from './PixelSprite';
 
@@ -19,33 +17,6 @@ export default function ArchetypeCard({
   archetypesLength,
   onReroll,
 }: ArchetypeCardProps) {
-  const [shareState, setShareState] = useState<'idle' | 'copied'>('idle');
-  const registryEntry = findArchetypeByTitle(currentArchetype.title);
-  const shareUrl = registryEntry
-    ? (typeof window !== 'undefined' ? `${window.location.origin}/archetype/${registryEntry.slug}` : `/archetype/${registryEntry.slug}`)
-    : null;
-
-  async function handleShare() {
-    if (!shareUrl) return;
-    // Prefer native share where available (mobile), fall back to clipboard copy.
-    // Pass url only (no text) — desktop "Copy" actions concatenate text+url and
-    // break the link. The og: title/description on the page handles unfurl preview.
-    if (typeof navigator !== 'undefined' && 'share' in navigator) {
-      try {
-        await navigator.share({ title: currentArchetype.title, url: shareUrl });
-        return;
-      } catch {
-        // User cancelled or share rejected — fall through to clipboard.
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      setShareState('copied');
-      setTimeout(() => setShareState('idle'), 2000);
-    } catch {
-      window.prompt('Copy your archetype link:', shareUrl);
-    }
-  }
 
   return (
     <div
@@ -118,19 +89,6 @@ export default function ArchetypeCard({
             }}
           >
             🔮 Read me again ({archetypeIndex % archetypesLength + 1}/{archetypesLength})
-          </button>
-        )}
-        {shareUrl && (
-          <button
-            onClick={handleShare}
-            className="flex-1 py-2 rounded-lg text-xs font-bold font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
-            style={{
-              background: 'linear-gradient(135deg, var(--color-accent-purple) 0%, var(--color-accent-pink) 100%)',
-              color: '#fff',
-              border: '1px solid transparent',
-            }}
-          >
-            {shareState === 'copied' ? '✓ Link copied' : '↗ Share your type'}
           </button>
         )}
       </div>
