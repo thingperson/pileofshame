@@ -26,11 +26,13 @@ export function detectDeviceType(): DeviceType {
  * Given a game, returns the launch target (URL + label) or null if no
  * launch action is available.
  *
- * Phase 1: Steam only. Future phases add PSN, Xbox, Epic, GOG, Switch.
+ * Supports: Steam (protocol URI), Xbox (protocol URI on desktop, store
+ * fallback on mobile), PlayStation (store URL — no native protocol).
  */
-export function getLaunchTarget(game: Game, _device?: DeviceType): LaunchTarget | null {
-  // Steam: use the protocol URI. Works on desktop + Android (Steam Link).
-  // iOS Safari often blocks custom protocol URIs, but Steam Link handles it.
+export function getLaunchTarget(game: Game, device?: DeviceType): LaunchTarget | null {
+  const d = device ?? detectDeviceType();
+
+  // Steam: protocol URI. Works on desktop + Android (Steam Link).
   if (game.steamAppId) {
     const label = SOURCE_LABELS[game.source] ?? 'Steam';
     return {
@@ -40,6 +42,30 @@ export function getLaunchTarget(game: Game, _device?: DeviceType): LaunchTarget 
     };
   }
 
-  // Future: other platforms will slot in here.
+  // Xbox: protocol URI on desktop/Android, store URL on iOS (no Xbox app deeplink).
+  if (game.xboxTitleId) {
+    if (d === 'ios') {
+      return {
+        url: `https://www.xbox.com/games/store/a/${game.xboxTitleId}`,
+        label: 'Open in Xbox Store',
+        title: 'Opens the Xbox Store page',
+      };
+    }
+    return {
+      url: `xbox://launch/${game.xboxTitleId}`,
+      label: 'Launch in Xbox',
+      title: 'Opens in Xbox app (or Game Pass)',
+    };
+  }
+
+  // PlayStation: no native protocol URI. Link to PS Store.
+  if (game.psnProductId) {
+    return {
+      url: `https://store.playstation.com/concept/${game.psnProductId}`,
+      label: 'Open in PS Store',
+      title: 'Opens the PlayStation Store page',
+    };
+  }
+
   return null;
 }

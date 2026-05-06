@@ -129,6 +129,7 @@ export async function POST(request: NextRequest) {
       trophiesTotal: number;
       hasPlatinum: boolean;
       earnedPlatinum: boolean;
+      productId?: string;
       source: 'purchased' | 'trophy' | 'both';
     }>();
 
@@ -149,6 +150,7 @@ export async function POST(request: NextRequest) {
           : 0,
         hasPlatinum: trophy?.definedTrophies.platinum ? trophy.definedTrophies.platinum > 0 : false,
         earnedPlatinum: trophy?.earnedTrophies.platinum ? trophy.earnedTrophies.platinum > 0 : false,
+        productId: purchased.productId || undefined,
         source: trophy ? 'both' : 'purchased',
       });
     }

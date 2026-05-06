@@ -17,6 +17,7 @@ interface PSNGameData {
   trophiesTotal: number;
   hasPlatinum: boolean;
   earnedPlatinum: boolean;
+  productId?: string;
   source: 'purchased' | 'trophy' | 'both';
 }
 
@@ -99,6 +100,7 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
         name: game.name,
         source: 'playstation',
         coverUrl: game.imageUrl || undefined,
+        psnProductId: game.productId || undefined,
         category: DEFAULT_CATEGORIES[0],
         vibes: [],
         timeTier: game.progress > 50 ? 'deep-cut' : 'wind-down',

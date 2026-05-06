@@ -18,6 +18,8 @@ export interface Game {
   name: string;
   source: GameSource;
   steamAppId?: number;
+  xboxTitleId?: string;
+  psnProductId?: string;
   rawgSlug?: string;
   coverUrl?: string;
   metacritic?: number;

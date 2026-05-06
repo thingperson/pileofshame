@@ -136,6 +136,7 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
         timeTier: 'wind-down',
         notes: gamerscoreNote,
         coverUrl: game.imageUrl || undefined,
+        xboxTitleId: game.titleId || undefined,
         achievements: game.achievements ? {
           earned: game.achievements.earned,
           total: game.achievements.total,
