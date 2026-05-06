@@ -5,6 +5,7 @@ import { Game, GameStatus } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { STATUS_CONFIG, SOURCE_LABELS, MAX_PLAYING_NOW, MAX_UP_NEXT } from '@/lib/constants';
 import { getLaunchTarget } from '@/lib/launch';
+import { findSimilarGames } from '@/lib/similarity';
 import { useToast } from './Toast';
 import { getGameDescriptor } from '@/lib/descriptors';
 import { MOOD_TAG_CONFIG, getPlaytimeRoast } from '@/lib/enrichment';
@@ -1032,6 +1033,30 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                     {insight}
                   </p>
                 ) : null;
+              })()}
+
+              {/* Similar games strip — Completed only, modal only */}
+              {game.status === 'played' && forceExpanded && (() => {
+                const allGames = useStore.getState().games;
+                const similar = findSimilarGames(game, allGames);
+                if (similar.length === 0) return null;
+                return (
+                  <div className="mt-2">
+                    <p className="text-xs font-[family-name:var(--font-mono)] text-text-dim mb-2">From your shelf</p>
+                    <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+                      {similar.map((g) => (
+                        <div key={g.id} className="flex-shrink-0 w-16" title={g.name}>
+                          {g.coverUrl ? (
+                            <img src={g.coverUrl} alt={g.name} className="w-16 h-20 rounded object-cover border border-white/10" />
+                          ) : (
+                            <div className="w-16 h-20 rounded bg-bg-elevated border border-white/10 flex items-center justify-center text-xs text-text-faint">🎮</div>
+                          )}
+                          <p className="text-[10px] text-text-dim mt-1 truncate">{g.name}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
               })()}
 
               {/* Notes — single editable field, auto-saves */}
