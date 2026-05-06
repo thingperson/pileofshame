@@ -370,6 +370,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
   const [ghostStatus, setGhostStatus] = useState<GameStatus | null>(null);
   const [showBailConfirm, setShowBailConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showMoreActions, setShowMoreActions] = useState(false);
   const [notesSaved, setNotesSaved] = useState(false);
   const [storylineOpen, setStorylineOpen] = useState(false);
   const [bailing, setBailing] = useState(false);
@@ -538,14 +539,24 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
     setBailing(true);
     setShowBailConfirm(false);
     const affirmation = bailAffirmations[Math.floor(Math.random() * bailAffirmations.length)];
+    const previousStatus = game.status;
     // Animate out, then commit the status change
     setTimeout(() => {
       setBailed(game.id);
-      showToast(`${game.name} → Moved On 👋 ${affirmation}`);
+      showToast(
+        `${game.name} → Moved On 👋 ${affirmation}`,
+        5000,
+        {
+          label: '↩ Undo',
+          onClick: () => {
+            updateGame(game.id, { status: previousStatus });
+          },
+        }
+      );
       setBailing(false);
       onStatusChange?.('bailed');
     }, 300);
-  }, [game.id, game.name, setBailed, showToast, onStatusChange]);
+  }, [game.id, game.name, game.status, setBailed, updateGame, showToast, onStatusChange]);
 
   const handlePlayAgain = useCallback(() => {
     const { games } = useStore.getState();
@@ -1276,32 +1287,27 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               </div>
             )}
 
-            {/* Don't suggest toggle */}
-            <button
-              onClick={() => {
-                toggleIgnore(game.id);
-                showToast(game.ignored
-                  ? `${game.name} is back in rotation.`
-                  : `${game.name} won't be suggested anymore.`
-                );
-              }}
-              className={
-                forceExpanded
-                  ? 'flex items-center justify-center text-xs font-semibold rounded-lg transition-all hover:brightness-110 active:scale-[0.97]'
-                  : 'px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97]'
-              }
-              style={{
-                backgroundColor: game.ignored ? 'rgba(167, 139, 250, 0.1)' : forceExpanded ? 'rgba(239, 68, 68, 0.08)' : 'rgba(255, 255, 255, 0.04)',
-                color: game.ignored ? '#a78bfa' : forceExpanded ? '#ef4444' : 'var(--color-text-faint)',
-                border: game.ignored ? '1px solid rgba(167, 139, 250, 0.25)' : forceExpanded ? '1px dashed rgba(239, 68, 68, 0.3)' : '1px solid transparent',
-                ...(forceExpanded ? { height: 44 } : {}),
-              }}
-              title={game.ignored ? 'Include in suggestions again' : 'Won\'t show up in What Should I Play'}
-            >
-              {game.ignored
-                ? (forceExpanded ? 'Suggest again' : '👁 Suggest again')
-                : (forceExpanded ? 'Don\'t suggest' : '🚫 Don\'t suggest')}
-            </button>
+            {/* Don't suggest toggle — card view only (modal moves this behind disclosure) */}
+            {!forceExpanded && (
+              <button
+                onClick={() => {
+                  toggleIgnore(game.id);
+                  showToast(game.ignored
+                    ? `${game.name} is back in rotation.`
+                    : `${game.name} won't be suggested anymore.`
+                  );
+                }}
+                className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97]"
+                style={{
+                  backgroundColor: game.ignored ? 'rgba(167, 139, 250, 0.1)' : 'rgba(255, 255, 255, 0.04)',
+                  color: game.ignored ? '#a78bfa' : 'var(--color-text-faint)',
+                  border: game.ignored ? '1px solid rgba(167, 139, 250, 0.25)' : '1px solid transparent',
+                }}
+                title={game.ignored ? 'Include in suggestions again' : 'Won\'t show up in Pick My Game'}
+              >
+                {game.ignored ? '👁 Suggest again' : '🚫 Don\'t suggest'}
+              </button>
+            )}
 
             {/* Skip count reset (only visible when game has been skipped 3+ times) */}
             {(() => {
@@ -1377,35 +1383,67 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
             )}
           </div>
 
-          {/* Modal: ghost-link delete at the very bottom */}
+          {/* Modal: "More actions" disclosure — Don't suggest + Delete */}
           {forceExpanded && (
-            <div className="mt-3 flex justify-center">
-              {!showDeleteConfirm ? (
+            <div className="mt-3">
+              {!showMoreActions ? (
                 <button
-                  onClick={() => setShowDeleteConfirm(true)}
-                  className="text-xs font-[family-name:var(--font-mono)] text-text-faint hover:text-red-400 transition-colors underline-offset-2 hover:underline"
-                  title="Permanently remove this game from your library"
+                  onClick={() => setShowMoreActions(true)}
+                  className="w-full text-xs font-[family-name:var(--font-mono)] text-text-faint hover:text-text-muted transition-colors py-2"
                 >
-                  Delete from library
+                  ··· More actions
                 </button>
               ) : (
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">Gone forever?</span>
+                <div className="border-t pt-3 space-y-2" style={{ borderColor: 'var(--color-border-subtle)' }}>
+                  {/* Don't suggest */}
                   <button
                     onClick={() => {
-                      deleteGame(game.id);
-                      showToast(`${game.name} deleted. It was never here.`);
+                      toggleIgnore(game.id);
+                      showToast(game.ignored
+                        ? `${game.name} is back in rotation.`
+                        : `${game.name} won't be suggested anymore.`
+                      );
                     }}
-                    className="px-2 py-1 text-xs font-medium rounded-md bg-red-500/15 text-red-400 hover:bg-red-500/25 transition-colors"
+                    className="flex items-center justify-center w-full text-xs font-semibold rounded-lg transition-all hover:brightness-110 active:scale-[0.97]"
+                    style={{
+                      height: 44,
+                      backgroundColor: game.ignored ? 'rgba(167, 139, 250, 0.1)' : 'rgba(239, 68, 68, 0.08)',
+                      color: game.ignored ? '#a78bfa' : '#ef4444',
+                      border: game.ignored ? '1px solid rgba(167, 139, 250, 0.25)' : '1px dashed rgba(239, 68, 68, 0.3)',
+                    }}
+                    title={game.ignored ? 'Include in suggestions again' : 'Won\'t show up in Pick My Game'}
                   >
-                    Delete
+                    {game.ignored ? 'Suggest again' : 'Don\'t suggest'}
                   </button>
-                  <button
-                    onClick={() => setShowDeleteConfirm(false)}
-                    className="px-2 py-1 text-xs text-text-dim hover:text-text-muted transition-colors"
-                  >
-                    Keep it
-                  </button>
+                  {/* Delete */}
+                  {!showDeleteConfirm ? (
+                    <button
+                      onClick={() => setShowDeleteConfirm(true)}
+                      className="w-full text-xs font-[family-name:var(--font-mono)] text-text-faint hover:text-red-400 transition-colors py-2 underline-offset-2 hover:underline"
+                      title="Permanently remove this game from your library"
+                    >
+                      Delete from library
+                    </button>
+                  ) : (
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">Gone forever?</span>
+                      <button
+                        onClick={() => {
+                          deleteGame(game.id);
+                          showToast(`${game.name} deleted. It was never here.`);
+                        }}
+                        className="px-2 py-1 text-xs font-medium rounded-md bg-red-500/15 text-red-400 hover:bg-red-500/25 transition-colors"
+                      >
+                        Delete
+                      </button>
+                      <button
+                        onClick={() => { setShowDeleteConfirm(false); setShowMoreActions(false); }}
+                        className="px-2 py-1 text-xs text-text-dim hover:text-text-muted transition-colors"
+                      >
+                        Keep it
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
