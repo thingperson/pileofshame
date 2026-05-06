@@ -218,6 +218,9 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
       // Each new pick collapses Why This One — we want the next reveal to
       // explain itself before the user reaches for justification.
       setShowWhyThisOne(false);
+      // First roll: expand filter summary so the user sees what shaped it.
+      // Subsequent rolls: collapse to the one-line summary.
+      setShowRollSettings(newCount <= 1);
       // Funnel: first-ever roll reveal (once per browser)
       trackFirstRoll();
     }, 500);
@@ -655,20 +658,35 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
         {currentPick && (
           <div className={`flex flex-col min-h-0 flex-1 transition-all duration-500 ${revealed ? 'opacity-100' : 'opacity-0'}`}>
           <div className="px-5 overflow-y-auto min-h-0 flex-1">
-            {/* Roll settings — collapsed by default. Mode / energy / mood
-                controls live here, surfaced only when the user wants to alter
-                the roll without resetting the modal. The pick should be the
-                star of the screen; the controls don't compete unless asked. */}
+            {/* Roll settings — collapsed to a one-line summary after the first
+                roll. On the very first roll of a session the filters stay
+                expanded so the user sees what shaped the pick. Subsequent
+                rolls collapse to mood · session length · ↻ change. */}
             <div className="mb-3 text-center">
-              <button
-                type="button"
-                onClick={() => setShowRollSettings((v) => !v)}
-                className="inline-flex items-center gap-1.5 text-xs font-[family-name:var(--font-mono)] text-text-faint hover:text-text-muted transition-colors"
-                aria-expanded={showRollSettings}
-              >
-                <span>⚙ {showRollSettings ? 'Hide' : 'Change'} roll settings</span>
-                <span className="text-text-dim">{showRollSettings ? '▴' : '▾'}</span>
-              </button>
+              {rollCount <= 1 ? (
+                <button
+                  type="button"
+                  onClick={() => setShowRollSettings((v) => !v)}
+                  className="inline-flex items-center gap-1.5 text-xs font-[family-name:var(--font-mono)] text-text-faint hover:text-text-muted transition-colors"
+                  aria-expanded={showRollSettings}
+                >
+                  <span>⚙ {showRollSettings ? 'Hide' : 'Change'} roll settings</span>
+                  <span className="text-text-dim">{showRollSettings ? '▴' : '▾'}</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShowRollSettings((v) => !v)}
+                  className="inline-flex items-center gap-1 text-xs font-[family-name:var(--font-mono)] text-text-dim hover:text-text-muted transition-colors"
+                  aria-expanded={showRollSettings}
+                >
+                  <span>{moodFilters.length > 0 ? MOOD_TAG_CONFIG[moodFilters[0]].label : 'Any vibe'}</span>
+                  <span className="text-text-faint">·</span>
+                  <span>{sessionLength === 'small' ? 'Small' : sessionLength === 'large' ? 'Large' : 'Medium'}</span>
+                  <span className="text-text-faint">·</span>
+                  <span className="text-accent-purple">↻ change</span>
+                </button>
+              )}
             </div>
             {showRollSettings && (
               <div className="mb-4 pb-3 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
@@ -945,22 +963,22 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                 2026-04-27: the close (×) in the modal header already serves
                 that exit. The picker only needs two answers from the user
                 here: "this one" or "show me another." */}
-            <div className="flex gap-2 px-5 py-4 shrink-0 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)', backgroundColor: 'var(--color-bg-elevated)' }}>
-              <button
-                onClick={() => doRoll()}
-                className="flex-1 px-3 py-3.5 sm:py-2.5 text-sm font-medium rounded-xl border border-border-subtle text-text-secondary hover:border-accent-purple transition-all"
-              >
-                🎲 Roll Again
-              </button>
+            <div className="flex flex-col items-center px-5 py-4 shrink-0 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)', backgroundColor: 'var(--color-bg-elevated)' }}>
               <button
                 onClick={() => handleLetsGo(currentPick)}
-                className="flex-1 px-3 py-3.5 sm:py-2.5 text-base sm:text-sm font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full px-3 py-3.5 sm:py-2.5 text-base sm:text-sm font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
                 style={{
                   backgroundColor: 'var(--color-accent-purple)',
                   color: '#0a0a0f',
                 }}
               >
                 Let&apos;s go
+              </button>
+              <button
+                onClick={() => doRoll()}
+                className="mt-2 text-sm font-medium text-text-dim hover:text-text-secondary transition-colors"
+              >
+                🎲 Roll again
               </button>
             </div>
           </div>
