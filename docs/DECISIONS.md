@@ -15,6 +15,58 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-05-05 — Pre-push lint gate demoted to non-blocking
+
+**Decision.** The blocking eslint pre-push hook (shipped in `d0d9ab1`, same day) was demoted to informational-only in `6103117`. CI remains the hard gate for lint errors.
+
+**Why.**
+- GameCard.tsx has 4 pre-existing React Compiler `preserve-manual-memoization` errors that predate the hook. These are structural (the compiler can't infer deps for a complex useCallback) and non-trivial to fix without a GameCard refactor.
+- A blocking hook that fails on pre-existing errors in untouched code trains the developer to bypass it. Non-blocking nag + CI hard gate is the correct two-tier pattern for this situation.
+
+**Implementation.** `scripts/hooks/pre-push` — lint section now prints warning and continues. Also scoped to only changed files (was running full-project lint before).
+
+**Rejected.**
+- Fix all pre-existing lint errors first — would require GameCard refactor (~1000 lines), not worth blocking feature work for.
+- `eslint-disable` the specific lines — suppresses real signals, sets bad precedent.
+
+**Drift risk.** If the pre-existing errors get fixed later, consider re-promoting to blocking.
+
+---
+
+## 2026-05-05 — Modal destructive-action disclosure pattern
+
+**Decision.** In modal view, Delete and Don't Suggest live behind a "··· More actions" disclosure. Bail ("Not for me") stays at second tier, always visible without disclosure.
+
+**Why.**
+- Delete + Don't Suggest are low-frequency, high-consequence. Hiding them reduces accidental clicks and visual clutter in the action row.
+- Bail stays visible because "Moving on is deciding too" is a canon moment (voice-charter.md). Hiding the primary agency-affirming exit behind a disclosure undermines the psychological work it does. The user should always see they can leave without shame.
+- Closing the disclosure cancels any active confirmation state (no orphaned "Gone forever?" prompts).
+
+**Implementation.** `components/GameCard.tsx` — `showMoreActions` state, conditional render in `forceExpanded` context. Card view unchanged.
+
+**Rejected.**
+- Disclose all three (Delete + Don't Suggest + Bail) — violates Moving On canon.
+- Collapse only Delete — Don't Suggest is equally low-frequency and equally disruptive to scan past.
+
+---
+
+## 2026-05-05 — Similar games only fires on Completed modal
+
+**Decision.** "From your shelf" strip renders exclusively on the Completed (`played`) game modal. Never on Backlog, Up Next, Playing Now, or Moved On.
+
+**Why.**
+- Iyengar (2000): surfacing alternatives during an active decision increases paralysis. Backlog/Up Next/Playing Now users are mid-decision — showing "more like this" reintroduces the jam-wall problem we exist to solve.
+- Amabile (2011): the post-completion moment is one of few where "what next?" is welcome. The user just won. They're not paralyzed, they're satisfied. "From your shelf" channels that momentum.
+- Moved On: would read as guilt-tripping ("here's what you could have played instead"). Skip.
+
+**Implementation.** `components/GameCard.tsx` — gated to `game.status === 'played' && forceExpanded`. `lib/similarity.ts` — weighted heuristic (genre 40%, mood 25%, time 20%, metacritic 15%).
+
+**Rejected.**
+- Show on all statuses with a "you might also like" framing — contradicts core thesis (less choice, not more).
+- Show on Moved On with "give these a shot" framing — too close to shaming the exit.
+
+---
+
 ## 2026-05-05 — Playwright MCP added at project scope via .mcp.json
 
 **Decision.** Playwright MCP wired via `/Users/bradywhitteker/Desktop/getplaying/.mcp.json` at project scope. Used `npx @playwright/mcp@latest` shape; verified package resolves cleanly. File committed (solo dev — no reason to gitignore project-specific MCP config).

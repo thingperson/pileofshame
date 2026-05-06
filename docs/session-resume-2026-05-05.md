@@ -195,3 +195,58 @@ Five commits, all live on `main`. Working tree clean at close. Through-line: ext
 ---
 
 *Session ended 2026-05-05 ~16:00 PM PDT (Wave 4 — full meta-tooling day).*
+
+---
+
+## Wave 5 — Tuesday late afternoon 2026-05-05 PDT (~16:38–17:15)
+
+Nine commits, all live on `main`. Working tree clean at close. Through-line: cleared the entire modal redesign spec + all active smaller surgeries in one sprint using parallel subagents.
+
+### Shipped (in commit order)
+
+- **`1a2b7d4` — fix(e2e): smoke test → "Pick My Game".** CI was failing because the e2e test still looked for the retired "What Should I Play?" button label. One-line fix.
+- **`62e1edf` — refactor(modal): extract Steam launch → lib/launch.ts.** Modal Item 2 Phase 1. New `getLaunchTarget(game)` utility returns `{url, label, title} | null`. GameCard consumes it. No behavior change — just the seam for future platforms.
+- **`368f674` — feat(archetypes): retroKids release-year enrichment.** `releaseYear?: number` on Game type, populated from RAWG `released` field during enrichment. retroKids fires at ≥40% pre-2011 games (min 5 with data). Sprite was already in `public/sprites/h2/`.
+- **`6103117` — fix(hooks): scope lint to changed files, non-blocking.** Pre-push lint was (a) running full-project including `notes/` scratch and (b) blocking on pre-existing React Compiler errors in GameCard. Now scoped to changed files only and informational. CI is the hard gate.
+- **`59ab238` — feat(reroll): post-pick hierarchy.** Filters collapse to one-line summary on subsequent rolls. "Roll Again" demoted to ghost link below "Let's go". First roll stays expanded.
+- **`98897ce` — feat(modal): destructive-action disclosure + Moved On undo toast.** Modal Item 1: Delete + Don't Suggest behind "··· More actions". Bail stays visible (Moving On canon). Toast component extended with optional action button; bail now shows 5s undo that restores previous status.
+- **`9c927b6` — feat(stats): hero metric + share consolidation.** Cleared count as big number, "≈$N reclaimed from your pile" at $15/game, Share Your Type moved above fold. Duplicate share buttons removed (3 → 2 affordances).
+- **`c436e3e` — feat(modal): "From your shelf" similar games.** New `lib/similarity.ts` with weighted heuristic. Horizontal scroll strip of up to 5 similar completed games on the Completed modal only (Iyengar-gated).
+- **`6319c34` — feat(launch): Xbox + PSN adaptive launch (Phase 2).** `xboxTitleId` and `psnProductId` added to Game type. Import modals now store the IDs (were previously dropped). `lib/launch.ts` dispatches Xbox protocol URI (desktop/Android) or store URL (iOS), PSN links to PS Store.
+
+### Verify on next session start
+
+- **Latest deploy is `6319c34`.** All app code changes this wave = first real deploy since Wave 2's `5a65eee`. Confirm with `curl -sI https://inventoryfull.gg/ | grep x-vercel-id`.
+- **Pick My Game CTA** on live site (validates the e2e fix + prior rename).
+- **Press `R`** on live site with a sample library loaded → picker opens (keyboard shortcut from Wave 2 still wired).
+- **Stats page** shows cleared count + value reclaimed hero (only visible if user has ≥1 completed game).
+- **Completed game modal** shows "From your shelf" strip (only if ≥2 completions exist).
+- **Move On a game** → toast with ↩ Undo button appears for 5s.
+- **CI should be green** at `6319c34` — the e2e fix in `1a2b7d4` resolved the prior failure.
+
+### Wave 5 rotting gotchas
+
+- **Xbox `titleId` format uncertainty.** OpenXBL returns `titleId` but the `xbox://launch/{titleId}` protocol may expect a different ID format (product ID vs title ID). Needs real-device validation. If it doesn't work, the store URL fallback is always safe.
+- **PSN `productId` ≠ concept ID.** The PS Store URL pattern `store.playstation.com/concept/{id}` uses concept IDs. The purchased-games API returns `productId` which may or may not be the same. Needs a real PSN user to test. If URLs 404, we can try `/product/` instead of `/concept/`.
+- **Similar games strip is non-interactive.** Thumbnails are display-only (no click-to-open). Adding cross-modal navigation would require prop threading through GameDetailModal. Acceptable for v1; revisit if users expect tappable cards.
+- **Stats value-reclaimed uses flat $15/game.** No real price data. Acceptable floor estimate but will feel wrong for users with mostly $60 AAA titles or mostly $1 bundle games. Future: pull price from RAWG or allow manual entry.
+- **Toast `pointer-events-auto` added.** The toast container is `pointer-events-none` by design; individual toasts with actions now override to `pointer-events-auto`. If future toasts without actions need click-through, this is fine. If a toast somehow blocks something beneath it, this is why.
+
+### Open design questions — updated
+
+- **Modal Item 2 Phases 3–4** (Epic/GOG/Switch) — deferred. No ID source exists for these platforms. RAWG `stores` array is the most likely enrichment path but adds complexity for low user-count platforms. Trigger: someone asks, or RAWG enrichment gets a general overhaul.
+- **Similar games interactivity.** Currently display-only. If users tap and expect navigation, add an `onOpenGame` prop to GameCard/GameDetailModal.
+- **GameCard React Compiler errors.** 4 pre-existing `preserve-manual-memoization` errors. Not urgent (doesn't affect runtime) but blocks re-promoting lint to blocking. Fix = refactor the 120-line `handleStatusClick` useCallback or accept the compiler skip.
+
+### Health snapshot — updated
+
+- Build state: green at `6319c34`. `npm run build` + `npm run test:e2e` both pass.
+- `main` tip: `6319c34 feat(launch): Xbox + PSN adaptive launch (Modal Item 2 Phase 2)`.
+- Known bugs: Xbox/PSN launch URLs unvalidated on real devices (may 404 — see gotchas).
+- Production deploy: live at `6319c34` as of session close. Vercel auto-deploy.
+- Supabase migrations: no schema changes.
+- Free-tier proximity: unchanged. New code is pure client-side logic + tiny API route edits.
+
+---
+
+*Session ended 2026-05-05 ~17:15 PM PDT (Wave 5 — feature sprint, modal redesign complete).*
