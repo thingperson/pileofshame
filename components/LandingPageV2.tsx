@@ -453,12 +453,12 @@ function ClarityBanner() {
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 const VIBE_PICKS: { emoji: string; label: string; game: string; art: string; time: string; tags: string; reason: string }[] = [
-  { emoji: '🌙', label: 'I want to chill', game: 'Stardew Valley', art: 'https://media.rawg.io/media/games/713/713269608dc8f2f40f5a670a14571571.jpg', time: '∞ (one more day)', tags: 'Cozy, Farming, Relaxing', reason: "No stakes. No pressure. Just you, your farm, and a town full of people who don't judge your bedtime." },
-  { emoji: '⚡', label: 'I want a challenge', game: 'Sekiro: Shadows Die Twice', art: 'https://media.rawg.io/media/games/67f/67f62d1f023c9f032571f22d0571b502.jpg', time: '30-50 hours', tags: 'Action, Souls-like, Precision', reason: "You said challenge. This is that. Every death teaches you something. Every victory is earned." },
-  { emoji: '📖', label: 'I want a good story', game: 'Disco Elysium', art: 'https://media.rawg.io/media/games/ccf/ccf26f6e3d553a04f0033a8107a521b8.jpg', time: '25-40 hours', tags: 'RPG, Detective, Narrative', reason: "The best-written RPG in years. You play a washed-up cop solving a murder. Your skills are your personality traits. It gets weird." },
-  { emoji: '⏱', label: 'I want something quick', game: 'Vampire Survivors', art: 'https://media.rawg.io/media/games/b1b/b1b293f1b6582548e271f6c803a1a744.jpg', time: '15-20 min runs', tags: 'Roguelike, Action, Addictive', reason: "One run. Fifteen minutes. You mow down thousands of monsters and somehow it never gets old. Perfect for when you have a sliver of time." },
-  { emoji: '😄', label: 'I want to laugh', game: 'Portal 2', art: 'https://media.rawg.io/media/games/328/3283617cb7d75d67257fc58339188571.jpg', time: '8-10 hours', tags: 'Puzzle, Comedy, Co-op', reason: "GLaDOS is still the funniest villain in gaming. The puzzles are brilliant. The writing is better." },
-  { emoji: '✨', label: 'Surprise me', game: 'Inscryption', art: 'https://media.rawg.io/media/games/a88/a886c37bf112d009e318b106db8d1002.jpg', time: '10-12 hours', tags: 'Card Game, Horror, Mystery', reason: "Starts as a card game in a cabin. Becomes something else entirely. The less you know going in, the better." },
+  { emoji: '🌙', label: 'I want to chill', game: 'Stardew Valley', art: '/landing/games/stardew-valley.jpg', time: '∞ (one more day)', tags: 'Cozy, Farming, Relaxing', reason: "No stakes. No pressure. Just you, your farm, and a town full of people who don't judge your bedtime." },
+  { emoji: '⚡', label: 'I want a challenge', game: 'Sekiro: Shadows Die Twice', art: '/landing/games/sekiro.jpg', time: '30-50 hours', tags: 'Action, Souls-like, Precision', reason: "You said challenge. This is that. Every death teaches you something. Every victory is earned." },
+  { emoji: '📖', label: 'I want a good story', game: 'Disco Elysium', art: '/landing/games/disco-elysium.jpg', time: '25-40 hours', tags: 'RPG, Detective, Narrative', reason: "The best-written RPG in years. You play a washed-up cop solving a murder. Your skills are your personality traits. It gets weird." },
+  { emoji: '⏱', label: 'I want something quick', game: 'Vampire Survivors', art: '/landing/games/vampire-survivors.jpg', time: '15-20 min runs', tags: 'Roguelike, Action, Addictive', reason: "One run. Fifteen minutes. You mow down thousands of monsters and somehow it never gets old. Perfect for when you have a sliver of time." },
+  { emoji: '😄', label: 'I want to laugh', game: 'Portal 2', art: '/landing/games/portal-2.jpg', time: '8-10 hours', tags: 'Puzzle, Comedy, Co-op', reason: "GLaDOS is still the funniest villain in gaming. The puzzles are brilliant. The writing is better." },
+  { emoji: '✨', label: 'Surprise me', game: 'Inscryption', art: '/landing/games/inscryption.jpg', time: '10-12 hours', tags: 'Card Game, Horror, Mystery', reason: "Starts as a card game in a cabin. Becomes something else entirely. The less you know going in, the better." },
 ];
 
 function VibeSection() {
@@ -519,7 +519,8 @@ function VibeSection() {
               <div className="flex flex-col sm:flex-row">
                 {/* Game art */}
                 <div className="sm:w-48 h-48 sm:h-auto shrink-0 relative overflow-hidden">
-                  <Image src={pick.art} alt={pick.game} width={400} height={300} className="w-full h-full object-cover" unoptimized />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={pick.art} alt={pick.game} className="w-full h-full object-cover" loading="lazy" />
                 </div>
                 {/* Pick details */}
                 <div className="flex-1 p-5 sm:p-6 text-left">
