@@ -209,20 +209,10 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
       <div className="absolute top-0 left-0 w-[60%] h-2 sm:h-3 z-10 hidden sm:block hero-accent-bar" style={{ backgroundColor: C.pink, transformOrigin: 'top left' }} aria-hidden />
 
       {/* Paint stroke — wider, more visible */}
-      <div className="absolute top-[22%] -left-6 w-[70%] max-w-[700px] pointer-events-none opacity-35 z-0 hidden sm:block">
-        <Image src="/landing/paint-stroke-1.png" alt="" width={800} height={150} className="w-full h-auto" />
+      <div className="absolute top-[22%] -left-6 w-[70%] max-w-[700px] pointer-events-none opacity-60 z-0 hidden sm:block">
+        <Image src="/landing/stroke-yellow.png" alt="" width={800} height={150} className="w-full h-auto" />
       </div>
 
-      {/* "Stop scrolling" badge — pink paint-stroke bg with text on top */}
-      <div className="relative z-10 inline-block ml-4 sm:ml-8 mb-2 hero-badge" style={{ animation: 'heroFadeSlide 500ms cubic-bezier(0.16, 1, 0.3, 1) 100ms both' }}>
-        <div className="absolute inset-y-0 -left-3 -right-3 pointer-events-none overflow-hidden">
-          <Image src="/landing/paint-stroke-4.png" alt="" width={400} height={50} className="w-full h-full object-fill" />
-        </div>
-        <div className="absolute inset-y-0 -left-2 -right-2 pointer-events-none" style={{ backgroundColor: C.pink, opacity: 0.85, transform: 'skewX(-5deg)' }} aria-hidden />
-        <span className="relative z-10 px-4 py-2 text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider block" style={{ color: C.white }}>
-          get playing.
-        </span>
-      </div>
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center pt-6 sm:pt-10 relative z-10">
         {/* Left: headline + copy */}
@@ -238,7 +228,7 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
           </h1>
 
           <div className="hero-subhead" style={{ animation: 'heroFadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both' }}>
-            <p className="text-base sm:text-lg leading-relaxed mb-2" style={{ color: C.textMuted }}>Ever feel that it&apos;s your library playing you, when it should be the other way around? You don&apos;t need more games. You need a way to decide.</p>
+            <p className="text-base sm:text-lg leading-relaxed mb-2" style={{ color: C.textMuted }}>Ever feel that it&apos;s your library playing you, when it should be the other way around? You don&apos;t need more games. You need one good pick.</p>
           </div>
 
           <div className="hero-subhead" style={{ animation: 'heroFadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both' }}>
@@ -378,7 +368,7 @@ function AntiTracker() {
             We&apos;re not here to organize your library. We&apos;re here to get you playing.
           </p>
           <p className="text-base sm:text-lg mt-2" style={{ color: C.textMuted }}>
-            Your backlog is a fuel source, not a burden. Your current mood + how much time you have produces your best pick for today.
+            Your backlog is full of games you already chose. Your mood and your time tell us which one&apos;s right for today.
           </p>
         </Reveal>
       </div>
@@ -707,10 +697,10 @@ function BottomCTA({ onImport, onLoadSample }: { onImport: () => void; onLoadSam
         <Reveal>
           <div style={{ transform: 'rotate(-2deg)', transformOrigin: 'center' }}>
             <h2 className="font-[family-name:var(--font-condensed)] uppercase leading-[0.85] tracking-tight mb-2" style={{ fontSize: 'clamp(2.5rem, 7vw, 4.5rem)', color: C.textDark }}>
-              Today&apos;s gaming session.
+              One pick.
             </h2>
             <h2 className="font-[family-name:var(--font-condensed)] uppercase leading-[0.85] tracking-tight mb-2 relative inline-block" style={{ fontSize: 'clamp(2.5rem, 7vw, 4.5rem)', color: C.pink }}>
-              One solid pick. That&apos;s the whole thing.
+              Get playing.
               <span className="absolute -bottom-1 left-0 w-full h-2" style={{ backgroundColor: C.cyan, transform: 'skewX(-12deg)' }} aria-hidden />
             </h2>
           </div>
@@ -782,10 +772,10 @@ function Footer() {
         </div>
         <div className="mt-10 flex flex-col items-center gap-3">
           <div className="flex items-end gap-3">
-            <Image src="/landing/pip-wave.png" alt="Pip waving" width={100} height={100} className="w-20 sm:w-24 h-auto" style={{ mixBlendMode: 'screen' }} />
+            <Image src="/landing/pip-wave.png" alt="Pip waving" width={100} height={100} className="w-20 sm:w-24 h-auto"  />
             <div className="relative rounded-lg px-3 py-2 mb-2" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
               <div className="absolute -left-1.5 bottom-3 w-0 h-0" style={{ borderTop: '5px solid transparent', borderBottom: '5px solid transparent', borderRight: '6px solid rgba(255,255,255,0.08)' }} aria-hidden />
-              <p className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>we&apos;ve got this.</p>
+              <p className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>go play something.</p>
               <p className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>(and we even have a dino theme. come on.)</p>
             </div>
           </div>
