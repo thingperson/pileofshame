@@ -238,8 +238,7 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
           </h1>
 
           <div className="hero-subhead" style={{ animation: 'heroFadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both' }}>
-            <p className="text-base sm:text-lg leading-relaxed mb-2" style={{ color: C.textMuted }}>Maybe your backlog is the one playing you. You don&apos;t need more games. You need a decision.</p>
-            <p className="text-base sm:text-lg leading-relaxed mb-8" style={{ color: C.textDark, fontWeight: 500 }}>Your backlog becomes a fuel source, not a burden. Your current mood + how much time you have produces your best pick for today.</p>
+            <p className="text-base sm:text-lg leading-relaxed mb-2" style={{ color: C.textMuted }}>Ever feel that it&apos;s your library playing you, when it should be the other way around? You don&apos;t need more games. You need a way to decide.</p>
           </div>
 
           <div className="hero-subhead" style={{ animation: 'heroFadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both' }}>
@@ -377,6 +376,9 @@ function AntiTracker() {
           </p>
           <p className="text-base sm:text-lg mt-3" style={{ color: C.textMuted }}>
             We&apos;re not here to organize your library. We&apos;re here to get you playing.
+          </p>
+          <p className="text-base sm:text-lg mt-2" style={{ color: C.textMuted }}>
+            Your backlog is a fuel source, not a burden. Your current mood + how much time you have produces your best pick for today.
           </p>
         </Reveal>
       </div>
@@ -780,15 +782,12 @@ function Footer() {
         </div>
         <div className="mt-10 flex flex-col items-center gap-3">
           <div className="flex items-end gap-3">
-            <Image src="/landing/pip-wave.png" alt="Pip waving" width={80} height={80} className="w-16 sm:w-20 h-auto opacity-70" />
+            <Image src="/landing/pip-wave.png" alt="Pip waving" width={100} height={100} className="w-20 sm:w-24 h-auto" style={{ mixBlendMode: 'screen' }} />
             <div className="relative rounded-lg px-3 py-2 mb-2" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
-              <div className="absolute -left-1.5 bottom-2.5 w-0 h-0" style={{ borderTop: '5px solid transparent', borderBottom: '5px solid transparent', borderRight: '6px solid rgba(255,255,255,0.08)' }} aria-hidden />
+              <div className="absolute -left-1.5 bottom-3 w-0 h-0" style={{ borderTop: '5px solid transparent', borderBottom: '5px solid transparent', borderRight: '6px solid rgba(255,255,255,0.08)' }} aria-hidden />
               <p className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>we&apos;ve got this.</p>
+              <p className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>(and we even have a dino theme. come on.)</p>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Image src="/landing/dino-silhouette.svg" alt="" width={24} height={16} className="opacity-30" />
-            <p className="text-xs opacity-30 font-[family-name:var(--font-mono)]">and we have a dino theme. come on.</p>
           </div>
         </div>
       </footer>
