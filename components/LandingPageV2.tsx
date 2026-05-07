@@ -167,17 +167,17 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
                 Try a Sample First
               </button>
             </div>
-            <div className="flex flex-wrap items-center gap-4 sm:gap-5 mt-2">
+            <div className="flex flex-wrap items-center gap-5 sm:gap-6 mt-3">
               {[
                 { icon: '✓', text: 'Free forever', desc: 'No credit card' },
                 { icon: '⚡', text: 'No account needed', desc: 'Works instantly' },
                 { icon: '🔒', text: 'Data stays on your device', desc: 'We never see it' },
               ].map((t) => (
-                <div key={t.text} className="flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0" style={{ backgroundColor: 'rgba(233, 30, 99, 0.1)' }}>{t.icon}</span>
+                <div key={t.text} className="flex items-center gap-2.5">
+                  <span className="w-7 h-7 rounded-full flex items-center justify-center text-sm shrink-0" style={{ backgroundColor: 'rgba(233, 30, 99, 0.1)' }}>{t.icon}</span>
                   <div className="leading-tight">
-                    <span className="text-xs font-bold block" style={{ color: C.textDark }}>{t.text}</span>
-                    <span className="text-[10px]" style={{ color: C.textMuted }}>{t.desc}</span>
+                    <span className="text-sm font-bold block" style={{ color: C.textDark }}>{t.text}</span>
+                    <span className="text-xs" style={{ color: C.textMuted }}>{t.desc}</span>
                   </div>
                 </div>
               ))}
@@ -261,8 +261,8 @@ function SocialProof() {
 function ProofStat({ value, label }: { value: string; label: string }) {
   return (
     <div className="text-center">
-      <p className="text-lg sm:text-xl font-bold font-[family-name:var(--font-condensed)]" style={{ color: C.pink }}>{value}</p>
-      <p className="text-xs font-[family-name:var(--font-mono)] uppercase tracking-wide" style={{ color: C.textMuted }}>{label}</p>
+      <p className="text-2xl sm:text-3xl font-bold font-[family-name:var(--font-condensed)]" style={{ color: C.pink }}>{value}</p>
+      <p className="text-sm font-[family-name:var(--font-mono)] uppercase tracking-wide" style={{ color: C.textMuted }}>{label}</p>
     </div>
   );
 }
@@ -279,12 +279,12 @@ function AntiTracker() {
 
       <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6 text-center sm:text-left">
         <Reveal>
-          <p className="text-xl sm:text-2xl font-bold font-[family-name:var(--font-condensed)] uppercase tracking-tight" style={{ color: C.textDark }}>
+          <p className="text-2xl sm:text-3xl font-bold font-[family-name:var(--font-condensed)] uppercase tracking-tight" style={{ color: C.textDark }}>
             More library managing = less playing.
           </p>
         </Reveal>
         <Reveal delay={100}>
-          <p className="text-base" style={{ color: C.textMuted }}>
+          <p className="text-lg sm:text-xl leading-relaxed" style={{ color: C.textMuted }}>
             Not another tracker. Not another list.<br />We&apos;re here to pick from your pile, not organize it.
           </p>
         </Reveal>
@@ -327,7 +327,7 @@ function ProblemSolution() {
 
       <div className="relative z-10 px-5 sm:px-8">
         <Reveal>
-          <p className="text-center text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-[0.2em] mb-12" style={{ color: C.textFaint }}>The actual problem.</p>
+          <p className="text-center text-sm font-bold font-[family-name:var(--font-mono)] uppercase tracking-[0.2em] mb-12" style={{ color: C.textFaint }}>The actual problem.</p>
         </Reveal>
 
         {/* PROBLEM panel — visibly rotated container */}
@@ -341,16 +341,16 @@ function ProblemSolution() {
               </h2>
             </Reveal>
           </div>
-          <p className="text-base sm:text-lg mb-10 mt-6 max-w-xl" style={{ color: C.textMuted }}>Too many games. Too many choices. Your brain checks out.</p>
+          <p className="text-lg sm:text-xl mb-10 mt-6 max-w-xl" style={{ color: C.textMuted }}>Too many games. Too many choices. Your brain checks out.</p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-5 max-w-3xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 max-w-3xl">
             {problems.map((p, i) => (
               <Reveal key={i} delay={i * 80}>
                 <div className="flex gap-3">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold" style={{ backgroundColor: 'rgba(233, 30, 99, 0.12)', color: C.pink }}>{'✕'}</div>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-sm font-bold" style={{ backgroundColor: 'rgba(233, 30, 99, 0.12)', color: C.pink }}>{'✕'}</div>
                   <div>
-                    <p className="font-bold text-sm" style={{ color: C.textDark }}>{p.title}</p>
-                    <p className="text-sm" style={{ color: C.textMuted }}>{p.body}</p>
+                    <p className="font-bold text-base" style={{ color: C.textDark }}>{p.title}</p>
+                    <p className="text-base" style={{ color: C.textMuted }}>{p.body}</p>
                   </div>
                 </div>
               </Reveal>
@@ -372,14 +372,14 @@ function ProblemSolution() {
             </Reveal>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-5 mt-8 max-w-3xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 mt-8 max-w-3xl">
             {solutions.map((s, i) => (
               <Reveal key={i} delay={i * 80}>
                 <div className="flex gap-3">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold" style={{ backgroundColor: C.cyanDark, color: C.white }}>{s.step}</div>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-sm font-bold" style={{ backgroundColor: C.cyanDark, color: C.white }}>{s.step}</div>
                   <div>
-                    <p className="font-bold text-sm" style={{ color: C.textDark }}>{s.title}</p>
-                    <p className="text-sm" style={{ color: C.textMuted }}>{s.body}</p>
+                    <p className="font-bold text-base" style={{ color: C.textDark }}>{s.title}</p>
+                    <p className="text-base" style={{ color: C.textMuted }}>{s.body}</p>
                   </div>
                 </div>
               </Reveal>
@@ -407,7 +407,7 @@ function MidPageCTA({ onImport }: { onImport: () => void }) {
         <button onClick={onImport} className="px-7 py-3.5 text-base font-bold rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer" style={{ backgroundColor: C.pink, color: C.white, boxShadow: `0 4px 20px ${C.pinkGlow}` }}>
           Import My Library →
         </button>
-        <p className="text-xs mt-3 font-[family-name:var(--font-mono)]" style={{ color: C.textFaint }}>Takes about 30 seconds. Seriously.</p>
+        <p className="text-sm mt-3 font-[family-name:var(--font-mono)]" style={{ color: C.textFaint }}>Takes about 30 seconds. Seriously.</p>
       </div>
     </Reveal>
   );
@@ -452,59 +452,114 @@ function ClarityBanner() {
    VIBE SECTION — angled card & tower
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
+const VIBE_PICKS: { emoji: string; label: string; game: string; art: string; time: string; tags: string; reason: string }[] = [
+  { emoji: '🌙', label: 'I want to chill', game: 'Stardew Valley', art: 'https://media.rawg.io/media/games/713/713269608dc8f2f40f5a670a14571571.jpg', time: '∞ (one more day)', tags: 'Cozy, Farming, Relaxing', reason: "No stakes. No pressure. Just you, your farm, and a town full of people who don't judge your bedtime." },
+  { emoji: '⚡', label: 'I want a challenge', game: 'Sekiro: Shadows Die Twice', art: 'https://media.rawg.io/media/games/67f/67f62d1f023c9f032571f22d0571b502.jpg', time: '30-50 hours', tags: 'Action, Souls-like, Precision', reason: "You said challenge. This is that. Every death teaches you something. Every victory is earned." },
+  { emoji: '📖', label: 'I want a good story', game: 'Disco Elysium', art: 'https://media.rawg.io/media/games/ccf/ccf26f6e3d553a04f0033a8107a521b8.jpg', time: '25-40 hours', tags: 'RPG, Detective, Narrative', reason: "The best-written RPG in years. You play a washed-up cop solving a murder. Your skills are your personality traits. It gets weird." },
+  { emoji: '⏱', label: 'I want something quick', game: 'Vampire Survivors', art: 'https://media.rawg.io/media/games/b1b/b1b293f1b6582548e271f6c803a1a744.jpg', time: '15-20 min runs', tags: 'Roguelike, Action, Addictive', reason: "One run. Fifteen minutes. You mow down thousands of monsters and somehow it never gets old. Perfect for when you have a sliver of time." },
+  { emoji: '😄', label: 'I want to laugh', game: 'Portal 2', art: 'https://media.rawg.io/media/games/328/3283617cb7d75d67257fc58339188571.jpg', time: '8-10 hours', tags: 'Puzzle, Comedy, Co-op', reason: "GLaDOS is still the funniest villain in gaming. The puzzles are brilliant. The writing is better." },
+  { emoji: '✨', label: 'Surprise me', game: 'Inscryption', art: 'https://media.rawg.io/media/games/a88/a886c37bf112d009e318b106db8d1002.jpg', time: '10-12 hours', tags: 'Card Game, Horror, Mystery', reason: "Starts as a card game in a cabin. Becomes something else entirely. The less you know going in, the better." },
+];
+
 function VibeSection() {
-  const vibes = [
-    { emoji: '🌙', label: 'I want to chill' },
-    { emoji: '⚡', label: 'I want a challenge' },
-    { emoji: '📖', label: 'I want a good story' },
-    { emoji: '⏱', label: 'I want something quick' },
-    { emoji: '😄', label: 'I want to laugh' },
-    { emoji: '✨', label: 'Surprise me' },
-  ];
+  const [activeVibe, setActiveVibe] = useState<number | null>(null);
+  const pick = activeVibe !== null ? VIBE_PICKS[activeVibe] : null;
 
   return (
     <section id="features" className="relative px-5 sm:px-8 py-14 sm:py-20 overflow-hidden" style={{ backgroundColor: C.cream }}>
-      {/* Firewatch tower — absolute, bleeding into next section */}
-      <div className="absolute -right-2 sm:right-8 -bottom-8 w-52 sm:w-64 pointer-events-none opacity-85 z-[2] hidden md:block" style={{ transform: 'rotate(3deg)' }}>
-        <Image src="/landing/firewatch-tower.png" alt="" width={600} height={300} className="w-full h-auto" />
-      </div>
-
       {/* Small triangle cluster — left */}
       <svg className="absolute top-10 left-2 sm:left-8 w-16 sm:w-20 pointer-events-none opacity-35 hidden sm:block" viewBox="0 0 80 70" fill="none" aria-hidden>
         <polygon points="0,70 40,0 80,70" fill={C.cyan} opacity="0.7" />
         <polygon points="20,70 50,15 80,70" fill={C.pink} opacity="0.5" />
       </svg>
 
-      <div className="max-w-3xl mx-auto text-center relative z-10">
+      <div className="max-w-4xl mx-auto text-center relative z-10">
         <Reveal>
           <div style={{ transform: 'rotate(-1.5deg)' }}>
-            <h2 className="font-[family-name:var(--font-condensed)] uppercase tracking-tight mb-2" style={{ fontSize: 'clamp(1.8rem, 5vw, 3rem)', color: C.textDark }}>
+            <h2 className="font-[family-name:var(--font-condensed)] uppercase tracking-tight mb-2" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: C.textDark }}>
               Or skip the form. Just tap a vibe.
             </h2>
           </div>
-          <p className="text-sm mb-8" style={{ color: C.textMuted }}>Tap one and see what we&apos;d pick from a sample library.</p>
+          <p className="text-base sm:text-lg mb-8" style={{ color: C.textMuted }}>Tap one and see what we&apos;d pick.</p>
         </Reveal>
 
         <Reveal delay={100}>
           <div className="flex flex-wrap justify-center gap-3 mb-10">
-            {vibes.map((v) => (
-              <button key={v.label} className="flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium border transition-all hover:scale-[1.04] active:scale-[0.97] cursor-pointer hover:border-[#E91E63]" style={{ borderColor: 'rgba(0,0,0,0.12)', color: C.textDark, backgroundColor: C.white }}>
-                <span>{v.emoji}</span><span>{v.label}</span>
+            {VIBE_PICKS.map((v, i) => (
+              <button
+                key={v.label}
+                onClick={() => setActiveVibe(i)}
+                className="flex items-center gap-2 px-5 py-3 rounded-full text-base font-medium border transition-all hover:scale-[1.04] active:scale-[0.97] cursor-pointer"
+                style={{
+                  borderColor: activeVibe === i ? C.pink : 'rgba(0,0,0,0.12)',
+                  color: activeVibe === i ? C.pink : C.textDark,
+                  backgroundColor: activeVibe === i ? 'rgba(233, 30, 99, 0.06)' : C.white,
+                  boxShadow: activeVibe === i ? `0 2px 12px ${C.pinkGlow}` : 'none',
+                }}
+              >
+                <span className="text-lg">{v.emoji}</span><span>{v.label}</span>
               </button>
             ))}
           </div>
         </Reveal>
 
-        <Reveal delay={200}>
-          <p className="text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-[0.15em] mb-4" style={{ color: C.cyanDark }}>What our picks look like.</p>
+        {/* Pick result card */}
+        <div className="min-h-[280px] sm:min-h-[240px]">
+          {pick ? (
+            <div
+              key={activeVibe}
+              className="max-w-2xl mx-auto rounded-2xl overflow-hidden shadow-xl"
+              style={{
+                backgroundColor: C.cardDark,
+                transform: 'rotate(-1deg)',
+                animation: 'vibeCardIn 400ms cubic-bezier(0.16, 1, 0.3, 1) both',
+              }}
+            >
+              <style>{`@keyframes vibeCardIn { from { opacity: 0; transform: rotate(-1deg) translateY(20px) scale(0.97); } to { opacity: 1; transform: rotate(-1deg) translateY(0) scale(1); } }`}</style>
+              <div className="flex flex-col sm:flex-row">
+                {/* Game art */}
+                <div className="sm:w-48 h-48 sm:h-auto shrink-0 relative overflow-hidden">
+                  <Image src={pick.art} alt={pick.game} width={400} height={300} className="w-full h-full object-cover" unoptimized />
+                </div>
+                {/* Pick details */}
+                <div className="flex-1 p-5 sm:p-6 text-left">
+                  <p className="text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider mb-1" style={{ color: C.pink }}>
+                    Tonight&apos;s answer
+                  </p>
+                  <h3 className="font-[family-name:var(--font-condensed)] uppercase text-2xl sm:text-3xl tracking-tight mb-2" style={{ color: C.white }}>
+                    {pick.game}
+                  </h3>
+                  <p className="text-xs font-[family-name:var(--font-mono)] mb-3" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                    {pick.time} · {pick.tags}
+                  </p>
+                  <p className="text-sm leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                    {pick.reason}
+                  </p>
+                  <div className="flex gap-2">
+                    <span className="px-4 py-2 text-sm font-bold rounded-lg" style={{ backgroundColor: C.pink, color: C.white }}>
+                      Let&apos;s go
+                    </span>
+                    <span className="px-4 py-2 text-sm font-medium rounded-lg border" style={{ borderColor: 'rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.6)' }}>
+                      Roll again
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <Reveal delay={200}>
+              <div className="max-w-md mx-auto py-12 px-6 rounded-2xl border-2 border-dashed" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
+                <p className="text-lg font-medium" style={{ color: C.textMuted }}>
+                  Pick a vibe above and we&apos;ll show you what a pick looks like.
+                </p>
+              </div>
+            </Reveal>
+          )}
+        </div>
 
-          {/* Card — tilted for angular feel */}
-          <div style={{ transform: 'rotate(-2deg)' }}>
-            <Image src="/landing/firewatch-card.png" alt="Example pick: Firewatch — 2-3 hours, Cozy, Curious, PC. Let's go or Roll again." width={600} height={250} className="max-w-md mx-auto w-full h-auto rounded-xl shadow-lg" />
-          </div>
-
-          <p className="mt-6 text-xs italic" style={{ color: C.textFaint }}>Every pick comes with a reason. And a tiny disclaimer.</p>
-        </Reveal>
+        <p className="mt-6 text-sm" style={{ color: C.textFaint }}>
+          {pick ? 'This is how every pick works. Mood in, game out.' : 'Every pick comes with a reason. No shortlists, no browsing.'}
+        </p>
       </div>
     </section>
   );
@@ -549,7 +604,7 @@ function BottomCTA({ onImport, onLoadSample }: { onImport: () => void; onLoadSam
               <span className="absolute -bottom-1 left-0 w-full h-2" style={{ backgroundColor: C.cyan, transform: 'skewX(-12deg)' }} aria-hidden />
             </h2>
           </div>
-          <p className="text-sm mb-8 mt-4" style={{ color: C.textMuted }}>Stop scrolling. Start playing.</p>
+          <p className="text-lg mb-8 mt-4" style={{ color: C.textMuted }}>Stop scrolling. Start playing.</p>
         </Reveal>
 
         <Reveal delay={100}>
@@ -561,7 +616,7 @@ function BottomCTA({ onImport, onLoadSample }: { onImport: () => void; onLoadSam
               Try a Sample First
             </button>
           </div>
-          <p className="text-xs font-[family-name:var(--font-mono)]" style={{ color: C.textFaint }}>Free. No account. No hassle. We barely want your email.</p>
+          <p className="text-sm font-[family-name:var(--font-mono)]" style={{ color: C.textFaint }}>Free. No account. No hassle. We barely want your email.</p>
         </Reveal>
       </div>
     </section>
