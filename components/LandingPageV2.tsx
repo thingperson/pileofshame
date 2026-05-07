@@ -229,17 +229,17 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
         <div className="relative">
           <h1 className="font-[family-name:var(--font-condensed)] uppercase leading-[0.9] tracking-tight mb-6" style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', transform: 'rotate(-2deg)', transformOrigin: 'left top' }}>
             <span className="block hero-headline-1" style={{ animation: 'revealUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both' }}>
-              You don&apos;t need more games.
+              Your backlog&apos;s
             </span>
             <span className="relative inline-block hero-headline-2" style={{ color: C.pink, animation: 'revealUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 350ms both' }}>
-              You need a decision.
+              not going to play itself.
               <span className="absolute -bottom-1 left-0 w-full h-1.5 sm:h-2 hero-underline" style={{ backgroundColor: C.cyan, transformOrigin: 'left center', animation: 'drawLine 400ms cubic-bezier(0.16, 1, 0.3, 1) 550ms both' }} aria-hidden />
             </span>
           </h1>
 
           <div className="hero-subhead" style={{ animation: 'heroFadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both' }}>
-            <p className="text-lg sm:text-xl leading-relaxed mb-2 font-bold" style={{ color: C.textDark }}>Your backlog&apos;s not gonna play itself.</p>
-            <p className="text-base sm:text-lg leading-relaxed mb-8" style={{ color: C.textMuted }}>We turn your backlog into one good answer for right now. Mood + time in. A game out.</p>
+            <p className="text-base sm:text-lg leading-relaxed mb-2" style={{ color: C.textMuted }}>Maybe your backlog is the one playing you. You don&apos;t need more games. You need a decision.</p>
+            <p className="text-base sm:text-lg leading-relaxed mb-8" style={{ color: C.textDark, fontWeight: 500 }}>Your backlog becomes a fuel source, not a burden. Your current mood + how much time you have produces your best pick for today.</p>
           </div>
 
           <div className="hero-subhead" style={{ animation: 'heroFadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both' }}>
@@ -390,10 +390,10 @@ function AntiTracker() {
 
 function ProblemSolution() {
   const problems = [
-    { title: 'Decision fatigue is real.', body: 'The more options you have, the harder it is to choose.' },
-    { title: 'Your mood changes.', body: 'What you want after work ≠ what you want on the weekend.' },
-    { title: 'Time matters.', body: 'A 50-hour RPG on a busy night? Probably not.' },
-    { title: "Libraries grow. Attention doesn't.", body: 'Your backlog grows faster than your free time.' },
+    { title: 'Decision fatigue is real.', body: 'The more options you have, the harder it is to choose.', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="w-4 h-4"><path d="M12 3v6m0 0v6m0-6h6m-6 0H6" transform="rotate(45 12 12)" /></svg> },
+    { title: 'Your mood changes.', body: 'What you want after work ≠ what you want on the weekend.', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="w-4 h-4"><circle cx="12" cy="12" r="9" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><path d="M9 9h.01M15 9h.01" /></svg> },
+    { title: 'Time matters.', body: 'A 50-hour RPG on a busy night? Probably not.', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="w-4 h-4"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></svg> },
+    { title: "Libraries grow. Attention doesn't.", body: 'Your backlog grows faster than your free time.', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="w-4 h-4"><path d="M3 6h18M3 12h18M3 18h18" /><path d="M19 6l2 0M19 12l2 0M19 18l2 0" /></svg> },
   ];
 
   const solutions = [
@@ -418,7 +418,7 @@ function ProblemSolution() {
 
       <div className="relative z-10 px-5 sm:px-8">
         <Reveal>
-          <p className="text-center text-lg sm:text-xl font-bold font-[family-name:var(--font-condensed)] uppercase tracking-wide mb-12" style={{ color: C.pink }}>get playing your games.</p>
+          <p className="text-center font-bold font-[family-name:var(--font-condensed)] uppercase tracking-wide mb-12" style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', color: C.pink }}>get playing your games.</p>
         </Reveal>
 
         {/* PROBLEM panel — visibly rotated container */}
@@ -438,7 +438,7 @@ function ProblemSolution() {
             {problems.map((p, i) => (
               <Reveal key={i} delay={i * 80} variant="left">
                 <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-sm font-bold" style={{ backgroundColor: 'rgba(233, 30, 99, 0.12)', color: C.pink }}>{'✕'}</div>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ backgroundColor: 'rgba(233, 30, 99, 0.12)', color: C.pink }}>{p.icon}</div>
                   <div>
                     <p className="font-bold text-base" style={{ color: C.textDark }}>{p.title}</p>
                     <p className="text-base" style={{ color: C.textMuted }}>{p.body}</p>
@@ -511,8 +511,10 @@ function MidPageCTA({ onImport }: { onImport: () => void }) {
 function PipCallout() {
   return (
     <Reveal>
-      <div className="flex items-end justify-center gap-3 py-6 px-5" style={{ backgroundColor: C.cream }}>
-        <Image src="/landing/pip-guide.png" alt="Pip, a small robot guide" width={64} height={64} className="shrink-0" />
+      <div className="flex items-end justify-center gap-4 py-8 px-5" style={{ backgroundColor: C.cream }}>
+        <div className="shrink-0 w-24 sm:w-32">
+          <Image src="/landing/pip-guide.png" alt="Pip, a small robot guide" width={128} height={128} className="w-full h-auto" />
+        </div>
         <div className="relative rounded-xl px-4 py-3 max-w-xs" style={{ backgroundColor: C.cardDark }}>
           <div className="absolute -left-2 bottom-3 w-0 h-0" style={{ borderTop: '6px solid transparent', borderBottom: '6px solid transparent', borderRight: `8px solid ${C.cardDark}` }} aria-hidden />
           <p className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>
@@ -551,7 +553,7 @@ function ClarityBanner() {
             className="relative z-10 font-[family-name:var(--font-condensed)] uppercase tracking-tight text-center px-4"
             style={{ fontSize: 'clamp(2rem, 6vw, 4.5rem)', color: C.white, transform: 'skewY(3deg)' }}
           >
-            Skip the form. Just tap a vibe.
+            Skip the overthinking. Just tap a vibe.
           </h2>
         </div>
       </div>
@@ -573,7 +575,7 @@ const VIBE_PICKS: { emoji: string; label: string; game: string; art: string; tim
 ];
 
 function VibeSection() {
-  const [activeVibe, setActiveVibe] = useState<number | null>(null);
+  const [activeVibe, setActiveVibe] = useState<number | null>(0);
   const pick = activeVibe !== null ? VIBE_PICKS[activeVibe] : null;
 
   return (
@@ -776,9 +778,15 @@ function Footer() {
             <span className="mt-2 text-[10px] opacity-50">Made by Brady in Vancouver, BC</span>
           </div>
         </div>
-        <div className="mt-8 flex items-end justify-center gap-3">
-          <Image src="/landing/pip-wave.png" alt="Pip, a small robot, waving" width={40} height={40} className="opacity-40 hover:opacity-70 transition-opacity" />
-          <div className="text-center flex items-center gap-2">
+        <div className="mt-10 flex flex-col items-center gap-3">
+          <div className="flex items-end gap-3">
+            <Image src="/landing/pip-wave.png" alt="Pip waving" width={80} height={80} className="w-16 sm:w-20 h-auto opacity-70" />
+            <div className="relative rounded-lg px-3 py-2 mb-2" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
+              <div className="absolute -left-1.5 bottom-2.5 w-0 h-0" style={{ borderTop: '5px solid transparent', borderBottom: '5px solid transparent', borderRight: '6px solid rgba(255,255,255,0.08)' }} aria-hidden />
+              <p className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>we&apos;ve got this.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
             <Image src="/landing/dino-silhouette.svg" alt="" width={24} height={16} className="opacity-30" />
             <p className="text-xs opacity-30 font-[family-name:var(--font-mono)]">and we have a dino theme. come on.</p>
           </div>
