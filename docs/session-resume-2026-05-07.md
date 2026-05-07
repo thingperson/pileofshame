@@ -62,4 +62,48 @@
 
 ---
 
-*Updated: 2026-05-07 ~11:45 AM PDT*
+## Second wave — afternoon session
+
+13. **Copy red team + tightening** (210b9e4):
+   - Hero subhead: "You need a way to decide" → "You need one good pick"
+   - Anti-tracker: "fuel source, not a burden" → "full of games you already chose"
+   - Bottom CTA: "Today's gaming session. One solid pick. That's the whole thing." → "One pick. Get playing."
+   - Footer Pip: "we've got this" → "go play something"
+   - Removed duplicate "get playing" badge from hero (was pink paint-stroke badge above h1)
+   - Yellow paint stroke replaces pink behind headline (pink-on-pink clash). Opacity bumped from 0.35 to 0.60. Asset: `public/landing/stroke-yellow.png`
+   - Transparent Pip sprites: pip-16 (thumbs up, mid-page guide) and pip-32 (lounging on controller, footer). `mix-blend-mode: screen` workaround removed.
+
+### Pip sprite inventory
+
+- 99 sprites renamed to `notes/pip/pip-01.png` through `pip-99.png` (all opaque DALL-E outputs)
+- 22 duplicates identified (pip-20–25 duplicate pip-14–19; pip-34–49 duplicate pip-26–33)
+- Unique count: ~77
+- Transparent versions made by Brady for landing: pip-16, pip-32
+- Strong candidates for future use: pip-07 (trophy, completion), pip-02 (portal, hero moment), pip-26 (celebrating), pip-13 (hero on game pile), pip-28 (dino costume)
+
+### Updated decisions
+
+- **Bottom CTA locked:** "One pick. Get playing." — Brady's call, tighter than my suggestion
+- **Yellow stroke over pink:** visual separation between paint stroke and pink headline text
+
+## What's open / next
+
+- **Visual review of Vercel preview** — Brady checking the deployed preview
+- **Merge to main** — clean merge when Brady is ready. No conflicts expected.
+- **Theme polish** — `.theme-poster` works but is basic
+- **OG card redesign** — planned to align with new landing aesthetic
+- **Voice charter update needed** — terminology table says "Moods" not "Vibes", and "pile" not "backlog" on-page
+- **Pip transparency pass** — Brady has the workflow. More sprites can be transparentized as needed for in-product use (completion modal, share cards, archetype reveals)
+- **Duplicate pip cleanup** — 22 confirmed dupes in `notes/pip/` can be deleted
+
+## Verify on next session start
+
+- [ ] `landing-v2` branch exists and is clean
+- [ ] Vercel preview deploy is live and rendering correctly
+- [ ] Game art images load (self-hosted, not external CDN)
+- [ ] Pip sprites render transparent (no white box) on both cream and dark backgrounds
+- [ ] Yellow stroke visible behind headline at 60% opacity
+
+---
+
+*Updated: 2026-05-07 ~3:40 PM PDT*
