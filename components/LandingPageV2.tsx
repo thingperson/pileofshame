@@ -38,6 +38,45 @@ export default function LandingPageV2({ onImport, onLoadSample }: LandingPageV2P
 
   return (
     <div className="w-full overflow-x-hidden" style={{ backgroundColor: C.cream, color: C.textDark }}>
+      {/* Global micro-interaction styles */}
+      <style>{`
+        .cta-primary {
+          transition: transform 150ms ease, box-shadow 200ms ease;
+        }
+        .cta-primary:hover {
+          transform: scale(1.03);
+          box-shadow: 0 4px 30px rgba(233, 30, 99, 0.35), 0 0 60px rgba(233, 30, 99, 0.1);
+        }
+        .cta-primary:active {
+          transform: scale(0.97);
+          box-shadow: 0 2px 10px rgba(233, 30, 99, 0.2);
+        }
+        .vibe-pill {
+          transition: transform 150ms ease, border-color 200ms ease, box-shadow 200ms ease;
+        }
+        .vibe-pill:hover {
+          transform: translateY(-2px) scale(1.04);
+          box-shadow: 0 4px 12px rgba(233, 30, 99, 0.12);
+        }
+        .vibe-pill:active {
+          transform: scale(0.97);
+        }
+        .vibe-pill:hover .vibe-emoji {
+          animation: emojiBounce 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes emojiBounce {
+          0%, 100% { transform: translateY(0); }
+          40%      { transform: translateY(-4px); }
+          70%      { transform: translateY(-1px); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .cta-primary:hover { transform: none; }
+          .cta-primary:active { transform: none; }
+          .vibe-pill:hover { transform: none; }
+          .vibe-pill:active { transform: none; }
+          .vibe-pill:hover .vibe-emoji { animation: none; }
+        }
+      `}</style>
       <Nav onImport={onImport} />
       <Hero onImport={onImport} onLoadSample={onLoadSample} />
       <PlatformBar />
@@ -91,6 +130,62 @@ function Nav({ onImport }: { onImport: () => void }) {
 function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: () => void }) {
   return (
     <section className="relative px-5 sm:px-8 pt-8 sm:pt-12 pb-20 sm:pb-28 overflow-visible">
+      {/* Hero entrance keyframes */}
+      <style>{`
+        @keyframes accentSlide {
+          from { transform: skewX(-25deg) scaleX(0); }
+          to   { transform: skewX(-25deg) scaleX(1); }
+        }
+        .hero-accent-bar {
+          animation: accentSlide 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        @keyframes revealUp {
+          from { opacity: 0; transform: translateY(24px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes drawLine {
+          from { transform: skewX(-12deg) scaleX(0); }
+          to   { transform: skewX(-12deg) scaleX(1); }
+        }
+        @keyframes heroFadeSlide {
+          from { opacity: 0; transform: translateX(-20px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes heroFadeUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes cardSettle {
+          from { opacity: 0; transform: rotate(5deg) translateY(40px); }
+          to   { opacity: 1; transform: rotate(2deg) translateY(0); }
+        }
+        @keyframes heroFadeScale {
+          from { opacity: 0; transform: rotate(12deg) scale(0.85); }
+          to   { opacity: 0.8; transform: rotate(12deg) scale(1); }
+        }
+        @keyframes heroFadeOnly {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-accent-bar,
+          .hero-badge,
+          .hero-headline-1,
+          .hero-headline-2,
+          .hero-underline,
+          .hero-subhead,
+          .hero-card,
+          .hero-collage-tr,
+          .hero-triangles {
+            animation: none !important;
+            opacity: 1 !important;
+          }
+          .hero-accent-bar { transform: skewX(-25deg) !important; }
+          .hero-card { transform: rotate(2deg) !important; }
+          .hero-collage-tr { transform: rotate(12deg) !important; opacity: 0.8 !important; }
+        }
+      `}</style>
+
       {/* Angled cream background panel */}
       <div
         className="absolute inset-0 z-0"
@@ -109,19 +204,8 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
         <Image src="/landing/mountain-hero.png" alt="" width={800} height={1000} className="w-full h-auto object-contain object-bottom" />
       </div>
 
-      {/* Pink accent bar — top, angled */}
-      <div className="absolute top-0 left-0 w-[60%] h-2 sm:h-3 z-10 hidden sm:block" style={{ backgroundColor: C.pink, transform: 'skewX(-25deg)', transformOrigin: 'top left' }} aria-hidden />
-
-      {/* Collage top-right — rotated aggressively */}
-      <div className="absolute -top-6 -right-6 w-56 sm:w-72 pointer-events-none opacity-80 z-[1] hidden sm:block" style={{ transform: 'rotate(12deg)' }}>
-        <Image src="/landing/collage-4.png" alt="" width={400} height={400} className="w-full h-auto" />
-      </div>
-
-      {/* Cyan + pink triangle cluster — top right */}
-      <svg className="absolute top-12 right-8 sm:right-16 w-24 sm:w-32 hidden sm:block pointer-events-none" viewBox="0 0 120 100" fill="none" aria-hidden>
-        <polygon points="0,100 60,0 120,100" fill={C.cyan} opacity="0.65" />
-        <polygon points="30,100 80,20 120,100" fill={C.pink} opacity="0.45" />
-      </svg>
+      {/* Pink accent bar — top, angled, animates in on load */}
+      <div className="absolute top-0 left-0 w-[60%] h-2 sm:h-3 z-10 hidden sm:block hero-accent-bar" style={{ backgroundColor: C.pink, transformOrigin: 'top left' }} aria-hidden />
 
       {/* Paint stroke — wider, more visible */}
       <div className="absolute top-[22%] -left-6 w-[70%] max-w-[700px] pointer-events-none opacity-35 z-0 hidden sm:block">
@@ -129,7 +213,7 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
       </div>
 
       {/* "Stop scrolling" badge — pink paint-stroke bg with text on top */}
-      <div className="relative z-10 inline-block ml-4 sm:ml-8 mb-2">
+      <div className="relative z-10 inline-block ml-4 sm:ml-8 mb-2 hero-badge" style={{ animation: 'heroFadeSlide 500ms cubic-bezier(0.16, 1, 0.3, 1) 100ms both' }}>
         <div className="absolute inset-y-0 -left-3 -right-3 pointer-events-none overflow-hidden">
           <Image src="/landing/paint-stroke-4.png" alt="" width={400} height={50} className="w-full h-full object-fill" />
         </div>
@@ -142,25 +226,24 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center pt-6 sm:pt-10 relative z-10">
         {/* Left: headline + copy */}
         <div className="relative">
-          <Reveal>
-            <h1 className="font-[family-name:var(--font-condensed)] uppercase leading-[0.9] tracking-tight mb-6" style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', transform: 'rotate(-2deg)', transformOrigin: 'left top' }}>
+          <h1 className="font-[family-name:var(--font-condensed)] uppercase leading-[0.9] tracking-tight mb-6" style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', transform: 'rotate(-2deg)', transformOrigin: 'left top' }}>
+            <span className="block hero-headline-1" style={{ animation: 'revealUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both' }}>
               You don&apos;t need more games.
-              <br />
-              <span className="relative inline-block" style={{ color: C.pink }}>
-                You need a decision.
-                <span className="absolute -bottom-1 left-0 w-full h-1.5 sm:h-2" style={{ backgroundColor: C.cyan, transform: 'skewX(-12deg)' }} aria-hidden />
-              </span>
-            </h1>
-          </Reveal>
+            </span>
+            <span className="relative inline-block hero-headline-2" style={{ color: C.pink, animation: 'revealUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 350ms both' }}>
+              You need a decision.
+              <span className="absolute -bottom-1 left-0 w-full h-1.5 sm:h-2 hero-underline" style={{ backgroundColor: C.cyan, transformOrigin: 'left center', animation: 'drawLine 400ms cubic-bezier(0.16, 1, 0.3, 1) 550ms both' }} aria-hidden />
+            </span>
+          </h1>
 
-          <Reveal delay={100}>
+          <div className="hero-subhead" style={{ animation: 'heroFadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both' }}>
             <p className="text-lg sm:text-xl leading-relaxed mb-2 font-bold" style={{ color: C.textDark }}>Your pile&apos;s not gonna play itself.</p>
             <p className="text-base sm:text-lg leading-relaxed mb-8" style={{ color: C.textMuted }}>We turn your pile into one good answer for tonight. Mood + time in. A game out.</p>
-          </Reveal>
+          </div>
 
-          <Reveal delay={200}>
+          <div className="hero-subhead" style={{ animation: 'heroFadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both' }}>
             <div className="flex flex-col sm:flex-row items-start gap-3 mb-4">
-              <button onClick={onImport} className="px-7 py-3.5 text-base font-bold rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer" style={{ backgroundColor: C.pink, color: C.white, boxShadow: `0 4px 20px ${C.pinkGlow}` }}>
+              <button onClick={onImport} className="cta-primary px-7 py-3.5 text-base font-bold rounded-lg cursor-pointer" style={{ backgroundColor: C.pink, color: C.white, boxShadow: `0 4px 20px ${C.pinkGlow}` }}>
                 Import My Library →
               </button>
               <button onClick={onLoadSample} className="px-6 py-3.5 text-base font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97] cursor-pointer border" style={{ borderColor: C.textDark, color: C.textDark, backgroundColor: 'transparent' }}>
@@ -182,12 +265,12 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
                 </div>
               ))}
             </div>
-          </Reveal>
+          </div>
         </div>
 
-        {/* Right: picker card — tilted */}
-        <Reveal delay={150}>
-          <div className="relative" style={{ transform: 'rotate(2deg)' }}>
+        {/* Right: picker card — tilted, entrance with rotation settle */}
+        <div className="hero-card" style={{ animation: 'cardSettle 800ms cubic-bezier(0.16, 1, 0.3, 1) 400ms both' }}>
+          <div className="relative">
             <div className="absolute -top-12 -right-2 sm:right-0 w-52 sm:w-64 z-20 pointer-events-none">
               <Image src="/landing/annotation-tell-us.png" alt="Tell us a few things. We'll do the hard part." width={500} height={150} className="w-full h-auto" />
             </div>
@@ -196,8 +279,19 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
               <Image src="/landing/annotation-new-picks.png" alt="New picks in seconds. No endless scrolling." width={500} height={100} className="w-full h-auto" />
             </div>
           </div>
-        </Reveal>
+        </div>
       </div>
+
+      {/* Collage top-right — entrance animation */}
+      <div className="absolute -top-6 -right-6 w-56 sm:w-72 pointer-events-none z-[1] hidden sm:block hero-collage-tr" style={{ animation: 'heroFadeScale 700ms cubic-bezier(0.16, 1, 0.3, 1) 600ms both' }}>
+        <Image src="/landing/collage-4.png" alt="" width={400} height={400} className="w-full h-auto" />
+      </div>
+
+      {/* Cyan + pink triangle cluster — entrance animation */}
+      <svg className="absolute top-12 right-8 sm:right-16 w-24 sm:w-32 hidden sm:block pointer-events-none hero-triangles" style={{ animation: 'heroFadeOnly 400ms ease 700ms both' }} viewBox="0 0 120 100" fill="none" aria-hidden>
+        <polygon points="0,100 60,0 120,100" fill={C.cyan} opacity="0.65" />
+        <polygon points="30,100 80,20 120,100" fill={C.pink} opacity="0.45" />
+      </svg>
 
       {/* Collage bottom-right — breaking into next section */}
       <div className="absolute -bottom-12 -right-6 w-52 sm:w-72 pointer-events-none opacity-75 z-[3] hidden sm:block" style={{ transform: 'rotate(-8deg)' }}>
@@ -345,7 +439,7 @@ function ProblemSolution() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 max-w-3xl">
             {problems.map((p, i) => (
-              <Reveal key={i} delay={i * 80}>
+              <Reveal key={i} delay={i * 80} variant="left">
                 <div className="flex gap-3">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-sm font-bold" style={{ backgroundColor: 'rgba(233, 30, 99, 0.12)', color: C.pink }}>{'✕'}</div>
                   <div>
@@ -374,7 +468,7 @@ function ProblemSolution() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 mt-8 max-w-3xl">
             {solutions.map((s, i) => (
-              <Reveal key={i} delay={i * 80}>
+              <Reveal key={i} delay={i * 80} variant="right">
                 <div className="flex gap-3">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-sm font-bold" style={{ backgroundColor: C.cyanDark, color: C.white }}>{s.step}</div>
                   <div>
@@ -404,7 +498,7 @@ function MidPageCTA({ onImport }: { onImport: () => void }) {
   return (
     <Reveal>
       <div className="text-center py-8 sm:py-10 px-5" style={{ backgroundColor: C.cream }}>
-        <button onClick={onImport} className="px-7 py-3.5 text-base font-bold rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer" style={{ backgroundColor: C.pink, color: C.white, boxShadow: `0 4px 20px ${C.pinkGlow}` }}>
+        <button onClick={onImport} className="cta-primary px-7 py-3.5 text-base font-bold rounded-lg cursor-pointer" style={{ backgroundColor: C.pink, color: C.white, boxShadow: `0 4px 20px ${C.pinkGlow}` }}>
           Import My Library →
         </button>
         <p className="text-sm mt-3 font-[family-name:var(--font-mono)]" style={{ color: C.textFaint }}>Takes about 30 seconds. Seriously.</p>
@@ -489,7 +583,7 @@ function VibeSection() {
               <button
                 key={v.label}
                 onClick={() => setActiveVibe(i)}
-                className="flex items-center gap-2 px-5 py-3 rounded-full text-base font-medium border transition-all hover:scale-[1.04] active:scale-[0.97] cursor-pointer"
+                className="vibe-pill flex items-center gap-2 px-5 py-3 rounded-full text-base font-medium border cursor-pointer"
                 style={{
                   borderColor: activeVibe === i ? C.pink : 'rgba(0,0,0,0.12)',
                   color: activeVibe === i ? C.pink : C.textDark,
@@ -497,7 +591,7 @@ function VibeSection() {
                   boxShadow: activeVibe === i ? `0 2px 12px ${C.pinkGlow}` : 'none',
                 }}
               >
-                <span className="text-lg">{v.emoji}</span><span>{v.label}</span>
+                <span className="vibe-emoji text-lg">{v.emoji}</span><span>{v.label}</span>
               </button>
             ))}
           </div>
@@ -610,7 +704,7 @@ function BottomCTA({ onImport, onLoadSample }: { onImport: () => void; onLoadSam
 
         <Reveal delay={100}>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
-            <button onClick={onImport} className="px-7 py-3.5 text-base font-bold rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer" style={{ backgroundColor: C.pink, color: C.white, boxShadow: `0 4px 20px ${C.pinkGlow}` }}>
+            <button onClick={onImport} className="cta-primary px-7 py-3.5 text-base font-bold rounded-lg cursor-pointer" style={{ backgroundColor: C.pink, color: C.white, boxShadow: `0 4px 20px ${C.pinkGlow}` }}>
               Import My Library →
             </button>
             <button onClick={onLoadSample} className="px-6 py-3.5 text-base font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97] cursor-pointer border" style={{ borderColor: C.textDark, color: C.textDark, backgroundColor: 'transparent' }}>
@@ -658,9 +752,12 @@ function Footer() {
             <span className="mt-2 text-[10px] opacity-50">Made by Brady in Vancouver, BC</span>
           </div>
         </div>
-        <div className="mt-8 text-center flex items-center justify-center gap-2">
-          <Image src="/landing/dino-silhouette.svg" alt="" width={24} height={16} className="opacity-30" />
-          <p className="text-xs opacity-30 font-[family-name:var(--font-mono)]">and we have a dino theme. come on.</p>
+        <div className="mt-8 flex items-end justify-center gap-3">
+          <Image src="/landing/pip-wave.png" alt="Pip, a small robot, waving" width={40} height={40} className="opacity-40 hover:opacity-70 transition-opacity" />
+          <div className="text-center flex items-center gap-2">
+            <Image src="/landing/dino-silhouette.svg" alt="" width={24} height={16} className="opacity-30" />
+            <p className="text-xs opacity-30 font-[family-name:var(--font-mono)]">and we have a dino theme. come on.</p>
+          </div>
         </div>
       </footer>
     </div>
@@ -703,7 +800,9 @@ function FooterEmailForm() {
    REVEAL
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-function Reveal({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
+type RevealVariant = 'up' | 'left' | 'right' | 'scale' | 'none';
+
+function Reveal({ children, delay = 0, variant = 'up', className }: { children: React.ReactNode; delay?: number; variant?: RevealVariant; className?: string }) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [shown, setShown] = useState(false);
 
@@ -717,8 +816,16 @@ function Reveal({ children, delay = 0, className }: { children: React.ReactNode;
     return () => io.disconnect();
   }, []);
 
+  const transforms: Record<RevealVariant, string> = {
+    up: 'translateY(32px)',
+    left: 'translateX(-40px)',
+    right: 'translateX(40px)',
+    scale: 'scale(0.92)',
+    none: 'none',
+  };
+
   return (
-    <div ref={ref} className={className} style={{ opacity: shown ? 1 : 0, transform: shown ? 'translateY(0)' : 'translateY(32px)', transition: `opacity 700ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 700ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`, willChange: shown ? 'auto' : 'opacity, transform' }}>
+    <div ref={ref} className={className} style={{ opacity: shown ? 1 : 0, transform: shown ? 'none' : transforms[variant], transition: `opacity 700ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 700ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`, willChange: shown ? 'auto' : 'opacity, transform' }}>
       {children}
     </div>
   );

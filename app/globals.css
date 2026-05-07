@@ -2351,6 +2351,53 @@ body.theme-campfire {
   filter: drop-shadow(0 0 14px rgba(254, 127, 45, 0.3));
 }
 
+/* ─── Landing / "Poster" theme ───
+   Derived from the landing page redesign mocks.
+   Hot pink primary, cyan accent, dark base. */
+
+.theme-poster {
+  --color-bg-primary: #0c0c12 !important;
+  --color-bg-card: #131319 !important;
+  --color-bg-elevated: #1c1c26 !important;
+  --color-border-subtle: rgba(255, 255, 255, 0.06) !important;
+  --color-border-active: rgba(233, 30, 99, 0.35) !important;
+  --color-text-primary: #f5f5f5 !important;
+  --color-text-secondary: #d4d4d8 !important;
+  --color-text-muted: #a1a1aa !important;
+  --color-text-dim: #888894 !important;
+  --color-text-faint: #6e6e7a !important;
+  --color-accent-purple: #E91E63 !important;
+  --color-accent-pink: #00BCD4 !important;
+  --color-status-buried: #71717a !important;
+  --color-status-buried-bg: rgba(113, 113, 122, 0.1) !important;
+  --color-status-on-deck: #00BCD4 !important;
+  --color-status-on-deck-bg: rgba(0, 188, 212, 0.1) !important;
+  --color-status-playing: #E91E63 !important;
+  --color-status-playing-bg: rgba(233, 30, 99, 0.1) !important;
+  --color-status-played: #26A69A !important;
+  --color-status-played-bg: rgba(38, 166, 154, 0.1) !important;
+  --color-status-bailed: #78909C !important;
+  --color-status-bailed-bg: rgba(120, 144, 156, 0.08) !important;
+}
+
+.theme-poster ::-webkit-scrollbar-thumb {
+  background-color: rgba(233, 30, 99, 0.4) !important;
+}
+.theme-poster ::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.theme-poster [role="progressbar"] div {
+  background-color: #E91E63 !important;
+}
+
+.theme-poster .default-banner {
+  --wordmark-in: #E91E63;
+}
+.theme-poster .default-banner-wordmark {
+  filter: drop-shadow(0 0 14px rgba(233, 30, 99, 0.3));
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
