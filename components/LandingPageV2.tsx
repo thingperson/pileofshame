@@ -84,6 +84,7 @@ export default function LandingPageV2({ onImport, onLoadSample }: LandingPageV2P
       <AntiTracker />
       <ProblemSolution />
       <MidPageCTA onImport={onImport} />
+      <PipCallout />
       <ClarityBanner />
       <VibeSection />
       <BottomCTA onImport={onImport} onLoadSample={onLoadSample} />
@@ -237,8 +238,8 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
           </h1>
 
           <div className="hero-subhead" style={{ animation: 'heroFadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both' }}>
-            <p className="text-lg sm:text-xl leading-relaxed mb-2 font-bold" style={{ color: C.textDark }}>Your pile&apos;s not gonna play itself.</p>
-            <p className="text-base sm:text-lg leading-relaxed mb-8" style={{ color: C.textMuted }}>We turn your pile into one good answer for tonight. Mood + time in. A game out.</p>
+            <p className="text-lg sm:text-xl leading-relaxed mb-2 font-bold" style={{ color: C.textDark }}>Your backlog&apos;s not gonna play itself.</p>
+            <p className="text-base sm:text-lg leading-relaxed mb-8" style={{ color: C.textMuted }}>We turn your backlog into one good answer for right now. Mood + time in. A game out.</p>
           </div>
 
           <div className="hero-subhead" style={{ animation: 'heroFadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both' }}>
@@ -314,10 +315,8 @@ function PlatformBar() {
           <PlatformIcon name="Steam" d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658a3.387 3.387 0 0 1 1.912-.59c.064 0 .127.003.19.008l2.861-4.142V8.91a4.528 4.528 0 0 1 4.524-4.524 4.528 4.528 0 0 1 4.524 4.524 4.528 4.528 0 0 1-4.524 4.524h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396a3.406 3.406 0 0 1-3.363-2.916L.464 15.24C1.884 20.24 6.514 24 11.979 24c6.627 0 12.001-5.373 12.001-12S18.606 0 11.979 0z" />
           <PlatformIcon name="PlayStation" d="M9.214 7.1v8.3l2.7.9V5.3c0-.6-.1-1.2-.3-1.7-.4-1-1.2-1.5-2.5-1.1L5.014 4c-2 .6-3.5 2-3.5 3.7 0 1.5.6 2.3 2.5 1.6l2.2-.8v1.5L4.314 10.6C1.714 11.6 0 12.7 0 14.5c0 1.8 1.2 2.7 3 2.1l4.2-1.5c.6-.2 1.4-.7 2-1.1v1.8l-4.1 1.5c-2 .7-3.5.2-4.3-.8-.4-.5-.6-1.1-.7-1.8 0 1.7.6 3.2 2 3.8.9.4 2.1.3 3.5-.2l5-1.8c.8-.3 1.7-.9 2.5-1.5v3.2l-3.6 1.3c-2.9 1-5.8.8-7.7-.4A4.7 4.7 0 0 1 0 16.3c0-2.1 1.3-4 3.6-5L9.2 9v-1.9zm9.4 3.6l-5 1.8v7.2l2.5-.9v-14c1.7-.6 3.3-.1 3.7 1.1.2.6.2 1.2.1 1.8l2.2.8c.4-1 .5-2.1.2-3.1-.7-2.2-3-3.1-5.7-2.3l-5.4 1.9v1.5l5-1.8c.7-.2 1.3-.3 1.8-.2.9.2 1.2.9 1.2 1.7v.3c0 .5-.3 1.1-.6 1.5-.2.3-.5.5-1 .7v-.1zm5.3 1.8c-1.5.8-2.5 2.2-2.5 3.9 0 1.4.7 2.3 1.8 2.6 1.2.3 2.5-.1 3.6-.7V20h2v-9.1c0-1.1-.4-2-1.1-2.5-.9-.6-2.2-.7-3.8.1zm1.9 5.2c-.5.3-1.1.4-1.5.3-.3-.1-.5-.4-.5-.9 0-.7.4-1.4 1.1-1.8.4-.2.7-.3.9-.3v2.7z" />
           <PlatformIcon name="Xbox" d="M4.102 21.033a11.947 11.947 0 0 1-2.642-3.677c-1.2-2.6-1.46-5.618-.692-8.06.81.39 2.622 1.762 4.733 4.076 2.094 2.297 3.79 4.674 4.49 5.758a23.94 23.94 0 0 1-2.222 1.46c-1.362.769-2.57 1.043-3.667.443zM12 2.244c-1.3 0-2.545.246-3.694.689.532.31 1.074.728 1.627 1.226 1.075.97 2.093 2.168 2.067 2.14-.024-.028 1.012-1.19 2.067-2.14a11.346 11.346 0 0 1 1.627-1.226A9.7 9.7 0 0 0 12 2.244zm7.898 18.789c-1.097.6-2.305.326-3.667-.443a23.94 23.94 0 0 1-2.222-1.46c.7-1.084 2.396-3.461 4.49-5.758 2.111-2.314 3.923-3.686 4.733-4.076.768 2.442.508 5.46-.692 8.06a11.947 11.947 0 0 1-2.642 3.677zm1.988-16.17c-.592-.32-2.882-.568-5.678 2.076l-.124.122c1.326 1.418 2.859 3.393 4.123 5.47.766 1.26 1.623 2.913 2.169 4.523a9.793 9.793 0 0 0 1.38-5.072 9.765 9.765 0 0 0-1.87-5.12zM2.114 4.863A9.765 9.765 0 0 0 .244 9.983c0 1.82.497 3.525 1.38 5.072.546-1.61 1.403-3.263 2.169-4.523 1.264-2.077 2.797-4.052 4.123-5.47l-.124-.122C4.996 2.295 2.706 2.543 2.114 4.863z" />
-          <PlatformIcon name="Epic" d="M3.537 0C2.165 0 1.66.506 1.66 1.879V18.12c0 1.373.505 1.879 1.877 1.879h4.994v2.122c0 1.373.506 1.879 1.879 1.879h1.682c1.373 0 1.877-.506 1.877-1.879V20h4.994c1.373 0 1.877-.506 1.877-1.879V1.879C20.84.506 20.336 0 18.963 0zm.791 3.333h3.902v6.334H5.614V7.331h1.824V5.669H4.328zm5.943 0h2.47l1.542 3.726L15.825 3.333h2.47v9.334h-1.944V6.28l-1.86 4.666h-1.476L11.155 6.28v6.387H9.271z" />
-          <PlatformIcon name="GOG" d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 3.6c4.636 0 8.4 3.764 8.4 8.4 0 4.636-3.764 8.4-8.4 8.4-4.636 0-8.4-3.764-8.4-8.4 0-4.636 3.764-8.4 8.4-8.4zm0 2.4a6 6 0 1 0 0 12 6 6 0 0 0 0-12z" />
           <span className="flex items-center gap-1.5 text-sm font-medium opacity-70">
-            <span className="text-base">+</span> CSV
+            <span className="text-base">+</span> Playnite CSV
           </span>
         </div>
       </div>
@@ -343,7 +342,7 @@ function SocialProof() {
     <Reveal>
       <div className="py-5 sm:py-6 px-5 text-center" style={{ backgroundColor: C.cream }}>
         <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 max-w-3xl mx-auto">
-          <ProofStat value="Steam" label="Xbox · PS · Playnite" />
+          <ProofStat value="4" label="platforms supported" />
           <ProofStat value="30 sec" label="to your first pick" />
           <ProofStat value="100%" label="free. no catch." />
         </div>
@@ -371,15 +370,13 @@ function AntiTracker() {
       {/* Angled pink accent strip */}
       <div className="absolute top-0 left-0 right-0 h-1" style={{ backgroundColor: C.pink, transform: 'skewY(-1deg)' }} aria-hidden />
 
-      <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6 text-center sm:text-left">
+      <div className="max-w-3xl mx-auto text-center">
         <Reveal>
-          <p className="text-2xl sm:text-3xl font-bold font-[family-name:var(--font-condensed)] uppercase tracking-tight" style={{ color: C.textDark }}>
-            More library managing = less playing.
+          <p className="text-3xl sm:text-4xl font-bold font-[family-name:var(--font-condensed)] uppercase tracking-tight" style={{ color: C.textDark }}>
+            Less managing. More playing.
           </p>
-        </Reveal>
-        <Reveal delay={100}>
-          <p className="text-lg sm:text-xl leading-relaxed" style={{ color: C.textMuted }}>
-            Not another tracker. Not another list.<br />We&apos;re here to pick from your pile, not organize it.
+          <p className="text-base sm:text-lg mt-3" style={{ color: C.textMuted }}>
+            We&apos;re not here to organize your library. We&apos;re here to get you playing.
           </p>
         </Reveal>
       </div>
@@ -396,7 +393,7 @@ function ProblemSolution() {
     { title: 'Decision fatigue is real.', body: 'The more options you have, the harder it is to choose.' },
     { title: 'Your mood changes.', body: 'What you want after work ≠ what you want on the weekend.' },
     { title: 'Time matters.', body: 'A 50-hour RPG on a busy night? Probably not.' },
-    { title: "Libraries grow. Attention doesn't.", body: 'Your pile grows faster than your free time.' },
+    { title: "Libraries grow. Attention doesn't.", body: 'Your backlog grows faster than your free time.' },
   ];
 
   const solutions = [
@@ -421,7 +418,7 @@ function ProblemSolution() {
 
       <div className="relative z-10 px-5 sm:px-8">
         <Reveal>
-          <p className="text-center text-sm font-bold font-[family-name:var(--font-mono)] uppercase tracking-[0.2em] mb-12" style={{ color: C.textFaint }}>The actual problem.</p>
+          <p className="text-center text-lg sm:text-xl font-bold font-[family-name:var(--font-condensed)] uppercase tracking-wide mb-12" style={{ color: C.pink }}>get playing your games.</p>
         </Reveal>
 
         {/* PROBLEM panel — visibly rotated container */}
@@ -508,6 +505,26 @@ function MidPageCTA({ onImport }: { onImport: () => void }) {
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PIP CALLOUT — mid-page character moment
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+function PipCallout() {
+  return (
+    <Reveal>
+      <div className="flex items-end justify-center gap-3 py-6 px-5" style={{ backgroundColor: C.cream }}>
+        <Image src="/landing/pip-guide.png" alt="Pip, a small robot guide" width={64} height={64} className="shrink-0" />
+        <div className="relative rounded-xl px-4 py-3 max-w-xs" style={{ backgroundColor: C.cardDark }}>
+          <div className="absolute -left-2 bottom-3 w-0 h-0" style={{ borderTop: '6px solid transparent', borderBottom: '6px solid transparent', borderRight: `8px solid ${C.cardDark}` }} aria-hidden />
+          <p className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>
+            We pick. You play. If it&apos;s not hitting, blame us and reroll.
+          </p>
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    CLARITY BANNER — heavily skewed full-width
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
@@ -534,7 +551,7 @@ function ClarityBanner() {
             className="relative z-10 font-[family-name:var(--font-condensed)] uppercase tracking-tight text-center px-4"
             style={{ fontSize: 'clamp(2rem, 6vw, 4.5rem)', color: C.white, transform: 'skewY(3deg)' }}
           >
-            More games ≠ more fun. Clarity does.
+            Skip the form. Just tap a vibe.
           </h2>
         </div>
       </div>
@@ -569,12 +586,7 @@ function VibeSection() {
 
       <div className="max-w-4xl mx-auto text-center relative z-10">
         <Reveal>
-          <div style={{ transform: 'rotate(-1.5deg)' }}>
-            <h2 className="font-[family-name:var(--font-condensed)] uppercase tracking-tight mb-2" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: C.textDark }}>
-              Or skip the form. Just tap a vibe.
-            </h2>
-          </div>
-          <p className="text-base sm:text-lg mb-8" style={{ color: C.textMuted }}>Tap one and see what we&apos;d pick.</p>
+          <p className="text-base sm:text-lg mb-8" style={{ color: C.textMuted }}>Tap one and see what we&apos;d pick from a sample library.</p>
         </Reveal>
 
         <Reveal delay={100}>
@@ -619,7 +631,7 @@ function VibeSection() {
               {/* Pick details */}
               <div className="p-5 sm:p-6 -mt-8 relative z-10 text-left">
                 <p className="text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider mb-1" style={{ color: C.pink }}>
-                  Tonight&apos;s answer
+                  Your pick
                 </p>
                 <h3 className="font-[family-name:var(--font-condensed)] uppercase text-2xl sm:text-3xl tracking-tight mb-2" style={{ color: C.white }}>
                   {pick.game}
@@ -691,14 +703,27 @@ function BottomCTA({ onImport, onLoadSample }: { onImport: () => void; onLoadSam
         <Reveal>
           <div style={{ transform: 'rotate(-2deg)', transformOrigin: 'center' }}>
             <h2 className="font-[family-name:var(--font-condensed)] uppercase leading-[0.85] tracking-tight mb-2" style={{ fontSize: 'clamp(2.5rem, 7vw, 4.5rem)', color: C.textDark }}>
-              One pick. Tonight.
+              Today&apos;s gaming session.
             </h2>
-            <h2 className="font-[family-name:var(--font-condensed)] uppercase leading-[0.85] tracking-tight mb-6 relative inline-block" style={{ fontSize: 'clamp(2.5rem, 7vw, 4.5rem)', color: C.pink }}>
-              That&apos;s the whole thing.
+            <h2 className="font-[family-name:var(--font-condensed)] uppercase leading-[0.85] tracking-tight mb-2 relative inline-block" style={{ fontSize: 'clamp(2.5rem, 7vw, 4.5rem)', color: C.pink }}>
+              One solid pick. That&apos;s the whole thing.
               <span className="absolute -bottom-1 left-0 w-full h-2" style={{ backgroundColor: C.cyan, transform: 'skewX(-12deg)' }} aria-hidden />
             </h2>
           </div>
-          <p className="text-lg mb-8 mt-4" style={{ color: C.textMuted }}>Free. No account. We barely want your email.</p>
+        </Reveal>
+
+        {/* 5-minute pick + moving on */}
+        <Reveal delay={50}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-8 mb-10 text-left max-w-xl mx-auto">
+            <div className="rounded-xl p-4" style={{ backgroundColor: 'rgba(0,0,0,0.04)' }}>
+              <p className="text-sm font-bold mb-1" style={{ color: C.textDark }}>⏱ The 5-minute pick.</p>
+              <p className="text-sm" style={{ color: C.textMuted }}>We pick a game, you give it 5 minutes on a timer. Keep playing if it&apos;s hitting. Don&apos;t like it? Blame us and move on.</p>
+            </div>
+            <div className="rounded-xl p-4" style={{ backgroundColor: 'rgba(0,0,0,0.04)' }}>
+              <p className="text-sm font-bold mb-1" style={{ color: C.textDark }}>↩ Moving on is a decision too.</p>
+              <p className="text-sm" style={{ color: C.textMuted }}>Realizing which games you won&apos;t play is progress. We make that easy, not painful.</p>
+            </div>
+          </div>
         </Reveal>
 
         <Reveal delay={100}>
@@ -710,7 +735,7 @@ function BottomCTA({ onImport, onLoadSample }: { onImport: () => void; onLoadSam
               Try a Sample First
             </button>
           </div>
-          <p className="text-sm font-[family-name:var(--font-mono)]" style={{ color: C.textFaint }}>Free. No account. No hassle. We barely want your email.</p>
+          <p className="text-sm font-[family-name:var(--font-mono)]" style={{ color: C.textFaint }}>Free. No account needed. Your data stays on your device.</p>
         </Reveal>
       </div>
     </section>
