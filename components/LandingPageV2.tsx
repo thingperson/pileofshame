@@ -219,7 +219,7 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
         </div>
         <div className="absolute inset-y-0 -left-2 -right-2 pointer-events-none" style={{ backgroundColor: C.pink, opacity: 0.85, transform: 'skewX(-5deg)' }} aria-hidden />
         <span className="relative z-10 px-4 py-2 text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider block" style={{ color: C.white }}>
-          Stop scrolling. Start playing.
+          get playing.
         </span>
       </div>
 
@@ -343,8 +343,8 @@ function SocialProof() {
     <Reveal>
       <div className="py-5 sm:py-6 px-5 text-center" style={{ backgroundColor: C.cream }}>
         <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 max-w-3xl mx-auto">
-          <ProofStat value="10,000+" label="games imported" />
-          <ProofStat value="5,000+" label="picks delivered" />
+          <ProofStat value="Steam" label="Xbox · PS · Playnite" />
+          <ProofStat value="30 sec" label="to your first pick" />
           <ProofStat value="100%" label="free. no catch." />
         </div>
       </div>
@@ -692,14 +692,14 @@ function BottomCTA({ onImport, onLoadSample }: { onImport: () => void; onLoadSam
         <Reveal>
           <div style={{ transform: 'rotate(-2deg)', transformOrigin: 'center' }}>
             <h2 className="font-[family-name:var(--font-condensed)] uppercase leading-[0.85] tracking-tight mb-2" style={{ fontSize: 'clamp(2.5rem, 7vw, 4.5rem)', color: C.textDark }}>
-              Your library isn&apos;t the problem.
+              One pick. Tonight.
             </h2>
             <h2 className="font-[family-name:var(--font-condensed)] uppercase leading-[0.85] tracking-tight mb-6 relative inline-block" style={{ fontSize: 'clamp(2.5rem, 7vw, 4.5rem)', color: C.pink }}>
-              Clarity is the fix.
+              That&apos;s the whole thing.
               <span className="absolute -bottom-1 left-0 w-full h-2" style={{ backgroundColor: C.cyan, transform: 'skewX(-12deg)' }} aria-hidden />
             </h2>
           </div>
-          <p className="text-lg mb-8 mt-4" style={{ color: C.textMuted }}>Stop scrolling. Start playing.</p>
+          <p className="text-lg mb-8 mt-4" style={{ color: C.textMuted }}>Free. No account. We barely want your email.</p>
         </Reveal>
 
         <Reveal delay={100}>
