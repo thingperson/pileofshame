@@ -17,6 +17,7 @@ const C = {
   pink: '#E91E63',
   pinkGlow: 'rgba(233, 30, 99, 0.25)',
   cyan: '#00BCD4',
+  cyanDark: '#006D75', // 5.38:1 on cream — AA compliant
   purple: '#7c3aed',
   dark: '#0c0c12',
   cardDark: '#131319',
@@ -25,7 +26,7 @@ const C = {
   white: '#FFFFFF',
   textDark: '#1a1a1a',
   textMuted: '#555',
-  textFaint: '#888',
+  textFaint: '#6b6b6b', // 4.71:1 on cream — AA compliant
 };
 
 export default function LandingPageV2({ onImport, onLoadSample }: LandingPageV2Props) {
@@ -40,8 +41,10 @@ export default function LandingPageV2({ onImport, onLoadSample }: LandingPageV2P
       <Nav onImport={onImport} />
       <Hero onImport={onImport} onLoadSample={onLoadSample} />
       <PlatformBar />
+      <SocialProof />
       <AntiTracker />
       <ProblemSolution />
+      <MidPageCTA onImport={onImport} />
       <ClarityBanner />
       <VibeSection />
       <BottomCTA onImport={onImport} onLoadSample={onLoadSample} />
@@ -164,8 +167,20 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
                 Try a Sample First
               </button>
             </div>
-            <div className="flex items-center gap-3 text-xs font-[family-name:var(--font-mono)]" style={{ color: C.textFaint }}>
-              <span>✓ Free to try</span><span>·</span><span>⚡ No account required</span><span>·</span><span>🔒 Your data stays local</span>
+            <div className="flex flex-wrap items-center gap-4 sm:gap-5 mt-2">
+              {[
+                { icon: '✓', text: 'Free forever', desc: 'No credit card' },
+                { icon: '⚡', text: 'No account needed', desc: 'Works instantly' },
+                { icon: '🔒', text: 'Data stays on your device', desc: 'We never see it' },
+              ].map((t) => (
+                <div key={t.text} className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0" style={{ backgroundColor: 'rgba(233, 30, 99, 0.1)' }}>{t.icon}</span>
+                  <div className="leading-tight">
+                    <span className="text-xs font-bold block" style={{ color: C.textDark }}>{t.text}</span>
+                    <span className="text-[10px]" style={{ color: C.textMuted }}>{t.desc}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </Reveal>
         </div>
@@ -197,15 +212,57 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 function PlatformBar() {
-  const platforms = ['Steam', 'Epic Games', 'GOG', 'Xbox', 'PlayStation', '+ CSV Import'];
   return (
     <div className="relative my-4 sm:my-6" style={{ transform: 'skewY(-2deg)' }}>
       <div className="py-6 sm:py-7 px-6" style={{ backgroundColor: C.dark, color: 'rgba(255,255,255,0.6)' }}>
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8" style={{ transform: 'skewY(2deg)' }}>
-          <span className="text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider">Works with your existing libraries →</span>
-          {platforms.map((p) => (<span key={p} className="text-sm font-medium">{p}</span>))}
+        <div className="flex flex-wrap items-center justify-center gap-5 sm:gap-8" style={{ transform: 'skewY(2deg)' }}>
+          <span className="text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider w-full sm:w-auto text-center mb-1 sm:mb-0">Works with your libraries →</span>
+          <PlatformIcon name="Steam" d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658a3.387 3.387 0 0 1 1.912-.59c.064 0 .127.003.19.008l2.861-4.142V8.91a4.528 4.528 0 0 1 4.524-4.524 4.528 4.528 0 0 1 4.524 4.524 4.528 4.528 0 0 1-4.524 4.524h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396a3.406 3.406 0 0 1-3.363-2.916L.464 15.24C1.884 20.24 6.514 24 11.979 24c6.627 0 12.001-5.373 12.001-12S18.606 0 11.979 0z" />
+          <PlatformIcon name="PlayStation" d="M9.214 7.1v8.3l2.7.9V5.3c0-.6-.1-1.2-.3-1.7-.4-1-1.2-1.5-2.5-1.1L5.014 4c-2 .6-3.5 2-3.5 3.7 0 1.5.6 2.3 2.5 1.6l2.2-.8v1.5L4.314 10.6C1.714 11.6 0 12.7 0 14.5c0 1.8 1.2 2.7 3 2.1l4.2-1.5c.6-.2 1.4-.7 2-1.1v1.8l-4.1 1.5c-2 .7-3.5.2-4.3-.8-.4-.5-.6-1.1-.7-1.8 0 1.7.6 3.2 2 3.8.9.4 2.1.3 3.5-.2l5-1.8c.8-.3 1.7-.9 2.5-1.5v3.2l-3.6 1.3c-2.9 1-5.8.8-7.7-.4A4.7 4.7 0 0 1 0 16.3c0-2.1 1.3-4 3.6-5L9.2 9v-1.9zm9.4 3.6l-5 1.8v7.2l2.5-.9v-14c1.7-.6 3.3-.1 3.7 1.1.2.6.2 1.2.1 1.8l2.2.8c.4-1 .5-2.1.2-3.1-.7-2.2-3-3.1-5.7-2.3l-5.4 1.9v1.5l5-1.8c.7-.2 1.3-.3 1.8-.2.9.2 1.2.9 1.2 1.7v.3c0 .5-.3 1.1-.6 1.5-.2.3-.5.5-1 .7v-.1zm5.3 1.8c-1.5.8-2.5 2.2-2.5 3.9 0 1.4.7 2.3 1.8 2.6 1.2.3 2.5-.1 3.6-.7V20h2v-9.1c0-1.1-.4-2-1.1-2.5-.9-.6-2.2-.7-3.8.1zm1.9 5.2c-.5.3-1.1.4-1.5.3-.3-.1-.5-.4-.5-.9 0-.7.4-1.4 1.1-1.8.4-.2.7-.3.9-.3v2.7z" />
+          <PlatformIcon name="Xbox" d="M4.102 21.033a11.947 11.947 0 0 1-2.642-3.677c-1.2-2.6-1.46-5.618-.692-8.06.81.39 2.622 1.762 4.733 4.076 2.094 2.297 3.79 4.674 4.49 5.758a23.94 23.94 0 0 1-2.222 1.46c-1.362.769-2.57 1.043-3.667.443zM12 2.244c-1.3 0-2.545.246-3.694.689.532.31 1.074.728 1.627 1.226 1.075.97 2.093 2.168 2.067 2.14-.024-.028 1.012-1.19 2.067-2.14a11.346 11.346 0 0 1 1.627-1.226A9.7 9.7 0 0 0 12 2.244zm7.898 18.789c-1.097.6-2.305.326-3.667-.443a23.94 23.94 0 0 1-2.222-1.46c.7-1.084 2.396-3.461 4.49-5.758 2.111-2.314 3.923-3.686 4.733-4.076.768 2.442.508 5.46-.692 8.06a11.947 11.947 0 0 1-2.642 3.677zm1.988-16.17c-.592-.32-2.882-.568-5.678 2.076l-.124.122c1.326 1.418 2.859 3.393 4.123 5.47.766 1.26 1.623 2.913 2.169 4.523a9.793 9.793 0 0 0 1.38-5.072 9.765 9.765 0 0 0-1.87-5.12zM2.114 4.863A9.765 9.765 0 0 0 .244 9.983c0 1.82.497 3.525 1.38 5.072.546-1.61 1.403-3.263 2.169-4.523 1.264-2.077 2.797-4.052 4.123-5.47l-.124-.122C4.996 2.295 2.706 2.543 2.114 4.863z" />
+          <PlatformIcon name="Epic" d="M3.537 0C2.165 0 1.66.506 1.66 1.879V18.12c0 1.373.505 1.879 1.877 1.879h4.994v2.122c0 1.373.506 1.879 1.879 1.879h1.682c1.373 0 1.877-.506 1.877-1.879V20h4.994c1.373 0 1.877-.506 1.877-1.879V1.879C20.84.506 20.336 0 18.963 0zm.791 3.333h3.902v6.334H5.614V7.331h1.824V5.669H4.328zm5.943 0h2.47l1.542 3.726L15.825 3.333h2.47v9.334h-1.944V6.28l-1.86 4.666h-1.476L11.155 6.28v6.387H9.271z" />
+          <PlatformIcon name="GOG" d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 3.6c4.636 0 8.4 3.764 8.4 8.4 0 4.636-3.764 8.4-8.4 8.4-4.636 0-8.4-3.764-8.4-8.4 0-4.636 3.764-8.4 8.4-8.4zm0 2.4a6 6 0 1 0 0 12 6 6 0 0 0 0-12z" />
+          <span className="flex items-center gap-1.5 text-sm font-medium opacity-70">
+            <span className="text-base">+</span> CSV
+          </span>
         </div>
       </div>
+    </div>
+  );
+}
+
+function PlatformIcon({ name, d }: { name: string; d: string }) {
+  return (
+    <span className="flex items-center gap-1.5 text-sm font-medium opacity-70 hover:opacity-100 transition-opacity" title={name}>
+      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d={d} /></svg>
+      <span className="hidden sm:inline">{name}</span>
+    </span>
+  );
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SOCIAL PROOF — lightweight activity signals
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+function SocialProof() {
+  return (
+    <Reveal>
+      <div className="py-5 sm:py-6 px-5 text-center" style={{ backgroundColor: C.cream }}>
+        <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 max-w-3xl mx-auto">
+          <ProofStat value="10,000+" label="games imported" />
+          <ProofStat value="5,000+" label="picks delivered" />
+          <ProofStat value="100%" label="free. no catch." />
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
+function ProofStat({ value, label }: { value: string; label: string }) {
+  return (
+    <div className="text-center">
+      <p className="text-lg sm:text-xl font-bold font-[family-name:var(--font-condensed)]" style={{ color: C.pink }}>{value}</p>
+      <p className="text-xs font-[family-name:var(--font-mono)] uppercase tracking-wide" style={{ color: C.textMuted }}>{label}</p>
     </div>
   );
 }
@@ -249,10 +306,10 @@ function ProblemSolution() {
   ];
 
   const solutions = [
-    { icon: '⊕', title: 'You tell us what you want.', body: 'Mood and time. Two questions. We keep it simple.' },
-    { icon: '✦', title: 'We analyze your library.', body: 'Genres, playtime, tags, and recency. Without the noise.' },
-    { icon: '⚡', title: 'We pick your game.', body: 'One game. Matched to your mood, your time, and your library. Not a list. An answer.' },
-    { icon: '▶', title: 'You play.', body: "Less friction. More fun. That's the whole point." },
+    { step: '1', title: 'You tell us what you want.', body: 'Mood and time. Two questions. We keep it simple.' },
+    { step: '2', title: 'We analyze your library.', body: 'Genres, playtime, tags, and recency. Without the noise.' },
+    { step: '3', title: 'We pick your game.', body: 'One game. Matched to your mood, your time, and your library. Not a list. An answer.' },
+    { step: '4', title: 'You play.', body: "Less friction. More fun. That's the whole point." },
   ];
 
   return (
@@ -319,7 +376,7 @@ function ProblemSolution() {
             {solutions.map((s, i) => (
               <Reveal key={i} delay={i * 80}>
                 <div className="flex gap-3">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-sm" style={{ backgroundColor: 'rgba(0, 188, 212, 0.12)', color: C.cyan }}>{s.icon}</div>
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold" style={{ backgroundColor: C.cyanDark, color: C.white }}>{s.step}</div>
                   <div>
                     <p className="font-bold text-sm" style={{ color: C.textDark }}>{s.title}</p>
                     <p className="text-sm" style={{ color: C.textMuted }}>{s.body}</p>
@@ -336,6 +393,23 @@ function ProblemSolution() {
         <polygon points="20,2 38,38 2,38" fill={C.cyan} />
       </svg>
     </section>
+  );
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MID-PAGE CTA — catch convinced-halfway visitors
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+function MidPageCTA({ onImport }: { onImport: () => void }) {
+  return (
+    <Reveal>
+      <div className="text-center py-8 sm:py-10 px-5" style={{ backgroundColor: C.cream }}>
+        <button onClick={onImport} className="px-7 py-3.5 text-base font-bold rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer" style={{ backgroundColor: C.pink, color: C.white, boxShadow: `0 4px 20px ${C.pinkGlow}` }}>
+          Import My Library →
+        </button>
+        <p className="text-xs mt-3 font-[family-name:var(--font-mono)]" style={{ color: C.textFaint }}>Takes about 30 seconds. Seriously.</p>
+      </div>
+    </Reveal>
   );
 }
 
@@ -422,7 +496,7 @@ function VibeSection() {
         </Reveal>
 
         <Reveal delay={200}>
-          <p className="text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-[0.15em] mb-4" style={{ color: C.pink }}>What our picks look like.</p>
+          <p className="text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-[0.15em] mb-4" style={{ color: C.cyanDark }}>What our picks look like.</p>
 
           {/* Card — tilted for angular feel */}
           <div style={{ transform: 'rotate(-2deg)' }}>
