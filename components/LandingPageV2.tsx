@@ -610,34 +610,33 @@ function VibeSection() {
               }}
             >
               <style>{`@keyframes vibeCardIn { from { opacity: 0; transform: rotate(-1deg) translateY(20px) scale(0.97); } to { opacity: 1; transform: rotate(-1deg) translateY(0) scale(1); } }`}</style>
-              <div className="flex flex-col sm:flex-row">
-                {/* Game art */}
-                <div className="sm:w-48 h-48 sm:h-auto shrink-0 relative overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={pick.art} alt={pick.game} className="w-full h-full object-cover" loading="lazy" />
-                </div>
-                {/* Pick details */}
-                <div className="flex-1 p-5 sm:p-6 text-left">
-                  <p className="text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider mb-1" style={{ color: C.pink }}>
-                    Tonight&apos;s answer
-                  </p>
-                  <h3 className="font-[family-name:var(--font-condensed)] uppercase text-2xl sm:text-3xl tracking-tight mb-2" style={{ color: C.white }}>
-                    {pick.game}
-                  </h3>
-                  <p className="text-xs font-[family-name:var(--font-mono)] mb-3" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                    {pick.time} · {pick.tags}
-                  </p>
-                  <p className="text-sm leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                    {pick.reason}
-                  </p>
-                  <div className="flex gap-2">
-                    <span className="px-4 py-2 text-sm font-bold rounded-lg" style={{ backgroundColor: C.pink, color: C.white }}>
-                      Let&apos;s go
-                    </span>
-                    <span className="px-4 py-2 text-sm font-medium rounded-lg border" style={{ borderColor: 'rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.6)' }}>
-                      Roll again
-                    </span>
-                  </div>
+              {/* Art banner — landscape, full-width, no crop */}
+              <div className="relative w-full" style={{ aspectRatio: '616 / 353' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={pick.art} alt={pick.game} className="w-full h-full object-cover" loading="lazy" />
+                <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${C.cardDark} 0%, transparent 50%)` }} />
+              </div>
+              {/* Pick details */}
+              <div className="p-5 sm:p-6 -mt-8 relative z-10 text-left">
+                <p className="text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider mb-1" style={{ color: C.pink }}>
+                  Tonight&apos;s answer
+                </p>
+                <h3 className="font-[family-name:var(--font-condensed)] uppercase text-2xl sm:text-3xl tracking-tight mb-2" style={{ color: C.white }}>
+                  {pick.game}
+                </h3>
+                <p className="text-xs font-[family-name:var(--font-mono)] mb-3" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                  {pick.time} · {pick.tags}
+                </p>
+                <p className="text-sm leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                  {pick.reason}
+                </p>
+                <div className="flex gap-2">
+                  <span className="px-4 py-2 text-sm font-bold rounded-lg" style={{ backgroundColor: C.pink, color: C.white }}>
+                    Let&apos;s go
+                  </span>
+                  <span className="px-4 py-2 text-sm font-medium rounded-lg border" style={{ borderColor: 'rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.6)' }}>
+                    Roll again
+                  </span>
                 </div>
               </div>
             </div>
