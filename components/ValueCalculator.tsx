@@ -101,7 +101,7 @@ export default function ValueCalculator({
           {calculated && priceConfidence.total > 0 && (
             <div className="mt-2 space-y-1">
               <div className="flex items-center justify-center gap-2">
-                <div className="w-32 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
+                <div className="w-32 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--color-glass-medium)' }}>
                   <div
                     className="h-full rounded-full transition-all duration-1000"
                     style={{
@@ -128,7 +128,7 @@ export default function ValueCalculator({
           )}
 
           {calculated && playedValue > 0 && (
-            <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+            <div className="mt-3 pt-3 border-t" style={{ borderColor: 'var(--color-glass-border)' }}>
               <div className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-0.5">
                 💰 Value reclaimed from the backlog
               </div>
@@ -143,7 +143,7 @@ export default function ValueCalculator({
 
           {/* Time to clear backlog */}
           {calculated && backlogHours !== null && backlogHours > 0 && (
-            <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+            <div className="mt-3 pt-3 border-t" style={{ borderColor: 'var(--color-glass-border)' }}>
               <div className="text-xs text-text-dim font-[family-name:var(--font-mono)] mb-0.5">
                 ⏳ Estimated time to clear
               </div>
@@ -157,7 +157,7 @@ export default function ValueCalculator({
               {/* HLTB confidence */}
               {hltbConfidence.total > 0 && (
                 <div className="flex items-center justify-center gap-2 mt-1.5">
-                  <div className="w-24 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
+                  <div className="w-24 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--color-glass-medium)' }}>
                     <div
                       className="h-full rounded-full transition-all duration-1000"
                       style={{
@@ -214,7 +214,7 @@ export default function ValueCalculator({
 
       {/* Share as OG card */}
       {calculated && (
-        <div className="mt-4 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+        <div className="mt-4 pt-3 border-t" style={{ borderColor: 'var(--color-glass-border)' }}>
           <div className="text-xs text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider mb-2 text-center">
             Share your stats
           </div>

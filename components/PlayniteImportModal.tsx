@@ -322,8 +322,8 @@ export default function PlayniteImportModal({ open, onClose, context }: Playnite
                   <label
                     key={idx}
                     className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
-                      game.selected ? 'bg-white/5' : ''
-                    } ${isExisting ? 'opacity-40' : 'hover:bg-white/5'}`}
+                      game.selected ? 'bg-glass-subtle' : ''
+                    } ${isExisting ? 'opacity-40' : 'hover:bg-glass-subtle'}`}
                   >
                     <input
                       type="checkbox"

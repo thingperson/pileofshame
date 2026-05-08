@@ -355,7 +355,7 @@ function GameClearShare({
       {/* Flavor preview — auto-picked, no reroll. The card is what it is. */}
       <div
         className="rounded-lg p-2.5 text-sm text-text-muted italic leading-relaxed"
-        style={{ backgroundColor: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.04)' }}
+        style={{ backgroundColor: 'var(--color-glass-subtle)', border: '1px solid var(--color-glass-border)' }}
       >
         {flavorText}
       </div>
@@ -378,8 +378,8 @@ function GameClearShare({
         <div className="space-y-2">
           {/* Generated URL */}
           <div
-            className="rounded-lg px-3 py-2 text-xs font-[family-name:var(--font-mono)] text-accent-purple truncate cursor-pointer hover:bg-white/5 transition-colors"
-            style={{ backgroundColor: 'rgba(0,0,0,0.3)', border: '1px solid rgba(167, 139, 250, 0.2)' }}
+            className="rounded-lg px-3 py-2 text-xs font-[family-name:var(--font-mono)] text-accent-purple truncate cursor-pointer hover:bg-glass-subtle transition-colors"
+            style={{ backgroundColor: 'var(--color-glass-medium)', border: '1px solid rgba(167, 139, 250, 0.2)' }}
             onClick={handleCopyLink}
             title="Click to copy"
           >
@@ -548,7 +548,7 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
   const modal = (
     <div
       className="fixed inset-0 flex items-center justify-center p-4"
-      style={{ backgroundColor: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(12px)', zIndex: 55 }}
+      style={{ backgroundColor: 'var(--color-glass-overlay)', backdropFilter: 'blur(12px)', zIndex: 55 }}
       onClick={handleClose}
     >
       {stage === 'celebrate' && <ConfettiCanvas />}
@@ -571,7 +571,7 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
         <div className="relative z-20 p-6 sm:p-8 text-center">
           <button
             onClick={handleClose}
-            className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-text-dim hover:text-text-muted hover:bg-white/10 transition-all"
+            className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-text-dim hover:text-text-muted hover:bg-glass-medium transition-all"
             aria-label="Close"
           >
             ✕
@@ -601,7 +601,7 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
                 </button>
                 <button
                   onClick={handleClose}
-                  className="px-6 py-3 text-base font-medium rounded-xl border transition-all hover:bg-white/5"
+                  className="px-6 py-3 text-base font-medium rounded-xl border transition-all hover:bg-glass-subtle"
                   style={{ borderColor: 'var(--color-border-active)', color: 'var(--color-text-muted)' }}
                 >
                   Not yet
@@ -721,7 +721,7 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
                 </button>
                 <button
                   onClick={handleClose}
-                  className="w-full px-6 py-3 text-base font-semibold rounded-xl border transition-all hover:scale-[1.02] active:scale-[0.97] hover:bg-white/5"
+                  className="w-full px-6 py-3 text-base font-semibold rounded-xl border transition-all hover:scale-[1.02] active:scale-[0.97] hover:bg-glass-subtle"
                   style={{
                     background: 'linear-gradient(135deg, #7c3aed, #a78bfa)',
                     color: 'white',

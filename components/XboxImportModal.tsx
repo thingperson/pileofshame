@@ -293,8 +293,8 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
                   <label
                     key={game.titleId}
                     className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
-                      selected.has(game.titleId) ? 'bg-white/5' : ''
-                    } ${isExisting ? 'opacity-40' : 'hover:bg-white/5'}`}
+                      selected.has(game.titleId) ? 'bg-glass-subtle' : ''
+                    } ${isExisting ? 'opacity-40' : 'hover:bg-glass-subtle'}`}
                   >
                     <input
                       type="checkbox"

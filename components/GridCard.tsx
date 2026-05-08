@@ -155,7 +155,7 @@ export default function GridCard({ game }: GridCardProps) {
           {hasAchievements && (
             <div
               className="w-full h-[3px] rounded-full overflow-hidden"
-              style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
+              style={{ backgroundColor: 'var(--color-glass-medium)' }}
               title={`${game.achievements!.earned}/${game.achievements!.total} achievements (${achievementPct}%)${game.achievements!.earnedPlatinum ? ' - Platinum!' : ''}`}
             >
               <div

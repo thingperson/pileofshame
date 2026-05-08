@@ -264,14 +264,14 @@ const JustFiveMinutes = forwardRef<JustFiveMinutesHandle, JustFiveMinutesProps>(
                 <button
                   onClick={() => handleTriage('pile')}
                   className="px-3 py-2.5 text-sm font-bold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'var(--color-text-muted)' }}
+                  style={{ backgroundColor: 'var(--color-glass-subtle)', color: 'var(--color-text-muted)' }}
                 >
                   📚 Back to The Pile
                 </button>
                 <button
                   onClick={() => handleTriage('bail')}
                   className="px-3 py-2.5 text-sm font-bold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'var(--color-text-dim)' }}
+                  style={{ backgroundColor: 'var(--color-glass-subtle)', color: 'var(--color-text-dim)' }}
                 >
                   🚪 Not for me
                 </button>
@@ -303,7 +303,7 @@ const JustFiveMinutes = forwardRef<JustFiveMinutesHandle, JustFiveMinutesProps>(
           {/* Mini progress ring */}
           <div className="relative w-10 h-10 shrink-0">
             <svg className="w-10 h-10 -rotate-90" viewBox="0 0 40 40">
-              <circle cx="20" cy="20" r="16" stroke="rgba(255,255,255,0.06)" strokeWidth="3" fill="none" />
+              <circle cx="20" cy="20" r="16" stroke="var(--color-glass-border)" strokeWidth="3" fill="none" />
               <circle
                 cx="20" cy="20" r="16"
                 stroke="#34d399"

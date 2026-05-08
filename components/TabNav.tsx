@@ -111,7 +111,7 @@ export default function TabNav({ activeTab, onTabChange, counts, flashingTab }: 
               <span
                 className="text-xs font-[family-name:var(--font-mono)] px-1.5 py-0.5 rounded-full"
                 style={{
-                  backgroundColor: active ? `${tab.color}20` : 'rgba(255,255,255,0.06)',
+                  backgroundColor: active ? `${tab.color}20` : 'var(--color-glass-subtle)',
                   color: active ? tab.color : 'var(--color-text-faint)',
                 }}
                 aria-label={`${count} game${count !== 1 ? 's' : ''}`}

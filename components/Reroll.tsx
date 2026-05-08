@@ -470,7 +470,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
         <button
           onClick={handleNotNow}
           aria-label="Close"
-          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full text-text-dim hover:text-text-primary hover:bg-white/10 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
+          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full text-text-dim hover:text-text-primary hover:bg-glass-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
         >
           ✕
         </button>
@@ -632,11 +632,11 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                       <button
                         key={mood}
                         onClick={() => toggleMood(mood)}
-                        className={`px-3 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 ${active ? 'scale-[1.02]' : 'hover:bg-white/10'}`}
+                        className={`px-3 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 ${active ? 'scale-[1.02]' : 'hover:bg-glass-medium'}`}
                         style={{
-                          backgroundColor: active ? `${config.color}25` : 'rgba(255,255,255,0.05)',
+                          backgroundColor: active ? `${config.color}25` : 'var(--color-glass-subtle)',
                           color: active ? config.color : 'var(--color-text-muted)',
-                          border: active ? `1px solid ${config.color}50` : '1px solid rgba(255,255,255,0.08)',
+                          border: active ? `1px solid ${config.color}50` : '1px solid var(--color-glass-border)',
                         }}
                       >
                         {hasSprite(config.spriteKey) ? (
@@ -689,7 +689,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
               )}
             </div>
             {showRollSettings && (
-              <div className="mb-4 pb-3 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+              <div className="mb-4 pb-3 border-b" style={{ borderColor: 'var(--color-glass-border)' }}>
                 {/* Mode switcher pills */}
                 <div className="flex flex-wrap justify-center gap-1.5 mb-2">
                   {REROLL_MODES.map(({ mode: m, icon, label }) => (
@@ -698,8 +698,8 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                       onClick={() => { setMode(m); }}
                       className={`px-3 py-2 rounded-full text-sm font-medium font-[family-name:var(--font-mono)] transition-all ${
                         mode === m
-                          ? 'bg-white/10 text-text-primary'
-                          : 'text-text-dim hover:text-text-muted hover:bg-white/5'
+                          ? 'bg-glass-medium text-text-primary'
+                          : 'text-text-dim hover:text-text-muted hover:bg-glass-subtle'
                       }`}
                       title={label}
                     >
@@ -712,7 +712,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                       const next = levels[(levels.indexOf(sessionLength) + 1) % levels.length];
                       setSessionLength(next);
                     }}
-                    className="px-3 py-2 rounded-full text-sm font-medium font-[family-name:var(--font-mono)] text-text-dim hover:text-text-muted hover:bg-white/5 transition-all"
+                    className="px-3 py-2 rounded-full text-sm font-medium font-[family-name:var(--font-mono)] text-text-dim hover:text-text-muted hover:bg-glass-subtle transition-all"
                     title={`Session length: ${sessionLength}. Tap to change.`}
                   >
                     {sessionLength === 'small' ? '🚣 Small' : sessionLength === 'large' ? '🚢 Large' : '⛵ Medium'}
@@ -729,10 +729,10 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                         key={mood}
                         onClick={() => { toggleMood(mood); }}
                         className={`px-2.5 py-1.5 rounded-full text-xs font-medium transition-all ${
-                          active ? 'scale-[1.02]' : 'hover:bg-white/10'
+                          active ? 'scale-[1.02]' : 'hover:bg-glass-medium'
                         }`}
                         style={{
-                          backgroundColor: active ? `${config.color}25` : 'rgba(255,255,255,0.03)',
+                          backgroundColor: active ? `${config.color}25` : 'var(--color-glass-subtle)',
                           color: active ? config.color : 'var(--color-text-muted)',
                         }}
                       >
@@ -861,7 +861,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                 }
                 if (!trigger && reasons.length === 0) return null;
                 return (
-                  <div className="mt-3 pt-2 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                  <div className="mt-3 pt-2 border-t" style={{ borderColor: 'var(--color-glass-border)' }}>
                     <button
                       type="button"
                       onClick={() => setShowWhyThisOne((v) => !v)}
@@ -889,7 +889,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                           <span
                             key={i}
                             className="text-xs text-text-muted font-[family-name:var(--font-mono)] px-2 py-1 rounded-md"
-                            style={{ backgroundColor: 'rgba(255,255,255,0.04)' }}
+                            style={{ backgroundColor: 'var(--color-glass-subtle)' }}
                           >
                             {r.icon} {r.label}
                           </span>
@@ -938,10 +938,10 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                         <button
                           key={key}
                           onClick={() => handleSkipFeedback(key)}
-                          className="px-2.5 py-1.5 rounded-full text-xs font-medium font-[family-name:var(--font-mono)] text-text-dim transition-all hover:text-text-muted hover:bg-white/10 inline-flex items-center gap-1.5"
+                          className="px-2.5 py-1.5 rounded-full text-xs font-medium font-[family-name:var(--font-mono)] text-text-dim transition-all hover:text-text-muted hover:bg-glass-medium inline-flex items-center gap-1.5"
                           style={{
-                            backgroundColor: 'rgba(255,255,255,0.04)',
-                            border: '1px solid rgba(255,255,255,0.06)',
+                            backgroundColor: 'var(--color-glass-subtle)',
+                            border: '1px solid var(--color-glass-border)',
                           }}
                         >
                           {hasSprite(spriteKey) ? (
@@ -963,7 +963,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                 2026-04-27: the close (×) in the modal header already serves
                 that exit. The picker only needs two answers from the user
                 here: "this one" or "show me another." */}
-            <div className="flex flex-col items-center px-5 py-4 shrink-0 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)', backgroundColor: 'var(--color-bg-elevated)' }}>
+            <div className="flex flex-col items-center px-5 py-4 shrink-0 border-t" style={{ borderColor: 'var(--color-glass-border)', backgroundColor: 'var(--color-bg-elevated)' }}>
               <button
                 onClick={() => handleLetsGo(currentPick)}
                 className="w-full px-3 py-3.5 sm:py-2.5 text-base sm:text-sm font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"

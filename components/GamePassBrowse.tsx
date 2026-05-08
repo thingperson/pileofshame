@@ -344,7 +344,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
                   className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
                     active ? 'text-white scale-[1.02]' : 'text-text-dim hover:text-text-muted opacity-60'
                   }`}
-                  style={active ? { background: cfg.gradient } : { backgroundColor: 'rgba(255,255,255,0.05)' }}
+                  style={active ? { background: cfg.gradient } : { backgroundColor: 'var(--color-glass-subtle)' }}
                 >
                   {cfg.icon} {cfg.label}
                 </button>
@@ -398,8 +398,8 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
                     onClick={() => setPlatformFilter(pf)}
                     className={`px-3 py-1.5 rounded-full text-xs font-medium font-[family-name:var(--font-mono)] transition-all ${
                       platformFilter === pf
-                        ? 'bg-white/10 text-text-primary'
-                        : 'text-text-dim hover:text-text-muted hover:bg-white/5'
+                        ? 'bg-glass-medium text-text-primary'
+                        : 'text-text-dim hover:text-text-muted hover:bg-glass-subtle'
                     }`}
                   >
                     {pf === 'all' ? 'All' : pf}
@@ -446,7 +446,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
                           : 'opacity-60 hover:opacity-90'
                       }`}
                       style={{
-                        backgroundColor: active ? `${config.color}25` : 'rgba(255,255,255,0.05)',
+                        backgroundColor: active ? `${config.color}25` : 'var(--color-glass-subtle)',
                         color: active ? config.color : 'var(--color-text-dim)',
                         border: active ? `1px solid ${config.color}50` : '1px solid transparent',
                       }}
@@ -482,8 +482,8 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
                   onClick={() => { setMode(m); doRoll(m); }}
                   className={`px-3 py-2 rounded-full text-xs font-medium font-[family-name:var(--font-mono)] transition-all ${
                     mode === m
-                      ? 'bg-white/10 text-text-primary'
-                      : 'text-text-dim hover:text-text-muted hover:bg-white/5'
+                      ? 'bg-glass-medium text-text-primary'
+                      : 'text-text-dim hover:text-text-muted hover:bg-glass-subtle'
                   }`}
                   title={label}
                 >
@@ -595,7 +595,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
 
                 {/* Mood tags */}
                 {currentPick.moodTags && currentPick.moodTags.length > 0 && (
-                  <div className="mt-3 pt-2 border-t flex flex-wrap justify-center gap-1.5" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                  <div className="mt-3 pt-2 border-t flex flex-wrap justify-center gap-1.5" style={{ borderColor: 'var(--color-glass-border)' }}>
                     {currentPick.moodTags.map((mood) => {
                       const config = MOOD_TAG_CONFIG[mood];
                       return (

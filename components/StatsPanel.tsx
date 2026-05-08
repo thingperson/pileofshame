@@ -111,7 +111,7 @@ function DecisionEngineSection({ showToast }: { showToast: (msg: string) => void
           </span>
         </div>
       </div>
-      <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+      <div className="mt-3 pt-3 border-t" style={{ borderColor: 'var(--color-glass-border)' }}>
         <button
           onClick={handleReset}
           className="text-xs font-medium font-[family-name:var(--font-mono)] transition-colors"
@@ -432,7 +432,7 @@ export default function StatsPanel({ games }: StatsPanelProps) {
               </div>
             )}
             <div className="flex items-center gap-2 shrink-0 hidden sm:flex">
-              <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
+              <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--color-glass-medium)' }}>
                 <div
                   className="h-full rounded-full transition-all duration-500"
                   style={{ width: `${explorationPct}%`, backgroundColor: '#a78bfa' }}

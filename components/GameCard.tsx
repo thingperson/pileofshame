@@ -68,7 +68,7 @@ function JumpBackIn({ game }: { game: Game }) {
                   <span className="text-amber-300/60">Mid-game</span>
                 )}
               </div>
-              <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
+              <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--color-glass-subtle)' }}>
                 <div
                   className="h-full rounded-full transition-all"
                   style={{
@@ -620,7 +620,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider
               font-[family-name:var(--font-mono)] transition-all duration-150
               ${game.status !== 'played' && game.status !== 'bailed'
-                ? 'hover:brightness-125 active:scale-95 cursor-pointer ring-1 ring-white/10 hover:ring-white/25'
+                ? 'hover:brightness-125 active:scale-95 cursor-pointer ring-1 ring-border-subtle hover:ring-border-active'
                 : 'cursor-default'}
             `}
             style={{
@@ -671,7 +671,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               relative flex items-center gap-1.5 px-2.5 py-2 sm:py-1.5 rounded-lg text-xs font-medium
               font-[family-name:var(--font-mono)] transition-all duration-150
               ${game.status !== 'played' && game.status !== 'bailed'
-                ? 'hover:brightness-125 active:scale-95 cursor-pointer ring-1 ring-white/10 hover:ring-white/25'
+                ? 'hover:brightness-125 active:scale-95 cursor-pointer ring-1 ring-border-subtle hover:ring-border-active'
                 : 'cursor-default'}
               ${showBadgeHint ? 'animate-[pulse_2s_ease-in-out_3]' : ''}
             `}
@@ -794,7 +794,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
           {regressAction && (
             <button
               onClick={(e) => { e.stopPropagation(); regressAction.onClick(); }}
-              className="px-3 py-2 text-xs font-medium font-[family-name:var(--font-mono)] rounded-md text-text-dim hover:text-text-muted hover:bg-white/5 transition-all"
+              className="px-3 py-2 text-xs font-medium font-[family-name:var(--font-mono)] rounded-md text-text-dim hover:text-text-muted hover:bg-glass-subtle transition-all"
             >
               {regressAction.label}
             </button>
@@ -896,7 +896,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                 return (
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 h-2 rounded-full overflow-hidden" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label={`${game.source === 'playstation' ? 'Trophy' : 'Achievement'} progress: ${pct}%`} style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
+                      <div className="flex-1 h-2 rounded-full overflow-hidden" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label={`${game.source === 'playstation' ? 'Trophy' : 'Achievement'} progress: ${pct}%`} style={{ backgroundColor: 'var(--color-glass-medium)' }}>
                         <div
                           className="h-full rounded-full transition-all duration-500"
                           style={{
@@ -1047,9 +1047,9 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                       {similar.map((g) => (
                         <div key={g.id} className="flex-shrink-0 w-16" title={g.name}>
                           {g.coverUrl ? (
-                            <img src={g.coverUrl} alt={g.name} className="w-16 h-20 rounded object-cover border border-white/10" />
+                            <img src={g.coverUrl} alt={g.name} className="w-16 h-20 rounded object-cover border border-border-subtle" />
                           ) : (
-                            <div className="w-16 h-20 rounded bg-bg-elevated border border-white/10 flex items-center justify-center text-xs text-text-faint">🎮</div>
+                            <div className="w-16 h-20 rounded bg-bg-elevated border border-border-subtle flex items-center justify-center text-xs text-text-faint">🎮</div>
                           )}
                           <p className="text-[10px] text-text-dim mt-1 truncate">{g.name}</p>
                         </div>
