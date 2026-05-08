@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Outfit, JetBrains_Mono, Nunito, Bebas_Neue } from "next/font/google";
 import CookieBanner from "@/components/CookieBanner";
 import FeedbackWidget from "@/components/FeedbackWidget";
+import ThemeClass from "@/components/ThemeClass";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -248,6 +249,7 @@ export default function RootLayout({
             }),
           }}
         />
+        <ThemeClass />
         {children}
         <FeedbackWidget />
         <CookieBanner />

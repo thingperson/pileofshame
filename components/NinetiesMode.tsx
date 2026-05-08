@@ -522,27 +522,9 @@ function CozyBanner() {
 // MAIN THEME WRAPPER
 // ============================
 
-const THEME_CLASSES = ['theme-90s', 'theme-80s', 'theme-future', 'theme-light', 'theme-dino', 'theme-weird', 'theme-ultra', 'theme-void', 'theme-cozy', 'theme-minimal', 'theme-tropical', 'theme-campfire', 'theme-poster'];
-
 export default function NinetiesMode({ children }: { children: React.ReactNode }) {
   const theme = useStore((s) => s.settings.theme);
-  // Landing (empty library) renders its own integrated header with wordmark + nav,
-  // so the default banner is suppressed to avoid a second duplicate wordmark row.
   const isLanding = useStore((s) => s.games.length === 0);
-
-  useEffect(() => {
-    // Remove all theme classes
-    THEME_CLASSES.forEach((cls) => document.body.classList.remove(cls));
-    // Add current theme class
-    const cls = `theme-${theme}`;
-    if (THEME_CLASSES.includes(cls)) {
-      document.body.classList.add(cls);
-    }
-
-    return () => {
-      THEME_CLASSES.forEach((c) => document.body.classList.remove(c));
-    };
-  }, [theme]);
 
   if (theme === '90s') {
     return (

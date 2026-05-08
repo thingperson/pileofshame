@@ -40,11 +40,17 @@
 | [smaller-surgeries.md](smaller-surgeries.md) | Queue of self-contained ~30–60 min surgeries (roll modal, stats, undo toast, retroKids, etc.) | PLANNING | Pick any when window opens |
 | [on-the-horizon.md](on-the-horizon.md) | Bigger workflow builds — visual regression loop, parallel sprint agents, self-healing site integrity | PLANNING | Per-build trigger; modal/surgery queues clear first |
 
+## In-flight specs
+
+| Doc | Subject | Status | Trigger to act |
+|---|---|---|---|
+| [app-theme-spec.md](app-theme-spec.md) | Cream light theme migration spec — token map, component audit, phased rollout | SHIPPED (phase 1–2) | Phase 3 polish when window opens |
+
 ## Session resumes
 
 `docs/session-resume-YYYY-MM-DD.md` — current-state pointer, written at session close. Always read the latest at session start.
 
-Latest: [`session-resume-2026-05-04.md`](session-resume-2026-05-04.md) (when written).
+Latest: [`session-resume-2026-05-07.md`](session-resume-2026-05-07.md) (when written).
 
 ## Audits
 
