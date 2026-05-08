@@ -162,7 +162,7 @@ export default function GameSearch({ value, onChange, onSelect }: GameSearchProp
               onClick={() => handleSelect(result)}
               onMouseEnter={() => setActiveIndex(idx)}
               className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${
-                activeIndex === idx ? 'bg-white/10' : 'hover:bg-white/5'
+                activeIndex === idx ? 'bg-glass-medium' : 'hover:bg-glass-subtle'
               }`}
             >
               {result.coverUrl ? (

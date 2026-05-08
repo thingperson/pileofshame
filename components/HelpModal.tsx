@@ -213,7 +213,7 @@ export default function HelpModal({ open, onClose }: HelpModalProps) {
               className={`px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
                 activeSection === s.id
                   ? 'bg-accent-purple/15 text-accent-purple'
-                  : 'text-text-dim hover:text-text-muted hover:bg-white/5'
+                  : 'text-text-dim hover:text-text-muted hover:bg-glass-subtle'
               }`}
             >
               {s.icon} {s.title}

@@ -173,7 +173,7 @@ function ImportHubModal({ open, onClose, setActiveImport }: { open: boolean; onC
             <button
               key={platform.id}
               onClick={() => setActiveImport(platform.id)}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-colors hover:bg-white/5 cursor-pointer"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-colors hover:bg-glass-subtle cursor-pointer"
               style={{ backgroundColor: 'var(--color-bg-card)' }}
             >
               <span className="text-xl shrink-0">{platform.icon}</span>

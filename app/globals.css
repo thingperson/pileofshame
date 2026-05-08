@@ -32,6 +32,11 @@
   --color-vibe-mindless: #fbbf24;
   --color-vibe-philosophical: #34d399;
 
+  --color-glass-subtle: rgba(255,255,255,0.05);
+  --color-glass-medium: rgba(255,255,255,0.10);
+  --color-glass-border: rgba(255,255,255,0.08);
+  --color-glass-overlay: rgba(0,0,0,0.5);
+
   --font-display: "Outfit", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 }
@@ -97,6 +102,13 @@ body::before {
 ::-webkit-scrollbar-thumb:hover {
   background: #475569;
 }
+
+/* Theme-aware glass utilities */
+.bg-glass-subtle { background-color: var(--color-glass-subtle); }
+.bg-glass-medium { background-color: var(--color-glass-medium); }
+.border-glass { border-color: var(--color-glass-border); }
+.hover\:bg-glass-subtle:hover { background-color: var(--color-glass-subtle); }
+.hover\:bg-glass-medium:hover { background-color: var(--color-glass-medium); }
 
 /* Now Playing glow */
 .now-playing-glow {
@@ -956,21 +968,21 @@ button:active:not(:disabled) {
    ====================================== */
 
 .theme-light {
-  --color-bg-primary: #f4f5f7 !important;
+  --color-bg-primary: #F5F0EB !important;
   --color-bg-card: #ffffff !important;
-  --color-bg-elevated: #edeef1 !important;
-  --color-border-subtle: #d4d6dc !important;
-  --color-border-active: #7c3aed !important;
-  --color-text-primary: #111827 !important;
-  --color-text-secondary: #1f2937 !important;
-  --color-text-muted: #4b5563 !important;
-  --color-text-dim: #6b7280 !important;
-  --color-text-faint: #595e69 !important;     /* was #7a828f (3.95:1 fail) → 6.51:1 PASS body */
+  --color-bg-elevated: #EDE8E3 !important;
+  --color-border-subtle: #D9D3CC !important;
+  --color-border-active: #E91E63 !important;
+  --color-text-primary: #1a1a1a !important;
+  --color-text-secondary: #2d2d2d !important;
+  --color-text-muted: #555555 !important;
+  --color-text-dim: #6b6b6b !important;
+  --color-text-faint: #888888 !important;
   --color-accent-purple: #7c3aed !important;
-  --color-accent-pink: #ec4899 !important;
+  --color-accent-pink: #E91E63 !important;
 
   --color-status-buried: #6b7280 !important;
-  --color-status-buried-bg: #f3f4f6 !important;
+  --color-status-buried-bg: #f0ebe6 !important;
   --color-status-on-deck: #2563eb !important;
   --color-status-on-deck-bg: #dbeafe !important;
   --color-status-playing: #d97706 !important;
@@ -980,18 +992,32 @@ button:active:not(:disabled) {
   --color-status-bailed: #dc2626 !important;
   --color-status-bailed-bg: #fee2e2 !important;
 
-  background: #f4f5f7 !important;
+  --color-vibe-cozy: #db2777 !important;
+  --color-vibe-narrative: #2563eb !important;
+  --color-vibe-atmospheric: #7c3aed !important;
+  --color-vibe-challenge: #dc2626 !important;
+  --color-vibe-mindless: #d97706 !important;
+  --color-vibe-philosophical: #059669 !important;
+
+  --color-glass-subtle: rgba(0,0,0,0.04) !important;
+  --color-glass-medium: rgba(0,0,0,0.07) !important;
+  --color-glass-border: rgba(0,0,0,0.08) !important;
+  --color-glass-overlay: rgba(0,0,0,0.3) !important;
+
+  background: #F5F0EB !important;
 }
 
 .theme-light::before {
-  display: none !important;
+  background:
+    radial-gradient(ellipse 600px 400px at 80% 10%, rgba(233, 30, 99, 0.03), transparent),
+    radial-gradient(ellipse 500px 400px at 20% 90%, rgba(0, 188, 212, 0.02), transparent) !important;
 }
 
 /* Light mode cards — shadow instead of glow, solid backgrounds */
 .theme-light .group {
   background-color: #ffffff !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-  border-color: #d4d6dc !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  border-color: #D9D3CC !important;
 }
 .theme-light .group:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -1000,7 +1026,7 @@ button:active:not(:disabled) {
 /* All text in light mode needs dark colors */
 .theme-light .text-text-primary,
 .theme-light [class*="text-text-primary"] {
-  color: #111827 !important;
+  color: #1a1a1a !important;
 }
 
 /* Fix select/input/textarea backgrounds */
@@ -1008,17 +1034,17 @@ button:active:not(:disabled) {
 .theme-light input,
 .theme-light textarea {
   background-color: #ffffff !important;
-  color: #111827 !important;
-  border-color: #d4d6dc !important;
+  color: #1a1a1a !important;
+  border-color: #D9D3CC !important;
 }
 .theme-light select option {
   background-color: #ffffff;
-  color: #111827;
+  color: #1a1a1a;
 }
 
 /* Fix filter bar buttons/dropdowns */
 .theme-light .bg-bg-primary {
-  background-color: #f4f5f7 !important;
+  background-color: #F5F0EB !important;
 }
 .theme-light .bg-bg-card {
   background-color: #ffffff !important;
@@ -1027,7 +1053,7 @@ button:active:not(:disabled) {
 /* Fix elevated panels (stats, modals) */
 .theme-light [style*="bg-elevated"],
 .theme-light [style*="color-bg-elevated"] {
-  background-color: #edeef1 !important;
+  background-color: #EDE8E3 !important;
 }
 
 /* Fix gradient buttons in light mode — keep white text */
@@ -1038,13 +1064,13 @@ button:active:not(:disabled) {
 /* Fix modals and dropdowns */
 .theme-light [class*="rounded-2xl"],
 .theme-light [class*="rounded-xl"] {
-  color: #111827;
+  color: #1a1a1a;
 }
 
 /* Settings menu / dropdown panels */
 .theme-light .z-40 {
   background-color: #ffffff !important;
-  border-color: #d4d6dc !important;
+  border-color: #D9D3CC !important;
 }
 
 /* Status badge text legibility */
@@ -1054,11 +1080,17 @@ button:active:not(:disabled) {
 
 /* Light scrollbar */
 .theme-light ::-webkit-scrollbar-thumb {
-  background: #c4c4d0;
+  background: #C5BFB8;
   border-radius: 4px;
 }
 .theme-light ::-webkit-scrollbar-track {
-  background: #f0f0f5;
+  background: transparent;
+}
+
+/* Light mode now-playing glow — pink instead of amber on warm bg */
+.theme-light .now-playing-glow {
+  box-shadow: 0 0 12px rgba(233, 30, 99, 0.15), 0 0 4px rgba(233, 30, 99, 0.08);
+  border-color: rgba(233, 30, 99, 0.3) !important;
 }
 
 
@@ -1759,9 +1791,9 @@ button:active:not(:disabled) {
   }
 }
 
-/* Light theme — keep the "IN" dark for contrast on light bg */
+/* Light theme — pink "IN" to match landing accent */
 .theme-light .default-banner {
-  --wordmark-in: #320b5e;
+  --wordmark-in: #E91E63;
 }
 .theme-light .default-banner-wordmark {
   filter: none;

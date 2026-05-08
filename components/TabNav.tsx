@@ -86,7 +86,7 @@ export default function TabNav({ activeTab, onTabChange, counts, flashingTab }: 
             className={`shrink-0 flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-t-lg sm:rounded-lg text-sm font-medium transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple relative sm:static -mb-px sm:mb-0 ${
               active
                 ? 'text-text-primary'
-                : 'text-text-dim hover:text-text-muted hover:bg-white/5'
+                : 'text-text-dim hover:text-text-muted hover:bg-glass-subtle'
             } ${flashingTab === tab.id ? 'tab-flash' : ''}`}
             style={active ? {
               backgroundColor: `${tab.color}15`,

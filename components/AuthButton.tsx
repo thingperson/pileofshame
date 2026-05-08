@@ -40,7 +40,7 @@ export default function AuthButton() {
       <div className="relative">
         <button
           onClick={() => setShowMenu(!showMenu)}
-          className="flex items-center gap-0 sm:gap-2 px-2 py-1 rounded-lg hover:bg-white/5 transition-colors min-h-[44px] sm:min-h-0"
+          className="flex items-center gap-0 sm:gap-2 px-2 py-1 rounded-lg hover:bg-glass-subtle transition-colors min-h-[44px] sm:min-h-0"
         >
           {avatarUrl ? (
             <img src={avatarUrl} alt="" className="w-7 h-7 shrink-0 rounded-full" />

@@ -86,7 +86,7 @@ function InlineSearch({ onAddManual }: { onAddManual: () => void }) {
           </div>
           <button
             onMouseDown={(e) => { e.preventDefault(); onAddManual(); }}
-            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-text-dim hover:text-accent-purple hover:bg-white/5 transition-all"
+            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-text-dim hover:text-accent-purple hover:bg-glass-subtle transition-all"
             title="Add a game manually"
             aria-label="Add a game manually"
           >
@@ -836,7 +836,7 @@ function AppContent() {
           {/* Search active indicator */}
           {filters.search && (
             <div className="mb-3">
-              <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-white/5">
+              <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-glass-subtle">
                 <span className="text-xs text-text-dim">Searching: &ldquo;{filters.search}&rdquo;</span>
                 <button
                   onClick={() => setFilter('search', '')}

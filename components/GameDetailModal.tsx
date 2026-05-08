@@ -107,7 +107,7 @@ export default function GameDetailModal({ game, onClose }: GameDetailModalProps)
         {/* Close button — desktop */}
         <button
           onClick={handleClose}
-          className="absolute top-3 right-3 z-10 w-7 h-7 flex items-center justify-center rounded-lg text-text-dim hover:text-text-muted hover:bg-white/5 transition-colors hidden sm:flex"
+          className="absolute top-3 right-3 z-10 w-7 h-7 flex items-center justify-center rounded-lg text-text-dim hover:text-text-muted hover:bg-glass-subtle transition-colors hidden sm:flex"
           aria-label="Close"
         >
           ✕

@@ -16,7 +16,7 @@ export default function ViewToggle() {
       <button
         onClick={() => setViewMode('list')}
         className={`px-3 py-2.5 sm:px-2.5 sm:py-1.5 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center text-xs transition-colors ${
-          viewMode === 'list' ? 'text-text-primary bg-white/5' : 'text-text-dim hover:text-text-muted'
+          viewMode === 'list' ? 'text-text-primary bg-glass-subtle' : 'text-text-dim hover:text-text-muted'
         }`}
         title="List view"
       >
@@ -27,7 +27,7 @@ export default function ViewToggle() {
       <button
         onClick={() => setViewMode('grid')}
         className={`px-3 py-2.5 sm:px-2.5 sm:py-1.5 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center text-xs transition-colors ${
-          viewMode === 'grid' ? 'text-text-primary bg-white/5' : 'text-text-dim hover:text-text-muted'
+          viewMode === 'grid' ? 'text-text-primary bg-glass-subtle' : 'text-text-dim hover:text-text-muted'
         }`}
         title="Grid view"
       >
