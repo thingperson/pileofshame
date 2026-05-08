@@ -93,7 +93,7 @@
 
 ### Themes
 - Dark (default) ✅
-- Light ✅
+- Light (v2: warm cream palette matching landing-v2, glass token system) ✅
 - 90s (full easter egg: marquee, cursor trails, guestbook, visitor counter) ✅
 - 80s (synthwave gradients) ✅
 - Future, Ultra, Void ✅
@@ -119,7 +119,7 @@
 ### Infrastructure
 - Supabase auth + cloud sync ✅
 - Google + GitHub OAuth ✅
-- OG image for Discord/Twitter/SMS unfurls (v3: hero illustration, landing headline, Outfit + JetBrains Mono fonts, purple glow) ✅
+- OG image for Discord/Twitter/SMS unfurls (v4: cream Pip card matching landing-v2, feature pills, wordmark SVG) ✅
 - GA4 analytics — full event set incl. `landing_view`, with `mood`/`session_length`/`archetype`/`smart_pick_type` params ✅
 - PWA manifest + 192/512px icons + apple-icon fix ✅
 - Token efficiency restructure (plan file 94% reduction, path-scoped rules) ✅
@@ -148,6 +148,9 @@
 - OPENXBL_API_KEY confirmed in Vercel env vars ✅
 
 ### Landing Page — SHIPPED ✅
+- V2 merged as default (2026-05-08): angular composition, scroll reveals, Pip character, vibe picker, cream palette ✅
+- Original preserved as LandingPageClassic.tsx ✅
+- About page redesigned to match V2 ✅
 - Hero illustration + bold brand banner with logomark ✅
 - Mono banner, transparent hero, tighter spacing ✅
 - "Get Started" hero CTA → GetStartedModal with all entry paths ✅

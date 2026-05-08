@@ -15,6 +15,20 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-05-08 — Theme class application moved to root layout
+
+**Decision.** Extracted theme class logic from NinetiesMode (which only ran on `page.tsx`) into a dedicated `ThemeClass` component in the root layout (`app/layout.tsx`). All routes now get the theme class on `<body>`.
+
+**Why.**
+- NinetiesMode lived inside `page.tsx`, so `/stats`, `/about`, and every other route never received the `theme-light` (or any theme) class. This was invisible while dark was the only theme (dark = default CSS values), but broke immediately when light theme shipped.
+- The fix is a clean separation: ThemeClass handles the global concern (CSS class on body), NinetiesMode handles the 90s-specific effects (scanlines, CRT, etc.).
+
+**Implementation.** `components/ThemeClass.tsx` (new), `app/layout.tsx` (import + render), `components/NinetiesMode.tsx` (removed duplicate useEffect + dead `THEME_CLASSES` const). Commit `ed43373`.
+
+**Rejected.** Moving all of NinetiesMode into root layout — too heavy, it renders theme-specific UI (banners, scanlines) that only belongs on the home page.
+
+---
+
 ## 2026-05-05 — Pre-push lint gate demoted to non-blocking
 
 **Decision.** The blocking eslint pre-push hook (shipped in `d0d9ab1`, same day) was demoted to informational-only in `6103117`. CI remains the hard gate for lint errors.
