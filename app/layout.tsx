@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Outfit, JetBrains_Mono, Nunito } from "next/font/google";
+import { Outfit, JetBrains_Mono, Nunito, Bebas_Neue } from "next/font/google";
 import CookieBanner from "@/components/CookieBanner";
 import FeedbackWidget from "@/components/FeedbackWidget";
 import "./globals.css";
@@ -8,6 +8,12 @@ const outfit = Outfit({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+});
+
+const bebasNeue = Bebas_Neue({
+  variable: "--font-condensed",
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 const nunito = Nunito({
@@ -120,7 +126,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${jetbrainsMono.variable} ${nunito.variable} h-full antialiased`}
+      className={`${outfit.variable} ${jetbrainsMono.variable} ${nunito.variable} ${bebasNeue.variable} h-full antialiased`}
     >
       <head>
           <link rel="preload" as="image" href="/IF-landing-BG.webp" type="image/webp" />

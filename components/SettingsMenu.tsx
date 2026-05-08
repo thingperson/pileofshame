@@ -390,6 +390,7 @@ export default function SettingsMenu({ onOpenImport, onOpenSearch }: SettingsMen
                             //   { value: 'minimal', label: '- Minimal' },
                             //   { value: 'tropical', label: '🌴 Tropical' },
                             //   { value: 'campfire', label: '🔥 Campfire' },
+                            { value: 'poster', label: '🎀 Poster' },
                           ].map((opt) => (
                             <button
                               key={opt.value}
