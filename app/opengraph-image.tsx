@@ -6,59 +6,29 @@ export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
 async function loadFonts() {
-  const [outfitRegular, outfitBold, jetbrainsMono] = await Promise.all([
+  const [outfitRegular, outfitBold, outfitBlack, jetbrainsMono] = await Promise.all([
     fetch('https://fonts.gstatic.com/s/outfit/v15/QGYyz_MVcBeNP4NjuGObqx1XmO1I4TC1C4E.ttf').then(r => r.arrayBuffer()),
     fetch('https://fonts.gstatic.com/s/outfit/v15/QGYyz_MVcBeNP4NjuGObqx1XmO1I4bCyC4E.ttf').then(r => r.arrayBuffer()),
+    fetch('https://fonts.gstatic.com/s/outfit/v15/QGYyz_MVcBeNP4NjuGObqx1XmO1I4ZmyC4E.ttf').then(r => r.arrayBuffer()),
     fetch('https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8-qxjPQ.ttf').then(r => r.arrayBuffer()),
   ]);
-  return { outfitBold, outfitRegular, jetbrainsMono };
+  return { outfitBold, outfitRegular, outfitBlack, jetbrainsMono };
 }
 
-// Inline wordmark paths (mirrors components/Wordmark.tsx) so satori renders
-// actual brand glyphs — external SVG <img> is unreliable in @vercel/og.
+// Inline wordmark paths — same as components/Wordmark.tsx
 const BODY_PATH =
   'm1592.68 702.2 107.69-50.26h157.95v116.14h-113.18v-61.66h-40.12v102.2H1822v55.33h-116.98v108.96h-112.34zm294.79-50.26h113.18v265.64h39.7V651.94h113.61v320.97h-266.49zm296.05 0h112.34v266.07h97.13v54.9h-209.48V651.94Zm238.61 0h112.34v266.07h97.13v54.9h-209.48V651.94Z';
 const IN_PATH =
   'M76.42 651.89h65.88v320.97H76.42zm91.22 51.1 64.62-51.1h91.22v320.97h-66.31V706.79h-23.23v266.07h-66.3zm181.17-51.1h64.62v266.07h23.23V651.89h65.88v271.98l-62.51 48.99h-91.22zm179.06 50.26 63.77-50.26h90.8v116.14h-65.88v-61.66h-23.23v102.2h67.99v55.33h-67.99v53.64h89.11v55.32H527.87zm179.91.84 64.62-51.1h91.22v320.97h-66.31V706.79h-23.23v266.07h-66.3zm216.23 3.81h-35.05v-54.9h137.26v54.9h-34.21v266.07h-67.99V706.8Zm127.54 0 66.3-54.9h88.69v266.49l-65.04 54.48h-89.95zm89.53 210.74V706.8h-23.23v210.74zm90.8-213.28 64.19-52.37h90.38v143.59l-36.74 40.54h36.74v136.84h-65.88V864.74h-22.81v108.12h-65.88zm88.69 100.51v-97.56h-22.81v97.56zm91.22 112.77h87.84v-54.9h-87.84V651.9h64.62v155.42h23.23V651.9h66.31v265.64l-64.19 55.32h-89.95v-55.32Z';
-const TAGLINE_PATHS: string[] = [
-  'M858.81 1124.66v-38.47c0-13.05 4.4-18 21.98-18h23.77v1.37h-23.77c-16.21 0-20.61 4.4-20.61 16.62v38.47c0 11.95 4.81 16.35 23.35 16.35h25.97v-26.24h1.38v27.61h-27.34c-20.19 0-24.73-4.95-24.73-17.72Z',
-  'M916.61 1148.11h-33.07c-18.8 0-30.45-3.92-30.45-23.45v-38.47c0-17.07 7.77-23.72 27.71-23.72h29.49v12.82H880.8c-14.88 0-14.88 3.42-14.88 10.9v38.47c0 6.85 0 10.62 17.63 10.62h20.24v-26.24h12.82v39.06Zm94.14-5.73h-46.3v-74.19h46.3v1.37h-44.92v34.48h33.8v1.38h-33.8V1141h44.92z',
-  'M1016.48 1148.11h-57.75v-85.64h57.75v12.82h-44.93v23.04h33.8v12.82h-33.8v24.13h44.93zm64.6-78.54h-28.16v-1.37h57.7v1.37h-28.16v72.81h-1.38z',
-  'M1088.18 1148.11h-12.82v-72.82h-28.17v-12.82h69.15v12.82h-28.16zm108.16-32.79v27.07h-1.38v-74.19h29.68c17.31 0 20.61 7.97 20.61 18.68v10.16c0 10.72-3.3 18.27-20.61 18.27h-28.3Zm28.3-1.38c16.21 0 19.23-7.01 19.23-16.9v-10.16c0-9.89-3.02-17.31-19.23-17.31h-28.3v44.38h28.3Z',
-  'M1202.06 1148.11h-12.82v-85.63h35.4c17.72 0 26.33 7.98 26.33 24.41v10.16c0 10.3-2.73 24-26.33 24h-22.58v27.07Zm0-39.89h22.58c12.86 0 13.51-4.25 13.51-11.18v-10.16c0-7.21-.91-11.59-13.51-11.59h-22.58zm93.05-40.02h1.37v72.81h47.81v-27.06h1.37v28.44h-50.56v-74.19Z',
-  'M1351.39 1148.11h-62.01v-85.64h12.82v72.81h36.37v-27.06h12.82zm98.54-29.36h-53.58v23.63h-1.38v-29.26c0-5.08.82-9.34 2.34-13.33l8.79-22.53c2.06-5.08 3.71-9.07 10.03-9.07h13.47c6.05 0 7.69 3.85 9.89 9.2l9.48 22.4c1.51 3.98 2.33 8.24 2.33 13.33v29.26h-1.37zm-53.58-1.37h53.58v-4.26c0-4.95-.82-9.07-2.2-12.78l-9.48-22.39c-2.06-4.81-3.57-8.38-8.65-8.38h-13.47c-5.49 0-7.01 3.57-8.79 8.24l-8.79 22.53c-1.37 3.71-2.2 7.83-2.2 12.78z',
-  'M1457.02 1148.11h-12.82v-23.63h-42.13v23.63h-12.82v-34.99c0-5.53.89-10.56 2.71-15.36l8.81-22.58c2.19-5.4 5.15-12.71 15.36-12.71h13.47c9.95 0 12.98 7.37 15.19 12.75l9.46 22.34c1.9 5.01 2.79 10.03 2.79 15.56v34.99Zm-54.92-36.45h42.07c-.13-3.34-.73-6.4-1.81-9.32l-9.38-22.15c-2.09-4.89-2.37-4.89-3.38-4.89h-13.47c-1.41 0-1.7 0-3.45 4.56l-8.81 22.57c-1.05 2.84-1.64 5.9-1.78 9.23Zm123.79 7.23v23.49h-1.37v-23.49h-1.38c-3.98 0-7.01-1.65-10.03-5.77l-13.33-18.55c-2.06-2.75-2.06-6.6-2.06-10.58v-15.8h1.38v15.8c0 3.85.14 7.28 1.92 10.03l13.33 18.55c2.47 3.71 5.63 4.95 8.79 4.95h3.71c3.43 0 6.18-1.38 8.93-4.95l13.74-18.55c1.92-2.47 1.92-6.18 1.92-10.03v-15.8h1.38v15.8c0 3.98.14 7.69-2.06 10.58l-13.74 18.55c-3.02 3.98-5.91 5.77-10.17 5.77z',
-  'M1531.61 1148.11h-12.82v-24.01c-3.95-1-7.28-3.48-10.29-7.59l-13.36-18.59c-3.14-4.18-3.14-9.35-3.14-13.92v-21.52h12.82V1084c0 2.94.08 5.49 1 6.91l13.17 18.33c1.52 2.27 2.88 2.56 4.14 2.56h3.71c1.26 0 2.46-.2 4.39-2.71l13.68-18.46c.8-1.03.8-4.26.8-6.62v-21.52h12.82v22.17c0 4.28.02 9.13-3.23 13.4l-13.69 18.49c-2.22 2.92-5.24 6.14-10.01 7.46v24.12Zm68.46-5.73V1141h21.29v-71.44h-21.29v-1.37h43.69v1.37h-21.02V1141h21.02v1.38z',
-  'M1649.48 1148.11h-55.14v-12.83h21.3v-59.99h-21.3v-12.82h55.14v12.82h-21.02v59.99h21.02zm99.09-21.94v-57.98h1.37v74.19h-1.37v-14.15l-51.93-58.25c-.28-.28-.41-.41-.69-.41s-.27.27-.27.41v72.4h-1.38v-72.68c0-1.1.82-1.65 1.65-1.65s1.1.28 2.06 1.24z',
-  'M1755.67 1148.11h-12.82v-17.69l-41.44-46.49v64.18h-12.82v-78.4c0-4.13 3.24-7.37 7.37-7.37 3.19 0 4.87 1.68 6.1 2.91l.24.25 40.56 45.63v-48.65h12.82v85.63Zm47.98-23.45v-38.47c0-13.05 4.4-18 21.98-18h23.77v1.37h-23.77c-16.21 0-20.61 4.4-20.61 16.62v38.47c0 11.95 4.81 16.35 23.35 16.35h25.97v-26.24h1.38v27.61h-27.34c-20.19 0-24.73-4.95-24.73-17.72Z',
-  'M1861.45 1148.11h-33.07c-18.8 0-30.45-3.92-30.45-23.45v-38.47c0-17.07 7.77-23.72 27.71-23.72h29.49v12.82h-29.49c-14.88 0-14.88 3.42-14.88 10.9v38.47c0 6.85 0 10.62 17.63 10.62h20.24v-26.24h12.82v39.06Zm800.77-174.4c-2.39 0-4.36-.85-5.9-2.57-1.54-1.71-2.31-3.64-2.31-5.81 0-2.39.77-4.38 2.31-5.98s3.51-2.39 5.9-2.39 4.39.8 5.99 2.39c1.6 1.6 2.4 3.59 2.4 5.98 0 2.17-.8 4.1-2.4 5.81-1.59 1.72-3.59 2.57-5.99 2.57m42.88 27.95v-12.34h20.03l5.54-5.54v-7.31h-25.57l-12.72-12.72v-37.53l12.72-12.72h38.16v75.44l-12.72 12.72zm25.57-75.81h-20.15l-5.54 5.54v27.2l5.54 5.54h20.15v-38.29Zm34.75 75.81v-12.34h20.03l5.54-5.54v-7.31h-25.57l-12.72-12.72v-37.53l12.72-12.72h38.16v75.44l-12.72 12.72zm25.57-75.81h-20.15l-5.54 5.54v27.2l5.54 5.54h20.15v-38.29Z',
-];
 
 export default async function Image() {
-  const heroUrl = new URL('/inventoryfull-hero-transparent.png', process.env.NEXT_PUBLIC_APP_URL || 'https://inventoryfull.gg').toString();
-  const { outfitBold, outfitRegular, jetbrainsMono } = await loadFonts();
+  const pipUrl = new URL('/landing/pip-wave.png', process.env.NEXT_PUBLIC_APP_URL || 'https://inventoryfull.gg').toString();
+  const { outfitBold, outfitRegular, outfitBlack, jetbrainsMono } = await loadFonts();
 
-  // Pills retinted to break the monochrome — purple, teal, pink to mirror
-  // the wordmark's tri-color palette.
-  const pills: { label: string; tint: string; border: string; bg: string }[] = [
-    {
-      label: 'Steam + Xbox + PS',
-      tint: '#c4b5fd',
-      border: 'rgba(167, 139, 250, 0.28)',
-      bg: 'rgba(167, 139, 250, 0.10)',
-    },
-    {
-      label: 'Mood Matching',
-      tint: '#7df0d6',
-      border: 'rgba(26, 226, 192, 0.30)',
-      bg: 'rgba(26, 226, 192, 0.10)',
-    },
-    {
-      label: 'Free, no sign-up',
-      tint: '#f5a4ef',
-      border: 'rgba(234, 45, 225, 0.28)',
-      bg: 'rgba(234, 45, 225, 0.10)',
-    },
+  const pills: { label: string; color: string; bg: string }[] = [
+    { label: 'Steam + Xbox + PS', color: '#7c3aed', bg: 'rgba(124, 58, 237, 0.10)' },
+    { label: 'Mood Matching', color: '#E91E63', bg: 'rgba(233, 30, 99, 0.08)' },
+    { label: 'Free, no sign-up', color: '#006D75', bg: 'rgba(0, 188, 212, 0.10)' },
   ];
 
   return new ImageResponse(
@@ -69,131 +39,120 @@ export default async function Image() {
           flexDirection: 'column',
           width: '100%',
           height: '100%',
-          background: '#0a0a0f',
+          background: '#F5F0EB',
           fontFamily: 'Outfit, sans-serif',
           position: 'relative',
           overflow: 'hidden',
         }}
       >
-        {/* Background glow — matches landing page radial gradient */}
+        {/* Subtle pink accent bar — top edge */}
         <div
           style={{
             position: 'absolute',
-            top: '-100px',
-            left: '50%',
-            width: '900px',
-            height: '700px',
-            background: 'radial-gradient(ellipse, rgba(124, 58, 237, 0.2), transparent 65%)',
-            transform: 'translateX(-50%)',
+            top: 0,
+            left: 0,
+            width: '55%',
+            height: '5px',
+            background: '#E91E63',
             display: 'flex',
           }}
         />
-        {/* Secondary glow — bottom right, pink tint */}
+
+        {/* Subtle ambient glow */}
         <div
           style={{
             position: 'absolute',
-            bottom: '-80px',
-            right: '-60px',
+            top: '-80px',
+            right: '-40px',
             width: '500px',
             height: '400px',
-            background: 'radial-gradient(ellipse, rgba(234, 45, 225, 0.10), transparent 70%)',
+            background: 'radial-gradient(ellipse, rgba(233, 30, 99, 0.06), transparent 70%)',
             display: 'flex',
           }}
         />
 
-        {/* Subtle grid pattern overlay */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
-            backgroundSize: '60px 60px',
-            display: 'flex',
-          }}
-        />
-
-        {/* Main layout: hero image left, copy right */}
+        {/* Main layout: copy left, Pip right */}
         <div
           style={{
             display: 'flex',
             flex: 1,
-            padding: '32px 56px 16px 32px',
-            gap: '24px',
+            padding: '50px 56px 20px',
+            gap: '32px',
             alignItems: 'center',
           }}
         >
-          {/* Hero illustration — bigger so it carries the card */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '460px',
-              flexShrink: 0,
-            }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={heroUrl}
-              alt=""
-              width={440}
-              height={300}
-              style={{
-                objectFit: 'contain',
-                filter: 'drop-shadow(0 0 50px rgba(124, 58, 237, 0.35))',
-              }}
-            />
-          </div>
-
           {/* Copy block */}
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
               flex: 1,
-              gap: '0px',
             }}
           >
-            {/* Brand wordmark — full variant: "INVENTORY FULL" + "get playing."
-                in proper brand colors (white IN, teal body, pink tagline).
-                Same path data as components/Wordmark.tsx. */}
+            {/* Brand wordmark — dark IN on cream, pink body */}
             <svg
-              width={620}
-              height={122}
-              viewBox="70 645 2580 510"
+              width={520}
+              height={70}
+              viewBox="70 645 2500 340"
               xmlns="http://www.w3.org/2000/svg"
               style={{ display: 'flex' }}
             >
-              <path d={BODY_PATH} fill="#1ae2c0" />
-              <path d={IN_PATH} fill="#ffffff" />
-              <g fill="#ea2de1">
-                {TAGLINE_PATHS.map((d, i) => (
-                  <path key={i} d={d} />
-                ))}
-              </g>
+              <path d={BODY_PATH} fill="#1a1a1a" />
+              <path d={IN_PATH} fill="#E91E63" />
             </svg>
+
+            {/* Tagline */}
+            <div
+              style={{
+                fontSize: '18px',
+                fontFamily: 'JetBrains Mono, monospace',
+                fontWeight: 500,
+                color: '#E91E63',
+                marginTop: '8px',
+                letterSpacing: '3px',
+                textTransform: 'uppercase',
+                display: 'flex',
+              }}
+            >
+              get playing.
+            </div>
+
+            {/* Headline */}
+            <div
+              style={{
+                fontSize: '38px',
+                fontWeight: 900,
+                color: '#1a1a1a',
+                marginTop: '28px',
+                lineHeight: 1.15,
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <span>You don&#39;t need more games.</span>
+              <span style={{ color: '#E91E63' }}>You need one good pick.</span>
+            </div>
 
             {/* Subline */}
             <div
               style={{
-                fontSize: '22px',
-                fontFamily: 'Outfit, sans-serif',
+                fontSize: '18px',
                 fontWeight: 400,
-                color: '#cbd5e1',
-                marginTop: '20px',
-                lineHeight: 1.4,
+                color: '#555555',
+                marginTop: '16px',
+                lineHeight: 1.5,
                 display: 'flex',
               }}
             >
-              {"Can't decide what to play? Yeah, we know."}
+              Tell us your mood. We find your game. You go play.
             </div>
 
-            {/* Key feature pills — tri-color tint matches wordmark palette */}
+            {/* Feature pills */}
             <div
               style={{
                 display: 'flex',
                 gap: '10px',
-                marginTop: '22px',
+                marginTop: '24px',
                 flexWrap: 'wrap',
               }}
             >
@@ -201,14 +160,14 @@ export default async function Image() {
                 <div
                   key={pill.label}
                   style={{
-                    padding: '7px 16px',
+                    padding: '6px 14px',
                     borderRadius: '9999px',
                     backgroundColor: pill.bg,
-                    color: pill.tint,
-                    fontSize: '14px',
+                    color: pill.color,
+                    fontSize: '13px',
                     fontFamily: 'JetBrains Mono, monospace',
                     fontWeight: 500,
-                    border: `1px solid ${pill.border}`,
+                    border: `1px solid ${pill.color}30`,
                     display: 'flex',
                   }}
                 >
@@ -217,9 +176,32 @@ export default async function Image() {
               ))}
             </div>
           </div>
+
+          {/* Pip character */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '340px',
+              flexShrink: 0,
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={pipUrl}
+              alt=""
+              width={300}
+              height={300}
+              style={{
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 8px 24px rgba(0, 0, 0, 0.08))',
+              }}
+            />
+          </div>
         </div>
 
-        {/* Bottom bar — mono font */}
+        {/* Bottom bar */}
         <div
           style={{
             display: 'flex',
@@ -231,10 +213,10 @@ export default async function Image() {
         >
           <div
             style={{
-              fontSize: '15px',
+              fontSize: '14px',
               fontFamily: 'JetBrains Mono, monospace',
               fontWeight: 500,
-              color: '#64748b',
+              color: '#999',
               letterSpacing: '2px',
               display: 'flex',
             }}
@@ -246,18 +228,32 @@ export default async function Image() {
               fontSize: '13px',
               fontFamily: 'JetBrains Mono, monospace',
               fontWeight: 400,
-              color: '#475569',
+              color: '#999',
               display: 'flex',
             }}
           >
-            No ads. No tracking. Your data stays yours.
+            Free forever. Your data stays on your device.
           </div>
         </div>
+
+        {/* Cyan accent — bottom right corner */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            width: '30%',
+            height: '4px',
+            background: '#00BCD4',
+            display: 'flex',
+          }}
+        />
       </div>
     ),
     {
       ...size,
       fonts: [
+        { name: 'Outfit', data: outfitBlack, weight: 900 as const, style: 'normal' as const },
         { name: 'Outfit', data: outfitBold, weight: 800 as const, style: 'normal' as const },
         { name: 'Outfit', data: outfitRegular, weight: 400 as const, style: 'normal' as const },
         { name: 'JetBrains Mono', data: jetbrainsMono, weight: 500 as const, style: 'normal' as const },
