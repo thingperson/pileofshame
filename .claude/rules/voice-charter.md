@@ -69,7 +69,7 @@ Retired labels (do not reintroduce): Buried, Play Next, On Deck, Queue, Active, 
 
 ### Taglines
 - **Primary:** `get playing.` (lowercase, with period). Use everywhere.
-- **Landing subhead:** "Your pile's not gonna play itself." ("pile" matches our locked terminology for the whole collection — "backlog" is reserved for the unplayed-status column. Keep "backlog" in SEO meta description / JSON-LD for discovery; on-page voice uses "pile.")
+- **Landing subhead:** updated with Phase 1 tightening spec (2026-05-11). H1 is now "Your backlog isn't the problem. Deciding is." — "backlog" is the universal gaming term and fine everywhere. "Pile" is a casual synonym, not a rule.
 - **Celebration/share only:** "Less shame. More game."
 - **Retired:** "Stop stalling. Get playing." — do not reintroduce.
 
