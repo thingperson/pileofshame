@@ -968,6 +968,7 @@ button:active:not(:disabled) {
    ====================================== */
 
 .theme-light {
+  color-scheme: light;
   --color-bg-primary: #F5F0EB !important;
   --color-bg-card: #ffffff !important;
   --color-bg-elevated: #EDE8E3 !important;
@@ -1009,8 +1010,8 @@ button:active:not(:disabled) {
 
 .theme-light::before {
   background:
-    radial-gradient(ellipse 600px 400px at 80% 10%, rgba(233, 30, 99, 0.03), transparent),
-    radial-gradient(ellipse 500px 400px at 20% 90%, rgba(0, 188, 212, 0.02), transparent) !important;
+    radial-gradient(ellipse 600px 400px at 80% 10%, rgba(233, 30, 99, 0.06), transparent),
+    radial-gradient(ellipse 500px 400px at 20% 90%, rgba(0, 188, 212, 0.04), transparent) !important;
 }
 
 /* Light mode cards — shadow instead of glow, solid backgrounds */
@@ -1076,6 +1077,18 @@ button:active:not(:disabled) {
 /* Status badge text legibility */
 .theme-light button[style*="status"] {
   font-weight: 600 !important;
+}
+
+/* Cover art borders — prevent light art from vanishing into white cards */
+.theme-light .group img[class*="rounded-lg"][class*="object-co"] {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Modal backdrop — lighter overlay + stronger blur for light theme */
+.theme-light .bg-black\/60 {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
 }
 
 /* Light scrollbar */
