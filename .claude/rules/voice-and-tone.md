@@ -112,7 +112,7 @@ Locked Apr 9, 2026. The user-facing status cycle is: **Backlog > Up Next > Playi
 
 | Concept | Term | NOT |
 |---------|------|-----|
-| Default game collection | The Pile / Your Library | Backlog (as a proper noun) |
+| Default game collection | Pile / Backlog / Your Library | — |
 | Status: unplayed | Backlog | Buried, Pile |
 | Status: queued to play | Up Next | Play Next, On Deck, Queue |
 | Status: currently playing | Playing Now | Now Playing, Active, Playing |
