@@ -69,12 +69,26 @@ export default function LandingPageV2({ onImport, onLoadSample }: LandingPageV2P
           40%      { transform: translateY(-4px); }
           70%      { transform: translateY(-1px); }
         }
+        @keyframes pipBob {
+          0%, 100% { transform: translateY(0); }
+          50%      { transform: translateY(-2px); }
+        }
+        .pip-anchor {
+          animation: pipBob 2.5s ease-in-out infinite;
+        }
+        .pip-anchor:hover {
+          animation-play-state: paused;
+          transform: scale(1.08);
+          transition: transform 200ms ease;
+        }
         @media (prefers-reduced-motion: reduce) {
           .cta-primary:hover { transform: none; }
           .cta-primary:active { transform: none; }
           .vibe-pill:hover { transform: none; }
           .vibe-pill:active { transform: none; }
           .vibe-pill:hover .vibe-emoji { animation: none; }
+          .pip-anchor { animation: none; }
+          .pip-anchor:hover { transform: none; }
         }
       `}</style>
       <Nav onImport={onImport} />
@@ -266,6 +280,11 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
         <polygon points="30,100 80,20 120,100" fill={C.pink} opacity="0.45" />
       </svg>
 
+      {/* Pip — pointing at picker card */}
+      <div className="absolute bottom-4 left-[42%] lg:left-[46%] z-[4] pointer-events-auto pip-anchor hidden sm:block">
+        <Image src="/landing/pip/pip-pointing.png" alt="" width={64} height={64} className="w-14 sm:w-16" />
+      </div>
+
       {/* Collage bottom-right — breaking into next section */}
       <div className="absolute -bottom-12 -right-6 w-52 sm:w-72 pointer-events-none opacity-75 z-[3] hidden sm:block" style={{ transform: 'rotate(-8deg)' }}>
         <Image src="/landing/collage-1.png" alt="" width={400} height={500} className="w-full h-auto" />
@@ -376,7 +395,12 @@ function ProblemSolution() {
               </h2>
             </Reveal>
           </div>
-          <p className="text-lg sm:text-xl mb-10 mt-6 max-w-xl" style={{ color: C.textMuted }}>Too many games. Too many choices. Your brain checks out.</p>
+          <div className="flex items-end gap-3 mt-6 mb-10">
+            <p className="text-lg sm:text-xl max-w-xl" style={{ color: C.textMuted }}>Too many games. Too many choices. Your brain checks out.</p>
+            <div className="pip-anchor shrink-0 hidden sm:block">
+              <Image src="/landing/pip/pip-exhausted.png" alt="" width={40} height={50} className="w-8 sm:w-10" />
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 max-w-3xl">
             {problems.map((p, i) => (
@@ -407,7 +431,12 @@ function ProblemSolution() {
             </Reveal>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 mt-8 max-w-3xl">
+          <div className="flex items-center gap-3 mt-8 mb-2">
+            <div className="pip-anchor shrink-0 hidden sm:block">
+              <Image src="/landing/pip/pip-magician.png" alt="" width={40} height={50} className="w-8 sm:w-10" />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 max-w-3xl">
             {solutions.map((s, i) => (
               <Reveal key={i} delay={i * 80} variant="right">
                 <div className="flex gap-3">
@@ -507,7 +536,12 @@ function VibeSection() {
 
       <div className="max-w-4xl mx-auto text-center relative z-10">
         <Reveal>
-          <p className="text-base sm:text-lg mb-8" style={{ color: C.textMuted }}>Tap one and see what we&apos;d pick from a sample library.</p>
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <p className="text-base sm:text-lg" style={{ color: C.textMuted }}>Tap one and see what we&apos;d pick from a sample library.</p>
+            <div className="pip-anchor shrink-0 hidden sm:block">
+              <Image src="/landing/pip/pip-thinking.png" alt="" width={32} height={40} className="w-8" />
+            </div>
+          </div>
         </Reveal>
 
         <Reveal delay={100}>
