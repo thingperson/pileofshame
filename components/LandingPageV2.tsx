@@ -61,13 +61,17 @@ export default function LandingPageV2({ onImport, onLoadSample }: LandingPageV2P
         .vibe-pill:active {
           transform: scale(0.97);
         }
-        .vibe-pill:hover .vibe-emoji {
-          animation: emojiBounce 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        .vibe-pill:hover img {
+          animation: spriteBounce 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        @keyframes emojiBounce {
+        @keyframes spriteBounce {
           0%, 100% { transform: translateY(0); }
           40%      { transform: translateY(-4px); }
           70%      { transform: translateY(-1px); }
+        }
+        .pixelated {
+          image-rendering: pixelated;
+          image-rendering: crisp-edges;
         }
         @keyframes pipBob {
           0%, 100% { transform: translateY(0); }
@@ -358,9 +362,9 @@ function ProofStat({ value, label }: { value: string; label: string }) {
 
 function ProblemSolution() {
   const problems = [
-    { title: 'Decision fatigue is real.', body: 'The more options you have, the harder it is to choose — especially when time and platform narrow the field.', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="w-4 h-4"><path d="M12 3v6m0 0v6m0-6h6m-6 0H6" transform="rotate(45 12 12)" /></svg> },
-    { title: 'Your mood changes.', body: 'What you want after work ≠ what you want on the weekend.', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="w-4 h-4"><circle cx="12" cy="12" r="9" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><path d="M9 9h.01M15 9h.01" /></svg> },
-    { title: "Libraries grow. Attention doesn't.", body: 'Your backlog grows faster than your free time.', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="w-4 h-4"><path d="M3 6h18M3 12h18M3 18h18" /><path d="M19 6l2 0M19 12l2 0M19 18l2 0" /></svg> },
+    { title: 'Decision fatigue is real.', body: 'The more options you have, the harder it is to choose — especially when time and platform narrow the field.', icon: <img src="/landing/sprites/skull.png" alt="" width={16} height={16} className="w-4 h-4 pixelated" /> },
+    { title: 'Your mood changes.', body: 'What you want after work ≠ what you want on the weekend.', icon: <img src="/landing/sprites/sad-console.png" alt="" width={16} height={16} className="w-4 h-4 pixelated" /> },
+    { title: "Libraries grow. Attention doesn't.", body: 'Your backlog grows faster than your free time.', icon: <img src="/landing/sprites/x-mark.png" alt="" width={16} height={16} className="w-4 h-4 pixelated" /> },
   ];
 
   const solutions = [
@@ -448,11 +452,11 @@ function ProblemSolution() {
                       <div className="mt-3 space-y-2">
                         <p className="text-xs font-bold uppercase tracking-wider" style={{ color: C.textFaint }}>Two more things we built for the way you actually play:</p>
                         <div className="rounded-lg p-3" style={{ backgroundColor: 'rgba(0,0,0,0.04)' }}>
-                          <p className="text-sm font-bold mb-0.5" style={{ color: C.textDark }}>⏱ The 5-minute pick.</p>
+                          <p className="text-sm font-bold mb-0.5" style={{ color: C.textDark }}><img src="/landing/sprites/hourglass.png" alt="" width={14} height={14} className="inline-block mr-1 -mt-0.5 pixelated" />The 5-minute pick.</p>
                           <p className="text-sm" style={{ color: C.textMuted }}>Give it 5 minutes. If it&apos;s not hitting, blame us and reroll.</p>
                         </div>
                         <div className="rounded-lg p-3" style={{ backgroundColor: 'rgba(0,0,0,0.04)' }}>
-                          <p className="text-sm font-bold mb-0.5" style={{ color: C.textDark }}>↩ Moving on is a decision too.</p>
+                          <p className="text-sm font-bold mb-0.5" style={{ color: C.textDark }}><img src="/landing/sprites/skip-back.png" alt="" width={14} height={14} className="inline-block mr-1 -mt-0.5 pixelated" />Moving on is a decision too.</p>
                           <p className="text-sm" style={{ color: C.textMuted }}>Realizing what you won&apos;t play is progress.</p>
                         </div>
                       </div>
@@ -513,13 +517,13 @@ function ClarityBanner() {
    VIBE SECTION — angled card & tower
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-const VIBE_PICKS: { emoji: string; label: string; game: string; art: string; time: string; tags: string; reason: string }[] = [
-  { emoji: '🌙', label: 'I want to chill', game: 'Stardew Valley', art: '/landing/games/stardew-valley.jpg', time: '∞ (one more day)', tags: 'Cozy, Farming, Relaxing', reason: "No stakes. No pressure. Just you, your farm, and a town full of people who don't judge your bedtime." },
-  { emoji: '⚡', label: 'I want a challenge', game: 'Sekiro: Shadows Die Twice', art: '/landing/games/sekiro.jpg', time: '30-50 hours', tags: 'Action, Souls-like, Precision', reason: "You said challenge. This is that. Every death teaches you something. Every victory is earned." },
-  { emoji: '📖', label: 'I want a good story', game: 'Disco Elysium', art: '/landing/games/disco-elysium.jpg', time: '25-40 hours', tags: 'RPG, Detective, Narrative', reason: "The best-written RPG in years. You play a washed-up cop solving a murder. Your skills are your personality traits. It gets weird." },
-  { emoji: '⏱', label: 'I want something quick', game: 'Vampire Survivors', art: '/landing/games/vampire-survivors.jpg', time: '15-20 min runs', tags: 'Roguelike, Action, Addictive', reason: "One run. Fifteen minutes. You mow down thousands of monsters and somehow it never gets old. Perfect for when you have a sliver of time." },
-  { emoji: '😄', label: 'I want to laugh', game: 'Portal 2', art: '/landing/games/portal-2.jpg', time: '8-10 hours', tags: 'Puzzle, Comedy, Co-op', reason: "GLaDOS is still the funniest villain in gaming. The puzzles are brilliant. The writing is better." },
-  { emoji: '✨', label: 'Surprise me', game: 'Inscryption', art: '/landing/games/inscryption.jpg', time: '10-12 hours', tags: 'Card Game, Horror, Mystery', reason: "Starts as a card game in a cabin. Becomes something else entirely. The less you know going in, the better." },
+const VIBE_PICKS: { sprite: string; label: string; game: string; art: string; time: string; tags: string; reason: string }[] = [
+  { sprite: '/landing/sprites/mood-chill.png', label: 'I want to chill', game: 'Stardew Valley', art: '/landing/games/stardew-valley.jpg', time: '∞ (one more day)', tags: 'Cozy, Farming, Relaxing', reason: "No stakes. No pressure. Just you, your farm, and a town full of people who don't judge your bedtime." },
+  { sprite: '/landing/sprites/mood-challenge.png', label: 'I want a challenge', game: 'Sekiro: Shadows Die Twice', art: '/landing/games/sekiro.jpg', time: '30-50 hours', tags: 'Action, Souls-like, Precision', reason: "You said challenge. This is that. Every death teaches you something. Every victory is earned." },
+  { sprite: '/landing/sprites/mood-story.png', label: 'I want a good story', game: 'Disco Elysium', art: '/landing/games/disco-elysium.jpg', time: '25-40 hours', tags: 'RPG, Detective, Narrative', reason: "The best-written RPG in years. You play a washed-up cop solving a murder. Your skills are your personality traits. It gets weird." },
+  { sprite: '/landing/sprites/mood-quick.png', label: 'I want something quick', game: 'Vampire Survivors', art: '/landing/games/vampire-survivors.jpg', time: '15-20 min runs', tags: 'Roguelike, Action, Addictive', reason: "One run. Fifteen minutes. You mow down thousands of monsters and somehow it never gets old. Perfect for when you have a sliver of time." },
+  { sprite: '/landing/sprites/mood-laugh.png', label: 'I want to laugh', game: 'Portal 2', art: '/landing/games/portal-2.jpg', time: '8-10 hours', tags: 'Puzzle, Comedy, Co-op', reason: "GLaDOS is still the funniest villain in gaming. The puzzles are brilliant. The writing is better." },
+  { sprite: '/landing/sprites/mood-surprise.png', label: 'Surprise me', game: 'Inscryption', art: '/landing/games/inscryption.jpg', time: '10-12 hours', tags: 'Card Game, Horror, Mystery', reason: "Starts as a card game in a cabin. Becomes something else entirely. The less you know going in, the better." },
 ];
 
 function VibeSection() {
@@ -558,7 +562,7 @@ function VibeSection() {
                   boxShadow: activeVibe === i ? `0 2px 12px ${C.pinkGlow}` : 'none',
                 }}
               >
-                <span className="vibe-emoji text-lg">{v.emoji}</span><span>{v.label}</span>
+                <img src={v.sprite} alt="" width={20} height={20} className="pixelated" /><span>{v.label}</span>
               </button>
             ))}
           </div>
