@@ -529,7 +529,7 @@ function VibeSection() {
   const pick = activeVibe !== null ? VIBE_PICKS[activeVibe] : null;
 
   return (
-    <section id="features" className="relative px-5 sm:px-8 py-14 sm:py-20 overflow-hidden" style={{ backgroundColor: C.cream }}>
+    <section id="features" className="relative px-5 sm:px-8 py-8 sm:py-12 overflow-hidden" style={{ backgroundColor: C.cream }}>
       {/* Small triangle cluster — left */}
       <svg className="absolute top-10 left-2 sm:left-8 w-16 sm:w-20 pointer-events-none opacity-35 hidden sm:block" viewBox="0 0 80 70" fill="none" aria-hidden>
         <polygon points="0,70 40,0 80,70" fill={C.cyan} opacity="0.7" />
@@ -538,7 +538,7 @@ function VibeSection() {
 
       <div className="max-w-4xl mx-auto text-center relative z-10">
         <Reveal>
-          <div className="flex items-center justify-center gap-3 mb-8">
+          <div className="flex items-center justify-center gap-3 mb-4">
             <p className="text-base sm:text-lg" style={{ color: C.textMuted }}>Tap one and see what we&apos;d pick from a sample library.</p>
             <div className="pip-anchor shrink-0 hidden sm:block">
               <Image src="/landing/pip/pip-thinking.png" alt="" width={120} height={150} className="w-16 sm:w-24" />
@@ -547,7 +547,7 @@ function VibeSection() {
         </Reveal>
 
         <Reveal delay={100}>
-          <div className="flex flex-wrap justify-center gap-3 mb-10">
+          <div className="flex flex-wrap justify-center gap-3 mb-6">
             {VIBE_PICKS.map((v, i) => (
               <button
                 key={v.label}
