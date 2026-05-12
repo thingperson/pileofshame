@@ -435,12 +435,10 @@ function ProblemSolution() {
             </Reveal>
           </div>
 
-          <div className="flex items-center gap-3 mt-8 mb-2">
-            <div className="pip-anchor shrink-0 hidden sm:block">
-              <Image src="/landing/pip/pip-magician.png" alt="" width={120} height={150} className="w-16 sm:w-24" />
+          <div className="relative grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 max-w-3xl mt-8">
+            <div className="pip-anchor absolute -right-20 top-0 hidden lg:block">
+              <Image src="/landing/pip/pip-magician.png" alt="" width={120} height={150} className="w-24" />
             </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 max-w-3xl">
             {solutions.map((s, i) => (
               <Reveal key={i} delay={i * 80} variant="right">
                 <div className="flex gap-3">
@@ -452,11 +450,11 @@ function ProblemSolution() {
                       <div className="mt-3 space-y-2">
                         <p className="text-xs font-bold uppercase tracking-wider" style={{ color: C.textFaint }}>Two more things we built for the way you actually play:</p>
                         <div className="rounded-lg p-3" style={{ backgroundColor: 'rgba(0,0,0,0.04)' }}>
-                          <p className="text-sm font-bold mb-0.5" style={{ color: C.textDark }}><img src="/landing/sprites/hourglass.png" alt="" width={14} height={14} className="inline-block mr-1 -mt-0.5 pixelated" />The 5-minute pick.</p>
+                          <p className="text-sm font-bold mb-0.5" style={{ color: C.textDark }}><img src="/landing/sprites/hourglass.png" alt="" width={20} height={20} className="inline-block mr-1.5 -mt-0.5 pixelated" />The 5-minute pick.</p>
                           <p className="text-sm" style={{ color: C.textMuted }}>Give it 5 minutes. If it&apos;s not hitting, blame us and reroll.</p>
                         </div>
                         <div className="rounded-lg p-3" style={{ backgroundColor: 'rgba(0,0,0,0.04)' }}>
-                          <p className="text-sm font-bold mb-0.5" style={{ color: C.textDark }}><img src="/landing/sprites/skip-back.png" alt="" width={14} height={14} className="inline-block mr-1 -mt-0.5 pixelated" />Moving on is a decision too.</p>
+                          <p className="text-sm font-bold mb-0.5" style={{ color: C.textDark }}><img src="/landing/sprites/skip-back.png" alt="" width={20} height={20} className="inline-block mr-1.5 -mt-0.5 pixelated" />Moving on is a decision too.</p>
                           <p className="text-sm" style={{ color: C.textMuted }}>Realizing what you won&apos;t play is progress.</p>
                         </div>
                       </div>
