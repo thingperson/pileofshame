@@ -286,7 +286,7 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
 
       {/* Pip — pointing at picker card */}
       <div className="absolute bottom-4 left-[42%] lg:left-[46%] z-[4] pointer-events-auto pip-anchor hidden sm:block">
-        <Image src="/landing/pip/pip-pointing.png" alt="" width={64} height={64} className="w-14 sm:w-16" />
+        <Image src="/landing/pip/pip-pointing.png" alt="" width={160} height={160} className="w-10 sm:w-40" />
       </div>
 
       {/* Collage bottom-right — breaking into next section */}
@@ -402,7 +402,7 @@ function ProblemSolution() {
           <div className="flex items-end gap-3 mt-6 mb-10">
             <p className="text-lg sm:text-xl max-w-xl" style={{ color: C.textMuted }}>Too many games. Too many choices. Your brain checks out.</p>
             <div className="pip-anchor shrink-0 hidden sm:block">
-              <Image src="/landing/pip/pip-exhausted.png" alt="" width={40} height={50} className="w-8 sm:w-10" />
+              <Image src="/landing/pip/pip-exhausted.png" alt="" width={120} height={150} className="w-16 sm:w-24" />
             </div>
           </div>
 
@@ -437,7 +437,7 @@ function ProblemSolution() {
 
           <div className="flex items-center gap-3 mt-8 mb-2">
             <div className="pip-anchor shrink-0 hidden sm:block">
-              <Image src="/landing/pip/pip-magician.png" alt="" width={40} height={50} className="w-8 sm:w-10" />
+              <Image src="/landing/pip/pip-magician.png" alt="" width={120} height={150} className="w-16 sm:w-24" />
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 max-w-3xl">
@@ -543,7 +543,7 @@ function VibeSection() {
           <div className="flex items-center justify-center gap-3 mb-8">
             <p className="text-base sm:text-lg" style={{ color: C.textMuted }}>Tap one and see what we&apos;d pick from a sample library.</p>
             <div className="pip-anchor shrink-0 hidden sm:block">
-              <Image src="/landing/pip/pip-thinking.png" alt="" width={32} height={40} className="w-8" />
+              <Image src="/landing/pip/pip-thinking.png" alt="" width={120} height={150} className="w-16 sm:w-24" />
             </div>
           </div>
         </Reveal>
