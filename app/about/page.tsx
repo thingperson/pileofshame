@@ -88,7 +88,7 @@ function Hero() {
 
       {/* Subtle paint stroke */}
       <div className="absolute top-[30%] -left-6 w-[50%] max-w-[500px] pointer-events-none opacity-40 z-0 hidden sm:block">
-        <Image src="/landing/stroke-yellow.png" alt="" width={800} height={150} className="w-full h-auto" />
+        <Image src="/landing/stroke-yellow.webp" alt="" width={800} height={150} className="w-full h-auto" />
       </div>
 
       <div className="max-w-3xl mx-auto relative z-10 text-center">
@@ -121,7 +121,7 @@ function Hero() {
 
       {/* Collage accent — right */}
       <div className="absolute -top-4 -right-6 w-44 sm:w-56 pointer-events-none z-[1] hidden lg:block opacity-50" style={{ transform: 'rotate(10deg)' }}>
-        <Image src="/landing/collage-4.png" alt="" width={400} height={400} className="w-full h-auto" />
+        <Image src="/landing/collage-4.webp" alt="" width={400} height={400} className="w-full h-auto" />
       </div>
 
       {/* Triangle cluster */}
@@ -189,7 +189,7 @@ function Philosophy() {
 
       {/* Collage accent */}
       <div className="absolute -right-6 top-[25%] w-48 sm:w-64 pointer-events-none opacity-40 z-[1] hidden lg:block" style={{ transform: 'rotate(-8deg)' }}>
-        <Image src="/landing/collage-2.png" alt="" width={400} height={500} className="w-full h-auto" />
+        <Image src="/landing/collage-2.webp" alt="" width={400} height={500} className="w-full h-auto" />
       </div>
     </section>
   );
@@ -345,7 +345,7 @@ function PipCallout() {
     <Reveal>
       <div className="flex items-end justify-center gap-4 py-10 px-5" style={{ backgroundColor: C.cream }}>
         <div className="shrink-0 w-24 sm:w-32">
-          <Image src="/landing/pip-guide.png" alt="Pip, a small robot guide" width={128} height={128} className="w-full h-auto" />
+          <Image src="/landing/pip-guide.webp" alt="Pip, a small robot guide" width={128} height={128} className="w-full h-auto" />
         </div>
         <div className="relative rounded-xl px-4 py-3 max-w-xs" style={{ backgroundColor: C.cardDark }}>
           <div className="absolute -left-2 bottom-3 w-0 h-0" style={{ borderTop: '6px solid transparent', borderBottom: '6px solid transparent', borderRight: `8px solid ${C.cardDark}` }} aria-hidden />
@@ -369,7 +369,7 @@ function BottomCTA() {
 
       {/* Hand collage — right */}
       <div className="absolute -right-4 top-1/2 -translate-y-1/2 w-44 sm:w-56 pointer-events-none opacity-50 z-[1] hidden md:block" style={{ transform: 'translateY(-50%) rotate(-6deg)' }}>
-        <Image src="/landing/hand-collage.png" alt="" width={400} height={300} className="w-full h-auto" />
+        <Image src="/landing/hand-collage.webp" alt="" width={400} height={300} className="w-full h-auto" />
       </div>
 
       {/* Pink accent bar */}
@@ -445,7 +445,7 @@ function Footer() {
         {/* Pip footer moment */}
         <div className="mt-10 flex flex-col items-center gap-3">
           <div className="flex items-end gap-3">
-            <Image src="/landing/pip-wave.png" alt="Pip waving" width={100} height={100} className="w-16 sm:w-20 h-auto" />
+            <Image src="/landing/pip-wave.webp" alt="Pip waving" width={100} height={100} className="w-16 sm:w-20 h-auto" />
             <div className="relative rounded-lg px-3 py-2 mb-2" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
               <div className="absolute -left-1.5 bottom-3 w-0 h-0" style={{ borderTop: '5px solid transparent', borderBottom: '5px solid transparent', borderRight: '6px solid rgba(255,255,255,0.08)' }} aria-hidden />
               <p className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>go play something.</p>

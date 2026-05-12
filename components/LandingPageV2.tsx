@@ -217,7 +217,7 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
         className="absolute bottom-0 left-0 w-[25%] max-w-[320px] pointer-events-none z-[1] hidden xl:block opacity-50"
         style={{ maskImage: 'linear-gradient(to right, black 40%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 40%, transparent 100%)' }}
       >
-        <Image src="/landing/mountain-hero.png" alt="" width={800} height={1000} className="w-full h-auto object-contain object-bottom" />
+        <Image src="/landing/mountain-hero.webp" alt="" width={800} height={1000} className="w-full h-auto object-contain object-bottom" />
       </div>
 
       {/* Pink accent bar — top, angled, animates in on load */}
@@ -225,7 +225,7 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
 
       {/* Paint stroke — wider, more visible */}
       <div className="absolute top-[22%] -left-6 w-[70%] max-w-[700px] pointer-events-none opacity-60 z-0 hidden sm:block">
-        <Image src="/landing/stroke-yellow.png" alt="" width={800} height={150} className="w-full h-auto" />
+        <Image src="/landing/stroke-yellow.webp" alt="" width={800} height={150} className="w-full h-auto" />
       </div>
 
 
@@ -263,11 +263,11 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
         <div className="hero-card" style={{ animation: 'cardSettle 800ms cubic-bezier(0.16, 1, 0.3, 1) 400ms both' }}>
           <div className="relative">
             <div className="absolute -top-12 -right-2 sm:right-0 w-52 sm:w-64 z-20 pointer-events-none">
-              <Image src="/landing/annotation-tell-us.png" alt="Tell us a few things. We'll do the hard part." width={500} height={150} className="w-full h-auto" />
+              <Image src="/landing/annotation-tell-us.webp" alt="Tell us a few things. We'll do the hard part." width={500} height={150} className="w-full h-auto" />
             </div>
-            <Image src="/landing/hero-picker-card.png" alt="Inventory Full picker: choose your mood and time, get one game recommendation — A Short Hike" width={600} height={750} className="w-full max-w-md mx-auto h-auto rounded-2xl shadow-2xl" priority />
+            <Image src="/landing/hero-picker-card.webp" alt="Inventory Full picker: choose your mood and time, get one game recommendation — A Short Hike" width={600} height={750} className="w-full max-w-md mx-auto h-auto rounded-2xl shadow-2xl" priority />
             <div className="absolute -bottom-8 -right-2 sm:right-0 w-48 sm:w-56 z-20 pointer-events-none">
-              <Image src="/landing/annotation-new-picks.png" alt="New picks in seconds. No endless scrolling." width={500} height={100} className="w-full h-auto" />
+              <Image src="/landing/annotation-new-picks.webp" alt="New picks in seconds. No endless scrolling." width={500} height={100} className="w-full h-auto" />
             </div>
           </div>
         </div>
@@ -275,7 +275,7 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
 
       {/* Collage top-right — entrance animation */}
       <div className="absolute -top-6 -right-6 w-56 sm:w-72 pointer-events-none z-[1] hidden sm:block hero-collage-tr" style={{ animation: 'heroFadeScale 700ms cubic-bezier(0.16, 1, 0.3, 1) 600ms both' }}>
-        <Image src="/landing/collage-4.png" alt="" width={400} height={400} className="w-full h-auto" />
+        <Image src="/landing/collage-4.webp" alt="" width={400} height={400} className="w-full h-auto" />
       </div>
 
       {/* Cyan + pink triangle cluster — entrance animation */}
@@ -291,7 +291,7 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
 
       {/* Collage bottom-right — breaking into next section */}
       <div className="absolute -bottom-12 -right-6 w-52 sm:w-72 pointer-events-none opacity-75 z-[3] hidden sm:block" style={{ transform: 'rotate(-8deg)' }}>
-        <Image src="/landing/collage-1.png" alt="" width={400} height={500} className="w-full h-auto" />
+        <Image src="/landing/collage-1.webp" alt="" width={400} height={500} className="w-full h-auto" />
       </div>
     </section>
   );
@@ -381,7 +381,7 @@ function ProblemSolution() {
 
       {/* Collage — right, big + rotated + bleeding out */}
       <div className="absolute -right-8 top-[20%] w-64 sm:w-80 pointer-events-none opacity-55 z-[1] hidden lg:block" style={{ transform: 'rotate(-10deg)' }}>
-        <Image src="/landing/collage-2.png" alt="" width={400} height={500} className="w-full h-auto" />
+        <Image src="/landing/collage-2.webp" alt="" width={400} height={500} className="w-full h-auto" />
       </div>
 
       {/* Pink accent bar angled across */}
@@ -487,7 +487,7 @@ function ClarityBanner() {
         {/* The skewed banner panel */}
         <div className="relative overflow-hidden" style={{ transform: 'skewY(-3deg)', padding: '3rem 0' }}>
           <div className="absolute inset-0 z-0">
-            <Image src="/landing/pink-banner-strip.png" alt="" width={1600} height={200} className="w-full h-full object-cover" />
+            <Image src="/landing/pink-banner-strip.webp" alt="" width={1600} height={200} className="w-full h-full object-cover" />
           </div>
           <div className="absolute inset-0 z-0" style={{ backgroundColor: 'rgba(233, 30, 99, 0.88)' }} />
 
@@ -637,12 +637,12 @@ function BottomCTA({ onImport, onLoadSample }: { onImport: () => void; onLoadSam
 
       {/* Hand collage — right, big + rotated */}
       <div className="absolute -right-4 top-1/2 -translate-y-1/2 w-56 sm:w-72 pointer-events-none opacity-70 z-[1] hidden md:block" style={{ transform: 'translateY(-50%) rotate(-6deg)' }}>
-        <Image src="/landing/hand-collage.png" alt="" width={400} height={300} className="w-full h-auto" />
+        <Image src="/landing/hand-collage.webp" alt="" width={400} height={300} className="w-full h-auto" />
       </div>
 
       {/* Collage — left, rotated */}
       <div className="absolute -left-6 bottom-4 w-44 sm:w-56 pointer-events-none opacity-60 z-[1] hidden md:block" style={{ transform: 'rotate(5deg)' }}>
-        <Image src="/landing/collage-3.png" alt="" width={300} height={400} className="w-full h-auto" />
+        <Image src="/landing/collage-3.webp" alt="" width={300} height={400} className="w-full h-auto" />
       </div>
 
       {/* Pink accent bar — bottom, angled */}
@@ -706,7 +706,7 @@ function Footer() {
         </div>
         <div className="mt-10 flex flex-col items-center gap-3">
           <div className="flex items-end gap-3">
-            <Image src="/landing/pip-wave.png" alt="Pip waving" width={100} height={100} className="w-20 sm:w-24 h-auto"  />
+            <Image src="/landing/pip-wave.webp" alt="Pip waving" width={100} height={100} className="w-20 sm:w-24 h-auto"  />
             <div className="relative rounded-lg px-3 py-2 mb-2" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
               <div className="absolute -left-1.5 bottom-3 w-0 h-0" style={{ borderTop: '5px solid transparent', borderBottom: '5px solid transparent', borderRight: '6px solid rgba(255,255,255,0.08)' }} aria-hidden />
               <p className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>go play something.</p>
