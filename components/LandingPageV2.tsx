@@ -435,10 +435,10 @@ function ProblemSolution() {
             </Reveal>
           </div>
 
-          <div className="relative grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 max-w-3xl mt-8">
-            <div className="pip-anchor absolute -right-20 top-0 hidden lg:block">
-              <Image src="/landing/pip/pip-magician.png" alt="" width={120} height={150} className="w-24" />
-            </div>
+          <div className="pip-anchor mt-6 mb-2 hidden sm:block">
+            <Image src="/landing/pip/pip-magician.png" alt="" width={120} height={150} className="w-20" />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 max-w-3xl">
             {solutions.map((s, i) => (
               <Reveal key={i} delay={i * 80} variant="right">
                 <div className="flex gap-3">
