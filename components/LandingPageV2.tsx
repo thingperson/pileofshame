@@ -419,6 +419,14 @@ function ProblemSolution() {
               </Reveal>
             ))}
           </div>
+          <Reveal delay={320}>
+            <p className="text-sm mt-6" style={{ color: C.textMuted }}>
+              There&apos;s a structural reason for this.{' '}
+              <a href="/why-deciding-is-hard" style={{ color: C.cyan, textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+                The psychology behind it →
+              </a>
+            </p>
+          </Reveal>
         </div>
 
         {/* SOLUTION panel — rotated the other direction */}

@@ -184,6 +184,15 @@ function Philosophy() {
               Less time in our app means we&apos;re doing our job. If you spend 30 minutes in Inventory Full, something went wrong.
             </p>
           </Reveal>
+
+          <Reveal delay={400}>
+            <p className="text-sm leading-relaxed" style={{ color: C.textMuted }}>
+              The reason it felt impossible to decide?{' '}
+              <a href="/why-deciding-is-hard" style={{ color: C.cyan, textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+                There&apos;s a name for it.
+              </a>
+            </p>
+          </Reveal>
         </div>
       </div>
 

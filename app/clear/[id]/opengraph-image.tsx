@@ -137,6 +137,21 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   const { bungee, outfitBold, pipBytes } = await loadAssets();
   const pipDataUrl = `data:image/png;base64,${pipBytes.toString('base64')}`;
 
+  // Satori can't fetch external URLs — fetch cover art server-side and embed as base64
+  let coverDataUrl: string | null = null;
+  if (card.cover_url) {
+    try {
+      const res = await fetch(card.cover_url);
+      if (res.ok) {
+        const buf = Buffer.from(await res.arrayBuffer());
+        const ct = res.headers.get('content-type') || 'image/jpeg';
+        coverDataUrl = `data:${ct};base64,${buf.toString('base64')}`;
+      }
+    } catch {
+      // decorative only — fail silently
+    }
+  }
+
   const gameName = (card.game_name ?? 'A Game').toUpperCase();
   const subtitle = pickSubtitle(card);
   const { fontSize: gameSize, lineHeight: gameLH } = fitGameName(gameName);
@@ -223,9 +238,9 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           }}
         >
           {/* Cover art backdrop — faded and dark */}
-          {card.cover_url && (
+          {coverDataUrl && (
             <img
-              src={card.cover_url}
+              src={coverDataUrl}
               alt=""
               style={{
                 position: 'absolute',
