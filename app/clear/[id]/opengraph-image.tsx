@@ -42,7 +42,7 @@ interface ShareCard {
 function getMockCard(id: string): ShareCard {
   const base: ShareCard = {
     game_name: 'Elden Ring',
-    cover_url: null,
+    cover_url: 'https://media.rawg.io/media/games/5ec/5ecac5cb026ec26a56efcc546364e348.jpg',
     rating: 5,
     hours_played: 85,
     hltb_main: 58,
@@ -153,6 +153,32 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           fontFamily: 'Outfit, sans-serif',
         }}
       >
+        {/* Decorative border frame */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '12px',
+            left: '12px',
+            right: '12px',
+            bottom: '12px',
+            border: '1px solid rgba(218, 165, 32, 0.25)',
+            borderRadius: '8px',
+            display: 'flex',
+          }}
+        />
+        {/* Inner glow line */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '16px',
+            left: '16px',
+            right: '16px',
+            bottom: '16px',
+            border: '1px solid rgba(26, 226, 192, 0.08)',
+            borderRadius: '6px',
+            display: 'flex',
+          }}
+        />
         {/* Left panel — Pip trophy on dark bg with subtle glow */}
         <div
           style={{
@@ -186,71 +212,113 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           />
         </div>
 
-        {/* Right panel — text content */}
+        {/* Right panel — text over cover art */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             flex: 1,
-            padding: '60px 56px 40px 0',
-            justifyContent: 'center',
             position: 'relative',
+            overflow: 'hidden',
           }}
         >
-          {/* "I CLEARED" label */}
+          {/* Cover art backdrop — faded and dark */}
+          {card.cover_url && (
+            <img
+              src={card.cover_url}
+              alt=""
+              style={{
+                position: 'absolute',
+                top: '0',
+                left: '0',
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                opacity: 0.18,
+                filter: 'saturate(0.6) brightness(0.7)',
+              }}
+            />
+          )}
+          {/* Gradient overlay to blend cover into bg */}
           <div
             style={{
-              fontFamily: 'Bungee, sans-serif',
-              fontSize: '36px',
-              color: '#ffffff',
-              letterSpacing: '3px',
+              position: 'absolute',
+              top: '0',
+              left: '0',
+              width: '100%',
+              height: '100%',
+              background: 'linear-gradient(90deg, #0a0a0f 0%, rgba(10, 10, 15, 0.7) 30%, rgba(10, 10, 15, 0.4) 100%)',
               display: 'flex',
-              marginBottom: '8px',
             }}
-          >
-            I CLEARED
-          </div>
-
-          {/* Game name — teal, big, adaptive */}
+          />
+          {/* Vignette at bottom for bar blend */}
           <div
             style={{
-              fontFamily: 'Bungee, sans-serif',
-              fontSize: `${gameSize}px`,
-              lineHeight: gameLH,
-              color: '#1ae2c0',
-              letterSpacing: '1px',
-              display: 'flex',
-              flexWrap: 'wrap',
-              maxWidth: '660px',
-            }}
-          >
-            {gameName}
-          </div>
-
-          {/* Teal accent line */}
-          <div
-            style={{
-              width: '280px',
-              height: '4px',
-              background: 'linear-gradient(90deg, #1ae2c0, transparent)',
-              marginTop: '24px',
-              marginBottom: '20px',
+              position: 'absolute',
+              bottom: '0',
+              left: '0',
+              width: '100%',
+              height: '160px',
+              background: 'linear-gradient(0deg, #0a0a0f, transparent)',
               display: 'flex',
             }}
           />
 
-          {/* Subtitle stat */}
+          {/* Text content */}
           <div
             style={{
-              fontFamily: 'Outfit, sans-serif',
-              fontWeight: 700,
-              fontSize: '28px',
-              color: '#d8c8f5',
               display: 'flex',
-              marginBottom: '8px',
+              flexDirection: 'column',
+              padding: '72px 56px 40px 0',
+              justifyContent: 'center',
+              flex: 1,
+              position: 'relative',
             }}
           >
-            {subtitle}
+            {/* "I CLEARED" label */}
+            <div
+              style={{
+                fontFamily: 'Bungee, sans-serif',
+                fontSize: '36px',
+                color: '#ffffff',
+                letterSpacing: '3px',
+                display: 'flex',
+                marginBottom: '16px',
+              }}
+            >
+              I CLEARED
+            </div>
+
+            {/* Game name — teal, big, adaptive */}
+            <div
+              style={{
+                fontFamily: 'Bungee, sans-serif',
+                fontSize: `${gameSize}px`,
+                lineHeight: gameLH,
+                color: '#1ae2c0',
+                letterSpacing: '1px',
+                display: 'flex',
+                flexWrap: 'wrap',
+                maxWidth: '660px',
+                textShadow: '0 2px 24px rgba(26, 226, 192, 0.3)',
+              }}
+            >
+              {gameName}
+            </div>
+
+            {/* Subtitle stat */}
+            <div
+              style={{
+                fontFamily: 'Outfit, sans-serif',
+                fontWeight: 700,
+                fontSize: '28px',
+                color: '#d8c8f5',
+                display: 'flex',
+                marginTop: '28px',
+              }}
+            >
+              {subtitle}
+            </div>
           </div>
         </div>
 
