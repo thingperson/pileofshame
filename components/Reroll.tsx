@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Game, MoodTag } from '@/lib/types';
 import { useStore } from '@/lib/store';
+import { useScrollLock } from '@/lib/useScrollLock';
 import { STATUS_CONFIG, REROLL_MESSAGES, TIME_TIER_CONFIG, MAX_PLAYING_NOW } from '@/lib/constants';
 import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
 import { hasSprite } from '@/lib/pixel/sprites';
@@ -60,6 +61,7 @@ interface RerollProps {
 }
 
 export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, onSubShuffle, onCommit }: RerollProps) {
+  useScrollLock(open);
   const [mode, setMode] = useState<RerollMode>('anything');
   const [moodFilters, setMoodFilters] = useState<MoodTag[]>([]);
   const [currentPick, setCurrentPick] = useState<Game | null>(null);

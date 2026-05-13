@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { GameSource, TimeTier } from '@/lib/types';
 import { useStore } from '@/lib/store';
+import { useScrollLock } from '@/lib/useScrollLock';
 import { SOURCE_LABELS, TIME_TIER_CONFIG } from '@/lib/constants';
 import { useToast } from './Toast';
 import GameSearch from './GameSearch';
@@ -14,6 +15,7 @@ interface AddGameModalProps {
 }
 
 export default function AddGameModal({ open, onClose, initialName }: AddGameModalProps) {
+  useScrollLock(open);
   const [name, setName] = useState(initialName || '');
   const [source, setSource] = useState<GameSource>('steam');
   const [category, setCategory] = useState('');

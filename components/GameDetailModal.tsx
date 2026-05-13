@@ -4,6 +4,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { Game } from '@/lib/types';
 import GameCard from './GameCard';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 interface GameDetailModalProps {
   game: Game | null;
@@ -21,6 +22,8 @@ export default function GameDetailModal({ game, onClose }: GameDetailModalProps)
   const handleClose = useCallback(() => {
     onClose();
   }, [onClose]);
+
+  useScrollLock(!!game);
 
   // Escape to close + focus trapping
   useEffect(() => {
@@ -57,8 +60,6 @@ export default function GameDetailModal({ game, onClose }: GameDetailModalProps)
     };
 
     document.addEventListener('keydown', handleKeyDown);
-    // Prevent body scroll while modal is open
-    document.body.style.overflow = 'hidden';
 
     // Focus first interactive element
     requestAnimationFrame(() => {
@@ -70,7 +71,6 @@ export default function GameDetailModal({ game, onClose }: GameDetailModalProps)
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
     };
   }, [game, handleClose]);
 
@@ -99,9 +99,17 @@ export default function GameDetailModal({ game, onClose }: GameDetailModalProps)
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close handle — mobile drag indicator */}
-        <div className="sticky top-0 z-10 flex justify-center pt-2 pb-1 sm:hidden" style={{ backgroundColor: 'var(--color-bg-elevated)' }}>
+        {/* Close handle + button — mobile */}
+        <div className="sticky top-0 z-10 flex items-center justify-between px-3 pt-2 pb-1 sm:hidden" style={{ backgroundColor: 'var(--color-bg-elevated)' }}>
+          <div className="w-7" />
           <div className="w-10 h-1 rounded-full bg-text-faint/30" />
+          <button
+            onClick={handleClose}
+            className="w-7 h-7 flex items-center justify-center rounded-lg text-text-dim active:text-text-muted"
+            aria-label="Close"
+          >
+            ✕
+          </button>
         </div>
 
         {/* Close button — desktop */}

@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { Game } from '@/lib/types';
 import { useStore } from '@/lib/store';
+import { useScrollLock } from '@/lib/useScrollLock';
 import { useToast } from './Toast';
 import { trackGameCleared, trackShareClear, trackFirstCompletion, trackShareCardCreated } from '@/lib/analytics';
 import { loadCache, PRICE_CACHE_KEY, getCacheKey } from '@/lib/statsHelpers';
@@ -441,6 +442,7 @@ function GameClearShare({
 }
 
 export default function CompletionCelebration({ game, onClose, onConfirm }: CompletionCelebrationProps) {
+  useScrollLock(!!game);
   const [stage, setStage] = useState<'confirm' | 'celebrate'>('confirm');
   const [rating, setRating] = useState<number>(0);
   const [hoverRating, setHoverRating] = useState<number>(0);

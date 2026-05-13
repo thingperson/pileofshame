@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { trackHelpOpen } from '@/lib/analytics';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 interface HelpModalProps {
   open: boolean;
@@ -153,6 +154,7 @@ const SECTIONS = [
 ];
 
 export default function HelpModal({ open, onClose }: HelpModalProps) {
+  useScrollLock(open);
   const [activeSection, setActiveSection] = useState('basics');
 
   useEffect(() => {

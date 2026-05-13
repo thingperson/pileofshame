@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '@/lib/useAuth';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 interface GetStartedModalProps {
   open: boolean;
@@ -13,6 +14,7 @@ interface GetStartedModalProps {
 }
 
 export default function GetStartedModal({ open, onClose }: GetStartedModalProps) {
+  useScrollLock(open);
   const { signInWithDiscord, signInWithGoogle, signInWithEmail } = useAuth();
   const [showEmailInput, setShowEmailInput] = useState(false);
   const [email, setEmail] = useState('');
