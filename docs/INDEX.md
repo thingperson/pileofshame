@@ -50,7 +50,7 @@
 
 `docs/session-resume-YYYY-MM-DD.md` — current-state pointer, written at session close. Always read the latest at session start.
 
-Latest: [`session-resume-2026-05-07.md`](session-resume-2026-05-07.md) (when written).
+Latest: [`session-resume-2026-05-13.md`](session-resume-2026-05-13.md)
 
 ## Audits
 
@@ -60,6 +60,7 @@ Latest: [`session-resume-2026-05-07.md`](session-resume-2026-05-07.md) (when wri
 
 `notes/feedback-inbox/` — design feedback drops in here.
 `notes/new archetype images apr24/` — full-character art, used as merch hero art per `merch-plan.md`.
+`notes/pip/` — Pip character art, transparent PNGs, WebP tinified copies, pixel sprites.
 `notes/bundle-wave2/` and `bundle-wave2 extra/` — H2 sprite bundles, processed.
 
 ---
