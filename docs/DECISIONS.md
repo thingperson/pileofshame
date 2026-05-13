@@ -1342,3 +1342,31 @@ This is the single biggest paradigm shift in the app's history and almost every 
 **Evidence.** `feedback_no_manual_categorization.md` in the prior-session memory. Downstream: every mood/time/quality signal in the app is auto-populated; the mood picker at pick-time is the only user-facing categorization surface and it acts on a single game, not the whole library.
 
 ---
+
+## 2026-05-13 — Monetization plan corrected; Year-in-Pile chosen as Dec 2026 paid moment
+
+**Decision.** The locked 2026-05-04 monetization plan was audited mid-launch-day after repeatedly producing the same stalled outcomes on affiliate work. Eight internal contradictions and unexamined assumptions were corrected in-place via an Amendments section in `docs/monetization-plan.md` — the headline shifts: cosmetic-only subscriptions are explicitly allowed (Letterboxd Pro analog reconciled with the previous hard-NO), the Supporter Tier B/C trigger ("first organic $5 tip") was recognized as circular and replaced with "audience signal," the affiliate gate moved from an arbitrary ≥1k MAU to a real-economics gate ("RAWG-cost-coverable revenue ≈2.5k MAU OR free-commercial metadata path"), the Ko-fi progress widget was dropped (zero-counter optics), and direct affiliate partners (Fanatical/Humble/GMG direct, GOG via AdTraction — not CJ) were specified.
+
+Year-in-Pile was added as a new monetization stream and identified as the strongest near-term bet — $5 one-time unlock, Dec 1 2026 launch deadline (calendar-fixed by Spotify Wrapped's seasonal slot), 11-beat scrollable walkthrough + MP4 export via MediaRecorder as the viral asset. Build window Sep–Nov 2026. Spec at `docs/year-in-pile-spec.md`.
+
+IGDB was investigated and ruled out as a RAWG escape — verified via web search that IGDB also requires a commercial agreement past free tier. Same gate, different gatekeeper.
+
+**Why.**
+- The plan was a year old and load-bearing on Brady's mental model, but never red-team'd hard. The contradictions (subscription hard-NO while citing Letterboxd Pro elsewhere) had been sitting there untriggered.
+- The "wait for first organic $5 tip" trigger was mathematically uncircularable — without monetization visible, no organic tip arrives, so the trigger never fires. We'd been kicking the same can repeatedly without naming the recursion.
+- Year-in-Pile is the rare monetization surface that aligns with our anchor principles (free-forever core preserved, doesn't gate decisions, inherently viral, reuses existing share-card infra) AND has a proven model (Spotify Wrapped et al). Identified as the single highest-leverage near-term build.
+- Real revenue math at our scale (1–2% conversion × ~$3 commission) shows affiliate is a $89/mo loss at 1k MAU due to RAWG's $149/mo commercial floor. The original ≥1k MAU gate was a guess; the corrected gate is a calculation.
+
+**Implementation.**
+- `docs/monetization-plan.md` — full Amendments section at the bottom of the file with traceability for all 8 corrections. New streams (Cosmetic Premium Subscription, Year-in-Pile) inserted as #5 and #6.
+- `docs/year-in-pile-spec.md` — new build-ready spec (~470 lines), all key decisions made (pricing, free/paid split, timeline, virality mechanics).
+- Memory: `~/.claude/projects/.../memory/feedback_check_index_first.md` — feedback rule logged to prevent future Claude sessions from reinventing planning work that's already in INDEX.md.
+
+**Rejected.**
+- Continuing to defer affiliate work to "after launch" without examining the economic gate. Would have produced another stalled affiliate sprint in 4–6 weeks.
+- IGDB migration to escape RAWG commercial cost. Web-verified equivalence — not an escape, just a different vendor relationship.
+- A Stripe-subscription Supporter tier (initial recommendation before reading the locked plan). The plan already specced one-time Ko-fi tip tiers; a parallel subscription would be redundant. The new Cosmetic Premium stream is *distinct* from one-time supporter tiers — different product, different mental model.
+
+**Drift risk.** The locked monetization plan now has both an original body (2026-05-04) and an Amendments section (2026-05-13). Future sessions must read the Amendments first when in doubt — the body is preserved for context but the Amendments section is the source of truth on any conflict. Marked explicitly in the doc.
+
+---
