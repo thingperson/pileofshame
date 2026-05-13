@@ -96,10 +96,11 @@
 - Light (v2: warm cream palette matching landing-v2, glass token system) ✅
 - 90s (full easter egg: marquee, cursor trails, guestbook, visitor counter) ✅
 - 80s (synthwave gradients) ✅
-- Future, Ultra, Void ✅
+- Ultra, Void ✅
+- Future ✅ (stashed from active rotation 2026-05-13 — CSS kept, removed from selector)
 - Dino: DALL-E illustrated mascot banner + landscape background ✅
 - Weird: Comic Sans, glitch effects, card rotation, chromatic aberration ✅
-- Cozy (warm golden cream, Nunito font, soft radius) ✅
+- Cozy (warm golden cream, Nunito font, soft radius) ✅ (stashed from active rotation 2026-05-13 — CSS kept, removed from selector)
 - Minimal (near-black, opacity text, red-only accent, dividers only) ✅
 - Tropical (vibrant mint/coral/maize on deep teal) ✅
 - Campfire (deep forest charcoal, warm orange/saffron accents) ✅

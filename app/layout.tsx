@@ -232,6 +232,7 @@ export default function RootLayout({
               sameAs: [
                 'https://twitter.com/WhittekerBrady',
                 'https://discord.gg/gJdmmymGg3',
+                'https://www.wikidata.org/wiki/Q139788592',
               ],
             }),
           }}

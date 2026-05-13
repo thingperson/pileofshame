@@ -39,6 +39,18 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-05-13 — Cozy and Future themes stashed from active rotation
+
+**Decision.** Removed `cozy` and `future` from the theme selector, type union, and NinetiesMode render branches. CSS rules in `globals.css` left in place. Component stubs retained as comments in `NinetiesMode.tsx`.
+
+**Why.** Theme count reduction — user feedback requested fewer themes (one dark, one light, a couple fun ones). Cozy and Future were the lowest-value picks: Future never felt finished, Cozy was visually soft but overlapped with the light theme's warmth. Dark / Light / 80s / 90s / Dino / Void is a tighter, more defensible set.
+
+**Implementation.** Commit `ceb1bbc` + `ed32a40`. Files: `lib/types.ts` (union), `components/SettingsMenu.tsx` (commented out with stash date), `components/ThemeClass.tsx` (removed from class list), `components/NinetiesMode.tsx` (branches commented, component bodies replaced with stubs).
+
+**To restore.** Uncomment in all four files. CSS is already there.
+
+---
+
 ## 2026-05-13 — Light theme as default; poster theme retired
 
 **Decision.** Flipped the default theme from `dark` to `light` in `lib/store.ts` initial state. Existing users keep their persisted preference; only new visits and import-resets land in light. Also dropped the `poster` theme from the active roster — `🎀 Poster` was sitting alongside the eight visible themes in Settings but was never validated and didn't fit the brand. Removed from `SettingsMenu.tsx`, `ThemeClass.tsx`, and the `theme` type union in `lib/types.ts`. CSS rules in `globals.css` left in place per the existing "stash, don't delete" convention.

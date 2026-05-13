@@ -1046,11 +1046,11 @@ function AppContent() {
         <p className="text-xs text-text-faint font-[family-name:var(--font-mono)]">
           ❤️ Free forever. Tips keep the servers running and new features coming.
         </p>
-        <div className="flex items-center justify-center gap-4 mt-3">
-          <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] py-3 sm:py-1">Discord</a>
-          <a href={PIP_BOT_INVITE_URL} target="_blank" rel="noopener noreferrer" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] py-3 sm:py-1">Add Pip bot</a>
-          <a href="/privacy" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] py-3 sm:py-1">Privacy</a>
-          <a href="/terms" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] py-3 sm:py-1">Terms</a>
+        <div className="flex flex-wrap items-center justify-center gap-3 mt-3">
+          <a href={PIP_BOT_INVITE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg transition-all hover:scale-[1.03]" style={{ backgroundColor: 'rgba(88,101,242,0.15)', color: 'rgba(88,101,242,1)', border: '1px solid rgba(88,101,242,0.3)' }}>🤖 Add Pip to Discord</a>
+          <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] py-1">Discord</a>
+          <a href="/privacy" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] py-1">Privacy</a>
+          <a href="/terms" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] py-1">Terms</a>
         </div>
       </footer>
     </div>

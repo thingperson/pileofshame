@@ -7,7 +7,7 @@ import Wordmark from '@/components/Wordmark';
 import AuthButton from '@/components/AuthButton';
 import { trackLandingView } from '@/lib/analytics';
 import { useStore } from '@/lib/store';
-import { DISCORD_INVITE_URL } from '@/lib/social';
+import { DISCORD_INVITE_URL, PIP_BOT_INVITE_URL } from '@/lib/social';
 
 interface LandingPageV2Props {
   onImport: () => void;
@@ -703,7 +703,11 @@ function Footer() {
           <div>
             <p className="text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>We&apos;re hanging out in Discord.</p>
             <p className="text-xs mb-4">Share what got picked. Roast your own pile. Tell us what to fix.</p>
-            <a href={DISCORD_INVITE_URL} className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all hover:scale-[1.03]" style={{ backgroundColor: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)' }} target="_blank" rel="noopener noreferrer">🎮 Join the Discord</a>
+            <div className="flex flex-wrap gap-2">
+              <a href={DISCORD_INVITE_URL} className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all hover:scale-[1.03]" style={{ backgroundColor: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)' }} target="_blank" rel="noopener noreferrer">🎮 Join the Discord</a>
+              <a href={PIP_BOT_INVITE_URL} className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all hover:scale-[1.03]" style={{ backgroundColor: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)' }} target="_blank" rel="noopener noreferrer">🤖 Add Pip to your server</a>
+            </div>
+            <p className="text-[11px] mt-3" style={{ color: 'rgba(255,255,255,0.45)' }}>Pip&apos;s our bot. Type <span className="font-[family-name:var(--font-mono)]">/pick</span>. He picks a game. That&apos;s it.</p>
           </div>
           <div className="flex flex-col gap-2 text-xs">
             <a href="/privacy" className="hover:text-white transition-colors">Privacy</a>
