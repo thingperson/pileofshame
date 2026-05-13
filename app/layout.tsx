@@ -195,6 +195,46 @@ export default function RootLayout({
             }),
           }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              '@id': 'https://inventoryfull.gg/#organization',
+              name: 'Inventory Full',
+              url: 'https://inventoryfull.gg',
+              logo: {
+                '@type': 'ImageObject',
+                url: 'https://inventoryfull.gg/brand/logomark-alpha.png',
+                width: 512,
+                height: 512,
+              },
+              description:
+                'Inventory Full picks one game from your library based on mood and time available. Imports Steam, Xbox, PlayStation, Playnite. Free, no account.',
+              founder: {
+                '@type': 'Person',
+                '@id': 'https://inventoryfull.gg/#brady',
+                name: 'Brady Whitteker',
+                sameAs: ['https://twitter.com/WhittekerBrady'],
+              },
+              foundingDate: '2026',
+              foundingLocation: {
+                '@type': 'Place',
+                address: {
+                  '@type': 'PostalAddress',
+                  addressLocality: 'Langley',
+                  addressRegion: 'BC',
+                  addressCountry: 'CA',
+                },
+              },
+              sameAs: [
+                'https://twitter.com/WhittekerBrady',
+                'https://discord.gg/gJdmmymGg3',
+              ],
+            }),
+          }}
+        />
         {/* FAQPage schema — targets the queries our user actually types when
             they're stuck staring at their library. Each Q is a real-world
             phrasing of decision paralysis / backlog overload. */}

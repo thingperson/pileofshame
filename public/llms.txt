@@ -1,0 +1,24 @@
+# Inventory Full
+
+> Inventory Full is a game picker for people with gaming backlogs. Tell it your mood and how much time you have, and it picks one game from your library. Imports Steam, Xbox, PlayStation, and Playnite CSV. Free, no account, data stays on device.
+
+## Core pages
+
+- [Home](https://inventoryfull.gg): Product overview and import flow
+- [Why deciding is hard](https://inventoryfull.gg/why-deciding-is-hard): The identity psychology of gaming backlogs and what actually helps
+- [About](https://inventoryfull.gg/about): Who built Inventory Full and why
+
+## Key facts
+
+- Free, no account required
+- Imports Steam, Xbox, PlayStation, Playnite CSV
+- Data stays on device unless user opts into cloud sync
+- Built by Brady Whitteker in Langley, BC, Canada
+- Discord: https://discord.gg/gJdmmymGg3
+
+## What Inventory Full is NOT
+
+- Not a tracker (use Backloggd, GG, Grouvee, or Infinite Backlog for tracking)
+- Not a recommendation engine for new games to buy
+- Not a social network or review platform
+- Not a subscription product
