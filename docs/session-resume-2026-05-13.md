@@ -67,4 +67,69 @@ These exist but are NOT committed yet. Brady should review and commit:
 
 ---
 
-*Closed 2026-05-13 ~01:30 PDT*
+*Closed first wave 2026-05-13 ~01:30 PDT*
+
+---
+
+# Second wave — 2026-05-13 evening session
+
+**Focus:** Discord bot Phase 1 shipped to Fly, launch demo capture script rebuilt for r/SideProject, light theme made default, post copy locked.
+
+## What shipped this wave (7 commits to main)
+
+1. **Scripted Playwright demo capture for launch assets** — Standalone `scripts/demo-capture.ts` produces a deterministic ~25-28s recording of the pick → play → complete flow. Mutates browser localStorage to force Outer Wilds as the picked game (without touching prod). Synthetic cursor + click-pulse rings (Playwright's `recordVideo` doesn't render the OS cursor). Title card overlay matching OG share card style (cream BG, inline-SVG wordmark, Outfit font, pip-26 from `notes/pip/Transparent Pips/` injected as base64). Override Pip variant with `PIP_FILE=...` env. Suppresses in-app onboarding modals (postAccept overlay via CSS opacity:0, SampleImportNudge via localStorage flag clear) so the launch reel reads as a clean cut. `35acf88` + `04206ca`. Docs: `scripts/demo-capture-README.md`.
+
+2. **Pip — Discord bot Phase 1 MVP** — `bot/` monorepo subdir, discord.js v14, deployed to Fly.io as `inventory-full-bot.fly.dev` (sjc, shared-cpu-1x, 256MB). Two slash commands: `/pick [length] [mood]` (curated 20-game pool, Roll-again button) and `/archetype <which>` (autocomplete over 40 slugs, embeds canonical OG image). Stateless, no DB, no privileged intents, no PSN/Steam/Xbox tokens. `.vercelignore` keeps it out of Vercel deploys. Sentry-ready (DSN optional). `b2dd60d`. See `bot/README.md` + `docs/DECISIONS.md` 2026-05-13 entry.
+
+3. **Light theme as new default + poster theme retired** — Flipped `theme: 'dark'` → `theme: 'light'` in store initial state. Existing users keep persisted preference. Dropped `poster` from active rotation (CSS stashed per existing convention). `2a7e73f`. See `docs/DECISIONS.md` 2026-05-13 entry.
+
+## Pip on Fly — current state
+
+- Live, responding, registered globally (1hr propagation completed during session)
+- Fly secrets set: `DISCORD_TOKEN`, `DISCORD_APP_ID`, `INVENTORY_FULL_URL`. `SENTRY_DSN` deferred — no separate Sentry project yet.
+- Fly billing: 7-day trial active, ~$5/mo after. Calendar nudge for day-6 not set.
+- Test server connected ("Pip Test"). Bot avatar still default Discord placeholder.
+
+## Launch post status — r/SideProject ready
+
+- Post copy locked. Title: *"Built this because my 750-game library was playing me, not the other way around"*. Body ~150 words, voice-charter clean.
+- Pre-comment ready with origin story + 2 specific feedback asks.
+- Karma at **17**. Needs **25+** before posting (r/SideProject mod queue threshold). Push 8 more via genuine comments on r/Steam / r/patientgamers / r/gamingsuggestions over 24–48h.
+- Demo video produced at `demo-output/page@*.webm` (2.7MB, ~25s playtime). **Needs upload to Streamable** before posting (Reddit native uploader doesn't accept webm).
+- Post timing window: Tue–Thu, 8–11am ET. Be at computer for 2hr after to reply to comments.
+
+## Verify on next session start
+
+- `https://inventoryfull.gg` loads with **light theme by default** on fresh-incognito visit. If still dark, theme migration bug.
+- Pip bot still online: `/pick` in test server responds. If offline, `fly logs` for crash signal.
+- Vercel deploy of `0c0a9cd` propagated (no user-facing change in this commit; demo script + bot are non-Vercel).
+
+## Health snapshot
+
+- **Build:** Clean (verified before light-theme commit)
+- **Main tip:** `0c0a9cd`
+- **Known bugs:** None new
+- **Worktree:** `claude/goofy-wilbur-f8a882` merged to main, clean
+
+## Next-session candidates (Pip)
+
+- **"Add to Discord" button on inventoryfull.gg** — distribution unlock. Without this, only your test server has Pip. ~30min UI work + Privacy Policy footnote.
+- **Pool growth 20 → 300** — write `bot/scripts/build-pool.ts` pulling from RAWG + HLTB, heuristic mood-tag mapping. ~90min script + 30min Brady editing.
+- **`/whatshouldweplay`** — group voting command. The reason gaming Discords would add Pip. ~3–4hr.
+- **Pip avatar + activity status** — upload Pip mascot PNG as bot avatar in dev portal. 5min cosmetic.
+- **Sentry watch** — create separate `pip` Sentry project, set DSN as Fly secret, redeploy.
+- **Day-6 Fly billing nudge** — set a calendar reminder for ~2026-05-19.
+
+## Next-session candidates (launch)
+
+- Streamable upload of demo video; drop link into the locked Reddit post body
+- Karma run (push 17 → 25+)
+- Execute post: pick a Tue/Wed/Thu morning slot
+
+## Carry-forward from first wave
+
+The CLEAR_FLAVORS non-finishable branch, pip-as-archetype, game-specific trophy Pips, untracked 2026-05-12 docs batch — none of these were touched this wave. Still open.
+
+---
+
+*Closed second wave 2026-05-13 ~05:50 PDT*
