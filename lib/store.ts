@@ -74,7 +74,7 @@ export const useStore = create<LibraryState & StoreActions>()(
         showPlayed: false,
         showBailed: false,
         viewMode: 'grid' as const,
-        theme: 'dark' as const,
+        theme: 'light' as const,
         platformPreference: 'any' as PlatformPreference,
       },
       reroll: {
@@ -343,7 +343,7 @@ export const useStore = create<LibraryState & StoreActions>()(
               showPlayed: false,
               showBailed: false,
               viewMode: 'list',
-              theme: 'dark',
+              theme: 'light',
               platformPreference: 'any',
             },
             lastSaved: new Date().toISOString(),
