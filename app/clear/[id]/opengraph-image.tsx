@@ -3,10 +3,6 @@ import { createClient } from '@supabase/supabase-js';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 
-// Node runtime so we can read the co-located assets straight off disk. Edge +
-// `fetch(new URL(..., import.meta.url))` blew up in Next 16 Turbopack
-// ("u2 is not iterable" inside satori's font pipeline); fs.readFile is the
-// pattern `app/apple-icon.tsx` uses and it works reliably.
 export const runtime = 'nodejs';
 export const alt = 'Game Cleared - Inventory Full';
 export const size = { width: 1200, height: 630 };
@@ -14,13 +10,12 @@ export const contentType = 'image/png';
 
 async function loadAssets() {
   const dir = join(process.cwd(), 'public/og-assets');
-  const [bungeeInline, bungee, outfitBold, heroBytes] = await Promise.all([
-    readFile(join(dir, 'BungeeInline.ttf')),
+  const [bungee, outfitBold, pipBytes] = await Promise.all([
     readFile(join(dir, 'Bungee.ttf')),
     fetch('https://fonts.gstatic.com/s/outfit/v15/QGYyz_MVcBeNP4NjuGObqx1XmO1I4bCyC4E.ttf').then((r) => r.arrayBuffer()),
-    readFile(join(dir, 'hero.png')),
+    readFile(join(dir, 'pip-trophy.png')),
   ]);
-  return { bungeeInline, bungee, outfitBold, heroBytes };
+  return { bungee, outfitBold, pipBytes };
 }
 
 interface ShareCard {
@@ -45,7 +40,6 @@ interface ShareCard {
 }
 
 function getMockCard(id: string): ShareCard {
-  // /clear/mock | mock-dollar | mock-hltb | mock-slow | mock-count | mock-hours
   const base: ShareCard = {
     game_name: 'Elden Ring',
     cover_url: null,
@@ -86,29 +80,34 @@ function getMockCard(id: string): ShareCard {
 }
 
 function pickSubtitle(card: ShareCard): string {
-  // Four stat templates, first-match wins. Falls back to a generic line.
   if (card.show_dollar_value && card.dollar_value) {
-    return `that's $${Math.round(card.dollar_value)} back from the pile.`;
+    return `That's $${Math.round(card.dollar_value)} reclaimed from the pile.`;
   }
   if (card.show_hltb_compare && card.hours_played && card.hltb_main && card.hltb_main > 0) {
     const diff = Math.round(card.hltb_main - card.hours_played);
     if (diff > 0) return `${diff}h faster than average.`;
-    // Slower-than-average is not a brag. Fall through to evergreen.
   }
   if (card.show_stats && card.total_cleared) {
-    return `game #${card.total_cleared} off the pile.`;
+    return `Game #${card.total_cleared} off the pile.`;
   }
   if (card.show_hours && card.hours_played) {
-    return `${Math.round(card.hours_played)}h, well spent.`;
+    return `${Math.round(card.hours_played)}h well spent.`;
   }
-  return 'another one down.';
+  return 'Another one down.';
+}
+
+function fitGameName(name: string): { fontSize: number; lineHeight: number } {
+  const len = name.length;
+  if (len <= 8) return { fontSize: 88, lineHeight: 1 };
+  if (len <= 14) return { fontSize: 72, lineHeight: 1 };
+  if (len <= 20) return { fontSize: 58, lineHeight: 1.05 };
+  if (len <= 30) return { fontSize: 46, lineHeight: 1.1 };
+  return { fontSize: 38, lineHeight: 1.15 };
 }
 
 export default async function Image({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  // Preview/mock shortcuts — hit /clear/mock/opengraph-image to see the card
-  // without a real share_cards row. Variants exercise each subtitle template.
   let card: ShareCard | null = null;
   if (id.startsWith('mock')) {
     card = getMockCard(id);
@@ -127,7 +126,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   if (!card) {
     return new ImageResponse(
       (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', background: '#0b0618', color: '#a78bfa', fontSize: '32px', fontFamily: 'system-ui' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', background: '#0a0a0f', color: '#1ae2c0', fontSize: '32px', fontFamily: 'system-ui' }}>
           inventoryfull.gg
         </div>
       ),
@@ -135,217 +134,146 @@ export default async function Image({ params }: { params: Promise<{ id: string }
     );
   }
 
-  const { bungeeInline, bungee, outfitBold, heroBytes } = await loadAssets();
-  const heroDataUrl = `data:image/png;base64,${heroBytes.toString('base64')}`;
+  const { bungee, outfitBold, pipBytes } = await loadAssets();
+  const pipDataUrl = `data:image/png;base64,${pipBytes.toString('base64')}`;
 
   const gameName = (card.game_name ?? 'A Game').toUpperCase();
   const subtitle = pickSubtitle(card);
-
-  // Layout strategy:
-  //   Short combined ("ELDEN RING CLEARED!") → one line, big type.
-  //   Longer → stack "game" on top, "CLEARED!" below. Game-name size scales
-  //   against its own length so "Disco Elysium: The Final Cut" still fits.
-  // Rough Bungee Inline width ≈ 0.6 × fontSize per char. Safe-zone padding 80px
-  // each side → content cap ≈ 1040px.
-  const combinedLen = gameName.length + ' CLEARED!'.length;
-  const stackLayout = combinedLen > 22;
-  let gameSize: number;
-  let clearedSize: number;
-  if (stackLayout) {
-    // Fit game name alone to ~1000px. Char ≈ 0.58 × fontSize.
-    gameSize = Math.min(83, Math.max(35, Math.floor(800 / (gameName.length * 0.58))));
-    clearedSize = 90;
-  } else {
-    // Single line — fit combined string.
-    gameSize = Math.min(77, Math.floor(800 / (combinedLen * 0.58)));
-    clearedSize = gameSize;
-  }
+  const { fontSize: gameSize, lineHeight: gameLH } = fitGameName(gameName);
 
   return new ImageResponse(
     (
       <div
         style={{
           display: 'flex',
-          flexDirection: 'column',
           width: '1200px',
           height: '630px',
-          background: 'linear-gradient(180deg, #1a0a2e 0%, #0b0618 60%, #0b0618 100%)',
+          background: '#0a0a0f',
           position: 'relative',
           fontFamily: 'Outfit, sans-serif',
         }}
       >
-        {/* Purple radial glow — full-width flex row centers it */}
+        {/* Left panel — Pip trophy on dark bg with subtle glow */}
         <div
           style={{
-            position: 'absolute',
-            top: '-80px',
-            left: 0,
-            width: '1200px',
-            height: '560px',
             display: 'flex',
+            width: '460px',
+            height: '630px',
+            alignItems: 'center',
             justifyContent: 'center',
+            position: 'relative',
           }}
         >
+          {/* Golden radial glow behind Pip */}
           <div
             style={{
-              width: '900px',
-              height: '560px',
-              background: 'radial-gradient(ellipse, rgba(168, 85, 247, 0.38), rgba(234, 45, 225, 0.08) 45%, transparent 70%)',
+              position: 'absolute',
+              top: '80px',
+              left: '40px',
+              width: '380px',
+              height: '460px',
+              background: 'radial-gradient(ellipse, rgba(218, 165, 32, 0.2) 0%, rgba(218, 165, 32, 0.05) 40%, transparent 70%)',
               display: 'flex',
             }}
           />
-        </div>
-
-        {/* Hero faded as the backdrop anchor — centered via flex row.
-            PNG not webp: satori in next/og 16.2.1 crashes on webp data URLs. */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '10px',
-            left: 0,
-            width: '1200px',
-            height: '380px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={heroDataUrl}
+            src={pipDataUrl}
             alt=""
-            width={540}
-            height={360}
-            style={{ width: '540px', height: '360px', objectFit: 'contain' }}
+            width={340}
+            height={340}
+            style={{ width: '340px', height: '340px', objectFit: 'contain' }}
           />
         </div>
 
-        {/* Main hero — game name (strikethrough) + CLEARED!, stacked or inline */}
+        {/* Right panel — text content */}
         <div
           style={{
-            position: 'absolute',
-            bottom: stackLayout ? '150px' : '178px',
-            left: 0,
-            width: '1200px',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
+            flex: 1,
+            padding: '60px 56px 40px 0',
             justifyContent: 'center',
-            padding: '0 80px',
-            gap: '0',
+            position: 'relative',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: stackLayout ? 0 : '22px', flexWrap: 'nowrap' }}>
-            <div
-              style={{
-                fontFamily: 'Bungee Inline, sans-serif',
-                fontSize: `${gameSize}px`,
-                lineHeight: 1,
-                color: '#f4ecff',
-                letterSpacing: '1px',
-                textDecoration: 'line-through',
-                textDecorationColor: '#ea2de1',
-                textDecorationThickness: `${Math.max(4, Math.round(gameSize / 18))}px`,
-                display: 'flex',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {gameName}
-            </div>
-            {!stackLayout && (
-              <div
-                style={{
-                  fontFamily: 'Bungee, sans-serif',
-                  fontSize: `${clearedSize}px`,
-                  lineHeight: 1,
-                  color: '#ff5a8a',
-                  letterSpacing: '1px',
-                  display: 'flex',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                CLEARED!
-              </div>
-            )}
+          {/* "I CLEARED" label */}
+          <div
+            style={{
+              fontFamily: 'Bungee, sans-serif',
+              fontSize: '36px',
+              color: '#ffffff',
+              letterSpacing: '3px',
+              display: 'flex',
+              marginBottom: '8px',
+            }}
+          >
+            I CLEARED
           </div>
-          {stackLayout && (
-            <div
-              style={{
-                fontFamily: 'Bungee, sans-serif',
-                fontSize: `${clearedSize}px`,
-                lineHeight: 1,
-                marginTop: '8px',
-                color: '#ff5a8a',
-                letterSpacing: '2px',
-                display: 'flex',
-              }}
-            >
-              CLEARED!
-            </div>
-          )}
-        </div>
 
-        {/* Subtitle — stat template */}
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '108px',
-            left: 0,
-            width: '1200px',
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
+          {/* Game name — teal, big, adaptive */}
+          <div
+            style={{
+              fontFamily: 'Bungee, sans-serif',
+              fontSize: `${gameSize}px`,
+              lineHeight: gameLH,
+              color: '#1ae2c0',
+              letterSpacing: '1px',
+              display: 'flex',
+              flexWrap: 'wrap',
+              maxWidth: '660px',
+            }}
+          >
+            {gameName}
+          </div>
+
+          {/* Teal accent line */}
+          <div
+            style={{
+              width: '280px',
+              height: '4px',
+              background: 'linear-gradient(90deg, #1ae2c0, transparent)',
+              marginTop: '24px',
+              marginBottom: '20px',
+              display: 'flex',
+            }}
+          />
+
+          {/* Subtitle stat */}
           <div
             style={{
               fontFamily: 'Outfit, sans-serif',
               fontWeight: 700,
-              fontSize: '34px',
+              fontSize: '28px',
               color: '#d8c8f5',
-              letterSpacing: '-0.3px',
               display: 'flex',
+              marginBottom: '8px',
             }}
           >
             {subtitle}
           </div>
         </div>
 
-        {/* Bottom row: attribution (left) + wordmark (right) */}
+        {/* Bottom bar — wordmark + tagline */}
         <div
           style={{
             position: 'absolute',
-            bottom: '32px',
-            left: 0,
+            bottom: '0',
+            left: '0',
             width: '1200px',
+            height: '80px',
             display: 'flex',
-            justifyContent: 'space-between',
             alignItems: 'center',
+            justifyContent: 'space-between',
             padding: '0 48px',
+            borderTop: '1px solid rgba(26, 226, 192, 0.15)',
+            background: 'linear-gradient(0deg, rgba(10, 10, 15, 0.95), transparent)',
           }}
         >
-          {/* Phase 1 Practical Value (Berger STEPPS) — recipient-facing CTA so
-              the card carries utility for the viewer, not just signaling for
-              the sender. Per DECISIONS 2026-04-27 share-card lockdown. */}
-          <div
-            style={{
-              fontSize: '18px',
-              color: '#d8c8f5',
-              fontFamily: 'Outfit, sans-serif',
-              fontWeight: 700,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
-            <span>find out what your pile is worth</span>
-            <span style={{ color: '#a78bfa' }}>→ inventoryfull.gg/stats</span>
-          </div>
-          {/* Wordmark — inline paths from public/if-logos/wordmark-alone.svg so
-              satori renders actual brand glyphs (external SVG <img> is unreliable
-              in @vercel/og). "IN" override to white on dark; "VENTORY FULL" teal. */}
+          {/* Wordmark */}
           <svg
-            width={260}
-            height={34}
+            width={220}
+            height={28}
             viewBox="70 645 2580 335"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -358,13 +286,24 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               fill="#ffffff"
             />
           </svg>
+          {/* Tagline */}
+          <div
+            style={{
+              fontFamily: 'Outfit, sans-serif',
+              fontWeight: 700,
+              fontSize: '18px',
+              color: 'rgba(255, 255, 255, 0.5)',
+              display: 'flex',
+            }}
+          >
+            We help you pick. You do the playing.
+          </div>
         </div>
       </div>
     ),
     {
       ...size,
       fonts: [
-        { name: 'Bungee Inline', data: bungeeInline, weight: 400 as const, style: 'normal' as const },
         { name: 'Bungee', data: bungee, weight: 400 as const, style: 'normal' as const },
         { name: 'Outfit', data: outfitBold, weight: 700 as const, style: 'normal' as const },
       ],
