@@ -204,6 +204,44 @@ const CLEAR_FLAVORS: FlavorVariant[] = [
   { id: 'lighter',    build: ({ name }) => `${name}: cleared. The pile gets lighter.` },
 ];
 
+const DONE_FLAVORS: FlavorVariant[] = [
+  {
+    id: 'done-hours',
+    build: ({ name, hoursOnGame }) => {
+      if (hoursOnGame < 20) return null;
+      return `${hoursOnGame} hours in ${name}. Put in the time.`;
+    },
+  },
+  {
+    id: 'done-dollar',
+    build: ({ name, gamePrice }) => {
+      if (!gamePrice || gamePrice < 5) return null;
+      return `Closed out ${name}. $${Math.round(gamePrice)} reclaimed.`;
+    },
+  },
+  {
+    id: 'done-countdown',
+    build: ({ name, backlogSize }) => {
+      if (backlogSize < 2) return null;
+      return `Done with ${name}. Pile down to ${backlogSize - 1}.`;
+    },
+  },
+  {
+    id: 'done-milestone',
+    build: ({ name, gamesCleared }) => {
+      const next = gamesCleared + 1;
+      if (next === 1) return `First one off the pile: ${name}.`;
+      if (next % 10 === 0) return `${name} done. That's ${next} cleared.`;
+      if (next % 5 === 0) return `${name} down. ${next} cleared so far.`;
+      return null;
+    },
+  },
+  { id: 'done-marked',    build: ({ name }) => `Made my mark on ${name}.` },
+  { id: 'done-time',      build: ({ name }) => `${name}: got the time it deserved. Moving on.` },
+  { id: 'done-pile',      build: ({ name }) => `${name}: done. One less on the pile.` },
+  { id: 'done-showed-up', build: ({ name }) => `Showed up for ${name}. That counts.` },
+];
+
 function pickFlavor(ctx: FlavorContext, exclude?: string): string {
   const eligible = CLEAR_FLAVORS
     .map((v) => v.build(ctx))
@@ -212,6 +250,14 @@ function pickFlavor(ctx: FlavorContext, exclude?: string): string {
   const pool = exclude ? eligible.filter((s) => s !== exclude) : eligible;
   const choose = pool.length > 0 ? pool : eligible;
   return choose[Math.floor(Math.random() * choose.length)];
+}
+
+function pickDoneFlavor(ctx: FlavorContext): string {
+  const eligible = DONE_FLAVORS
+    .map((v) => v.build(ctx))
+    .filter((s): s is string => typeof s === 'string' && s.length > 0);
+  if (eligible.length === 0) return `${ctx.name}: done.`;
+  return eligible[Math.floor(Math.random() * eligible.length)];
 }
 
 function ShareThisClear(props: {
@@ -275,17 +321,17 @@ function GameClearShare({
 
   // Flavor text auto-picked once. The user can't reroll — the card is what it
   // is. Per DECISIONS 2026-04-27 share-card lockdown.
-  const flavorText = useMemo(
-    () => pickFlavor({
+  const flavorText = useMemo(() => {
+    const ctx = {
       name: game.name,
       daysInPile: timeInPileDays,
       hoursOnGame,
       gamesCleared,
       backlogSize,
       gamePrice,
-    }),
-    [game.name, timeInPileDays, hoursOnGame, gamesCleared, backlogSize, gamePrice],
-  );
+    };
+    return game.isNonFinishable ? pickDoneFlavor(ctx) : pickFlavor(ctx);
+  }, [game.name, game.isNonFinishable, timeInPileDays, hoursOnGame, gamesCleared, backlogSize, gamePrice]);
 
   // HLTB "faster than average" — only a brag when the player actually beat it
   // below the average. Slower/thorough isn't share-worthy.

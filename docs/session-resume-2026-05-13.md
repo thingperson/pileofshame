@@ -231,23 +231,36 @@ Session spawned in a git worktree (`/.claude/worktrees/awesome-shockley-6eafb2`)
 5. **Cozy + future themes stashed** — removed from selector, type union, NinetiesMode branches. CSS retained.
 6. **`/why-deciding-is-hard` page** — shipped earlier this session. Internal links from landing + about page added.
 
-## Known open items (confirmed not built, despite prior session notes suggesting otherwise)
+## What shipped end-of-session (fifth wave)
+
+7. **Clear card cover art opacity increased** — `opengraph-image.tsx`: opacity `0.18 → 0.38`, filter to `saturate(0.8) brightness(0.75)`, gradient overlay right-end opacity `0.4 → 0.15`. Art now clearly visible on share cards.
+8. **LinkedIn company page added to sameAs** — `layout.tsx` Organization JSON-LD: `https://www.linkedin.com/company/117025197` added.
+9. **r/patientgamers post backlink** — `docs/LAUNCH_BIBLE.md §4.6`: added line pointing to `inventoryfull.gg/why-deciding-is-hard` in post body.
+10. **Pip images on manifesto page** — `app/why-deciding-is-hard/page.tsx`: `pip-exhausted.webp` added after section 1, `pip-pointing.webp` added before "What actually helps" section. 120×120 inline `<img>` tags at 0.88 opacity.
+11. **DONE_FLAVORS** — `components/CompletionCelebration.tsx`: Added `DONE_FLAVORS` array (8 variants for MMOs/sandboxes/non-finishable games), `pickDoneFlavor()` function, and branched `flavorText` useMemo on `game.isNonFinishable`. Share cards for non-finishable games now use "Made my mark," "Put in the time," etc. instead of "Cleared."
+
+## Known open items (confirmed not built)
 
 - **Pip bot pool:** still 20 games. Pool growth to 300 (`bot/scripts/build-pool.ts`) is NOT built.
 - **Platform pages** (`/steam-backlog-picker`, `/xbox-backlog-picker`, `/playstation-backlog-picker`): NOT built.
 - **`/alternatives` page:** NOT built.
-- **CLEAR_FLAVORS non-finishable branch:** NOT built.
-- **Landing page one-liner cleanup (LAUNCH_BIBLE §11):** NOT built. Subhead still reads "Your library feels more like it's playing you. It should be the other way around." — flagged as redundant in audit. "Skip the overthinking" section header still present.
+- **Landing page one-liner cleanup (LAUNCH_BIBLE §11):** NOT built. Subhead still redundant, "Skip the overthinking" header still present.
 - **Pre-seeding metadata cache** with top 500 Steam games: NOT done.
 - **Resend transactional email wiring:** NOT done. Needed before first marketing send.
+- **Pip bot Discord Developer Portal metadata** (description, tags): NOT done. Fill out bot's profile for discoverability.
+- **Product Hunt:** Streamable video + 5 screenshots still missing from listing.
+
+## AlternativeTo reminder
+
+Brady created an AlternativeTo.net account on ~2026-05-13. Account needs 7 days before posting. **Post on or after 2026-05-20.** List IF as an alternative to: Backloggd, Backlog Shuffle, Backlog Roulette, GG App, Grouvee. Position as "game backlog picker (not tracker), picks one game by mood + session length, free, no account."
 
 ## Next-session candidates (priority order)
 
-1. Pip bot pool 20 → 300 — `bot/scripts/build-pool.ts` from RAWG + HLTB
-2. Landing page one-liner cleanup per §11 audit (~50 min)
-3. CLEAR_FLAVORS non-finishable branch in CompletionCelebration.tsx
+1. `/alternatives` comparison page — high ROI for LLM compare queries
+2. Pip bot pool 20 → 300 — `bot/scripts/build-pool.ts` from RAWG + HLTB
+3. Landing page one-liner cleanup per §11 audit (~50 min)
 4. Platform pages — `/steam-backlog-picker`, `/xbox-backlog-picker`, `/playstation-backlog-picker`
-5. `/alternatives` comparison page
+5. Resend email wiring (needed before first marketing send)
 
 ## Distribution queue status
 
@@ -256,17 +269,17 @@ Session spawned in a git worktree (`/.claude/worktrees/awesome-shockley-6eafb2`)
 | r/SideProject | ✅ POSTED |
 | r/patientgamers | Pending ≥1 week after SideProject |
 | r/gamingsuggestions | Pending, only if first two land |
-| Product Hunt Coming Soon page | Brady has draft — needs verification |
+| Product Hunt Coming Soon page | Brady has draft — needs Streamable + 5 screenshots |
 | Show HN | After PH week |
 | Creator outreach Tier 1 | After HN |
-| AlternativeTo listing | Brady action (5 min) |
-| LinkedIn company page | Brady action (5 min, for sameAs) |
+| AlternativeTo listing | ⏰ Ready 2026-05-20 (account 7-day wait) |
+| LinkedIn company page | ✅ Added to sameAs JSON-LD |
 
 ## Health snapshot
 
-- **Build:** Clean. Commit `179996e`.
+- **Build:** Clean (verified after fifth wave commit).
 - **Known bugs:** Clear card art only applies to newly created cards (old rows have null cover_url). Pre-existing: HLTB 404s, NinetiesMode lint warnings.
 
 ---
 
-*Closed fourth wave 2026-05-13 evening PDT*
+*Closed fifth wave 2026-05-13 evening PDT*

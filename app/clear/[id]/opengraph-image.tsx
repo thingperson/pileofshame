@@ -249,8 +249,8 @@ export default async function Image({ params }: { params: Promise<{ id: string }
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
-                opacity: 0.18,
-                filter: 'saturate(0.6) brightness(0.7)',
+                opacity: 0.38,
+                filter: 'saturate(0.8) brightness(0.75)',
               }}
             />
           )}
@@ -262,7 +262,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               left: '0',
               width: '100%',
               height: '100%',
-              background: 'linear-gradient(90deg, #0a0a0f 0%, rgba(10, 10, 15, 0.7) 30%, rgba(10, 10, 15, 0.4) 100%)',
+              background: 'linear-gradient(90deg, #0a0a0f 0%, rgba(10, 10, 15, 0.6) 30%, rgba(10, 10, 15, 0.15) 100%)',
               display: 'flex',
             }}
           />

@@ -285,6 +285,8 @@ Priority order:
 >
 > [inventoryfull.gg](https://inventoryfull.gg)
 >
+> (The underlying psychology — identity claims, loss aversion, why organizing never fixes it — is written up here if that framing is useful: [inventoryfull.gg/why-deciding-is-hard](https://inventoryfull.gg/why-deciding-is-hard))
+>
 > Mostly posting this to find out if I'm uniquely broken at picking games or if there's a quiet army of you who also stare at 700 icons and play Balatro for the eighth time.
 
 #### Alt hooks (swap the first sentence if the 750-games lead feels braggy on the day)

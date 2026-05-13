@@ -233,6 +233,7 @@ export default function RootLayout({
                 'https://twitter.com/WhittekerBrady',
                 'https://discord.gg/gJdmmymGg3',
                 'https://www.wikidata.org/wiki/Q139788592',
+                'https://www.linkedin.com/company/117025197',
               ],
             }),
           }}

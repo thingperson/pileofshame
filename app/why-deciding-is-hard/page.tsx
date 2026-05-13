@@ -134,6 +134,18 @@ export default function WhyDecidingIsHardPage() {
             completely predictable output it actually is.
           </p>
 
+          {/* Pip — exhausted from the scroll-and-close loop */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <div style={{ textAlign: 'center', margin: '2rem 0 1.5rem' }}>
+            <img
+              src="/landing/pip/pip-exhausted.webp"
+              alt=""
+              width={120}
+              height={120}
+              style={{ display: 'inline-block', opacity: 0.88 }}
+            />
+          </div>
+
           {/* Section 2 — The reframe */}
           <h2
             style={{
@@ -264,6 +276,18 @@ export default function WhyDecidingIsHardPage() {
             decision-making under conditions of abundance and uncertainty. The scroll-and-close pattern
             is the expected output when you combine all four.
           </p>
+
+          {/* Pip — pointing toward solutions */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <div style={{ textAlign: 'center', margin: '2rem 0 1.5rem' }}>
+            <img
+              src="/landing/pip/pip-pointing.webp"
+              alt=""
+              width={120}
+              height={120}
+              style={{ display: 'inline-block', opacity: 0.88 }}
+            />
+          </div>
 
           {/* Section 4 — What actually helps */}
           <h2
