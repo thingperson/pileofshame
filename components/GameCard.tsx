@@ -1286,14 +1286,14 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                 }}
                 title="Draw the line on this one"
               >
-                {forceExpanded ? 'Not for me' : '🚪 Not for me'}
+                {forceExpanded ? "I'm moving on" : "🚪 I'm moving on"}
               </button>
             )}
 
             {/* Bail confirmation inline */}
             {canBail && showBailConfirm && (
               <div className={forceExpanded ? 'col-span-2 flex flex-wrap items-center gap-2' : 'flex flex-wrap items-center gap-2'}>
-                <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">Drawing the line?</span>
+                <span className="text-xs text-text-muted font-[family-name:var(--font-mono)]">Moving on from this game for good?</span>
                 <button
                   onClick={handleBail}
                   className="px-2.5 py-1 text-xs font-bold rounded-md transition-all hover:scale-[1.02]"
@@ -1303,38 +1303,17 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                     border: '1px solid rgba(239, 68, 68, 0.3)',
                   }}
                 >
-                  ✊ Yeah, I&apos;m done
+                  Yeah, not for me
                 </button>
                 <button
                   onClick={() => setShowBailConfirm(false)}
                   className="px-2 py-1 text-xs text-text-dim hover:text-text-muted transition-colors"
                 >
-                  Maybe later
+                  Not yet
                 </button>
               </div>
             )}
 
-            {/* Don't suggest toggle — card view only (modal moves this behind disclosure) */}
-            {!forceExpanded && (
-              <button
-                onClick={() => {
-                  toggleIgnore(game.id);
-                  showToast(game.ignored
-                    ? `${game.name} is back in rotation.`
-                    : `${game.name} won't be suggested anymore.`
-                  );
-                }}
-                className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97]"
-                style={{
-                  backgroundColor: game.ignored ? 'rgba(167, 139, 250, 0.1)' : 'rgba(255, 255, 255, 0.04)',
-                  color: game.ignored ? '#a78bfa' : 'var(--color-text-faint)',
-                  border: game.ignored ? '1px solid rgba(167, 139, 250, 0.25)' : '1px solid transparent',
-                }}
-                title={game.ignored ? 'Include in suggestions again' : 'Won\'t show up in Pick My Game'}
-              >
-                {game.ignored ? '👁 Suggest again' : '🚫 Don\'t suggest'}
-              </button>
-            )}
 
             {/* Skip count reset (only visible when game has been skipped 3+ times) */}
             {(() => {
@@ -1422,26 +1401,6 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                 </button>
               ) : (
                 <div className="border-t pt-3 space-y-2" style={{ borderColor: 'var(--color-border-subtle)' }}>
-                  {/* Don't suggest */}
-                  <button
-                    onClick={() => {
-                      toggleIgnore(game.id);
-                      showToast(game.ignored
-                        ? `${game.name} is back in rotation.`
-                        : `${game.name} won't be suggested anymore.`
-                      );
-                    }}
-                    className="flex items-center justify-center w-full text-xs font-semibold rounded-lg transition-all hover:brightness-110 active:scale-[0.97]"
-                    style={{
-                      height: 44,
-                      backgroundColor: game.ignored ? 'rgba(167, 139, 250, 0.1)' : 'rgba(239, 68, 68, 0.08)',
-                      color: game.ignored ? '#a78bfa' : '#ef4444',
-                      border: game.ignored ? '1px solid rgba(167, 139, 250, 0.25)' : '1px dashed rgba(239, 68, 68, 0.3)',
-                    }}
-                    title={game.ignored ? 'Include in suggestions again' : 'Won\'t show up in Pick My Game'}
-                  >
-                    {game.ignored ? 'Suggest again' : 'Don\'t suggest'}
-                  </button>
                   {/* Delete */}
                   {!showDeleteConfirm ? (
                     <button

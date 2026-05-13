@@ -18,6 +18,7 @@
     "@sentry/nextjs": "^10.47.0",
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.101.1",
+    "@vercel/analytics": "^2.0.1",
     "next": "16.2.1",
     "psn-api": "^2.18.0",
     "react": "19.2.4",

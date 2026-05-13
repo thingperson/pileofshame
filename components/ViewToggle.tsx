@@ -12,7 +12,7 @@ export default function ViewToggle() {
   };
 
   return (
-    <div className="flex rounded-lg border overflow-hidden" style={{ borderColor: 'var(--color-border-subtle)' }}>
+    <div className="hidden sm:flex rounded-lg border overflow-hidden" style={{ borderColor: 'var(--color-border-subtle)' }}>
       <button
         onClick={() => setViewMode('list')}
         className={`px-3 py-2.5 sm:px-2.5 sm:py-1.5 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center text-xs transition-colors ${

@@ -560,55 +560,10 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
               )}
             </div>
 
-            {/* More ways to play — Quick Session + Resume. Collapsed by default. */}
-            <div className="mt-3 rounded-xl border" style={{ borderColor: 'var(--color-border-subtle)' }}>
-              <button
-                type="button"
-                onClick={() => setShowMoreWays((v) => !v)}
-                className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
-                aria-expanded={showMoreWays}
-              >
-                <span>More ways to play</span>
-                <span className="text-text-dim text-xs">{showMoreWays ? '▴' : '▾'}</span>
-              </button>
-              {showMoreWays && (
-                <div className="px-3 pb-3 grid grid-cols-2 gap-2">
-                  {REROLL_MODES.filter((m) => m.mode !== 'anything').map(({ mode: m, label, icon, description }) => (
-                    <button
-                      key={m}
-                      onClick={() => { setMode(m); setTimeout(() => handleFirstRoll(m), 0); }}
-                      className="px-3 py-3 rounded-xl text-left border border-border-subtle hover:border-accent-purple transition-all"
-                      style={{ backgroundColor: 'var(--color-bg-card)' }}
-                    >
-                      <div className="text-base font-medium text-text-primary">
-                        {icon} {label}
-                      </div>
-                      <div className="text-xs text-text-dim mt-0.5">{description}</div>
-                    </button>
-                  ))}
-                  {onSubShuffle && (
-                    <button
-                      onClick={() => onSubShuffle()}
-                      className="col-span-2 px-3 py-3 rounded-xl text-left border border-border-subtle hover:border-accent-purple transition-all"
-                      style={{ backgroundColor: 'var(--color-bg-card)' }}
-                    >
-                      <div className="text-base font-medium text-text-primary">
-                        <span className="font-black tracking-tight" style={{ color: '#7ec850' }}>GP</span>
-                        <span className="opacity-50"> / </span>
-                        <span className="font-black tracking-tight" style={{ color: '#ffd800' }}>PS+</span>
-                        <span> Sub Shuffle</span>
-                      </div>
-                      <div className="text-xs text-text-dim mt-0.5">Pick from the Game Pass or PS+ catalog.</div>
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-
             {/* Vibes — mood chips. Collapsed by default. Single-select to avoid
                 zero-result rolls (see toggleMood comment). Selecting a vibe
                 filters the next roll; selection persists until cleared. */}
-            <div className="mt-2 rounded-xl border" style={{ borderColor: 'var(--color-border-subtle)' }}>
+            <div className="mt-3 rounded-xl border" style={{ borderColor: 'var(--color-border-subtle)' }}>
               <button
                 type="button"
                 onClick={() => setShowVibes((v) => !v)}
@@ -650,6 +605,53 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                       </button>
                     );
                   })}
+                </div>
+              )}
+            </div>
+
+            {/* More ways to play — alternative roll modes. Visually separated
+                from the filters above: these choose a different pick strategy
+                entirely, not a refinement of the current one. */}
+            <div className="mt-4 pt-3 border-t" style={{ borderColor: 'var(--color-border-subtle)' }}>
+              <button
+                type="button"
+                onClick={() => setShowMoreWays((v) => !v)}
+                className="w-full flex items-center justify-between px-1 py-1 text-xs font-medium text-text-dim hover:text-text-muted transition-colors"
+                aria-expanded={showMoreWays}
+              >
+                <span>Or pick a different way...</span>
+                <span className="text-text-dim text-xs">{showMoreWays ? '▴' : '▾'}</span>
+              </button>
+              {showMoreWays && (
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  {REROLL_MODES.filter((m) => m.mode !== 'anything').map(({ mode: m, label, icon, description }) => (
+                    <button
+                      key={m}
+                      onClick={() => { setMode(m); setTimeout(() => handleFirstRoll(m), 0); }}
+                      className="px-3 py-3 rounded-xl text-left border border-border-subtle hover:border-accent-purple transition-all"
+                      style={{ backgroundColor: 'var(--color-bg-card)' }}
+                    >
+                      <div className="text-base font-medium text-text-primary">
+                        {icon} {label}
+                      </div>
+                      <div className="text-xs text-text-dim mt-0.5">{description}</div>
+                    </button>
+                  ))}
+                  {onSubShuffle && (
+                    <button
+                      onClick={() => onSubShuffle()}
+                      className="col-span-2 px-3 py-3 rounded-xl text-left border border-border-subtle hover:border-accent-purple transition-all"
+                      style={{ backgroundColor: 'var(--color-bg-card)' }}
+                    >
+                      <div className="text-base font-medium text-text-primary">
+                        <span className="font-black tracking-tight" style={{ color: '#7ec850' }}>GP</span>
+                        <span className="opacity-50"> / </span>
+                        <span className="font-black tracking-tight" style={{ color: '#ffd800' }}>PS+</span>
+                        <span> Sub Shuffle</span>
+                      </div>
+                      <div className="text-xs text-text-dim mt-0.5">Pick from the Game Pass or PS+ catalog.</div>
+                    </button>
+                  )}
                 </div>
               )}
             </div>

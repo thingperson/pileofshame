@@ -3,6 +3,7 @@ import { Outfit, JetBrains_Mono, Nunito, Bebas_Neue } from "next/font/google";
 import CookieBanner from "@/components/CookieBanner";
 import FeedbackWidget from "@/components/FeedbackWidget";
 import ThemeClass from "@/components/ThemeClass";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -293,6 +294,7 @@ export default function RootLayout({
         {children}
         <FeedbackWidget />
         <CookieBanner />
+        <Analytics />
       </body>
     </html>
   );
