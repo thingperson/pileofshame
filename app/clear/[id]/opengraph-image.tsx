@@ -81,7 +81,7 @@ function getMockCard(id: string): ShareCard {
 
 function pickSubtitle(card: ShareCard): string {
   if (card.show_dollar_value && card.dollar_value) {
-    return `That's $${Math.round(card.dollar_value)} reclaimed from the pile.`;
+    return `$${Math.round(card.dollar_value)} reclaimed from the pile.`;
   }
   if (card.show_hltb_compare && card.hours_played && card.hltb_main && card.hltb_main > 0) {
     const diff = Math.round(card.hltb_main - card.hours_played);
