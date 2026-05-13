@@ -21,7 +21,8 @@
 | Doc | Subject | Status | Trigger to act |
 |---|---|---|---|
 | [ROADMAP.md](ROADMAP.md) | Top-level roadmap | LIVE | Planning |
-| [LAUNCH_BIBLE.md](LAUNCH_BIBLE.md) | Launch sprint single-source | LIVE | Launch tasks |
+| [LAUNCH_BIBLE.md](LAUNCH_BIBLE.md) | Launch single-source — merged 2026-05-12 (positioning, distribution sequencing, Reddit/PH/HN/creator/Bluesky copy, demo workflow, landing audit, infra, monetization, scale-up) | LIVE | Any launch work |
+| [launch-plays/linkedin-activatable.md](launch-plays/linkedin-activatable.md) | LinkedIn launch drafts — off the canonical gaming-audience path, activatable when targeting brand/founder audience | DORMANT | When Brady wants to reach his pro network |
 | [DECISIONS.md](DECISIONS.md) | Key locked decisions log | LIVE | When choosing something with prior history |
 
 ## Planning specs from May-4 session (NEW — bank these, don't re-do)
@@ -33,7 +34,6 @@
 | [b2b-studios-spec.md](b2b-studios-spec.md) | Anonymized analytics for indie studios | LOCKED | ≥5k MAU |
 | [marketing-recipients-spec.md](marketing-recipients-spec.md) | SQL view to dedupe email send list | LOCKED | When Resend/equivalent is on the near roadmap |
 | [monetization-plan.md](monetization-plan.md) | Tip jar, supporter tiers, mascot eval | LOCKED | Multiple per-stream triggers (see doc) |
-| [distribution-plan.md](distribution-plan.md) | Reddit + Twitter + Bluesky strategy, channel readiness | LOCKED | Move 1 (Reddit) when subagent recommendation arrives; Move 2 (socials) anytime |
 | [bot-character-spec.md](bot-character-spec.md) | Pip — bot character bible, GPT prompt library, placement plan | LOCKED | When generating new Pip art or wiring Pip into app/Discord/merch |
 | [testing-agents-spec.md](testing-agents-spec.md) | "Won't suck" + "Didn't strip a feature" testing agents — design, cadence, recon plan | PARTIAL — phases 1+3 shipped 2026-05-05 | Phase 4 (scheduling Agent B weekly) when ready |
 | [modal-redesign-spec.md](modal-redesign-spec.md) | Game-detail modal: destructive collapse, adaptive CTA, more like this | PLANNING — recon done 2026-05-05 | Pick any of 3 items per dedicated session |
