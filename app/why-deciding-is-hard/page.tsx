@@ -1,4 +1,6 @@
+/* eslint-disable react/no-unescaped-entities */
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Why deciding what to play is so hard — Inventory Full',
@@ -64,7 +66,7 @@ export default function WhyDecidingIsHardPage() {
             padding: '2rem 1.5rem 0',
           }}
         >
-          <a
+          <Link
             href="/"
             style={{
               color: 'var(--color-text-secondary)',
@@ -74,7 +76,7 @@ export default function WhyDecidingIsHardPage() {
             }}
           >
             ← inventoryfull.gg
-          </a>
+          </Link>
         </div>
 
         {/* Article */}

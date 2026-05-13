@@ -376,7 +376,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
   const [storylineOpen, setStorylineOpen] = useState(false);
   const [bailing, setBailing] = useState(false);
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
-  const { cycleStatus, getNextStatus, setBailed, unBail, shelveGame, playAgain, newGamePlus, updateGame, deleteGame, showCelebration, toggleIgnore } = useStore();
+  const { cycleStatus, getNextStatus, setBailed, unBail, shelveGame, playAgain, newGamePlus, updateGame, deleteGame, showCelebration } = useStore();
   const { showToast } = useToast();
   const statusConfig = STATUS_CONFIG[game.status];
   const nextStatus = getNextStatus(game.status);
