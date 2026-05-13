@@ -1,0 +1,21 @@
+# fly.toml app configuration file generated for inventory-full-bot on 2026-05-13T03:55:25-07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'inventory-full-bot'
+primary_region = 'sjc'
+
+
+
+[env]
+  NODE_ENV = 'production'
+
+[processes]
+  bot = 'node dist/index.js'
+
+[[vm]]
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 256
+  processes = ['bot']

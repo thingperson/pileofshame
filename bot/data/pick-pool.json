@@ -1,0 +1,122 @@
+[
+  {
+    "title": "Hades",
+    "lengthHours": 25,
+    "moods": ["intense", "atmospheric", "story-rich"],
+    "blurb": "Greek mythology roguelike. Tight runs, real story, gets out of your way."
+  },
+  {
+    "title": "A Short Hike",
+    "lengthHours": 2,
+    "moods": ["chill", "atmospheric", "creative"],
+    "blurb": "Climb a mountain in an afternoon. Nothing wants anything from you."
+  },
+  {
+    "title": "Stardew Valley",
+    "lengthHours": 60,
+    "moods": ["chill", "story-rich", "creative"],
+    "blurb": "Inherit a farm, slowly rebuild a life. Easy to load, hard to put down."
+  },
+  {
+    "title": "Outer Wilds",
+    "lengthHours": 22,
+    "moods": ["atmospheric", "story-rich", "creative"],
+    "blurb": "Knowledge-based exploration. You'll know when to stop, and that's the point."
+  },
+  {
+    "title": "Hollow Knight",
+    "lengthHours": 35,
+    "moods": ["intense", "atmospheric"],
+    "blurb": "Beautiful, brutal, enormous. The pile fears this one."
+  },
+  {
+    "title": "Celeste",
+    "lengthHours": 12,
+    "moods": ["intense", "emotional", "story-rich"],
+    "blurb": "Hard platformer, surprisingly tender. Beatable in a weekend."
+  },
+  {
+    "title": "Disco Elysium",
+    "lengthHours": 30,
+    "moods": ["story-rich", "atmospheric", "brain-off"],
+    "blurb": "RPG that's mostly conversation. You play a wreck of a detective. Read it like a novel."
+  },
+  {
+    "title": "Vampire Survivors",
+    "lengthHours": 15,
+    "moods": ["brain-off", "intense"],
+    "blurb": "20-minute runs, dopamine on tap. Costs less than a coffee."
+  },
+  {
+    "title": "Slay the Spire",
+    "lengthHours": 40,
+    "moods": ["strategic", "brain-off"],
+    "blurb": "Deckbuilder roguelike. Each run teaches the next. Endlessly replayable."
+  },
+  {
+    "title": "Inscryption",
+    "lengthHours": 12,
+    "moods": ["spooky", "story-rich", "strategic"],
+    "blurb": "Card game in a cabin. Goes weird places. Trust it."
+  },
+  {
+    "title": "Slime Rancher 2",
+    "lengthHours": 15,
+    "moods": ["chill", "creative"],
+    "blurb": "Slimes, plorts, no stakes. Background-music for your brain."
+  },
+  {
+    "title": "Tunic",
+    "lengthHours": 16,
+    "moods": ["atmospheric", "strategic", "creative"],
+    "blurb": "Tiny fox, huge world. The manual is part of the puzzle."
+  },
+  {
+    "title": "Cult of the Lamb",
+    "lengthHours": 20,
+    "moods": ["intense", "spooky", "strategic"],
+    "blurb": "Roguelike + cult management. Cuter and meaner than it looks."
+  },
+  {
+    "title": "Chained Echoes",
+    "lengthHours": 40,
+    "moods": ["story-rich", "strategic"],
+    "blurb": "Modern JRPG that respects your time. SNES energy, 2020s polish."
+  },
+  {
+    "title": "Pizza Tower",
+    "lengthHours": 10,
+    "moods": ["intense", "brain-off"],
+    "blurb": "Cartoon platformer at 200mph. Pure adrenaline, beatable in a week."
+  },
+  {
+    "title": "Subnautica",
+    "lengthHours": 30,
+    "moods": ["spooky", "atmospheric", "creative"],
+    "blurb": "Ocean survival. Beautiful and terrifying in equal measure."
+  },
+  {
+    "title": "Return of the Obra Dinn",
+    "lengthHours": 8,
+    "moods": ["strategic", "story-rich", "atmospheric"],
+    "blurb": "Detective puzzle on a dead ship. One weekend, no regrets."
+  },
+  {
+    "title": "Tetris Effect",
+    "lengthHours": 10,
+    "moods": ["chill", "atmospheric", "brain-off"],
+    "blurb": "Tetris if Tetris was a religious experience. Headphones non-negotiable."
+  },
+  {
+    "title": "Pentiment",
+    "lengthHours": 20,
+    "moods": ["story-rich", "atmospheric"],
+    "blurb": "16th-century murder mystery, illuminated-manuscript art style. Slow burn, deeply rewarding."
+  },
+  {
+    "title": "Balatro",
+    "lengthHours": 25,
+    "moods": ["strategic", "brain-off"],
+    "blurb": "Poker roguelike that ate everyone's December. One more run. One more."
+  }
+]
