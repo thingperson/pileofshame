@@ -15,6 +15,44 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-05-13 — Pip Discord bot: Phase 1 architecture locked
+
+**Decision.** Built Phase 1 of Pip (the Inventory Full Discord bot) as a Node service in `bot/` subdir using `discord.js` v14, deployed to Fly.io on a 256MB shared-cpu-1x machine in sjc. Slash-commands only, no privileged intents, stateless, no database. Ships with `/pick` (single-game recommendation from a 20-game curated pool with Roll-again button) and `/archetype` (autocomplete over 40 slugs, embeds the canonical OG image from the web app).
+
+**Why.**
+- Monorepo subdir over separate repo: easier to keep `archetypeSlugs.ts` in sync with `lib/archetypeRegistry.ts`, one git history, single launch story. `.vercelignore` keeps the bot out of Next.js deploys.
+- `discord.js` over `@discordjs/core`: batteries-included means weekend-shippable. We don't care about bundle size at 256MB.
+- Fly.io over Cloudflare Workers: the gateway WSS connection is outbound and persistent — Workers can't hold that without rewriting to HTTP-only Interactions. ~$5/month is below the cost of refactoring.
+- Curated pool seeded with 20 games hand-picked for variety/length/mood. Drafting script (`bot/scripts/build-pool.ts`, future) will pull from RAWG + HLTB for the eventual 300.
+- Stateless / no DB: nothing to maintain, nothing to leak. Cooldowns deferred until abuse shows up.
+- Bot named "Pip" — leverages the existing robot character in `notes/pip/`. A Discord bot literally IS a robot; the bot-vs-mascot tension flagged in `bot-character-spec.md` resolves itself.
+
+**Implementation.** `bot/` subdir (Dockerfile, fly.toml, src/{index,registerCommands,embed,archetypeSlugs}.ts + src/commands/{pick,archetype}.ts), `.vercelignore`. Commits `b2dd60d`, `03b3dea`. Live at `inventory-full-bot.fly.dev`.
+
+**Rejected.**
+- Cloudflare Workers (HTTP-only Interactions): would have been free but required ~4hr refactor and locks out future gateway-only features (presence, reactions, voice).
+- Separate `inventory-full-bot` repo: cleaner blast radius but duplicates tsconfig/eslint and breaks easy type sharing.
+- Adding Redis/Fly KV now for cooldowns: premature. Add when abuse appears.
+- Bot name "Inventory Full" or "get playing": both lose to "Pip" — short Discord handle (`@Pip`), uses existing character asset, the brand stays in every embed footer.
+
+**Drift risk.** `archetypeSlugs.ts` mirrors `lib/archetypeRegistry.ts` manually. Adding archetypes upstream without updating the bot's list will silently exclude them from `/archetype` autocomplete. Regeneration recipe is in the file header.
+
+---
+
+## 2026-05-13 — Light theme as default; poster theme retired
+
+**Decision.** Flipped the default theme from `dark` to `light` in `lib/store.ts` initial state. Existing users keep their persisted preference; only new visits and import-resets land in light. Also dropped the `poster` theme from the active roster — `🎀 Poster` was sitting alongside the eight visible themes in Settings but was never validated and didn't fit the brand. Removed from `SettingsMenu.tsx`, `ThemeClass.tsx`, and the `theme` type union in `lib/types.ts`. CSS rules in `globals.css` left in place per the existing "stash, don't delete" convention.
+
+**Why.**
+- Landing page is already cream/light. Users hit the warm-cream `LandingPageV2`, click "Try a sample" or import, and previously got slammed with the dark app shell. Light → light → light is a cleaner first impression.
+- Poster theme was a one-off experiment that never earned a place in rotation. Removing it tightens the user-facing theme menu without losing the underlying CSS.
+
+**Implementation.** Commits `2a7e73f`, `5114a9b` (merge). Files: `lib/store.ts` (two default sites), `lib/types.ts` (union), `components/SettingsMenu.tsx` (commented out), `components/ThemeClass.tsx` (removed from list).
+
+**Rejected.** Hard-flipping existing users to light too. Would have nuked everyone's saved preference for a non-emergency change — too aggressive. Persisted theme wins, default only changes for fresh visits.
+
+---
+
 ## 2026-05-08 — Theme class application moved to root layout
 
 **Decision.** Extracted theme class logic from NinetiesMode (which only ran on `page.tsx`) into a dedicated `ThemeClass` component in the root layout (`app/layout.tsx`). All routes now get the theme class on `<body>`.
