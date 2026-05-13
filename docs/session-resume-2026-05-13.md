@@ -133,3 +133,76 @@ The CLEAR_FLAVORS non-finishable branch, pip-as-archetype, game-specific trophy 
 ---
 
 *Closed second wave 2026-05-13 ~05:50 PDT*
+
+---
+
+# Third wave — 2026-05-13 afternoon session
+
+**Focus:** Sentry triage, AI discoverability infrastructure, mobile modal scroll-lock fix, Reddit feedback triage, session cleanup. Session ran in a worktree (`awesome-shockley-6eafb2`) which caused friction — see gotchas.
+
+## What shipped this wave (2 commits to main)
+
+1. **AI discoverability infrastructure** — robots.ts updated with explicit AI crawler allowlisting (GPTBot, ClaudeBot, PerplexityBot, etc.). Created `public/llms.txt` for LLM-friendly site summary. Added Organization JSON-LD schema to layout.tsx (founder, location, sameAs anchoring). Expanded sitemap for upcoming `/why-deciding-is-hard`. Removed redundant static `public/robots.txt`. Commit `7f1c62a`.
+
+2. **Modal scroll lock + mobile close button** — New `lib/useScrollLock.ts` hook using `position: fixed` approach (iOS Safari requires this over `overflow: hidden`). Wired into all 6 modal components: Reroll, GameDetailModal, AddGameModal, HelpModal, GetStartedModal, CompletionCelebration. Added visible X close button on mobile GameDetailModal (previously only had a drag handle). Commit `a692e34`.
+
+## Reviewed but not built
+
+- **AI optimization spec** (from `notes/AI optimization searchy stuff/`): 4-doc package covering Reddit post strategy, listicle/writer outreach templates, content page specs (`/why-deciding-is-hard`, `/alternatives`, platform pages), and SEO hygiene + entity anchoring. Technical hygiene shipped; content pages and outreach are next.
+- **r/patientgamers post** (`01-reddit-post.md`): Ready to post. Lead with backlog psychology, app is footnote.
+
+## Sentry triage
+
+- 22 unresolved issues reviewed — all third-party noise (gtag/GA4 internal errors, Safari minified errors, RAWG abort errors). Zero app-code bugs. Zero real users impacted. Brady marked all as resolved in Sentry.
+
+## Reddit feedback (r/sideproject) — bugs triaged
+
+Real user feedback received. Two bugs prioritized and fixed this session:
+- ✅ **Modal scroll bleed** — background scrolled under modals on iOS Safari. Fixed with `useScrollLock`.
+- ✅ **Game detail modal missing close button on mobile** — only had drag handle. Added visible X.
+
+Remaining feedback items for future sessions:
+- **List view useless on mobile** — less info, no images, fewer items than grid
+- **Pick modal: "More ways to play" mixed with filters** — different interaction type, should be visually separated
+- **"5-min tryout" relationship to filters unclear** — user confused about whether it uses mood/session filters
+- **"Not for me" vs "Don't suggest" vs "Delete"** — three actions that seem identical
+- **Theme count** — user suggested 1 dark + 1 light + 1-2 fun ones max
+- **"Roasts" unclear** — not obvious to new users what this means
+
+## Worktree gotcha
+
+Session spawned in a git worktree (`/.claude/worktrees/awesome-shockley-6eafb2`). This caused:
+- `notes/` folder invisible (untracked, gitignored)
+- Preview server served stale worktree code, not main repo changes
+- Previous session's uncommitted rollback changes found in main repo (Pip removal, monetization reverts) — discarded to restore current committed state
+
+**Prevention:** Don't run concurrent Claude Code sessions on same project. Single session = no worktree.
+
+## Issues flagged for next session (investigate)
+
+- **Pip Discord bot broken** — was working hours ago, now unresponsive in both test and main IF servers. Nothing from this session should have changed it. Check `fly logs`, verify bot is running.
+- **GA4 showing zero users** — real visitors are hitting the site (Reddit engagement, Sentry events from real browsers) but GA4 shows nothing. May be a gtag configuration issue related to the errors Sentry is catching.
+- **Stale worktree branches** — clean up `claude/awesome-shockley-6eafb2` and any other orphaned worktree branches.
+- **90s theme persisting in preview** — dev server was showing 90s theme; may be a localStorage issue or theme default regression.
+
+## Carry-forward from prior waves
+
+- `/why-deciding-is-hard` manifesto page — spec reviewed, ready to build
+- `/alternatives` comparison page — spec reviewed
+- Listicle outreach (MakeUseOf, How-To Geek, Lifehacker) — templates ready in notes
+- Games writer pitches (Aftermath, RPS, Polygon) — templates ready in notes
+- Wikidata entry for entity disambiguation
+- CLEAR_FLAVORS non-finishable branch
+- Pip-as-archetype, game-specific trophy Pips
+- Untracked 2026-05-12 docs batch
+- `sameAs` expansion (LinkedIn company page, AlternativeTo entry)
+
+## Health snapshot
+
+- **Build:** Compiles clean. Pre-existing discord.js typecheck error in `bot/` (not blocking web deploy).
+- **Main tip:** `a692e34`
+- **Known bugs:** Pip bot unresponsive (new), GA4 zero users (new), pre-existing HLTB 404s
+
+---
+
+*Closed third wave 2026-05-13 ~12:55 PDT*
