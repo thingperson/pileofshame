@@ -18,7 +18,7 @@ export default function PrivacyPage() {
 
         <h1 className="text-3xl font-bold mb-2">Privacy Policy</h1>
         <p className="text-sm text-text-dim font-[family-name:var(--font-mono)] mb-8">
-          Last updated: May 2, 2026
+          Last updated: May 13, 2026
         </p>
 
         <div className="space-y-8 text-text-secondary text-[15px] leading-relaxed">
@@ -153,6 +153,32 @@ export default function PrivacyPage() {
               <li><strong>Supabase</strong>: authentication and cloud sync (when signed in)</li>
               <li><strong>Sentry</strong>: error monitoring (anonymous error reports, no personal data sent)</li>
             </ul>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold text-text-primary mb-3">Our Discord bot (Pip)</h2>
+            <p>
+              We run an optional Discord bot called Pip (<a href="https://inventory-full-bot.fly.dev" target="_blank" rel="noopener noreferrer" className="text-accent-purple hover:underline">inventory-full-bot.fly.dev</a>).
+              Server admins can add Pip to their own Discord server to use slash commands like
+              <span className="font-[family-name:var(--font-mono)]"> /pick</span> and
+              <span className="font-[family-name:var(--font-mono)]"> /archetype</span>.
+            </p>
+            <p className="mt-2">
+              Pip is stateless. It does not store any user data, message history, server membership,
+              or persistent identifiers. It does not request privileged intents. It cannot read your
+              messages — it only sees the slash command payloads Discord sends it when someone
+              explicitly invokes one. Each interaction is processed in memory and discarded when the
+              response is returned.
+            </p>
+            <p className="mt-2">
+              Pip does not have access to your Inventory Full account, library, Steam/PSN/Xbox tokens,
+              or any other data you&apos;ve given the web app. The bot and the web app share branding
+              only, not data.
+            </p>
+            <p className="mt-2">
+              Operational errors from Pip may be sent to Sentry (anonymous error reports, no Discord
+              user IDs or message content) on the same terms as the rest of our error monitoring.
+            </p>
           </section>
 
           <section>
