@@ -1,0 +1,2 @@
+# Keep the Discord bot out of Vercel builds. It deploys to Fly.io separately.
+bot/
