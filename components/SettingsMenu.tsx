@@ -380,11 +380,11 @@ export default function SettingsMenu({ onOpenImport, onOpenSearch }: SettingsMen
                             { value: 'light', label: '☀️ Light' },
                             { value: '80s', label: '🌆 80s' },
                             { value: '90s', label: '🚧 90s' },
-                            { value: 'future', label: '🔮 Future' },
                             { value: 'dino', label: '🦕 Dino' },
-                            { value: 'cozy', label: '☕ Cozy' },
                             { value: 'void', label: '🫥 Void' },
                             // Hidden for now (CSS retained in globals.css):
+                            //   { value: 'future', label: '🔮 Future' },   // stashed 2026-05-13
+                            //   { value: 'cozy', label: '☕ Cozy' },        // stashed 2026-05-13
                             //   { value: 'weird', label: '👁️ Weird' },
                             //   { value: 'ultra', label: '⚡ ULTRA' },       // stashed — Brady likes it, bring back later
                             //   { value: 'minimal', label: '- Minimal' },

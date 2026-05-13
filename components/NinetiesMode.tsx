@@ -556,16 +556,10 @@ export default function NinetiesMode({ children }: { children: React.ReactNode }
     );
   }
 
-  if (theme === 'future') {
-    return (
-      <>
-        <HoloParticles />
-        <FutureBanner />
-        {children}
-        <FutureFooter />
-      </>
-    );
-  }
+  // stashed 2026-05-13 — future theme removed from active rotation; CSS retained in globals.css
+  // if (theme === 'future') {
+  //   return (<><HoloParticles /><FutureBanner />{children}<FutureFooter /></>);
+  // }
 
   if (theme === 'dino') {
     return (
@@ -579,14 +573,10 @@ export default function NinetiesMode({ children }: { children: React.ReactNode }
     );
   }
 
-  if (theme === 'cozy') {
-    return (
-      <>
-        <CozyBanner />
-        {children}
-      </>
-    );
-  }
+  // stashed 2026-05-13 — cozy theme removed from active rotation; CSS retained in globals.css
+  // if (theme === 'cozy') {
+  //   return (<><CozyBanner />{children}</>);
+  // }
 
   if (theme === 'minimal') {
     // Minimal: zero chrome, pure function
