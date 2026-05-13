@@ -39,7 +39,7 @@ function getSessionEstimate(game: Game): string | null {
       const remaining = Math.max(Math.ceil(game.hltbMain - game.hoursPlayed), 1);
       return `~${remaining}h left`;
     }
-    return `~${game.hltbMain}h to beat`;
+    return game.isNonFinishable ? `~${game.hltbMain}h per session` : `~${game.hltbMain}h to beat`;
   }
   return null;
 }
@@ -777,7 +777,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                     say "try this — we have reason to believe you'll like it,"
                     not "here's how it scored." */}
                 {currentPick.hltbMain && (
-                  <span>🕐 ~{currentPick.hltbMain}h to beat</span>
+                  <span>🕐 ~{currentPick.hltbMain}h {currentPick.isNonFinishable ? 'per session' : 'to beat'}</span>
                 )}
                 <span>{TIME_TIER_CONFIG[currentPick.timeTier].icon} {TIME_TIER_CONFIG[currentPick.timeTier].label}</span>
                 {currentPick.hoursPlayed > 0 && <span>{currentPick.hoursPlayed}h logged</span>}

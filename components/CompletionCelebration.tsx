@@ -420,7 +420,7 @@ function GameClearShare({
               onClick={() => {
                 trackShareClear('reddit', game.name);
                 window.open(
-                  `https://reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(`Just cleared ${game.name} off my backlog`)}`,
+                  `https://reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(game.isNonFinishable ? `Done with ${game.name}. Moving on.` : `Just cleared ${game.name} off my backlog`)}`,
                   '_blank',
                 );
               }}
@@ -582,10 +582,12 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
                 <PixelSprite name="cleared" size={96} ariaLabel="Cleared trophy" />
               </div>
               <h2 className="text-2xl font-bold text-text-primary mb-2">
-                You beat {game.name}?
+                {game.isNonFinishable ? `Done with ${game.name}?` : `You beat ${game.name}?`}
               </h2>
               <p className="text-base text-text-muted mb-8">
-                For real? Like, credits rolled and everything? This is a big deal.
+                {game.isNonFinishable
+                  ? "Had your fill? Ready to call it? That counts."
+                  : "For real? Like, credits rolled and everything? This is a big deal."}
               </p>
               <div className="flex gap-3 justify-center">
                 <button
@@ -597,7 +599,7 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
                     boxShadow: '0 4px 20px rgba(34, 197, 94, 0.3)',
                   }}
                 >
-                  I crushed it
+                  {game.isNonFinishable ? "I'm done with it" : "I crushed it"}
                 </button>
                 <button
                   onClick={handleClose}
@@ -614,22 +616,32 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
             <>
               <div className="text-5xl mb-3">🎉</div>
               <h2 className="text-2xl font-bold text-text-primary mb-1">
-                {game.name}: Cleared!
+                {game.name}: {game.isNonFinishable ? 'Done!' : 'Cleared!'}
               </h2>
               <p className="text-base text-text-muted mb-1">
-                You cleared <span className="text-green-400 font-semibold">{game.name}</span> from your backlog.
+                {game.isNonFinishable
+                  ? <><span className="text-green-400 font-semibold">{game.name}</span> got its time. On to the next.</>
+                  : <>You cleared <span className="text-green-400 font-semibold">{game.name}</span> from your backlog.</>}
               </p>
               <p className="text-sm text-text-dim italic mb-5">
                 {(() => {
-                  const msgs = [
-                    'One more slot opened up. Space cleared. Great work.',
-                    'That\'s one less game looking at you from the pile.',
-                    'You committed, you followed through. That\'s the whole game.',
-                    'Another one done. The pile is officially lighter.',
-                    'Credits rolled. You earned this moment.',
-                    'Feels good, right? That\'s what finishing things feels like.',
-                    'The backlog just got a little less intimidating.',
-                  ];
+                  const msgs = game.isNonFinishable
+                    ? [
+                        'You gave it real time. That\'s what matters.',
+                        'Not every game has a finish line. You still showed up.',
+                        'You committed, you followed through. That\'s the whole game.',
+                        'Another one done. The pile is officially lighter.',
+                        'The backlog just got a little less intimidating.',
+                      ]
+                    : [
+                        'One more slot opened up. Space cleared. Great work.',
+                        'That\'s one less game looking at you from the pile.',
+                        'You committed, you followed through. That\'s the whole game.',
+                        'Another one done. The pile is officially lighter.',
+                        'Credits rolled. You earned this moment.',
+                        'Feels good, right? That\'s what finishing things feels like.',
+                        'The backlog just got a little less intimidating.',
+                      ];
                   return msgs[Math.floor(Math.random() * msgs.length)];
                 })()}
               </p>

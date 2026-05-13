@@ -127,7 +127,7 @@ const SECTIONS = [
       },
       {
         q: 'Status icons',
-        a: '📚 Backlog — haven\'t started yet\n🎯 Up Next — queued to play soon\n▶️ Playing Now — actively playing\n✅ Completed — done, credits rolled\n👋 Moved On — not for you, no shame',
+        a: '📚 Backlog — haven\'t started yet\n🎯 Up Next — queued to play soon\n▶️ Playing Now — actively playing\n✅ Completed — done (or done for now, for games that don\'t end)\n👋 Moved On — not for you, no shame',
       },
     ],
   },

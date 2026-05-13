@@ -286,7 +286,7 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
 
       {/* Pip — pointing at picker card */}
       <div className="absolute bottom-4 left-[42%] lg:left-[46%] z-[4] pointer-events-auto pip-anchor hidden sm:block">
-        <Image src="/landing/pip/pip-pointing.png" alt="" width={160} height={160} className="w-10 sm:w-40" />
+        <Image src="/landing/pip/pip-pointing.webp" alt="" width={160} height={160} className="w-10 sm:w-40" />
       </div>
 
       {/* Collage bottom-right — breaking into next section */}
@@ -402,7 +402,7 @@ function ProblemSolution() {
           <div className="flex items-end gap-3 mt-6 mb-10">
             <p className="text-lg sm:text-xl max-w-xl" style={{ color: C.textMuted }}>Too many games. Too many choices. Your brain checks out.</p>
             <div className="pip-anchor shrink-0 hidden sm:block">
-              <Image src="/landing/pip/pip-exhausted.png" alt="" width={120} height={150} className="w-16 sm:w-24" />
+              <Image src="/landing/pip/pip-exhausted.webp" alt="" width={120} height={150} className="w-16 sm:w-24" />
             </div>
           </div>
 
@@ -436,7 +436,7 @@ function ProblemSolution() {
           </div>
 
           <div className="pip-anchor mt-6 mb-2 hidden sm:block">
-            <Image src="/landing/pip/pip-magician.png" alt="" width={120} height={150} className="w-20" />
+            <Image src="/landing/pip/pip-magician.webp" alt="" width={120} height={150} className="w-20" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 max-w-3xl">
             {solutions.map((s, i) => (

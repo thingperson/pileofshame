@@ -60,6 +60,8 @@ function getFinishCandidates(games: Game[]): Game[] {
     if (g.hoursPlayed < g.hltbMain * 0.85) return false;
     // Must not already be marked finished or bailed
     if (g.status === 'played' || g.status === 'bailed') return false;
+    // Non-finishable games (MMOs, sandboxes, etc.) can't be "finished"
+    if (g.isNonFinishable) return false;
     // Must not be ignored
     if (g.ignored) return false;
     // Not dismissed 3+ times

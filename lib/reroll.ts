@@ -289,7 +289,7 @@ export function getPickReasons(game: Game): PickReason[] {
   }
 
   if (game.hltbMain && game.hltbMain <= 8) {
-    reasons.push({ label: `Beatable in ~${game.hltbMain}h`, icon: '⏱️' });
+    reasons.push({ label: game.isNonFinishable ? `~${game.hltbMain}h sessions` : `Beatable in ~${game.hltbMain}h`, icon: '⏱️' });
   }
 
   // Time-of-day contextual reason.

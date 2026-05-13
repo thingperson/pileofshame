@@ -998,7 +998,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                 <div className="flex flex-wrap items-center gap-1.5">
                   {game.hltbMain && (
                     <span className="text-xs font-[family-name:var(--font-mono)] text-text-dim px-1.5 py-0.5 rounded bg-bg-primary border border-border-subtle" title="Average completion time via HowLongToBeat">
-                      🕐 ~{game.hltbMain}h to beat
+                      🕐 ~{game.hltbMain}h {game.isNonFinishable ? 'per session' : 'to beat'}
                     </span>
                   )}
                   {game.moodTags?.map((mood) => {
@@ -1224,9 +1224,11 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                   border: '1px solid rgba(34, 197, 94, 0.35)',
                   ...(forceExpanded ? { height: 44 } : {}),
                 }}
-                title="Mark this game as cleared. Bring on the confetti."
+                title={game.isNonFinishable ? "Done with this one? Mark it complete." : "Mark this game as cleared. Bring on the confetti."}
               >
-                {forceExpanded ? 'I beat it' : '🏁 I beat it'}
+                {game.isNonFinishable
+                  ? (forceExpanded ? "I'm done" : "✅ I'm done")
+                  : (forceExpanded ? 'I beat it' : '🏁 I beat it')}
               </button>
             )}
 
