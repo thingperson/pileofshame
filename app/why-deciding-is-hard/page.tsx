@@ -116,7 +116,7 @@ export default function WhyDecidingIsHardPage() {
 
           <p style={{ marginBottom: '1rem', color: 'var(--color-text-secondary)' }}>
             You open Steam. You scroll. You hover over something and some part of your brain says{' '}
-            <em>not that one</em> — you can't say why, it just does — so you scroll more. You
+            <em>not that one</em>. You can't say why. So you scroll more. You
             remember you also have games on Xbox, so you open that. You scroll there too. Twenty
             minutes pass. You open YouTube. You watch someone else play a game. You go to bed without
             having played anything.
@@ -129,8 +129,7 @@ export default function WhyDecidingIsHardPage() {
           <p style={{ marginBottom: '1rem', color: 'var(--color-text-secondary)' }}>
             This pattern happens to people with meticulously organized libraries. People with color-coded
             spreadsheets and "up next" queues and HLTB estimates next to every title. The organization
-            doesn't solve it. More options — a bigger sale, a new Game Pass drop — make it worse, not
-            better. There's a structural reason this keeps happening. Once you understand it, the
+            doesn't solve it. More options make it worse. A bigger sale, a new Game Pass drop. Same problem. There's a structural reason this keeps happening. Once you understand it, the
             scroll-and-close loop stops feeling like a personal failing and starts feeling like the
             completely predictable output it actually is.
           </p>
@@ -155,7 +154,7 @@ export default function WhyDecidingIsHardPage() {
           </p>
 
           <p style={{ marginBottom: '1rem', color: 'var(--color-text-secondary)' }}>
-            Every unplayed game in that library is an identity claim you made — usually at 2am during
+            Every unplayed game in that library is an identity claim you made. Usually at 2am during
             a sale, maybe on a friend's recommendation, maybe after watching a review that made the
             game look transformative. You weren't buying a product. You were buying a future self. The
             person who finally plays <em>Disco Elysium</em>. The person who gets deep into{' '}
@@ -189,8 +188,7 @@ export default function WhyDecidingIsHardPage() {
 
           <p style={{ marginBottom: '1.5rem', color: 'var(--color-text-secondary)' }}>
             The scroll-and-close pattern has a name in the research literature. Several, actually.
-            This isn't a character flaw. It's documented human behavior under specific conditions —
-            conditions your game library manufactures at scale.
+            This isn't a character flaw. It's documented human behavior under specific conditions. Conditions your game library manufactures at scale.
           </p>
 
           <p
@@ -239,8 +237,8 @@ export default function WhyDecidingIsHardPage() {
           </p>
           <p style={{ marginBottom: '1.5rem', color: 'var(--color-text-secondary)' }}>
             Kahneman and Tversky showed that losses loom about twice as large as equivalent gains feel
-            good. A new game is a 20-to-60-hour commitment. If it doesn't land — if it turns out not
-            to be your thing after 8 hours — that's a real perceived loss. So your brain delays. It
+            good. A new game is a 20-to-60-hour commitment. If it doesn't land, if it turns out not
+            to be your thing after 8 hours, that's a real perceived loss. So your brain delays. It
             scrolls. It opens YouTube. It makes the decision feel lower-stakes by never quite making
             it.
           </p>
@@ -257,7 +255,7 @@ export default function WhyDecidingIsHardPage() {
           <p style={{ marginBottom: '1.5rem', color: 'var(--color-text-secondary)' }}>
             The $60 game you bought four years ago has weight. Not starting it already felt like a
             small mistake. Starting it now and not liking it confirms that. Better to leave it in the
-            "I'll get to it" column where the loss is still theoretical. It's not avoidance — it's
+            "I'll get to it" column where the loss is still theoretical. It's not avoidance. It's
             your brain protecting a story about a future self that hasn't failed yet.
           </p>
 
@@ -296,8 +294,8 @@ export default function WhyDecidingIsHardPage() {
             1. Constrain the field
           </h3>
           <p style={{ marginBottom: '1.25rem', color: 'var(--color-text-secondary)' }}>
-            The jam study solution wasn't better jam. It was fewer jam. Pick a mood — tense, chill,
-            whatever. Pick a session length — 20 minutes or an evening. Let those two things collapse
+            The jam study solution wasn't better jam. It was fewer jam. Pick a mood. Tense, chill,
+            whatever. Pick a session length. 20 minutes or an evening. Let those two things collapse
             400 options down to something manageable. Then pick the first thing that doesn't
             immediately feel wrong. You're not finding the perfect game. You're breaking the decision
             paralysis.
@@ -317,8 +315,7 @@ export default function WhyDecidingIsHardPage() {
           <p style={{ marginBottom: '1.25rem', color: 'var(--color-text-secondary)' }}>
             You can't reliably predict which 40-hour RPG will be worth your Tuesday night. You can
             know whether you want something intense or something you can zone out to. Decide there
-            first. The game follows from the mood. This is a much easier decision to make — and it
-            turns out it's sufficient.
+            first. The game follows from the mood. Much easier decision. And it turns out it's sufficient.
           </p>
 
           <h3
@@ -333,7 +330,7 @@ export default function WhyDecidingIsHardPage() {
             3. Time-box the audition
           </h3>
           <p style={{ marginBottom: '1.25rem', color: 'var(--color-text-secondary)' }}>
-            The fear is commitment. So don't commit. Give any game 20 minutes — that's an audition,
+            The fear is commitment. So don't commit. Give any game 20 minutes. That's an audition,
             not a marriage. If it hooks you, keep going. If it doesn't, it gets the same status as
             a game you beat: a decision made. Something evaluated and accounted for. The pile gets
             smaller either way.
@@ -351,8 +348,7 @@ export default function WhyDecidingIsHardPage() {
             4. Treat quitting as a decision
           </h3>
           <p style={{ marginBottom: '1.25rem', color: 'var(--color-text-secondary)' }}>
-            Moving on is not failure. You decided that game isn't the right one for you right now —
-            or maybe ever. That's information. That freed up mental space and real time for one that
+            Moving on is not failure. You decided that game isn't the right one for you right now. Or maybe ever. That's information. That freed up mental space and real time for one that
             is. Not a pile of shame. A list of options you've evaluated. The ones that are still
             sitting there? You just haven't auditioned them yet.
           </p>
@@ -382,7 +378,7 @@ export default function WhyDecidingIsHardPage() {
             >
               Inventory Full
             </a>{' '}
-            exists. It takes your actual library, asks two questions — mood and session length — and
+            exists. It takes your actual library, asks two questions (mood and session length), and
             gives one answer. No browsing 400 options. No shortlist to second-guess yourself on. One
             game, picked from what you already own. Whether you use it or not: the backlog problem is
             a decision problem. The fix is reducing choices, not optimizing them.
