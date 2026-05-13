@@ -369,72 +369,12 @@ function SynthwaveFooter() {
 }
 
 // ============================
-// FUTURE MODE COMPONENTS
+// FUTURE MODE COMPONENTS — stashed 2026-05-13 (theme removed from rotation; CSS retained)
 // ============================
 
-function FutureBanner() {
-  return (
-    <div className="future-banner">
-      <div className="future-banner-inner">
-        <span className="future-glyph">◈</span>
-        <span className="future-banner-text">INVENTORY_FULL</span>
-        <span className="future-banner-version">v4.2.1</span>
-        <span className="future-glyph">◈</span>
-      </div>
-      <div className="future-status-bar">
-        <span>SYS.OK</span>
-        <span>BACKLOG.CRITICAL</span>
-        <span>SHAME.LEVEL: ELEVATED</span>
-      </div>
-    </div>
-  );
-}
-
-function HoloParticles() {
-  const [particles, setParticles] = useState<{ id: number; x: number; y: number; delay: number; size: number }[]>([]);
-
-  useEffect(() => {
-    const p = Array.from({ length: 30 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      delay: Math.random() * 8,
-      size: 1 + Math.random() * 3,
-    }));
-    setParticles(p);
-  }, []);
-
-  return (
-    <div className="fixed inset-0 pointer-events-none z-[1]" style={{ opacity: 0.4 }}>
-      {particles.map((p) => (
-        <div
-          key={p.id}
-          className="future-particle"
-          style={{
-            left: `${p.x}%`,
-            top: `${p.y}%`,
-            width: p.size,
-            height: p.size,
-            animationDelay: `${p.delay}s`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-function FutureFooter() {
-  return (
-    <div className="future-footer">
-      <div className="future-footer-line" />
-      <div className="future-footer-text">
-        <span>◇ NEURAL.LINK: ACTIVE</span>
-        <span>◇ BACKLOG.AI: MONITORING</span>
-        <span>◇ SHAME.INDEX: CALCULATING...</span>
-      </div>
-    </div>
-  );
-}
+// function FutureBanner() { ... }
+// function HoloParticles() { ... }
+// function FutureFooter() { ... }
 
 // ============================
 // DINO MODE COMPONENTS
@@ -509,14 +449,7 @@ function DefaultBanner() {
   );
 }
 
-function CozyBanner() {
-  return (
-    <div className="cozy-banner">
-      <span className="cozy-banner-text">inventory full</span>
-      <span className="cozy-banner-sub">take your time. pick something nice.</span>
-    </div>
-  );
-}
+// function CozyBanner() { ... } — stashed 2026-05-13 (theme removed from rotation; CSS retained)
 
 // ============================
 // MAIN THEME WRAPPER
