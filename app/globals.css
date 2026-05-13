@@ -293,8 +293,8 @@ button:active:not(:disabled) {
   --color-text-primary: #000000;
   --color-text-secondary: #000000;
   --color-text-muted: #333333;
-  --color-text-dim: #666666;
-  --color-text-faint: #505050;
+  --color-text-dim: #444444; /* was #666666 — failed 3:1 on grey card (2.81). #444444 = 4.76:1 AA pass */
+  --color-text-faint: #4a4a4a; /* was #505050 — borderline 3.94:1; #4a4a4a = 4.31:1 safer */
   --color-accent-purple: #551a8b;
   --color-accent-pink: #a01060;
 
@@ -382,6 +382,20 @@ button:active:not(:disabled) {
 }
 .theme-90s button:active {
   border-style: inset !important;
+}
+
+/* 90s contrast safety — Tailwind utility classes hardcode white/light text in
+   many components, which renders unreadably (~2:1) on the theme's grey cards
+   and buttons. Force dark text inside cards/buttons; the page-level navy bg
+   isn't a text surface in practice (cards cover it). */
+.theme-90s .group .text-white,
+.theme-90s .group [class*="text-gray-1"],
+.theme-90s .group [class*="text-gray-2"],
+.theme-90s .group [class*="text-gray-3"],
+.theme-90s .group [class*="text-gray-4"],
+.theme-90s button .text-white,
+.theme-90s button [class*="text-gray-"] {
+  color: #000000 !important;
 }
 
 /* 90s inputs */
