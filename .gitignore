@@ -58,3 +58,4 @@ next-env.d.ts
 # claude code transient worktrees (see AGENTS.md)
 .claude/worktrees/
 
+demo-output/
