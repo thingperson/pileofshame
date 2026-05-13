@@ -57,7 +57,9 @@ These exist but are NOT committed yet. Brady should review and commit:
 
 ## Next session candidates
 
-- **CLEAR_FLAVORS non-finishable branch** — add parallel flavor array for MMOs/sandboxes
+- **Cover art backdrop fix** — satori can't fetch external RAWG URLs ("not a valid image"). Needs proxied/cached images or base64-encoded cover art. The wiring is done, just needs a fetchable image source.
+- **Pixel sprite WebP swap on landing** — `notes/pixel sprite webps/` has 16 tiny WebP icons (controller, book, hourglass, lightning, sparkle, etc.). Current landing uses PNGs from `/landing/sprites/`. Needs name mapping pass then swap. Also: `pip-thinking.png` (934KB) has no WebP version.
+- **CLEAR_FLAVORS non-finishable branch** — add parallel flavor array for MMOs/sandboxes in CompletionCelebration.tsx
 - **Pip as archetype branch** — user requested, not started. Pip renders per-archetype on share cards + clear cards
 - **Game-specific trophy Pips** — 20 GPT prompts written but not yet generated. Top 20 completable games.
 - **Commit 2026-05-12 untracked docs** — review and commit the launch deliverables batch
