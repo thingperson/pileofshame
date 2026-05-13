@@ -1074,6 +1074,8 @@ The H2 swap is the same move at a different scale: "Three steps. We do the hard 
 
 **Decision.** The game status cycle is locked to: **Backlog → Up Next → Playing Now → Completed → Moved On**. The word "bail" is retired from all user-facing copy. The button verb for the move-on action is "Not for me"; the destination state is "Moved On". The Playing Now tab icon is ▶️ (was 🔥 — 🔥 stays on the `deep-cut` time tier).
 
+**Superseded (2026-05-13).** "Not for me" button renamed to **"I'm moving on"**. Confirmation prompt updated to "Moving on from this game for good?" with "Yeah, not for me" / "Not yet". The first-person active framing better echoes "Moving on is deciding too" and connects the button action to the status name. The "Don't suggest" / "Hide from picks" manual toggle removed — skip-penalty system (3+ skips = weight penalty, 5+ = soft-ignore) covers the same need algorithmically. Delete from library retained for garbage-collection use case (wrong imports, DLC packs).
+
 **Why.** Semantic audit found drift everywhere: "Now Playing" vs "Playing Now", "Bailed" vs "Moved On" vs "Dropped", tab icons not matching cap copy, help modal referencing filter toggles that don't exist. Lock the vocabulary now, sweep every surface once, and future additions inherit the locked terms.
 
 Brady's reasoning on retiring "bail": *"bail is too 'lingo' it's like gnarly or rad or cowabunga. good character, but pigeonholed and alienating."* The word has a specific generational/subcultural read that narrows the audience without adding warmth. "Moved On" is neutral, compassionate, and carries the brand thesis (declining a game is a decision, not a failure) without leaning on slang.
