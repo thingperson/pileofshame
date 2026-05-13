@@ -206,3 +206,67 @@ Session spawned in a git worktree (`/.claude/worktrees/awesome-shockley-6eafb2`)
 ---
 
 *Closed third wave 2026-05-13 ~12:55 PDT*
+
+---
+
+# Fourth wave — 2026-05-13 evening session
+
+**Focus:** Docs triage, distribution status update, Pip bot CTA, Wikidata entity anchoring, theme docs cleanup.
+
+## Actual current state (corrected from stale session notes)
+
+- **r/SideProject post:** POSTED ~4 hours ago as of this wave. Title locked. Brady stayed at computer for 2 hours replying to comments.
+- **Reddit karma:** ~114 (not 17 as second wave noted — Brady built this up via genuine comments).
+- **Demo video:** uploaded to Streamable and linked in the Reddit post.
+- **Pip bot:** online and responding (Fly billing fixed via credit card).
+- **GA4:** zero users resolved — Vercel Analytics added as cookieless complement. Both live.
+- **Clear card cover art:** fix deployed (server-side fetch + base64 in opengraph-image.tsx). Old share card rows in DB have null cover_url — new cards created after today's deploy should show art.
+
+## What shipped this wave
+
+1. **Wikidata Q139788592 added to Organization sameAs in layout.tsx** — entity anchoring complete. Brady created the Wikidata entry; Q-ID wired into schema.
+2. **Pip bot CTA upgraded** — "Add Pip to your server" button added to landing page footer Discord section (matching about page style). App page footer upgraded from ghost text to Discord-purple styled button.
+3. **DECISIONS.md** — added entry for cozy/future theme stash decision.
+4. **ROADMAP.md** — clarified cozy/future as stashed not removed.
+5. **Cozy + future themes stashed** — removed from selector, type union, NinetiesMode branches. CSS retained.
+6. **`/why-deciding-is-hard` page** — shipped earlier this session. Internal links from landing + about page added.
+
+## Known open items (confirmed not built, despite prior session notes suggesting otherwise)
+
+- **Pip bot pool:** still 20 games. Pool growth to 300 (`bot/scripts/build-pool.ts`) is NOT built.
+- **Platform pages** (`/steam-backlog-picker`, `/xbox-backlog-picker`, `/playstation-backlog-picker`): NOT built.
+- **`/alternatives` page:** NOT built.
+- **CLEAR_FLAVORS non-finishable branch:** NOT built.
+- **Landing page one-liner cleanup (LAUNCH_BIBLE §11):** NOT built. Subhead still reads "Your library feels more like it's playing you. It should be the other way around." — flagged as redundant in audit. "Skip the overthinking" section header still present.
+- **Pre-seeding metadata cache** with top 500 Steam games: NOT done.
+- **Resend transactional email wiring:** NOT done. Needed before first marketing send.
+
+## Next-session candidates (priority order)
+
+1. Pip bot pool 20 → 300 — `bot/scripts/build-pool.ts` from RAWG + HLTB
+2. Landing page one-liner cleanup per §11 audit (~50 min)
+3. CLEAR_FLAVORS non-finishable branch in CompletionCelebration.tsx
+4. Platform pages — `/steam-backlog-picker`, `/xbox-backlog-picker`, `/playstation-backlog-picker`
+5. `/alternatives` comparison page
+
+## Distribution queue status
+
+| Step | Status |
+|------|--------|
+| r/SideProject | ✅ POSTED |
+| r/patientgamers | Pending ≥1 week after SideProject |
+| r/gamingsuggestions | Pending, only if first two land |
+| Product Hunt Coming Soon page | Brady has draft — needs verification |
+| Show HN | After PH week |
+| Creator outreach Tier 1 | After HN |
+| AlternativeTo listing | Brady action (5 min) |
+| LinkedIn company page | Brady action (5 min, for sameAs) |
+
+## Health snapshot
+
+- **Build:** Clean. Commit `179996e`.
+- **Known bugs:** Clear card art only applies to newly created cards (old rows have null cover_url). Pre-existing: HLTB 404s, NinetiesMode lint warnings.
+
+---
+
+*Closed fourth wave 2026-05-13 evening PDT*
