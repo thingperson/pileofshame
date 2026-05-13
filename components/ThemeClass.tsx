@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useStore } from '@/lib/store';
 
-const THEME_CLASSES = ['theme-90s', 'theme-80s', 'theme-future', 'theme-light', 'theme-dino', 'theme-weird', 'theme-ultra', 'theme-void', 'theme-cozy', 'theme-minimal', 'theme-tropical', 'theme-campfire', 'theme-poster'];
+const THEME_CLASSES = ['theme-90s', 'theme-80s', 'theme-future', 'theme-light', 'theme-dino', 'theme-weird', 'theme-ultra', 'theme-void', 'theme-cozy', 'theme-minimal', 'theme-tropical', 'theme-campfire'];
 
 export default function ThemeClass() {
   const theme = useStore((s) => s.settings.theme);
