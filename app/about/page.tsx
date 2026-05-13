@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import Wordmark from '@/components/Wordmark';
 import { DISCORD_INVITE_URL, PIP_BOT_INVITE_URL } from '@/lib/social';
 
@@ -188,9 +189,9 @@ function Philosophy() {
           <Reveal delay={400}>
             <p className="text-sm leading-relaxed" style={{ color: C.textMuted }}>
               The reason it felt impossible to decide?{' '}
-              <a href="/why-deciding-is-hard" style={{ color: C.cyan, textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+              <Link href="/why-deciding-is-hard" style={{ color: C.cyan, textDecoration: 'underline', textUnderlineOffset: '3px' }}>
                 There&apos;s a name for it.
-              </a>
+              </Link>
             </p>
           </Reveal>
         </div>

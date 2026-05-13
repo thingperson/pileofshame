@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import Wordmark from '@/components/Wordmark';
 import AuthButton from '@/components/AuthButton';
 import { trackLandingView } from '@/lib/analytics';
@@ -422,9 +423,9 @@ function ProblemSolution() {
           <Reveal delay={320}>
             <p className="text-sm mt-6" style={{ color: C.textMuted }}>
               There&apos;s a structural reason for this.{' '}
-              <a href="/why-deciding-is-hard" style={{ color: C.cyan, textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+              <Link href="/why-deciding-is-hard" style={{ color: C.cyan, textDecoration: 'underline', textUnderlineOffset: '3px' }}>
                 The psychology behind it →
-              </a>
+              </Link>
             </p>
           </Reveal>
         </div>
