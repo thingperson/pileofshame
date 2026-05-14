@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
+/* eslint-disable @next/next/no-img-element */
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -135,7 +136,6 @@ export default function WhyDecidingIsHardPage() {
           </p>
 
           {/* Pip — exhausted from the scroll-and-close loop */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <div style={{ textAlign: 'center', margin: '2rem 0 1.5rem' }}>
             <img
               src="/landing/pip/pip-exhausted.webp"
@@ -278,7 +278,6 @@ export default function WhyDecidingIsHardPage() {
           </p>
 
           {/* Pip — pointing toward solutions */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <div style={{ textAlign: 'center', margin: '2rem 0 1.5rem' }}>
             <img
               src="/landing/pip/pip-pointing.webp"
