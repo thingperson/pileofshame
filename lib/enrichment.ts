@@ -1,4 +1,5 @@
 import { MoodTag, TimeTier } from './types';
+import { CURATED_MOODS } from './curatedMoods';
 
 /**
  * Auto-enrichment engine.
@@ -115,12 +116,19 @@ const GAME_MOOD_OVERRIDES: Record<string, MoodTag[]> = {
 
 /**
  * Infer mood tags from genres.
- * Checks overrides first (fuzzy match on game name), then maps genres.
+ * Priority: hand-tuned overrides → curated pool (344 titles) → genre auto-map.
  */
 export function inferMoodTags(gameName: string, genres?: string[]): MoodTag[] {
-  // Check overrides first (fuzzy: game name starts with or contains the key)
+  // Check hand-tuned overrides first (fuzzy: game name contains the key)
   const nameLower = gameName.toLowerCase();
   for (const [key, moods] of Object.entries(GAME_MOOD_OVERRIDES)) {
+    if (nameLower.includes(key.toLowerCase())) {
+      return moods;
+    }
+  }
+
+  // Check curated pool (exact title match from bot pool — 344 popular games)
+  for (const [key, moods] of Object.entries(CURATED_MOODS)) {
     if (nameLower.includes(key.toLowerCase())) {
       return moods;
     }

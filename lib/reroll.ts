@@ -4,6 +4,7 @@ import { getGenreCooldownMultiplier } from './genreCooldown';
 import { isNotInterestedIgnored, isHitAWallSuppressed, getAllSkipReasons } from './skipReasons';
 import { getBehavioralWeight } from './decisionHistory';
 import type { SmartPickType } from './smartPickCopy';
+import { getSupersededGameIds } from './franchiseDedup';
 
 // `continue` is the internal key for user-facing "Resume". Kept as `continue`
 // so existing persisted state and analytics events don't break. Deep Cut and
@@ -48,7 +49,12 @@ export function getEligibleGames(
   platformPreference: PlatformPreference = 'any',
   moodFilters: MoodTag[] = [],
 ): Game[] {
+  const superseded = getSupersededGameIds(games);
+
   return games.filter((game) => {
+    // Exclude older versions of annual franchises (FIFA 23 when user owns FIFA 24)
+    if (superseded.has(game.id)) return false;
+
     // Exclude ignored games from all recommendations
     if (game.ignored) return false;
 
