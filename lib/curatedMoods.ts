@@ -230,7 +230,7 @@ export const CURATED_MOODS: Record<string, MoodTag[]> = {
   'Resident Evil 4 (2023)': ['intense', 'spooky'],
   'Hi-Fi Rush': ['intense', 'brainless', 'creative'],
   'Sifu': ['intense'],
-  'Neon White': ['intense', 'strategic'],
+  'Neon White': ['intense', 'brainless'],
   'Katana ZERO': ['intense', 'story-rich'],
   'Oxenfree': ['story-rich', 'spooky', 'atmospheric'],
   'Night in the Woods': ['story-rich', 'emotional', 'atmospheric'],

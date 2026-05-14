@@ -253,23 +253,12 @@ function AppContent() {
           case 'most-playtime': sorted.sort((a, b) => (b.hoursPlayed || 0) - (a.hoursPlayed || 0) || a.name.localeCompare(b.name)); break;
           case 'least-playtime': sorted.sort((a, b) => (a.hoursPlayed || 0) - (b.hoursPlayed || 0) || a.name.localeCompare(b.name)); break;
           case 'closest-to-done': sorted.sort((a, b) => {
-            // Tier 1: Has HLTB + progress → sort by remaining hours (lowest first)
-            const hasDataA = a.hoursPlayed > 0 && a.hltbMain && a.hltbMain > 0;
-            const hasDataB = b.hoursPlayed > 0 && b.hltbMain && b.hltbMain > 0;
-            const remA = hasDataA ? Math.max(a.hltbMain! - a.hoursPlayed, 0) : Infinity;
-            const remB = hasDataB ? Math.max(b.hltbMain! - b.hoursPlayed, 0) : Infinity;
-            if (hasDataA && hasDataB) return remA - remB;
-            if (hasDataA && !hasDataB) return -1;
-            if (!hasDataA && hasDataB) return 1;
-            // Tier 2: Has playtime but no HLTB → sort by most hours (likely furthest along)
-            if (a.hoursPlayed > 0 && b.hoursPlayed > 0) return (b.hoursPlayed || 0) - (a.hoursPlayed || 0);
-            if (a.hoursPlayed > 0) return -1;
-            if (b.hoursPlayed > 0) return 1;
-            // Tier 3: Has HLTB but no playtime → short games first (quick wins)
+            // Sort by HLTB main story length — shortest games first.
+            // We don't infer completion proximity from hours played; the user
+            // decides where they are, not us.
             if (a.hltbMain && b.hltbMain) return a.hltbMain - b.hltbMain;
             if (a.hltbMain) return -1;
             if (b.hltbMain) return 1;
-            // Tier 4: No data → A-Z fallback
             return a.name.localeCompare(b.name);
           }); break;
           default: sorted = sortBestForYou(inTab, games);
@@ -788,7 +777,7 @@ function AppContent() {
                 <option value="z-a">Z → A</option>
                 <option value="newest">Recently added</option>
                 <option value="oldest">Earliest added</option>
-                <option value="closest-to-done">🏁 Quick to clear</option>
+                <option value="closest-to-done">🏁 Shortest games</option>
                 <option value="most-playtime">Most playtime</option>
                 <option value="least-playtime">Least playtime</option>
               </select>
