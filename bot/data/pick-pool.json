@@ -2,121 +2,3233 @@
   {
     "title": "Hades",
     "lengthHours": 25,
-    "moods": ["intense", "atmospheric", "story-rich"],
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
     "blurb": "Greek mythology roguelike. Tight runs, real story, gets out of your way."
   },
   {
     "title": "A Short Hike",
     "lengthHours": 2,
-    "moods": ["chill", "atmospheric", "creative"],
+    "moods": [
+      "chill",
+      "atmospheric",
+      "creative"
+    ],
     "blurb": "Climb a mountain in an afternoon. Nothing wants anything from you."
   },
   {
     "title": "Stardew Valley",
     "lengthHours": 60,
-    "moods": ["chill", "story-rich", "creative"],
+    "moods": [
+      "chill",
+      "story-rich",
+      "creative"
+    ],
     "blurb": "Inherit a farm, slowly rebuild a life. Easy to load, hard to put down."
   },
   {
     "title": "Outer Wilds",
     "lengthHours": 22,
-    "moods": ["atmospheric", "story-rich", "creative"],
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "creative"
+    ],
     "blurb": "Knowledge-based exploration. You'll know when to stop, and that's the point."
   },
   {
     "title": "Hollow Knight",
     "lengthHours": 35,
-    "moods": ["intense", "atmospheric"],
+    "moods": [
+      "intense",
+      "atmospheric"
+    ],
     "blurb": "Beautiful, brutal, enormous. The pile fears this one."
   },
   {
     "title": "Celeste",
     "lengthHours": 12,
-    "moods": ["intense", "emotional", "story-rich"],
+    "moods": [
+      "intense",
+      "emotional",
+      "story-rich"
+    ],
     "blurb": "Hard platformer, surprisingly tender. Beatable in a weekend."
   },
   {
     "title": "Disco Elysium",
     "lengthHours": 30,
-    "moods": ["story-rich", "atmospheric", "brain-off"],
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "brain-off"
+    ],
     "blurb": "RPG that's mostly conversation. You play a wreck of a detective. Read it like a novel."
   },
   {
     "title": "Vampire Survivors",
     "lengthHours": 15,
-    "moods": ["brain-off", "intense"],
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
     "blurb": "20-minute runs, dopamine on tap. Costs less than a coffee."
   },
   {
     "title": "Slay the Spire",
     "lengthHours": 40,
-    "moods": ["strategic", "brain-off"],
+    "moods": [
+      "strategic",
+      "brain-off"
+    ],
     "blurb": "Deckbuilder roguelike. Each run teaches the next. Endlessly replayable."
   },
   {
     "title": "Inscryption",
     "lengthHours": 12,
-    "moods": ["spooky", "story-rich", "strategic"],
+    "moods": [
+      "spooky",
+      "story-rich",
+      "strategic"
+    ],
     "blurb": "Card game in a cabin. Goes weird places. Trust it."
   },
   {
     "title": "Slime Rancher 2",
     "lengthHours": 15,
-    "moods": ["chill", "creative"],
+    "moods": [
+      "chill",
+      "brain-off",
+      "creative"
+    ],
     "blurb": "Slimes, plorts, no stakes. Background-music for your brain."
   },
   {
     "title": "Tunic",
     "lengthHours": 16,
-    "moods": ["atmospheric", "strategic", "creative"],
+    "moods": [
+      "atmospheric",
+      "strategic",
+      "creative"
+    ],
     "blurb": "Tiny fox, huge world. The manual is part of the puzzle."
   },
   {
     "title": "Cult of the Lamb",
     "lengthHours": 20,
-    "moods": ["intense", "spooky", "strategic"],
+    "moods": [
+      "intense",
+      "spooky",
+      "strategic"
+    ],
     "blurb": "Roguelike + cult management. Cuter and meaner than it looks."
   },
   {
     "title": "Chained Echoes",
     "lengthHours": 40,
-    "moods": ["story-rich", "strategic"],
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
     "blurb": "Modern JRPG that respects your time. SNES energy, 2020s polish."
   },
   {
     "title": "Pizza Tower",
     "lengthHours": 10,
-    "moods": ["intense", "brain-off"],
+    "moods": [
+      "intense",
+      "brain-off"
+    ],
     "blurb": "Cartoon platformer at 200mph. Pure adrenaline, beatable in a week."
   },
   {
     "title": "Subnautica",
     "lengthHours": 30,
-    "moods": ["spooky", "atmospheric", "creative"],
+    "moods": [
+      "spooky",
+      "atmospheric",
+      "creative"
+    ],
     "blurb": "Ocean survival. Beautiful and terrifying in equal measure."
   },
   {
     "title": "Return of the Obra Dinn",
     "lengthHours": 8,
-    "moods": ["strategic", "story-rich", "atmospheric"],
+    "moods": [
+      "strategic",
+      "story-rich",
+      "atmospheric"
+    ],
     "blurb": "Detective puzzle on a dead ship. One weekend, no regrets."
   },
   {
     "title": "Tetris Effect",
     "lengthHours": 10,
-    "moods": ["chill", "atmospheric", "brain-off"],
+    "moods": [
+      "chill",
+      "atmospheric",
+      "brain-off"
+    ],
     "blurb": "Tetris if Tetris was a religious experience. Headphones non-negotiable."
   },
   {
     "title": "Pentiment",
     "lengthHours": 20,
-    "moods": ["story-rich", "atmospheric"],
+    "moods": [
+      "story-rich",
+      "atmospheric"
+    ],
     "blurb": "16th-century murder mystery, illuminated-manuscript art style. Slow burn, deeply rewarding."
   },
   {
     "title": "Balatro",
     "lengthHours": 25,
-    "moods": ["strategic", "brain-off"],
+    "moods": [
+      "strategic",
+      "brain-off"
+    ],
     "blurb": "Poker roguelike that ate everyone's December. One more run. One more."
+  },
+  {
+    "title": "The Legend of Zelda: Ocarina of Time",
+    "lengthHours": 26,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "The one that taught a generation what adventure feels like. Still holds up."
+  },
+  {
+    "title": "Soulcalibur",
+    "lengthHours": 8,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "The fighting game that made Dreamcast owners insufferable. Deservedly."
+  },
+  {
+    "title": "Super Mario Galaxy",
+    "lengthHours": 15,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Nintendo threw Mario into space and somehow made gravity fun. Pure joy."
+  },
+  {
+    "title": "Metroid Prime",
+    "lengthHours": 14,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Lonely, atmospheric, brilliant. Scanning everything isn't a chore here."
+  },
+  {
+    "title": "Super Mario Galaxy 2",
+    "lengthHours": 13,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "More Galaxy. That's the highest compliment."
+  },
+  {
+    "title": "Perfect Dark",
+    "lengthHours": 8,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "GoldenEye's cooler older sister. Laptop guns that become turrets."
+  },
+  {
+    "title": "Super Mario Odyssey",
+    "lengthHours": 12,
+    "moods": [
+      "intense",
+      "brain-off"
+    ],
+    "blurb": "Possessing a T-Rex with a hat is peak game design. No notes."
+  },
+  {
+    "title": "The Legend of Zelda: Breath of the Wild",
+    "lengthHours": 50,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "They broke the Zelda formula and rebuilt it better. Go anywhere."
+  },
+  {
+    "title": "Baldur's Gate III",
+    "lengthHours": 100,
+    "moods": [
+      "strategic",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "200 hours of 'one more conversation.' Your save file has consequences."
+  },
+  {
+    "title": "The Legend of Zelda: Tears of the Kingdom",
+    "lengthHours": 55,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Breath of the Wild but now you can glue rockets to a raft."
+  },
+  {
+    "title": "Half-Life",
+    "lengthHours": 12,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "Started the 'shooters can have stories' argument. Won it immediately."
+  },
+  {
+    "title": "Uncharted 2: Among Thieves",
+    "lengthHours": 10,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "The train level. You know the one. Blockbuster gaming at its peak."
+  },
+  {
+    "title": "Red Dead Redemption 2",
+    "lengthHours": 50,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "Slow, deliberate, devastating. Arthur Morgan deserves your time."
+  },
+  {
+    "title": "BioShock",
+    "lengthHours": 12,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "Would you kindly clear your evening? Rapture doesn't let go."
+  },
+  {
+    "title": "Half-Life 2",
+    "lengthHours": 13,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "The gravity gun changed everything. Still the benchmark for physics gameplay."
+  },
+  {
+    "title": "Tekken 3",
+    "lengthHours": 5,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "The fighting game your cousin was suspiciously good at. Still tight."
+  },
+  {
+    "title": "Metal Gear Solid 2: Sons of Liberty",
+    "lengthHours": 12,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "strategic"
+    ],
+    "blurb": "Kojima predicted the internet and nobody believed him. They do now."
+  },
+  {
+    "title": "The Legend of Zelda: Majora's Mask",
+    "lengthHours": 20,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Three days to save the world. Dark, urgent, unforgettable."
+  },
+  {
+    "title": "Baldur's Gate II: Shadows of Amn",
+    "lengthHours": 60,
+    "moods": [
+      "strategic",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "The CRPG everything else is measured against. Minsc and Boo demand it."
+  },
+  {
+    "title": "Portal 2",
+    "lengthHours": 8,
+    "moods": [
+      "strategic",
+      "story-rich",
+      "brain-off"
+    ],
+    "blurb": "Co-op ruins friendships. Solo ruins your sense of what puzzles can be. Perfect."
+  },
+  {
+    "title": "LittleBigPlanet",
+    "lengthHours": 8,
+    "moods": [
+      "brain-off",
+      "intense",
+      "creative"
+    ],
+    "blurb": "Sackboy is pure vibes. Play the levels, skip the creator unless you want to lose a weekend."
+  },
+  {
+    "title": "The Legend of Zelda: A Link to the Past",
+    "lengthHours": 16,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Top-down Zelda perfected. Every dungeon earns its place."
+  },
+  {
+    "title": "Grand Theft Auto IV",
+    "lengthHours": 28,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Bowling with your cousin. Also: the best story Rockstar ever told."
+  },
+  {
+    "title": "The Last Of Us",
+    "lengthHours": 15,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "You'll feel things you didn't sign up for. Trust the pacing."
+  },
+  {
+    "title": "Red Dead Redemption",
+    "lengthHours": 18,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "The sunset ride home. If you know, you know. If you don't, go find out."
+  },
+  {
+    "title": "XCOM 2: War of the Chosen",
+    "lengthHours": 35,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": "Your soldiers will die and you'll name the next squad after them."
+  },
+  {
+    "title": "Elden Ring",
+    "lengthHours": 55,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Beautiful, brutal, enormous. The pile fears this one."
+  },
+  {
+    "title": "The Orange Box",
+    "lengthHours": 15,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Three legendary games for the price of one. Valve never did this again."
+  },
+  {
+    "title": "Burnout 3: Takedown",
+    "lengthHours": 10,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": "Pure destruction at 200mph. No simulation, no pretense. Just carnage."
+  },
+  {
+    "title": "Chrono Cross",
+    "lengthHours": 35,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Gorgeous, strange, polarizing. The soundtrack alone justifies the hours."
+  },
+  {
+    "title": "Resident Evil Code: Veronica",
+    "lengthHours": 12,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Classic RE at its most unhinged. Claire deserves this spotlight."
+  },
+  {
+    "title": "The Elder Scrolls IV: Oblivion",
+    "lengthHours": 30,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "The NPCs have unhinged conversations at 3am. You'll love every second."
+  },
+  {
+    "title": "Grand Theft Auto: Vice City",
+    "lengthHours": 18,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "creative"
+    ],
+    "blurb": "Neon, synths, Hawaiian shirts. The vibes are immaculate."
+  },
+  {
+    "title": "God of War I",
+    "lengthHours": 9,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "Angry dad before the reboot made him a sad dad. Pure spectacle."
+  },
+  {
+    "title": "Diablo",
+    "lengthHours": 15,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": "Click demons until they drop loot. Repeat forever. The original loop."
+  },
+  {
+    "title": "The Elder Scrolls V: Skyrim",
+    "lengthHours": 35,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "You've bought it four times. Might as well finally finish it."
+  },
+  {
+    "title": "Batman: Arkham City",
+    "lengthHours": 12,
+    "moods": [
+      "intense",
+      "spooky",
+      "atmospheric"
+    ],
+    "blurb": "Be Batman in an open-world prison. The combat still feels incredible."
+  },
+  {
+    "title": "BioShock Infinite",
+    "lengthHours": 11,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "Columbia is gorgeous. The ending will start arguments. Both are the point."
+  },
+  {
+    "title": "Divinity: Original Sin 2 - Definitive Edition",
+    "lengthHours": 60,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Everything is a weapon. Oil plus fire equals tactics. Best co-op RPG ever made."
+  },
+  {
+    "title": "Metal Gear Solid 3: Subsistence",
+    "lengthHours": 16,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Snake eats frogs in a jungle. Also: the best story in the series."
+  },
+  {
+    "title": "Divinity: Original Sin - Enhanced Edition",
+    "lengthHours": 45,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Larian's first crack at the formula. Rough edges, genuine magic underneath."
+  },
+  {
+    "title": "Metal Gear Solid",
+    "lengthHours": 11,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Cardboard box stealth. Fourth-wall demolition. Gaming's first auteur moment."
+  },
+  {
+    "title": "Grim Fandango",
+    "lengthHours": 9,
+    "moods": [
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Film noir with skeletons. The writing hasn't aged a day."
+  },
+  {
+    "title": "Command & Conquer",
+    "lengthHours": 12,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": "Tiberium harvesting and FMV cutscenes. RTS before RTS got complicated."
+  },
+  {
+    "title": "Super Mario 64",
+    "lengthHours": 12,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Invented 3D platforming and mostly got it right on the first try."
+  },
+  {
+    "title": "Metal Gear Solid 4: Guns of the Patriots",
+    "lengthHours": 16,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "More movie than game. That's either the pitch or the warning."
+  },
+  {
+    "title": "Mass Effect 2",
+    "lengthHours": 25,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Assemble the squad. Do their loyalty missions. Get attached. Survive the finale."
+  },
+  {
+    "title": "Persona 5 Royal",
+    "lengthHours": 100,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "strategic"
+    ],
+    "blurb": "100+ hours of style, heart, and time management. The calendar is the real boss."
+  },
+  {
+    "title": "Sid Meier's Civilization IV",
+    "lengthHours": 40,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": "'One more turn' at 2am. You've been warned."
+  },
+  {
+    "title": "Jet Set Radio",
+    "lengthHours": 6,
+    "moods": [
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": "Cel-shaded rollerblading with a soundtrack that never left your head."
+  },
+  {
+    "title": "God of War (2018)",
+    "lengthHours": 20,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "One continuous camera shot. Father-son roadtrip through Norse mythology. Heavy."
+  },
+  {
+    "title": "StarCraft II: Wings of Liberty",
+    "lengthHours": 16,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": "The campaign is secretly great. Raynor's story carries it."
+  },
+  {
+    "title": "Company of Heroes",
+    "lengthHours": 15,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": "WW2 RTS where cover and positioning matter more than build order spam."
+  },
+  {
+    "title": "Gears of War 2",
+    "lengthHours": 9,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Chainsaw guns and genuine emotional beats. The Horde mode alone is worth it."
+  },
+  {
+    "title": "Dwarf Fortress",
+    "lengthHours": 80,
+    "moods": [
+      "strategic",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "ASCII art hides the deepest simulation ever made. Losing is fun. Literally."
+  },
+  {
+    "title": "Okami",
+    "lengthHours": 35,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Zelda by way of Japanese watercolor. Paintbrush combat that never stops being satisfying."
+  },
+  {
+    "title": "Grand Theft Auto III",
+    "lengthHours": 15,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "The one that started it. Rough now, but the freedom was real."
+  },
+  {
+    "title": "The Last of Us Part II",
+    "lengthHours": 24,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Relentless. Will make you feel things you didn't sign up for."
+  },
+  {
+    "title": "Maniac Mansion: Day of the Tentacle",
+    "lengthHours": 6,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "brain-off"
+    ],
+    "blurb": "Point-and-click perfection. Time travel puzzles that actually make sense. Mostly."
+  },
+  {
+    "title": "Castlevania: Symphony of the Night",
+    "lengthHours": 8,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "The map keeps going. Invented a genre and still plays better than most of its children."
+  },
+  {
+    "title": "SSX 3",
+    "lengthHours": 8,
+    "moods": [
+      "brain-off"
+    ],
+    "blurb": "One enormous mountain, top to bottom. Arcade snowboarding that hasn't been topped."
+  },
+  {
+    "title": "Paper Mario (2000)",
+    "lengthHours": 20,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "RPG with construction-paper charm. Funny, simple, genuinely clever."
+  },
+  {
+    "title": "Skies of Arcadia",
+    "lengthHours": 40,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Sky pirates, airship battles, a world that wants to be explored. JRPG comfort food."
+  },
+  {
+    "title": "Grand Theft Auto: San Andreas",
+    "lengthHours": 30,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "Three cities, a BMX, and zero chill. The one everyone remembers."
+  },
+  {
+    "title": "Super Mario 3D World",
+    "lengthHours": 9,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Pure platforming joy. Every level a new idea, no filler."
+  },
+  {
+    "title": "The Legend of Zelda: Skyward Sword",
+    "lengthHours": 35,
+    "moods": [
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Divisive for a reason. Motion controls aside, the dungeons are some of Zelda's best."
+  },
+  {
+    "title": "Homeworld",
+    "lengthHours": 12,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": "Space RTS in full 3D. Still gorgeous. Still heartbreaking."
+  },
+  {
+    "title": "Super Smash Bros. Ultimate",
+    "lengthHours": 25,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Everyone is here. Literally everyone. Single-player is meatier than you'd expect."
+  },
+  {
+    "title": "God of War II",
+    "lengthHours": 10,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Bigger, angrier sequel. The scale goes absurd and earns it."
+  },
+  {
+    "title": "Demon's Souls (2020)",
+    "lengthHours": 22,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "The remake that justified the PS5. Gorgeous misery from minute one."
+  },
+  {
+    "title": "Sid Meier's Alpha Centauri",
+    "lengthHours": 30,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": "Civilization on an alien planet with better writing than most RPGs."
+  },
+  {
+    "title": "Soul Calibur II",
+    "lengthHours": 8,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Weapon-based fighting that still feels incredible. Pick a guest character and go."
+  },
+  {
+    "title": "FINAL FANTASY VI",
+    "lengthHours": 35,
+    "moods": [
+      "story-rich",
+      "strategic",
+      "atmospheric"
+    ],
+    "blurb": "The opera scene. Kefka. The World of Ruin. The JRPG all others are measured against."
+  },
+  {
+    "title": "The Walking Dead: Season 1",
+    "lengthHours": 10,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Telltale's best. You'll make terrible choices and feel every one."
+  },
+  {
+    "title": "God of War III",
+    "lengthHours": 8,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Opens with the most ridiculous set piece in gaming history. Doesn't slow down."
+  },
+  {
+    "title": "Uncharted 3: Drake's Deception",
+    "lengthHours": 9,
+    "moods": [
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": "Big set pieces, great banter. The plane sequence alone."
+  },
+  {
+    "title": "Eternal Darkness: Sanity's Requiem",
+    "lengthHours": 11,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Horror that messes with YOU, not just the character. The sanity effects are legendary."
+  },
+  {
+    "title": "Vagrant Story (2000)",
+    "lengthHours": 25,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Dark, dense, and criminally underplayed. The weapon crafting will consume you."
+  },
+  {
+    "title": "Mario Kart 8 Deluxe",
+    "lengthHours": 10,
+    "moods": [
+      "brain-off"
+    ],
+    "blurb": "The definitive kart racer. 96 tracks. Every single one bangs."
+  },
+  {
+    "title": "Call of Duty 4: Modern Warfare",
+    "lengthHours": 6,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "The campaign that rewrote shooters. Short, brutal, unforgettable."
+  },
+  {
+    "title": "Super Mario World",
+    "lengthHours": 5,
+    "moods": [
+      "intense",
+      "brain-off"
+    ],
+    "blurb": "Perfect 2D platforming. Cape Feather is the best power-up ever made."
+  },
+  {
+    "title": "Metroid Fusion",
+    "lengthHours": 5,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Tight, tense, linear Metroid. The SA-X is stalking you. You are not ready."
+  },
+  {
+    "title": "Fire Emblem Awakening",
+    "lengthHours": 30,
+    "moods": [
+      "strategic",
+      "story-rich"
+    ],
+    "blurb": "The one that saved the franchise. Permadeath makes every move matter."
+  },
+  {
+    "title": "Super Mario Sunshine",
+    "lengthHours": 16,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Weird Mario. FLUDD is polarizing, but the platforming underneath is pure."
+  },
+  {
+    "title": "Bloodborne",
+    "lengthHours": 30,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "spooky"
+    ],
+    "blurb": "Victorian nightmare at 30fps and you won't care. The best combat From ever made."
+  },
+  {
+    "title": "Undertale",
+    "lengthHours": 6,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Looks like nothing. Plays like nothing else. Spare everyone or don't. It notices."
+  },
+  {
+    "title": "Final Fantasy X",
+    "lengthHours": 40,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Linear and proud of it. The story hits harder than the sphere grid."
+  },
+  {
+    "title": "Tom Clancy's Splinter Cell Chaos Theory",
+    "lengthHours": 10,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Peak stealth. Every mission a puzzle box. The bank level is a masterpiece."
+  },
+  {
+    "title": "Final Fantasy XII",
+    "lengthHours": 60,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "MMO combat in a single-player shell. The Gambit system is programming-lite and brilliant."
+  },
+  {
+    "title": "A Monster's Expedition",
+    "lengthHours": 10,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "brain-off"
+    ],
+    "blurb": "Push trees. Make bridges. The whole island opens up. Quietly perfect."
+  },
+  {
+    "title": "Thief: The Dark Project",
+    "lengthHours": 15,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "First-person stealth before anyone else figured it out. Sound design carries the game."
+  },
+  {
+    "title": "Warcraft 3: Reign of Chaos",
+    "lengthHours": 18,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": "RTS with hero units and a campaign that set up an entire MMO."
+  },
+  {
+    "title": "Braid",
+    "lengthHours": 5,
+    "moods": [
+      "strategic",
+      "atmospheric"
+    ],
+    "blurb": "Time-bending platformer. The last world recontextualizes everything. Short and permanent."
+  },
+  {
+    "title": "Bayonetta 2",
+    "lengthHours": 8,
+    "moods": [
+      "intense",
+      "brain-off"
+    ],
+    "blurb": "Over-the-top action that never stops escalating. Pure spectacle, zero filler."
+  },
+  {
+    "title": "Metroid Prime 2: Echoes",
+    "lengthHours": 15,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Darker, harder Metroid Prime. The light/dark world mechanic earns every headache."
+  },
+  {
+    "title": "Age of Empires II: Age of Kings",
+    "lengthHours": 20,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": "The RTS that ruined a generation's bedtime. Still holds up."
+  },
+  {
+    "title": "Grand Theft Auto V",
+    "lengthHours": 30,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "creative"
+    ],
+    "blurb": "Massive, dumb, brilliant. Three playable idiots and a world that rewards curiosity."
+  },
+  {
+    "title": "Conker's Bad Fur Day",
+    "lengthHours": 8,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Foul-mouthed platformer from Rare's unhinged era. Absolutely for you."
+  },
+  {
+    "title": "Banjo-Kazooie",
+    "lengthHours": 10,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Collect-a-thon perfected. Charming, funny, and tighter than you remember."
+  },
+  {
+    "title": "Journey",
+    "lengthHours": 2,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "spooky"
+    ],
+    "blurb": "Two hours, no words, genuinely moving. Play it in one sitting."
+  },
+  {
+    "title": "System Shock 2",
+    "lengthHours": 12,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "The immersive sim that taught BioShock everything. Creaky but still terrifying."
+  },
+  {
+    "title": "The Witcher 3: Wild Hunt",
+    "lengthHours": 50,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "200 hours of world-class RPG. Side quests here outwrite most games' main stories."
+  },
+  {
+    "title": "Crash Bandicoot 3: Warped",
+    "lengthHours": 6,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Peak Crash. Tight levels, wild variety, beatable in a weekend."
+  },
+  {
+    "title": "Gears of War 3",
+    "lengthHours": 9,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Best campaign in the series. A real ending and Horde mode worth it alone."
+  },
+  {
+    "title": "Tom Clancy's Splinter Cell",
+    "lengthHours": 10,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Slow, tense stealth that rewards patience. Sam Fisher's best outing aged well."
+  },
+  {
+    "title": "Crysis",
+    "lengthHours": 10,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "Still gorgeous. The nanosuit sandbox is more fun than the memes suggest."
+  },
+  {
+    "title": "Shadow of the Colossus",
+    "lengthHours": 8,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Sixteen bosses. No filler. Every fight is a puzzle made of fur and stone."
+  },
+  {
+    "title": "The Legend of Zelda: A Link Between Worlds",
+    "lengthHours": 15,
+    "moods": [
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Top-down Zelda that trusts you from the start. Open structure, tight dungeons."
+  },
+  {
+    "title": "Klonoa 2: Lunatea's Veil",
+    "lengthHours": 6,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Gorgeous 2.5D platformer that nobody played. Short, sweet, surprisingly emotional."
+  },
+  {
+    "title": "Ninja Gaiden (2004)",
+    "lengthHours": 10,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Brutal, precise combat that punishes button-mashing. You will die. You will improve."
+  },
+  {
+    "title": "Super Mario World 2: Yoshi's Island",
+    "lengthHours": 8,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Hand-drawn platforming at its best. Baby Mario's crying is the final boss."
+  },
+  {
+    "title": "Mark of the Ninja",
+    "lengthHours": 7,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "Stealth done right in 2D. Every kill feels earned. Tight and replayable."
+  },
+  {
+    "title": "Death Road to Canada",
+    "lengthHours": 8,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "intense"
+    ],
+    "blurb": "Roguelike road trip through zombie Canada. Silly, chaotic, great with friends."
+  },
+  {
+    "title": "FEZ",
+    "lengthHours": 5,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Rotate the world. 2D becomes 3D becomes puzzle. Quiet, brilliant, unforgettable."
+  },
+  {
+    "title": "Spyro: Year of the Dragon",
+    "lengthHours": 8,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Peak PS1 collectathon. More variety than the first two, same charm."
+  },
+  {
+    "title": "Call of Duty",
+    "lengthHours": 7,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "The original. No killstreaks, no prestige. Just a solid WWII campaign."
+  },
+  {
+    "title": "Resident Evil 2",
+    "lengthHours": 8,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Survival horror landmark. Two characters, genuine tension, inventory as gameplay."
+  },
+  {
+    "title": "God of War: Chains of Olympus",
+    "lengthHours": 5,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "PSP-sized God of War that punches way above its weight."
+  },
+  {
+    "title": "Ratchet & Clank: Up Your Arsenal",
+    "lengthHours": 10,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Best PS2 Ratchet. Weapons are creative, humor actually lands."
+  },
+  {
+    "title": "Tony Hawk's Pro Skater 2",
+    "lengthHours": 5,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": "Two-minute runs, perfect flow state. The soundtrack alone is worth it."
+  },
+  {
+    "title": "Deus Ex: Human Revolution - Director's Cut",
+    "lengthHours": 20,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Cyberpunk immersive sim. Multiple solutions to everything. Your call."
+  },
+  {
+    "title": "Castlevania: Aria of Sorrow",
+    "lengthHours": 7,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Best GBA Castlevania. The soul system is addictive. Beatable in a weekend."
+  },
+  {
+    "title": "Dark Souls II",
+    "lengthHours": 35,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "The weird middle child. Slower, stranger, still rewarding. Majula's music haunts."
+  },
+  {
+    "title": "Baldur's Gate",
+    "lengthHours": 40,
+    "moods": [
+      "strategic",
+      "story-rich"
+    ],
+    "blurb": "The CRPG that started it all. Dense, demanding, worth the learning curve."
+  },
+  {
+    "title": "Halo 3",
+    "lengthHours": 8,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "The campaign that finished the fight. Still the gold standard for sci-fi shooter setpieces."
+  },
+  {
+    "title": "DRAGON QUEST XI S: Echoes of an Elusive Age - Definitive Edition",
+    "lengthHours": 80,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "strategic"
+    ],
+    "blurb": "Classic JRPG comfort food. 80 hours of charm, zero cynicism."
+  },
+  {
+    "title": "The Longest Journey",
+    "lengthHours": 18,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "brain-off"
+    ],
+    "blurb": "Point-and-click epic with writing that still holds up. Slow, wordy, rewarding."
+  },
+  {
+    "title": "Rez Infinite",
+    "lengthHours": 2,
+    "moods": [
+      "brain-off",
+      "chill",
+      "atmospheric"
+    ],
+    "blurb": "Synesthesia as a rail shooter. Short, hypnotic, unlike anything else."
+  },
+  {
+    "title": "Metal Gear Solid V: The Phantom Pain",
+    "lengthHours": 46,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "Best stealth sandbox ever made. The story trails off. The gameplay never does."
+  },
+  {
+    "title": "Fallout 3",
+    "lengthHours": 25,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Step out of the vault. The Capital Wasteland is bleak and impossible to stop exploring."
+  },
+  {
+    "title": "Planescape: Torment",
+    "lengthHours": 30,
+    "moods": [
+      "strategic",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "The best-written RPG ever made. Combat is forgettable. Everything else is unforgettable."
+  },
+  {
+    "title": "Dragon Age: Origins",
+    "lengthHours": 40,
+    "moods": [
+      "story-rich",
+      "strategic",
+      "atmospheric"
+    ],
+    "blurb": "BioWare's last great RPG. Choices matter, companions are memorable."
+  },
+  {
+    "title": "Ori and the Will of the Wisps",
+    "lengthHours": 8,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Gorgeous Metroidvania with combat that actually bites. Better than Blind Forest."
+  },
+  {
+    "title": "Resident Evil",
+    "lengthHours": 7,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Fixed cameras, limited ammo, real dread. The original survival horror template still works."
+  },
+  {
+    "title": "Golden Sun",
+    "lengthHours": 20,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "GBA JRPG with puzzle dungeons and djinn. Comfort-tier handheld RPG."
+  },
+  {
+    "title": "Tony Hawk's Pro Skater 4",
+    "lengthHours": 8,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": "Arcade skating at its loosest. Open levels, no timer pressure, just flow."
+  },
+  {
+    "title": "Twisted Metal: Black",
+    "lengthHours": 5,
+    "moods": [
+      "brain-off"
+    ],
+    "blurb": "Car combat soaked in grim PS2 atmosphere. Short, violent, singular."
+  },
+  {
+    "title": "Legacy of Kain: Soul Reaver",
+    "lengthHours": 12,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Shift between life and death to solve puzzles. The writing carries it hard."
+  },
+  {
+    "title": "Dishonored",
+    "lengthHours": 12,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "First-person stealth where every room is a puzzle box. Replay it differently every time."
+  },
+  {
+    "title": "Batman: Arkham Asylum",
+    "lengthHours": 10,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "Tight, contained, the one that proved superhero games could work."
+  },
+  {
+    "title": "Shovel Knight: Treasure Trove",
+    "lengthHours": 15,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Four campaigns of retro platforming that earns the nostalgia. Tight and generous."
+  },
+  {
+    "title": "Halo: Reach",
+    "lengthHours": 8,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Bungie's farewell. You know how it ends. Play it anyway."
+  },
+  {
+    "title": "N++ (NPLUSPLUS)",
+    "lengthHours": 15,
+    "moods": [
+      "intense",
+      "brain-off"
+    ],
+    "blurb": "Minimalist platforming, thousands of levels. Zen or rage, your call."
+  },
+  {
+    "title": "Metroid Prime 3: Corruption",
+    "lengthHours": 12,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Wii controls finally clicked for a shooter. Weaker story, still great exploration."
+  },
+  {
+    "title": "Gears of War",
+    "lengthHours": 8,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Cover shooter that invented the cover shooter. Chainsaw gun. That's the pitch."
+  },
+  {
+    "title": "Grand Theft Auto: Chinatown Wars",
+    "lengthHours": 8,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Top-down GTA with actual drug trading mechanics. Handheld, but vicious."
+  },
+  {
+    "title": "Microsoft Flight Simulator 2020",
+    "lengthHours": 30,
+    "moods": [
+      "chill",
+      "creative",
+      "atmospheric"
+    ],
+    "blurb": "The entire planet, rendered. Meditative if you let it be."
+  },
+  {
+    "title": "Mario and Luigi: Bowser's Inside Story",
+    "lengthHours": 22,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "You play as Bowser. The bros are stuck inside him. Funnier than it should be."
+  },
+  {
+    "title": "Tony Hawk's Underground",
+    "lengthHours": 8,
+    "moods": [
+      "atmospheric"
+    ],
+    "blurb": "Story mode in a skating game. Sounds dumb. It works."
+  },
+  {
+    "title": "ICO",
+    "lengthHours": 6,
+    "moods": [
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": "Hold her hand, solve the castle. Quiet in a way games forgot how to be."
+  },
+  {
+    "title": "Deus Ex",
+    "lengthHours": 20,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "The immersive sim. Every problem has four solutions. Janky, brilliant, unrepeated."
+  },
+  {
+    "title": "Banjo-Tooie",
+    "lengthHours": 14,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Bigger than Kazooie. Maybe too big. Interconnected worlds that reward the stubborn."
+  },
+  {
+    "title": "Tom Clancy's Splinter Cell: Pandora Tomorrow",
+    "lengthHours": 8,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Stealth that punishes impatience. Play it for the shadows."
+  },
+  {
+    "title": "Viewtiful Joe (2003)",
+    "lengthHours": 6,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Side-scrolling action with time-bending style. Hard, flashy, short."
+  },
+  {
+    "title": "DRAGON QUEST V",
+    "lengthHours": 25,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Three generations of one family. Monster recruiting came first. Comfort food JRPG."
+  },
+  {
+    "title": "Halo: Combat Evolved",
+    "lengthHours": 10,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "The 30 seconds of fun that built a console. Library level and all."
+  },
+  {
+    "title": "Sea of Stars",
+    "lengthHours": 25,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Turn-based RPG with Chrono Trigger energy. Gorgeous, warm, doesn't overstay."
+  },
+  {
+    "title": "Total War: SHOGUN 2",
+    "lengthHours": 25,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": "The tightest Total War. Fewer factions, sharper focus. Campaign eats a week."
+  },
+  {
+    "title": "Sekiro: Shadows Die Twice",
+    "lengthHours": 25,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Parry or die. No build variety, no crutches. Pure swordplay."
+  },
+  {
+    "title": "Odin Sphere Leifthrasir",
+    "lengthHours": 20,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Five characters, one interlocking story. Vanillaware at their most lush."
+  },
+  {
+    "title": "Ape Escape",
+    "lengthHours": 6,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Catch monkeys with gadgets. PS1 charm that hasn't been matched since."
+  },
+  {
+    "title": "Donkey Kong 64",
+    "lengthHours": 20,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Collect-a-thon that maybe has too much stuff. Nostalgic, exhausting, unforgettable."
+  },
+  {
+    "title": "Mario & Luigi: Superstar Saga",
+    "lengthHours": 18,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "GBA RPG with timing-based combat. Bros attacks never get old."
+  },
+  {
+    "title": "The Room Three",
+    "lengthHours": 3,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "brain-off"
+    ],
+    "blurb": "Puzzle boxes inside puzzle boxes. Tactile, creepy, perfect for a single sitting."
+  },
+  {
+    "title": "Bayonetta",
+    "lengthHours": 8,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Stylish action at maximum volume. Combos reward creativity. Witch time never gets old."
+  },
+  {
+    "title": "FINAL FANTASY VIII",
+    "lengthHours": 40,
+    "moods": [
+      "story-rich",
+      "strategic",
+      "atmospheric"
+    ],
+    "blurb": "Draw magic from enemies, junction it to stats. Weird system, underrated story."
+  },
+  {
+    "title": "Spelunky 2",
+    "lengthHours": 15,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "strategic"
+    ],
+    "blurb": "Harder than the first. Every death teaches something. Bottomless depth in a platformer."
+  },
+  {
+    "title": "Brothers: A Tale of Two Sons",
+    "lengthHours": 3,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "intense"
+    ],
+    "blurb": "One controller, two brothers. Three hours. The mechanic IS the story."
+  },
+  {
+    "title": "Mass Effect 3",
+    "lengthHours": 24,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "The trilogy closer. Combat's the best it's been. Bring tissues for Tuchanka."
+  },
+  {
+    "title": "Sid Meier's Civilization V",
+    "lengthHours": 40,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": "One more turn. You know the trap. Fall in willingly."
+  },
+  {
+    "title": "Into the Breach",
+    "lengthHours": 10,
+    "moods": [
+      "strategic",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "Tiny mech tactics, perfect information. Every move matters. Short runs, huge depth."
+  },
+  {
+    "title": "Diablo IV",
+    "lengthHours": 25,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": "Loot, click, loot, click. The loop works. Dark fantasy comfort food."
+  },
+  {
+    "title": "Animal Crossing: New Horizons",
+    "lengthHours": 50,
+    "moods": [
+      "chill",
+      "brain-off",
+      "creative"
+    ],
+    "blurb": "Your island, your pace. 20 minutes a day adds up to something real."
+  },
+  {
+    "title": "The Legend of Zelda: Phantom Hourglass",
+    "lengthHours": 15,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "DS Zelda with stylus controls. The ocean exploration works."
+  },
+  {
+    "title": "Forza Horizon 4",
+    "lengthHours": 15,
+    "moods": [
+      "brain-off",
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": "Open-world driving through Britain's seasons. Not a sim. A road trip with 500 cars."
+  },
+  {
+    "title": "Jak and Daxter: The Precursor Legacy",
+    "lengthHours": 9,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "PS2 platformer with no loading screens. Bright, breezy, a weekend clear."
+  },
+  {
+    "title": "Black & White",
+    "lengthHours": 15,
+    "moods": [
+      "atmospheric",
+      "strategic",
+      "story-rich"
+    ],
+    "blurb": "Play god. Literally. Train a giant creature, answer prayers, smite villages."
+  },
+  {
+    "title": "The Witness",
+    "lengthHours": 25,
+    "moods": [
+      "strategic",
+      "atmospheric",
+      "chill"
+    ],
+    "blurb": "An island of line puzzles. Sounds boring. Isn't. Teaches without a single word."
+  },
+  {
+    "title": "Inside",
+    "lengthHours": 3,
+    "moods": [
+      "atmospheric",
+      "spooky",
+      "emotional"
+    ],
+    "blurb": "Three hours of pure dread. No dialogue. The ending won't leave you alone."
+  },
+  {
+    "title": "Limbo",
+    "lengthHours": 3,
+    "moods": [
+      "atmospheric",
+      "spooky"
+    ],
+    "blurb": "Black and white puzzle platformer. A dead boy. A spider. You'll remember it."
+  },
+  {
+    "title": "What Remains of Edith Finch",
+    "lengthHours": 2,
+    "moods": [
+      "story-rich",
+      "emotional",
+      "atmospheric"
+    ],
+    "blurb": "Walk through a family house. Each room is a different kind of gutpunch."
+  },
+  {
+    "title": "Firewatch",
+    "lengthHours": 4,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "emotional"
+    ],
+    "blurb": "Summer job as a fire lookout. Talk to your boss on a walkie-talkie. Feel things."
+  },
+  {
+    "title": "Gone Home",
+    "lengthHours": 2,
+    "moods": [
+      "story-rich",
+      "emotional",
+      "atmospheric"
+    ],
+    "blurb": "Walk through your family's empty house. Read everything. Trust the payoff."
+  },
+  {
+    "title": "Control",
+    "lengthHours": 12,
+    "moods": [
+      "atmospheric",
+      "intense",
+      "story-rich"
+    ],
+    "blurb": "Federal building full of things that don't obey physics. The Ashtray Maze alone."
+  },
+  {
+    "title": "Psychonauts 2",
+    "lengthHours": 15,
+    "moods": [
+      "creative",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Platforming through people's brains. Funnier and more thoughtful than it has any right to be."
+  },
+  {
+    "title": "Titanfall 2",
+    "lengthHours": 6,
+    "moods": [
+      "intense",
+      "story-rich"
+    ],
+    "blurb": "Wall-running mech shooter with a 6-hour campaign that punches above everything. Effect and Cause."
+  },
+  {
+    "title": "Doom (2016)",
+    "lengthHours": 12,
+    "moods": [
+      "intense",
+      "brain-off"
+    ],
+    "blurb": "Rip and tear. The reboot that remembered shooters should feel good."
+  },
+  {
+    "title": "Doom Eternal",
+    "lengthHours": 18,
+    "moods": [
+      "intense",
+      "brain-off"
+    ],
+    "blurb": "Doom 2016 cranked to eleven. Resource management disguised as ultraviolence."
+  },
+  {
+    "title": "Death Stranding",
+    "lengthHours": 40,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "chill"
+    ],
+    "blurb": "Walking simulator where 'walking simulator' is the whole point. Strangely meditative."
+  },
+  {
+    "title": "It Takes Two",
+    "lengthHours": 12,
+    "moods": [
+      "creative",
+      "chill",
+      "emotional"
+    ],
+    "blurb": "Co-op mandatory. Every level reinvents the rules. Best couples therapy in gaming."
+  },
+  {
+    "title": "Cyberpunk 2077",
+    "lengthHours": 25,
+    "moods": [
+      "story-rich",
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": "Night City earned its reputation. The side stories are the real main quest."
+  },
+  {
+    "title": "Horizon Zero Dawn",
+    "lengthHours": 25,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Robot dinosaurs in a post-apocalypse. The lore reveal is worth the 25 hours alone."
+  },
+  {
+    "title": "Ghost of Tsushima",
+    "lengthHours": 25,
+    "moods": [
+      "atmospheric",
+      "intense",
+      "story-rich"
+    ],
+    "blurb": "Samurai open world. Wind guides you, not waypoints. Kurosawa mode exists for a reason."
+  },
+  {
+    "title": "Spiritfarer",
+    "lengthHours": 25,
+    "moods": [
+      "chill",
+      "emotional",
+      "creative"
+    ],
+    "blurb": "Ferry the dead to the afterlife. Hug them first. Will absolutely make you cry."
+  },
+  {
+    "title": "Cocoon",
+    "lengthHours": 5,
+    "moods": [
+      "strategic",
+      "atmospheric"
+    ],
+    "blurb": "Worlds inside worlds inside worlds. Puzzle design that makes you feel like a genius."
+  },
+  {
+    "title": "The Talos Principle",
+    "lengthHours": 15,
+    "moods": [
+      "strategic",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "First-person puzzles with philosophical arguments. Patient, smart, surprisingly moving."
+  },
+  {
+    "title": "Prey (2017)",
+    "lengthHours": 16,
+    "moods": [
+      "atmospheric",
+      "spooky",
+      "strategic"
+    ],
+    "blurb": "Anything in the room could be a mimic. Immersive sim in a space station. Criminally overlooked."
+  },
+  {
+    "title": "Dead Cells",
+    "lengthHours": 20,
+    "moods": [
+      "intense",
+      "strategic"
+    ],
+    "blurb": "Metroidvania roguelite. Every run feels tighter. The combat clicks and never lets go."
+  },
+  {
+    "title": "Dark Souls",
+    "lengthHours": 45,
+    "moods": [
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": "The one that started it. Lordran rewards curiosity and punishes greed."
+  },
+  {
+    "title": "Dark Souls III",
+    "lengthHours": 30,
+    "moods": [
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": "Fastest Souls game. The boss fights are the high point. Finale the series earned."
+  },
+  {
+    "title": "Returnal",
+    "lengthHours": 20,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "spooky"
+    ],
+    "blurb": "Die, loop, improve. Roguelite bullet hell with a story that earns the confusion."
+  },
+  {
+    "title": "Alan Wake 2",
+    "lengthHours": 18,
+    "moods": [
+      "spooky",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Survival horror where the writer is the weapon. The musical number is real."
+  },
+  {
+    "title": "Resident Evil Village",
+    "lengthHours": 10,
+    "moods": [
+      "spooky",
+      "intense"
+    ],
+    "blurb": "Tall vampire lady. Also: tight horror with wild pacing. Each section a different flavor."
+  },
+  {
+    "title": "Resident Evil 4 (2023)",
+    "lengthHours": 16,
+    "moods": [
+      "intense",
+      "spooky"
+    ],
+    "blurb": "The remake that nailed it. Tense, replayable, the attache case still satisfies."
+  },
+  {
+    "title": "Hi-Fi Rush",
+    "lengthHours": 10,
+    "moods": [
+      "intense",
+      "brain-off",
+      "creative"
+    ],
+    "blurb": "Rhythm action brawler. Everything moves to the beat. Pure joy, criminally undersold."
+  },
+  {
+    "title": "Sifu",
+    "lengthHours": 8,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "You age every time you die. Kung fu roguelite. Tight, brutal, fair."
+  },
+  {
+    "title": "Neon White",
+    "lengthHours": 8,
+    "moods": [
+      "intense",
+      "strategic"
+    ],
+    "blurb": "FPS speedrunning with cards. Chase the leaderboard. One more try. One more."
+  },
+  {
+    "title": "Katana ZERO",
+    "lengthHours": 5,
+    "moods": [
+      "intense",
+      "story-rich"
+    ],
+    "blurb": "One-hit-kill action platformer. Time slows, you plan, you execute."
+  },
+  {
+    "title": "Oxenfree",
+    "lengthHours": 4,
+    "moods": [
+      "story-rich",
+      "spooky",
+      "atmospheric"
+    ],
+    "blurb": "Teens on an island with a radio. The dialogue system feels genuinely natural."
+  },
+  {
+    "title": "Night in the Woods",
+    "lengthHours": 8,
+    "moods": [
+      "story-rich",
+      "emotional",
+      "atmospheric"
+    ],
+    "blurb": "College dropout returns to a dying town. Platforming and feelings in equal measure."
+  },
+  {
+    "title": "Hellblade: Senua's Sacrifice",
+    "lengthHours": 7,
+    "moods": [
+      "atmospheric",
+      "emotional",
+      "intense"
+    ],
+    "blurb": "Psychosis rendered as game mechanics. Headphones mandatory. Short, searing, important."
+  },
+  {
+    "title": "Ori and the Blind Forest",
+    "lengthHours": 9,
+    "moods": [
+      "atmospheric",
+      "emotional",
+      "intense"
+    ],
+    "blurb": "Gorgeous Metroidvania that will make you cry in the first ten minutes."
+  },
+  {
+    "title": "Cuphead",
+    "lengthHours": 10,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "1930s cartoon boss rush. Frame-perfect art, frame-perfect difficulty. Worth the pain."
+  },
+  {
+    "title": "Final Fantasy VII Remake",
+    "lengthHours": 33,
+    "moods": [
+      "story-rich",
+      "intense",
+      "emotional"
+    ],
+    "blurb": "Midgar expanded into a full game. The combat system earned the reimagining."
+  },
+  {
+    "title": "Yakuza 0",
+    "lengthHours": 30,
+    "moods": [
+      "story-rich",
+      "intense",
+      "brain-off"
+    ],
+    "blurb": "Crime drama that pivots to karaoke, real estate, and bowling. Absurd and sincere."
+  },
+  {
+    "title": "13 Sentinels: Aegis Rim",
+    "lengthHours": 30,
+    "moods": [
+      "story-rich",
+      "strategic",
+      "emotional"
+    ],
+    "blurb": "13 timelines, mechs, time travel. Vanillaware made a visual novel that actually needs a flowchart."
+  },
+  {
+    "title": "Little Nightmares",
+    "lengthHours": 3,
+    "moods": [
+      "spooky",
+      "atmospheric"
+    ],
+    "blurb": "Tiny child, huge monsters. Three hours of perfectly paced dread."
+  },
+  {
+    "title": "A Plague Tale: Innocence",
+    "lengthHours": 10,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "emotional"
+    ],
+    "blurb": "Siblings surviving the Black Death. The rat swarms are unforgettable."
+  },
+  {
+    "title": "Transistor",
+    "lengthHours": 6,
+    "moods": [
+      "atmospheric",
+      "strategic",
+      "story-rich"
+    ],
+    "blurb": "Cyberpunk action RPG with a talking sword. The combat pauses for strategy. Gorgeous."
+  },
+  {
+    "title": "Bastion",
+    "lengthHours": 6,
+    "moods": [
+      "atmospheric",
+      "intense",
+      "story-rich"
+    ],
+    "blurb": "The narrator reacts to everything you do. That hook never gets old."
+  },
+  {
+    "title": "Pyre",
+    "lengthHours": 10,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "strategic"
+    ],
+    "blurb": "Magical basketball with exiles. Losing changes the story. Supergiant's most underrated."
+  },
+  {
+    "title": "The Forgotten City",
+    "lengthHours": 6,
+    "moods": [
+      "story-rich",
+      "strategic",
+      "atmospheric"
+    ],
+    "blurb": "Roman time loop mystery. Started as a Skyrim mod. Better than it had any right to be."
+  },
+  {
+    "title": "Chicory: A Colorful Tale",
+    "lengthHours": 8,
+    "moods": [
+      "chill",
+      "emotional",
+      "creative"
+    ],
+    "blurb": "You paint the world. Literally. Gentle adventure about creativity and self-doubt."
+  },
+  {
+    "title": "Stray",
+    "lengthHours": 5,
+    "moods": [
+      "atmospheric",
+      "chill"
+    ],
+    "blurb": "You are a cat. In a robot city. The meow button exists. Enough said."
+  },
+  {
+    "title": "Her Story",
+    "lengthHours": 3,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Search a police database. Watch interview clips. Piece it together yourself."
+  },
+  {
+    "title": "Citizen Sleeper",
+    "lengthHours": 8,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "strategic"
+    ],
+    "blurb": "Tabletop RPG on a space station. Dice determine your day. Gorgeous writing."
+  },
+  {
+    "title": "Loop Hero",
+    "lengthHours": 15,
+    "moods": [
+      "strategic",
+      "brain-off"
+    ],
+    "blurb": "Build the road. Watch the hero walk it. Tile placement roguelite. Deceptively deep."
+  },
+  {
+    "title": "Hyper Light Drifter",
+    "lengthHours": 8,
+    "moods": [
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "Pixel art action with zero dialogue. The world tells its own story through color and ruin."
+  },
+  {
+    "title": "CrossCode",
+    "lengthHours": 35,
+    "moods": [
+      "story-rich",
+      "strategic",
+      "intense"
+    ],
+    "blurb": "Action RPG disguised as an MMO. The puzzle dungeons rival Zelda. Criminally long and worth it."
+  },
+  {
+    "title": "Astro Bot",
+    "lengthHours": 10,
+    "moods": [
+      "chill",
+      "creative"
+    ],
+    "blurb": "Pure 3D platforming joy. Every level a toy box. PlayStation's answer to Mario."
+  },
+  {
+    "title": "Animal Well",
+    "lengthHours": 8,
+    "moods": [
+      "atmospheric",
+      "strategic",
+      "spooky"
+    ],
+    "blurb": "Looks simple. Has layers. Puzzle Metroidvania that keeps revealing secrets weeks later."
+  },
+  {
+    "title": "Outer Worlds",
+    "lengthHours": 20,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Fallout in space, smaller scope, sharper writing. Doesn't overstay its welcome."
+  },
+  {
+    "title": "Monster Hunter: World",
+    "lengthHours": 50,
+    "moods": [
+      "intense",
+      "strategic",
+      "chill"
+    ],
+    "blurb": "Hunt monsters, wear them, hunt bigger monsters. The loop is perfect. Bring friends or don't."
+  },
+  {
+    "title": "Celeste 2: Lani's Trek",
+    "lengthHours": 1,
+    "moods": [
+      "intense",
+      "emotional"
+    ],
+    "blurb": "Tiny follow-up to Celeste. Free, short, still surprisingly hard."
+  },
+  {
+    "title": "The Pathless",
+    "lengthHours": 5,
+    "moods": [
+      "atmospheric",
+      "chill"
+    ],
+    "blurb": "Run, glide, hunt. Open world with no map. The movement is the reward."
+  },
+  {
+    "title": "Unpacking",
+    "lengthHours": 3,
+    "moods": [
+      "chill",
+      "emotional"
+    ],
+    "blurb": "Unpack boxes into apartments. A life told through stuff. Quiet and devastating."
+  },
+  {
+    "title": "Hades II",
+    "lengthHours": 30,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Supergiant did it again. Melinoe fights differently, the story cuts just as deep."
+  },
+  {
+    "title": "Clair Obscur: Expedition 33",
+    "lengthHours": 35,
+    "moods": [
+      "story-rich",
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": "French RPG with real consequences. The art direction alone justifies the hours."
+  },
+  {
+    "title": "Final Fantasy XVI",
+    "lengthHours": 35,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Eikon fights shake the screen. More action than RPG. Clive's story earns every hour."
+  },
+  {
+    "title": "Marvel's Spider-Man 2",
+    "lengthHours": 17,
+    "moods": [
+      "intense",
+      "story-rich"
+    ],
+    "blurb": "Two Spider-Men, one New York. Symbiote arc hits. The swinging still feels perfect."
+  },
+  {
+    "title": "Dave the Diver",
+    "lengthHours": 20,
+    "moods": [
+      "chill",
+      "creative",
+      "brain-off"
+    ],
+    "blurb": "Dive by day, run a sushi restaurant by night. Shouldn't work. Absolutely works."
+  },
+  {
+    "title": "Dredge",
+    "lengthHours": 12,
+    "moods": [
+      "atmospheric",
+      "spooky",
+      "chill"
+    ],
+    "blurb": "Fishing game with Lovecraftian dread. The catch of the day might have too many eyes."
+  },
+  {
+    "title": "Lies of P",
+    "lengthHours": 30,
+    "moods": [
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": "Pinocchio souls-like. Sounds absurd. Plays beautifully. The weapon system is genuinely clever."
+  },
+  {
+    "title": "Super Mario Bros. Wonder",
+    "lengthHours": 8,
+    "moods": [
+      "chill",
+      "creative",
+      "brain-off"
+    ],
+    "blurb": "Mario got weird again. Talking flowers, elephant Mario, every level a surprise."
+  },
+  {
+    "title": "Pikmin 4",
+    "lengthHours": 15,
+    "moods": [
+      "strategic",
+      "chill",
+      "creative"
+    ],
+    "blurb": "Grow tiny plant soldiers, solve puzzles, fight bugs. Charming, strategic, weirdly relaxing."
+  },
+  {
+    "title": "Armored Core VI: Fires of Rubicon",
+    "lengthHours": 15,
+    "moods": [
+      "intense",
+      "strategic"
+    ],
+    "blurb": "FromSoft made a mech game and it plays like a boss rush. Build, fight, rebuild."
+  },
+  {
+    "title": "Black Myth: Wukong",
+    "lengthHours": 20,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "Monkey King action RPG. Visually staggering, mechanically tight. Boss fights demand respect."
+  },
+  {
+    "title": "Metaphor: ReFantazio",
+    "lengthHours": 80,
+    "moods": [
+      "story-rich",
+      "strategic",
+      "atmospheric"
+    ],
+    "blurb": "Atlus made a fantasy Persona. 80 hours of systems, story, and style. Worth every minute."
+  },
+  {
+    "title": "Final Fantasy VII Rebirth",
+    "lengthHours": 60,
+    "moods": [
+      "story-rich",
+      "emotional",
+      "intense"
+    ],
+    "blurb": "Midgar to the Forgotten Capital. Open world that earns the detours. The Gold Saucer alone."
+  },
+  {
+    "title": "Silent Hill 2 (2024)",
+    "lengthHours": 12,
+    "moods": [
+      "spooky",
+      "atmospheric",
+      "emotional"
+    ],
+    "blurb": "The remake that understood the assignment. Fog, guilt, and creature design that disturbs."
+  },
+  {
+    "title": "Like a Dragon: Infinite Wealth",
+    "lengthHours": 55,
+    "moods": [
+      "story-rich",
+      "brain-off",
+      "emotional"
+    ],
+    "blurb": "Ichiban goes to Hawaii. Turn-based RPG with minigame madness. Heart on its sleeve."
+  },
+  {
+    "title": "UFO 50",
+    "lengthHours": 30,
+    "moods": [
+      "creative",
+      "strategic",
+      "intense"
+    ],
+    "blurb": "Fifty fake retro games. Most of them are genuinely great. The meta-game ties them together."
+  },
+  {
+    "title": "Lorelei and the Laser Eyes",
+    "lengthHours": 8,
+    "moods": [
+      "strategic",
+      "atmospheric",
+      "spooky"
+    ],
+    "blurb": "Black and white puzzle game. Every room a riddle. Aesthetic commitment that rewards patience."
+  },
+  {
+    "title": "Neva",
+    "lengthHours": 4,
+    "moods": [
+      "atmospheric",
+      "emotional"
+    ],
+    "blurb": "Wordless companion adventure. Short, gorgeous, emotionally devastating."
+  },
+  {
+    "title": "Senua's Saga: Hellblade II",
+    "lengthHours": 7,
+    "moods": [
+      "atmospheric",
+      "emotional",
+      "intense"
+    ],
+    "blurb": "Iceland as a nightmare. Seven hours of sensory overload. Headphones still mandatory."
+  },
+  {
+    "title": "Indiana Jones and the Great Circle",
+    "lengthHours": 13,
+    "moods": [
+      "story-rich",
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": "MachineGames made an Indy game and it works. Vatican, pyramids, punching Nazis."
+  },
+  {
+    "title": "Thank Goodness You're Here!",
+    "lengthHours": 2,
+    "moods": [
+      "brain-off",
+      "chill"
+    ],
+    "blurb": "Slapstick adventure in a Yorkshire town. Two hours of genuine belly laughs."
+  },
+  {
+    "title": "Marvel's Spider-Man: Miles Morales",
+    "lengthHours": 7,
+    "moods": [
+      "intense",
+      "story-rich"
+    ],
+    "blurb": "Shorter, tighter, Miles's own story. The venom powers feel electric."
+  },
+  {
+    "title": "Marvel's Spider-Man Remastered",
+    "lengthHours": 17,
+    "moods": [
+      "intense",
+      "story-rich",
+      "brain-off"
+    ],
+    "blurb": "Web-slinging through Manhattan never stopped feeling good. The benchmark superhero game."
+  },
+  {
+    "title": "Remnant II",
+    "lengthHours": 18,
+    "moods": [
+      "intense",
+      "strategic"
+    ],
+    "blurb": "Souls-like shooter with procedural worlds. Co-op shines. Solo works. Every run different."
+  },
+  {
+    "title": "Warhammer 40,000: Space Marine 2",
+    "lengthHours": 8,
+    "moods": [
+      "intense",
+      "brain-off"
+    ],
+    "blurb": "Chainsword through a Tyranid horde. Eight hours of spectacle, zero pretense."
+  },
+  {
+    "title": "Townscaper",
+    "lengthHours": 2,
+    "moods": [
+      "chill",
+      "creative"
+    ],
+    "blurb": "Click to build a town. No goals, no failure. Just colors and rooftops."
+  },
+  {
+    "title": "PowerWash Simulator",
+    "lengthHours": 15,
+    "moods": [
+      "chill",
+      "brain-off"
+    ],
+    "blurb": "Pressure-wash dirt off things. Aggressively satisfying. The podcast game."
+  },
+  {
+    "title": "Katamari Damacy REROLL",
+    "lengthHours": 4,
+    "moods": [
+      "brain-off",
+      "chill",
+      "creative"
+    ],
+    "blurb": "Roll things into a ball. Bigger and bigger. The soundtrack is permanent."
+  },
+  {
+    "title": "Untitled Goose Game",
+    "lengthHours": 3,
+    "moods": [
+      "brain-off",
+      "chill",
+      "creative"
+    ],
+    "blurb": "Be a horrible goose. Ruin a village. Honk button. That's the whole game."
+  },
+  {
+    "title": "Dorfromantik",
+    "lengthHours": 10,
+    "moods": [
+      "chill",
+      "creative",
+      "brain-off"
+    ],
+    "blurb": "Tile-placement puzzle. Build countryside landscapes. Meditative and endlessly replayable."
+  },
+  {
+    "title": "Abzu",
+    "lengthHours": 2,
+    "moods": [
+      "chill",
+      "atmospheric",
+      "emotional"
+    ],
+    "blurb": "Swim with whales. No combat, no death. Journey, but underwater."
+  },
+  {
+    "title": "Gris",
+    "lengthHours": 3,
+    "moods": [
+      "atmospheric",
+      "emotional",
+      "chill"
+    ],
+    "blurb": "Watercolor platformer about grief. No words needed. Every frame a painting."
+  },
+  {
+    "title": "Kind Words",
+    "lengthHours": 3,
+    "moods": [
+      "chill",
+      "emotional"
+    ],
+    "blurb": "Write letters to strangers. Get letters back. Radical sincerity in lo-fi form."
+  },
+  {
+    "title": "Eastshade",
+    "lengthHours": 6,
+    "moods": [
+      "chill",
+      "creative",
+      "atmospheric"
+    ],
+    "blurb": "Open-world game where you paint landscapes. No combat. Pure exploration and vibes."
+  },
+  {
+    "title": "Wylde Flowers",
+    "lengthHours": 20,
+    "moods": [
+      "chill",
+      "story-rich",
+      "creative"
+    ],
+    "blurb": "Farm sim with actual witchcraft. Cozy surface, surprisingly good story underneath."
+  },
+  {
+    "title": "The Gardens Between",
+    "lengthHours": 3,
+    "moods": [
+      "chill",
+      "emotional",
+      "atmospheric"
+    ],
+    "blurb": "Manipulate time on tiny islands. Friendship told through objects. Short and warm."
+  },
+  {
+    "title": "Soma",
+    "lengthHours": 9,
+    "moods": [
+      "spooky",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Underwater horror that asks what makes you you. The safe mode is legit."
+  },
+  {
+    "title": "Amnesia: The Dark Descent",
+    "lengthHours": 8,
+    "moods": [
+      "spooky",
+      "atmospheric"
+    ],
+    "blurb": "Can't fight back. Can only hide. The game that launched a thousand streamers."
+  },
+  {
+    "title": "Phasmophobia",
+    "lengthHours": 15,
+    "moods": [
+      "spooky",
+      "brain-off"
+    ],
+    "blurb": "Ghost hunting with friends and a spirit box. Terrifying until someone screams, then hilarious."
+  },
+  {
+    "title": "Peglin",
+    "lengthHours": 12,
+    "moods": [
+      "brain-off",
+      "strategic"
+    ],
+    "blurb": "Peggle meets roguelite. Bounce orbs, deal damage, zone out completely."
+  },
+  {
+    "title": "Webbed",
+    "lengthHours": 3,
+    "moods": [
+      "chill",
+      "creative"
+    ],
+    "blurb": "You're a tiny spider building webs. Swinging physics, no stakes, pure charm."
+  },
+  {
+    "title": "Wandersong",
+    "lengthHours": 8,
+    "moods": [
+      "chill",
+      "emotional",
+      "story-rich"
+    ],
+    "blurb": "Sing your way through problems. Relentlessly positive. Will sneak up and move you."
+  },
+  {
+    "title": "Teardown",
+    "lengthHours": 10,
+    "moods": [
+      "creative",
+      "brain-off"
+    ],
+    "blurb": "Voxel destruction sandbox. Plan a heist, then smash walls to execute it. Endlessly satisfying."
+  },
+  {
+    "title": "Overcooked 2",
+    "lengthHours": 8,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": "Co-op cooking chaos. Friendships tested. Kitchens on fire. Someone chop the onions."
+  },
+  {
+    "title": "Trombone Champ",
+    "lengthHours": 3,
+    "moods": [
+      "brain-off",
+      "chill"
+    ],
+    "blurb": "Rhythm game where you're bad at trombone on purpose. Genuine art form."
+  },
+  {
+    "title": "Celeste 64: Fragments of the Mountain",
+    "lengthHours": 1,
+    "moods": [
+      "intense"
+    ],
+    "blurb": "Fifteen minutes of 3D Celeste. Free. The dash still feels perfect."
+  },
+  {
+    "title": "Before Your Eyes",
+    "lengthHours": 2,
+    "moods": [
+      "emotional",
+      "story-rich"
+    ],
+    "blurb": "Blink to advance time. Your webcam controls the game. Two hours, permanent damage."
+  },
+  {
+    "title": "To the Moon",
+    "lengthHours": 4,
+    "moods": [
+      "emotional",
+      "story-rich"
+    ],
+    "blurb": "Walk through someone's memories backward. RPG Maker, no combat, devastating."
+  },
+  {
+    "title": "Florence",
+    "lengthHours": 1,
+    "moods": [
+      "emotional",
+      "chill"
+    ],
+    "blurb": "A relationship told in vignettes. Thirty minutes. Touchscreen interactions that mean something."
+  },
+  {
+    "title": "Venba",
+    "lengthHours": 2,
+    "moods": [
+      "emotional",
+      "story-rich",
+      "chill"
+    ],
+    "blurb": "Cook Tamil recipes. Raise a son. Immigration story told through food. Ninety minutes, stays."
+  },
+  {
+    "title": "Baba Is You",
+    "lengthHours": 10,
+    "moods": [
+      "strategic",
+      "creative"
+    ],
+    "blurb": "Push the words that make the rules. The puzzles will break your brain. Brilliantly."
+  },
+  {
+    "title": "Papers, Please",
+    "lengthHours": 5,
+    "moods": [
+      "strategic",
+      "emotional",
+      "atmospheric"
+    ],
+    "blurb": "Stamp passports. Follow rules. Feel the moral weight. Glory to Arstotzka."
+  },
+  {
+    "title": "Sable",
+    "lengthHours": 8,
+    "moods": [
+      "chill",
+      "atmospheric",
+      "creative"
+    ],
+    "blurb": "Hoverbike across a desert. Find your mask. Open world with nothing to kill."
+  },
+  {
+    "title": "Viewfinder",
+    "lengthHours": 4,
+    "moods": [
+      "creative",
+      "atmospheric",
+      "chill"
+    ],
+    "blurb": "Take a photo, place it in the world, walk into it. Perspective puzzles done fresh."
+  },
+  {
+    "title": "Resident Evil 2 (2019)",
+    "lengthHours": 8,
+    "moods": [
+      "spooky",
+      "intense"
+    ],
+    "blurb": "The remake that set the standard. Mr. X is always coming. Two campaigns, both essential."
+  },
+  {
+    "title": "Pathologic 2",
+    "lengthHours": 35,
+    "moods": [
+      "spooky",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "Plague town survival. Deliberately hostile. The greatest game you might not enjoy playing."
+  },
+  {
+    "title": "Darkest Dungeon",
+    "lengthHours": 55,
+    "moods": [
+      "spooky",
+      "strategic"
+    ],
+    "blurb": "Your heroes will go mad. Manage their sanity and yours. Narrator alone is worth it."
+  },
+  {
+    "title": "Elden Ring: Shadow of the Erdtree",
+    "lengthHours": 40,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "spooky"
+    ],
+    "blurb": "DLC-sized like a full game. The Lands of Shadow out-creep the base game."
+  },
+  {
+    "title": "Factorio",
+    "lengthHours": 80,
+    "moods": [
+      "creative",
+      "strategic"
+    ],
+    "blurb": "Automate everything. Conveyor belts stretch to the horizon. You will dream about production ratios."
+  },
+  {
+    "title": "Satisfactory",
+    "lengthHours": 60,
+    "moods": [
+      "creative",
+      "chill"
+    ],
+    "blurb": "3D factory building in a gorgeous world. Optimize, rebuild, optimize again. The factory must grow."
+  },
+  {
+    "title": "Minecraft",
+    "lengthHours": 50,
+    "moods": [
+      "creative",
+      "chill",
+      "brain-off"
+    ],
+    "blurb": "Build anything. Mine everything. You already know. You just haven't gone back lately."
+  },
+  {
+    "title": "Terraria",
+    "lengthHours": 50,
+    "moods": [
+      "creative",
+      "intense"
+    ],
+    "blurb": "2D Minecraft with actual bosses. Dig down, gear up, fight gods. Endlessly generous."
+  },
+  {
+    "title": "No Man's Sky",
+    "lengthHours": 50,
+    "moods": [
+      "creative",
+      "atmospheric",
+      "chill"
+    ],
+    "blurb": "Explore a universe. Or just build a base. Redemption arc of the decade."
+  },
+  {
+    "title": "Rimworld",
+    "lengthHours": 60,
+    "moods": [
+      "creative",
+      "strategic"
+    ],
+    "blurb": "Colony sim that generates stories. Your pawns will do terrible things. You'll let them."
+  },
+  {
+    "title": "Cities: Skylines",
+    "lengthHours": 50,
+    "moods": [
+      "creative",
+      "strategic",
+      "chill"
+    ],
+    "blurb": "Build a city. Watch traffic break it. Fix the traffic. That is the game."
+  },
+  {
+    "title": "Anno 1800",
+    "lengthHours": 50,
+    "moods": [
+      "creative",
+      "strategic",
+      "chill"
+    ],
+    "blurb": "Industrial revolution city builder. Supply chains, trade routes, islands. Time vanishes."
+  },
+  {
+    "title": "Planet Zoo",
+    "lengthHours": 40,
+    "moods": [
+      "creative",
+      "chill"
+    ],
+    "blurb": "Design a zoo. Obsess over enclosures. The animals judge your paths. You fix the paths."
+  },
+  {
+    "title": "Astroneer",
+    "lengthHours": 25,
+    "moods": [
+      "creative",
+      "chill"
+    ],
+    "blurb": "Terraforming sandbox on alien planets. Chill, colorful, surprisingly deep."
+  },
+  {
+    "title": "Borderlands 3",
+    "lengthHours": 30,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": "A billion procedural guns. Shoot the thing, pick up the loot. Pure dopamine loop."
+  },
+  {
+    "title": "Just Cause 3",
+    "lengthHours": 30,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": "Grapple hook, wingsuit, explosions. The open world is your demolition playground."
+  },
+  {
+    "title": "The Binding of Isaac: Rebirth",
+    "lengthHours": 50,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": "Crying baby fights nightmares. Thousands of item combos. Every run different. Bottomless."
+  },
+  {
+    "title": "LEGO Star Wars: The Skywalker Saga",
+    "lengthHours": 30,
+    "moods": [
+      "brain-off",
+      "chill"
+    ],
+    "blurb": "Nine movies, one game. Brick everything. Great with a kid or without one."
+  },
+  {
+    "title": "Risk of Rain 2",
+    "lengthHours": 35,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": "Third-person roguelite that scales until the screen melts. Loop until you can't."
+  },
+  {
+    "title": "Far Cry 6",
+    "lengthHours": 30,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": "Tropical dictatorship sandbox. The formula works when you stop thinking about it."
+  },
+  {
+    "title": "Grim Dawn",
+    "lengthHours": 35,
+    "moods": [
+      "brain-off",
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": "Diablo-style ARPG with build depth. Dark, crunchy, doesn't demand your full attention."
+  },
+  {
+    "title": "Monster Train",
+    "lengthHours": 15,
+    "moods": [
+      "brain-off",
+      "strategic"
+    ],
+    "blurb": "Slay the Spire on a train going to hell. Faster, wilder, equally addictive."
+  },
+  {
+    "title": "Brotato",
+    "lengthHours": 15,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": "Arena survivor with a potato. Fast runs, absurd builds. Pure one-more-run energy."
+  },
+  {
+    "title": "Assassin's Creed Odyssey",
+    "lengthHours": 45,
+    "moods": [
+      "brain-off",
+      "atmospheric"
+    ],
+    "blurb": "Ancient Greece is gorgeous. Climb, fight, sail. Turn your brain off for 40 hours."
+  },
+  {
+    "title": "Life is Strange",
+    "lengthHours": 14,
+    "moods": [
+      "emotional",
+      "story-rich"
+    ],
+    "blurb": "Time-rewind teen drama. Choices haunt. The soundtrack will follow you home."
+  },
+  {
+    "title": "The Last Guardian",
+    "lengthHours": 12,
+    "moods": [
+      "emotional",
+      "atmospheric"
+    ],
+    "blurb": "A boy and his giant bird-dog. Frustrating, beautiful, unforgettable."
+  },
+  {
+    "title": "Omori",
+    "lengthHours": 20,
+    "moods": [
+      "emotional",
+      "story-rich",
+      "spooky"
+    ],
+    "blurb": "RPG that hides something dark. Cute surface, devastating underneath. Don't spoil it."
+  },
+  {
+    "title": "STALKER 2: Heart of Chornobyl",
+    "lengthHours": 40,
+    "moods": [
+      "spooky",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "The Zone doesn't care about you. Ukrainian post-apocalypse with atmosphere for days."
+  },
+  {
+    "title": "The Forest",
+    "lengthHours": 30,
+    "moods": [
+      "spooky",
+      "creative"
+    ],
+    "blurb": "Crash-land. Build shelter. Discover what's in the caves. Survival horror that earns both words."
+  },
+  {
+    "title": "Alien: Isolation",
+    "lengthHours": 18,
+    "moods": [
+      "spooky",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": "One xenomorph. No weapons that matter. Fifteen hours of hiding under desks."
+  },
+  {
+    "title": "Project Zomboid",
+    "lengthHours": 50,
+    "moods": [
+      "spooky",
+      "strategic"
+    ],
+    "blurb": "Zombie survival sim. You will die. The question is how long you can delay it."
+  },
+  {
+    "title": "Dead Space (2023)",
+    "lengthHours": 12,
+    "moods": [
+      "spooky",
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": "The remake that made the Ishimura gorgeous and terrible. Plasma cutter still king."
+  },
+  {
+    "title": "Metro Exodus",
+    "lengthHours": 15,
+    "moods": [
+      "spooky",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "Post-apocalyptic train journey through Russia. Linear shooter that opens up. Gorgeous bleakness."
+  },
+  {
+    "title": "The Legend of Zelda: The Wind Waker",
+    "lengthHours": 25,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "chill"
+    ],
+    "blurb": "Cel-shaded Zelda that aged better than every 'realistic' game around it."
   }
 ]

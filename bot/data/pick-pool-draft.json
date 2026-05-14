@@ -1,0 +1,2763 @@
+[
+  {
+    "title": "Hades",
+    "lengthHours": 25,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": "Greek mythology roguelike. Tight runs, real story, gets out of your way."
+  },
+  {
+    "title": "A Short Hike",
+    "lengthHours": 2,
+    "moods": [
+      "chill",
+      "atmospheric",
+      "creative"
+    ],
+    "blurb": "Climb a mountain in an afternoon. Nothing wants anything from you."
+  },
+  {
+    "title": "Stardew Valley",
+    "lengthHours": 60,
+    "moods": [
+      "chill",
+      "story-rich",
+      "creative"
+    ],
+    "blurb": "Inherit a farm, slowly rebuild a life. Easy to load, hard to put down."
+  },
+  {
+    "title": "Outer Wilds",
+    "lengthHours": 22,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "creative"
+    ],
+    "blurb": "Knowledge-based exploration. You'll know when to stop, and that's the point."
+  },
+  {
+    "title": "Hollow Knight",
+    "lengthHours": 35,
+    "moods": [
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": "Beautiful, brutal, enormous. The pile fears this one."
+  },
+  {
+    "title": "Celeste",
+    "lengthHours": 12,
+    "moods": [
+      "intense",
+      "emotional",
+      "story-rich"
+    ],
+    "blurb": "Hard platformer, surprisingly tender. Beatable in a weekend."
+  },
+  {
+    "title": "Disco Elysium",
+    "lengthHours": 30,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "brain-off"
+    ],
+    "blurb": "RPG that's mostly conversation. You play a wreck of a detective. Read it like a novel."
+  },
+  {
+    "title": "Vampire Survivors",
+    "lengthHours": 15,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": "20-minute runs, dopamine on tap. Costs less than a coffee."
+  },
+  {
+    "title": "Slay the Spire",
+    "lengthHours": 40,
+    "moods": [
+      "strategic",
+      "brain-off"
+    ],
+    "blurb": "Deckbuilder roguelike. Each run teaches the next. Endlessly replayable."
+  },
+  {
+    "title": "Inscryption",
+    "lengthHours": 12,
+    "moods": [
+      "spooky",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Card game in a cabin. Goes weird places. Trust it."
+  },
+  {
+    "title": "Slime Rancher 2",
+    "lengthHours": 15,
+    "moods": [
+      "chill",
+      "creative"
+    ],
+    "blurb": "Slimes, plorts, no stakes. Background-music for your brain."
+  },
+  {
+    "title": "Tunic",
+    "lengthHours": 16,
+    "moods": [
+      "atmospheric",
+      "strategic",
+      "creative"
+    ],
+    "blurb": "Tiny fox, huge world. The manual is part of the puzzle."
+  },
+  {
+    "title": "Cult of the Lamb",
+    "lengthHours": 20,
+    "moods": [
+      "intense",
+      "spooky",
+      "strategic"
+    ],
+    "blurb": "Roguelike + cult management. Cuter and meaner than it looks."
+  },
+  {
+    "title": "Chained Echoes",
+    "lengthHours": 40,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": "Modern JRPG that respects your time. SNES energy, 2020s polish."
+  },
+  {
+    "title": "Pizza Tower",
+    "lengthHours": 10,
+    "moods": [
+      "intense",
+      "brain-off"
+    ],
+    "blurb": "Cartoon platformer at 200mph. Pure adrenaline, beatable in a week."
+  },
+  {
+    "title": "Subnautica",
+    "lengthHours": 30,
+    "moods": [
+      "spooky",
+      "atmospheric",
+      "creative"
+    ],
+    "blurb": "Ocean survival. Beautiful and terrifying in equal measure."
+  },
+  {
+    "title": "Return of the Obra Dinn",
+    "lengthHours": 8,
+    "moods": [
+      "strategic",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "Detective puzzle on a dead ship. One weekend, no regrets."
+  },
+  {
+    "title": "Tetris Effect",
+    "lengthHours": 10,
+    "moods": [
+      "chill",
+      "atmospheric",
+      "brain-off"
+    ],
+    "blurb": "Tetris if Tetris was a religious experience. Headphones non-negotiable."
+  },
+  {
+    "title": "Pentiment",
+    "lengthHours": 20,
+    "moods": [
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": "16th-century murder mystery, illuminated-manuscript art style. Slow burn, deeply rewarding."
+  },
+  {
+    "title": "Balatro",
+    "lengthHours": 25,
+    "moods": [
+      "strategic",
+      "brain-off"
+    ],
+    "blurb": "Poker roguelike that ate everyone's December. One more run. One more."
+  },
+  {
+    "title": "The Legend of Zelda: Ocarina of Time",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Soulcalibur (1998)",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Soulcalibur",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Super Mario Galaxy",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Metroid Prime",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Super Mario Galaxy 2",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Perfect Dark",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Super Mario Odyssey",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Legend of Zelda: Breath of the Wild",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Baldur's Gate III",
+    "lengthHours": 0,
+    "moods": [
+      "strategic",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Half-Life 2: Update",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "GoldenEye 007 (1997)",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Legend of Zelda: Tears of the Kingdom",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Half-Life",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Uncharted 2: Among Thieves",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Red Dead Redemption 2",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "BioShock",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Half-Life 2",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Tekken 3",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Gran Turismo",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Metal Gear Solid 2: Sons of Liberty",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Legend of Zelda: Majora's Mask",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Grand Theft Auto IV: Complete Edition",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Divinity: Original Sin 2",
+    "lengthHours": 0,
+    "moods": [
+      "strategic",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Legend of Zelda: Collector's Edition",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Baldur's Gate II: Shadows of Amn",
+    "lengthHours": 0,
+    "moods": [
+      "strategic",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Portal 2",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "brain-off",
+      "chill"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "LittleBigPlanet",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "intense",
+      "creative"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Last Of Us Remastered",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Legend of Zelda: A Link to the Past",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Grand Theft Auto IV",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Last Of Us",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Red Dead Redemption",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "XCOM 2: War of the Chosen",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Elden Ring",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Orange Box",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Burnout 3: Takedown",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Chrono Cross",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Resident Evil Code: Veronica",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Legend of Zelda: Ocarina of Time 3D",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Elder Scrolls IV: Oblivion",
+    "lengthHours": 0,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Grand Theft Auto: Vice City",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "creative"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "God of War I",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Diablo",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Sid Meier's Civilization 2",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Elder Scrolls V: Skyrim Legendary Edition",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Quake",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "spooky"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "N.O.V.A.",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Tony Hawk's Pro Skater 3",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Elder Scrolls IV: Oblivion Game of the Year Edition",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Elder Scrolls V: Skyrim",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Batman: Arkham City",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "spooky",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "BioShock Infinite",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Divinity: Original Sin 2 - Definitive Edition",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Metal Gear Solid 3: Subsistence",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Divinity: Original Sin - Enhanced Edition",
+    "lengthHours": 0,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Metal Gear Solid",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Grim Fandango",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Command & Conquer",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Super Mario 64",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Super Mario Advance 4: Super Mario Bros. 3",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Metal Gear Solid 4: Guns of the Patriots",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Mass Effect 2",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Persona 5 Royal",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Sid Meier's Civilization IV",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Jet Set Radio",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "God of War (2018)",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "StarCraft II: Wings of Liberty",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Super Smash Bros. Brawl",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "chill",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Company of Heroes",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Gears of War 2",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Dwarf Fortress",
+    "lengthHours": 0,
+    "moods": [
+      "strategic",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Gran Turismo 2",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Half-Life: Alyx",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Cut the Rope",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "chill",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Mario Kart: Super Circuit (2001)",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Okami",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Grand Theft Auto III",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Last of Us Part II",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "SSX (2000)",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Maniac Mansion: Day of the Tentacle",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Castlevania: Symphony of the Night",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Uncharted 4: A Thief’s End",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "SSX 3",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Unreal Tournament 2004: Editor's Choice Edition",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Unreal Tournament 2004",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Paper Mario (2000)",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Skies of Arcadia",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Grand Theft Auto: San Andreas",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Super Mario 3D World",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Pro Evolution Soccer 2",
+    "lengthHours": 0,
+    "moods": [
+      "chill",
+      "creative"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Legend of Zelda: Skyward Sword",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Homeworld",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "StarCraft II",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Super Smash Bros. Ultimate",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Persona 5",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "God of War II",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Age of Empires: The Age of Kings",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Demon's Souls (2020)",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Sid Meier's Alpha Centauri",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Super Smash Bros. Melee",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Soul Calibur II",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Thief Gold",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "chill",
+      "creative"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Tony Hawk's Pro Skater",
+    "lengthHours": 0,
+    "moods": [
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Unreal Tournament",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "FINAL FANTASY VI",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Walking Dead: Season 1",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "God of War III",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Uncharted 3: Drake's Deception",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Prune",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "chill",
+      "creative"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Threes!",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "chill",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Eternal Darkness: Sanity's Requiem",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Out of the Park Baseball 17",
+    "lengthHours": 0,
+    "moods": [
+      "strategic",
+      "atmospheric",
+      "chill"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Medal of Honor (1999)",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Forza Motorsport 3",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Vagrant Story (2000)",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Mario Kart 8 Deluxe",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Call of Duty 4: Modern Warfare",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Super Mario World",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Sid Meier's Gettysburg!",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Wave Race 64: Kawasaki Jet Ski",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Metroid Fusion",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Galactic Civilizations II: Ultimate Edition",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Fire Emblem Awakening",
+    "lengthHours": 0,
+    "moods": [
+      "strategic",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Super Mario Sunshine",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Bloodborne",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Undertale",
+    "lengthHours": 0,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Final Fantasy X",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Tom Clancy's Splinter Cell Chaos Theory",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "OKAMI HD",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Rome: Total War - Collection",
+    "lengthHours": 0,
+    "moods": [
+      "strategic",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "PaRappa the Rapper",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Final Fantasy XII",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Witcher 3: Wild Hunt – Blood and Wine",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic",
+      "spooky"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "A Monster's Expedition",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Forza Motorsport (2005)",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "chill"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Rock Band 3",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Thief: The Dark Project",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Warcraft 3: Reign of Chaos",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Braid",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "brain-off",
+      "chill"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Bayonetta 2",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Metroid Prime 2: Echoes",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Witcher 3 Wild Hunt - Complete Edition",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Age of Empires II: Age of Kings",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Grand Theft Auto V",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "creative"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Soul Caliber 2",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Conker's Bad Fur Day",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Super Mario World: Super Mario Advance 2",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "SSX Tricky",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Banjo-Kazooie",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Journey",
+    "lengthHours": 0,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "spooky"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "System Shock 2",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Team Fortress 2",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Alto's Adventure",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Witcher 3: Wild Hunt",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "DRAGON QUEST XI: Echoes of an Elusive Age",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Crash Bandicoot 3: Warped",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Gears of War 3",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Fallout 3: Game of the Year Edition",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Tom Clancy's Splinter Cell",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Medal of Honor: Allied Assault",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Crysis",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Shadow of the Colossus",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Myth: The Fallen Lords",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Tumblestone",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "brain-off",
+      "chill"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Castlevania: Circle of the Moon",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Legend of Zelda: A Link Between Worlds",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Klonoa 2: Lunatea's Veil",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Ninja Gaiden (2004)",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Super Mario World 2: Yoshi's Island",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Mark of the Ninja",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "NieR:Automata Game of the YoRHa Edition",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Death Road to Canada",
+    "lengthHours": 0,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Ticket to Ride",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "chill",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "FEZ",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Spyro: Year of the Dragon",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Call of Duty",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Resident Evil 2",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "God of War: Chains of Olympus",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Freespace 2",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "chill",
+      "creative"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Asphalt 8: Airborne",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "chill",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Ratchet & Clank: Up Your Arsenal",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "BADLAND 2",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Shadow of the Colossus (2011)",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "spooky"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "STAR WARS Jedi Knight: Dark Forces II",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Tony Hawk's Pro Skater 2",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Batman: Arkham City - Game of the Year Edition",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Deus Ex: Human Revolution - Director's Cut",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Castlevania: Aria of Sorrow",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Dark Souls II",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Baldur's Gate",
+    "lengthHours": 0,
+    "moods": [
+      "strategic",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Shadow of the Colossus  (2018)",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Halo 3",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Cinco Paus",
+    "lengthHours": 0,
+    "moods": [
+      "strategic",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Mario Tennis (2000)",
+    "lengthHours": 0,
+    "moods": [
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "DRAGON QUEST XI S: Echoes of an Elusive Age - Definitive Edition",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "No One Lives Forever 2: A Spy in H.A.R.M.'s Way",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Longest Journey",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Street Fighter IV",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Rez Infinite",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "chill",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Metal Gear Solid V: The Phantom Pain",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Batman: Arkham Asylum Game of the Year Edition",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Fallout 3",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Planescape: Torment",
+    "lengthHours": 0,
+    "moods": [
+      "strategic",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Dragon Age: Origins",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Ori and the Will of the Wisps",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Resident Evil",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Metroid Prime: Trilogy",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Mario Kart DS",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Golden Sun",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Tony Hawk's Pro Skater 4",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Killzone 2",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Twisted Metal: Black",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Legacy of Kain: Soul Reaver",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Guitar Hero",
+    "lengthHours": 0,
+    "moods": [
+      "chill",
+      "creative"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Forza Motorsport 4",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Dishonored",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Batman: Arkham Asylum",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "chill"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Battlefield 2",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Shovel Knight: Treasure Trove",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Halo: Reach",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Where's My Water?",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "chill",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Beetle Adventure Racing",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Tadpole Treble",
+    "lengthHours": 0,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "N++ (NPLUSPLUS)",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "brain-off",
+      "chill"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Metroid Prime 3: Corruption",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Jetpack Joyride",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "intense",
+      "chill"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Silent Hunter III",
+    "lengthHours": 0,
+    "moods": [
+      "strategic",
+      "chill",
+      "creative"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Gears of War",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Grand Theft Auto: Chinatown Wars",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Microsoft Flight Simulator 2020",
+    "lengthHours": 0,
+    "moods": [
+      "chill",
+      "creative",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Mario and Luigi: Bowser's Inside Story",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Syphon Filter",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Tony Hawk's Underground",
+    "lengthHours": 0,
+    "moods": [
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "ICO",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Deus Ex",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Panzer Dragoon Orta",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Legend of Zelda: The Wind Waker HD",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Banjo-Tooie",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "NBA 2K17",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Portal: Still Alive",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "brain-off",
+      "chill"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Tom Clancy's Splinter Cell: Pandora Tomorrow",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The World Ends with You: Solo Remix",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "N.O.V.A. 2: Near Orbit Vanguard Alliance",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Viewtiful Joe (2003)",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Witcher 3: Wild Hunt – Hearts of Stone",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "DRAGON QUEST V",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Halo: Combat Evolved",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Sea of Stars",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Total War: SHOGUN 2",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Sekiro: Shadows Die Twice",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "MLB 11 The Show",
+    "lengthHours": 0,
+    "moods": [
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Odin Sphere Leifthrasir",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Ape Escape",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Donkey Kong 64",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Rayman: Revolution",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Mario & Luigi: Superstar Saga",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Room Three",
+    "lengthHours": 0,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "brain-off"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Freedom Force",
+    "lengthHours": 0,
+    "moods": [
+      "strategic",
+      "intense",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Beat Saber",
+    "lengthHours": 0,
+    "moods": [
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "TimeSplitters 2",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Bayonetta",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Resident Evil 2 (1998)",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "spooky"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "FINAL FANTASY VIII",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "strategic",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Spelunky 2",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "atmospheric",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Brothers: A Tale of Two Sons",
+    "lengthHours": 0,
+    "moods": [
+      "atmospheric",
+      "story-rich",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Mass Effect 3",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Sid Meier's Civilization V",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Into the Breach",
+    "lengthHours": 0,
+    "moods": [
+      "strategic",
+      "atmospheric",
+      "story-rich"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Diablo IV",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Animal Crossing: New Horizons",
+    "lengthHours": 0,
+    "moods": [
+      "chill",
+      "creative"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "NieR:Automata BECOME AS GODS Edition",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Tetris Effect: Connected",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "chill",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The Legend of Zelda: Phantom Hourglass",
+    "lengthHours": 0,
+    "moods": [
+      "story-rich",
+      "atmospheric",
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "The World Ends With You DS",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Deus Ex: Game of the Year Edition",
+    "lengthHours": 0,
+    "moods": [
+      "intense",
+      "story-rich",
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Hearthstone",
+    "lengthHours": 0,
+    "moods": [
+      "strategic"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Forza Horizon 4",
+    "lengthHours": 0,
+    "moods": [
+      "brain-off",
+      "intense",
+      "atmospheric"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Jak and Daxter: The Precursor Legacy",
+    "lengthHours": 0,
+    "moods": [
+      "intense"
+    ],
+    "blurb": ""
+  },
+  {
+    "title": "Black & White",
+    "lengthHours": 0,
+    "moods": [
+      "atmospheric",
+      "strategic",
+      "story-rich"
+    ],
+    "blurb": ""
+  }
+]
