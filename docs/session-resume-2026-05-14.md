@@ -1,6 +1,6 @@
 # Session Resume — 2026-05-14 (Wednesday, PDT)
 
-**START HERE:** Pip bot pool expanded 20 → 344 games. Franchise version dedup and mood pre-classification shipped for web app picker.
+**START HERE:** Four-sweep review (voice, psychology, a11y, legal) completed and shipped. Pip bot pool, franchise dedup, and mood pre-classification shipped in prior session segment.
 
 Prior context: `docs/session-resume-2026-05-13.md`
 
@@ -13,6 +13,12 @@ Prior context: `docs/session-resume-2026-05-13.md`
 2. **Franchise version dedup** (`lib/franchiseDedup.ts`) — Annual franchise games (FIFA/EA FC, Madden, NHL, NBA 2K, MLB The Show, WWE 2K, F1, Football Manager, CS) are grouped; only the newest version the user owns is eligible for picks. Distinct franchises (Souls, Civ, FF, Zelda, Slay the Spire) deliberately untouched. Wired into `getEligibleGames()` in `lib/reroll.ts`. Commit `f4ee0fb`.
 
 3. **Mood pre-classification** (`lib/curatedMoods.ts`) — 344 curated mood assignments from the bot pool now seed `inferMoodTags()` as a fallback between hand-tuned `GAME_MOOD_OVERRIDES` (52 titles) and genre auto-mapping. Games like Factorio→creative, Bloodborne→spooky, Dave the Diver→chill get correct moods on import without waiting for genre inference. Brain-off (bot) mapped to brainless (web app). Commit `f4ee0fb`.
+
+4. **Four-sweep review: voice, psychology, a11y, legal** — Commit `3c6ff75`.
+   - **Voice:** canonical "Moving on is deciding too" (was "a decision too"), "on deck" → "Up Next" (locked terminology), "Skip the overthinking" → "Pick a mood. See what fits.", redundant hero subhead tightened, "Built different" → "Not another tracker. A picker." on about page.
+   - **Psychology:** CTA added to alternatives page closer with confident framing ("Trackers help you see what you own. Inventory Full helps you play it."), shame-free reframe on Moving On supporting copy.
+   - **Accessibility:** `<main>` and `<nav>` landmarks added to manifesto and alternatives pages.
+   - **Legal:** Vercel Analytics disclosed in privacy policy (third-party list + cookies section), Discord bot (Pip) added to ToS as §6, sections renumbered 6→15, ToS date updated May 14, PII (user email) stripped from ntfy warm-lead notification body.
 
 ## Pool composition
 
@@ -40,18 +46,19 @@ Bot pool is on main but the Fly.io image hasn't been rebuilt. Brady needs to run
 
 ## Health snapshot
 
-- **Build:** Clean (verified after both commits)
-- **Main tip:** `f4ee0fb`
-- **Known bugs:** Pre-existing HLTB token fetch 404s, NinetiesMode lint warnings
+- **Build:** Clean (verified after all commits)
+- **Main tip:** `3c6ff75`
+- **Known bugs:** Pre-existing HLTB token fetch 404s, NinetiesMode lint warnings, about page lint warnings (`<a>` vs `<Link>`, `setShown` in effect)
 - **Git:** Clean, all changes pushed
 
 ## Engineering backlog (updated priority)
 
 1. ~~Pip bot pool 20 → 300~~ — **DONE** (344 games)
-2. Landing page one-liner cleanup (§11 audit) — pending
+2. ~~Landing/copy cleanup (voice + psychology + a11y + legal sweeps)~~ — **DONE**
 3. Platform pages (`/steam-backlog-picker`, `/xbox-backlog-picker`, `/playstation-backlog-picker`) — pending
 4. Resend transactional email wiring — pending
 5. Product Hunt metadata (screenshots, video) — pending
+6. About page lint fixes (`<a>` → `<Link>`, `setShown` in effect) — LOW
 
 ## Distribution queue
 
@@ -65,10 +72,10 @@ Bot pool is on main but the Fly.io image hasn't been rebuilt. Brady needs to run
 
 ## Reviews overdue
 
-- **Voice sweep on landing** — §11 audit flagged "subhead still redundant" and "Skip the overthinking" header. Not run since pre-launch.
-- **Psychology audit on new pages** — `/why-deciding-is-hard` and `/alternatives` haven't been audited against psychology rules since shipping.
-- **Accessibility pass on new pages** — manifesto, alternatives, archetype pages not contrast/keyboard checked.
-- **Legal/privacy periodic check** — last run mid-April. No new data collection since, but periodic is good hygiene.
+- ~~Voice sweep on landing~~ — **DONE** (2026-05-14, commit `3c6ff75`)
+- ~~Psychology audit on new pages~~ — **DONE** (2026-05-14, commit `3c6ff75`)
+- ~~Accessibility pass on new pages~~ — **DONE** (2026-05-14, commit `3c6ff75`). Archetype pages not checked (LOW priority).
+- ~~Legal/privacy periodic check~~ — **DONE** (2026-05-14, commit `3c6ff75`). Clean except pre-existing lint warnings in about page (`<a>` vs `<Link>`, `setShown` in effect).
 
 ## Carry-forward
 
@@ -81,4 +88,4 @@ Bot pool is on main but the Fly.io image hasn't been rebuilt. Brady needs to run
 
 ---
 
-*Updated 2026-05-14 ~08:45 PDT*
+*Updated 2026-05-14 ~12:15 PDT*
