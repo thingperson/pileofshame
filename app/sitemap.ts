@@ -15,6 +15,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: 'https://inventoryfull.gg/alternatives',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://inventoryfull.gg/steam-backlog-picker',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://inventoryfull.gg/xbox-backlog-picker',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://inventoryfull.gg/playstation-backlog-picker',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
       url: 'https://inventoryfull.gg/about',
       lastModified: new Date(),
       changeFrequency: 'monthly',
