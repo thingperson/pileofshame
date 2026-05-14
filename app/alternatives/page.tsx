@@ -407,8 +407,8 @@ export default function AlternativesPage() {
               why choosing is so hard
             </Link>{' '}
             is its own page, but the short version is: more options produce more paralysis, not better
-            decisions. Picking for you — based on what you already own, what mood you're in, and how
-            much time you have — is the whole job.
+            decisions. Picking for you (based on what you already own, what mood you're in, and how
+            much time you have) is the whole job.
           </p>
 
           <p style={{ marginBottom: '1rem', color: 'var(--color-text-secondary)' }}>

@@ -238,12 +238,12 @@ Session spawned in a git worktree (`/.claude/worktrees/awesome-shockley-6eafb2`)
 9. **r/patientgamers post backlink** — `docs/LAUNCH_BIBLE.md §4.6`: added line pointing to `inventoryfull.gg/why-deciding-is-hard` in post body.
 10. **Pip images on manifesto page** — `app/why-deciding-is-hard/page.tsx`: `pip-exhausted.webp` added after section 1, `pip-pointing.webp` added before "What actually helps" section. 120×120 inline `<img>` tags at 0.88 opacity.
 11. **DONE_FLAVORS** — `components/CompletionCelebration.tsx`: Added `DONE_FLAVORS` array (8 variants for MMOs/sandboxes/non-finishable games), `pickDoneFlavor()` function, and branched `flavorText` useMemo on `game.isNonFinishable`. Share cards for non-finishable games now use "Made my mark," "Put in the time," etc. instead of "Cleared."
+12. **`/alternatives` comparison page** — `app/alternatives/page.tsx`: server component, honest tracker vs. picker framing, 9 competitors covered (Backloggd, GG App, Grouvee, Infinite Backlog, HowLongToBeat, Backlog Shuffle, Backlog Roulette, MyBacklog, Steam Library Randomizer). Article + ItemList JSON-LD schema. Commit `d9035a1`.
 
 ## Known open items (confirmed not built)
 
 - **Pip bot pool:** still 20 games. Pool growth to 300 (`bot/scripts/build-pool.ts`) is NOT built.
 - **Platform pages** (`/steam-backlog-picker`, `/xbox-backlog-picker`, `/playstation-backlog-picker`): NOT built.
-- **`/alternatives` page:** NOT built.
 - **Landing page one-liner cleanup (LAUNCH_BIBLE §11):** NOT built. Subhead still redundant, "Skip the overthinking" header still present.
 - **Pre-seeding metadata cache** with top 500 Steam games: NOT done.
 - **Resend transactional email wiring:** NOT done. Needed before first marketing send.
@@ -256,8 +256,7 @@ Brady created an AlternativeTo.net account on ~2026-05-13. Account needs 7 days 
 
 ## Next-session candidates (priority order)
 
-1. `/alternatives` comparison page — high ROI for LLM compare queries
-2. Pip bot pool 20 → 300 — `bot/scripts/build-pool.ts` from RAWG + HLTB
+1. Pip bot pool 20 → 300 — `bot/scripts/build-pool.ts` from RAWG + HLTB
 3. Landing page one-liner cleanup per §11 audit (~50 min)
 4. Platform pages — `/steam-backlog-picker`, `/xbox-backlog-picker`, `/playstation-backlog-picker`
 5. Resend email wiring (needed before first marketing send)

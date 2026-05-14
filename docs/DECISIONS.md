@@ -15,6 +15,19 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-05-13 — DONE_FLAVORS: separate share-card copy pool for non-finishable games
+
+**Decision.** Added `DONE_FLAVORS` array and `pickDoneFlavor()` in `CompletionCelebration.tsx`, branching the share-card `flavorText` useMemo on `game.isNonFinishable`. Non-finishable games (MMOs, sandboxes, infinite games) get distinct flavor text ("Made my mark on {name}," "Put in the time," "Showed up for {name}. That counts.") instead of drawing from `CLEAR_FLAVORS` ("Knocked out," "Cleared," "Finished").
+
+**Why.**
+- "Cleared" framing is category-wrong for games without an end state — creates cognitive dissonance on share cards posted publicly
+- The in-app celebration stage already branched on `isNonFinishable` correctly; the share card had a blind spot
+- Voice charter rule: celebrate action, not just completion — applies here too
+
+**Implementation.** `components/CompletionCelebration.tsx` lines ~207–260. `DONE_FLAVORS` has 8 variants (4 contextual, 4 evergreen). `pickDoneFlavor()` mirrors `pickFlavor()` pattern. Branch in `flavorText` useMemo adds `game.isNonFinishable` to the dep array. Commit `bcd54c5`.
+
+---
+
 ## 2026-05-13 — Pip Discord bot: Phase 1 architecture locked
 
 **Decision.** Built Phase 1 of Pip (the Inventory Full Discord bot) as a Node service in `bot/` subdir using `discord.js` v14, deployed to Fly.io on a 256MB shared-cpu-1x machine in sjc. Slash-commands only, no privileged intents, stateless, no database. Ships with `/pick` (single-game recommendation from a 20-game curated pool with Roll-again button) and `/archetype` (autocomplete over 40 slugs, embeds the canonical OG image from the web app).
