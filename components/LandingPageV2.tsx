@@ -244,7 +244,7 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
           </h1>
 
           <div className="hero-subhead" style={{ animation: 'heroFadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both' }}>
-            <p className="text-base sm:text-lg leading-relaxed mb-2" style={{ color: C.textMuted }}>Your library feels more like it&apos;s playing you. It should be the other way around.</p>
+            <p className="text-base sm:text-lg leading-relaxed mb-2" style={{ color: C.textMuted }}>Tell us your mood. We&apos;ll find the game.</p>
           </div>
 
           <div className="hero-subhead" style={{ animation: 'heroFadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both' }}>
@@ -463,8 +463,8 @@ function ProblemSolution() {
                           <p className="text-sm" style={{ color: C.textMuted }}>Give it 5 minutes. If it&apos;s not hitting, blame us and reroll.</p>
                         </div>
                         <div className="rounded-lg p-3" style={{ backgroundColor: 'rgba(0,0,0,0.04)' }}>
-                          <p className="text-sm font-bold mb-0.5" style={{ color: C.textDark }}><img src="/landing/sprites/skip-back.png" alt="" width={20} height={20} className="inline-block mr-1.5 -mt-0.5 pixelated" />Moving on is a decision too.</p>
-                          <p className="text-sm" style={{ color: C.textMuted }}>Realizing what you won&apos;t play is progress.</p>
+                          <p className="text-sm font-bold mb-0.5" style={{ color: C.textDark }}><img src="/landing/sprites/skip-back.png" alt="" width={20} height={20} className="inline-block mr-1.5 -mt-0.5 pixelated" />Moving on is deciding too.</p>
+                          <p className="text-sm" style={{ color: C.textMuted }}>Clearing a game you&apos;re done pretending you&apos;ll finish? That&apos;s progress.</p>
                         </div>
                       </div>
                     )}
@@ -512,7 +512,7 @@ function ClarityBanner() {
             className="relative z-10 font-[family-name:var(--font-condensed)] uppercase tracking-tight text-center px-4"
             style={{ fontSize: 'clamp(2rem, 6vw, 4.5rem)', color: C.white, transform: 'skewY(3deg)' }}
           >
-            Skip the overthinking. Just tap a vibe.
+            Pick a mood. See what fits.
           </h2>
         </div>
       </div>

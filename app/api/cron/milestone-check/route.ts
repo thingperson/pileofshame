@@ -139,7 +139,7 @@ export async function GET(req: NextRequest) {
         const lead = newWarmLeads[0];
         const preview = (lead.message || '').slice(0, 80);
         await pushNtfy(
-          `Warm lead: ${lead.email}`,
+          `Warm lead — check Supabase`,
           `${preview}${preview.length >= 80 ? '…' : ''}`,
           'high',
         );

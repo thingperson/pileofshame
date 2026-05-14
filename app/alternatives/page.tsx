@@ -128,7 +128,7 @@ export default function AlternativesPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
       />
-      <div
+      <main
         style={{
           backgroundColor: 'var(--color-bg-primary)',
           color: 'var(--color-text-primary)',
@@ -136,7 +136,7 @@ export default function AlternativesPage() {
         }}
       >
         {/* Nav */}
-        <div
+        <nav
           style={{
             maxWidth: '42rem',
             margin: '0 auto',
@@ -154,7 +154,7 @@ export default function AlternativesPage() {
           >
             ← inventoryfull.gg
           </Link>
-        </div>
+        </nav>
 
         {/* Article */}
         <article
@@ -443,10 +443,28 @@ export default function AlternativesPage() {
               color: 'var(--color-text-secondary)',
             }}
           >
-            Use what fits how you think about your library.
+
+            Trackers help you see what you own. Inventory Full helps you play it.
+          </p>
+          <p style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+            <Link
+              href="/"
+              style={{
+                display: 'inline-block',
+                backgroundColor: 'var(--color-cyan)',
+                color: 'var(--color-bg-primary)',
+                fontWeight: 700,
+                padding: '0.75rem 2rem',
+                borderRadius: '0.5rem',
+                textDecoration: 'none',
+                fontSize: '1rem',
+              }}
+            >
+              Try Inventory Full. It&apos;s free.
+            </Link>
           </p>
         </article>
-      </div>
+      </main>
     </>
   );
 }

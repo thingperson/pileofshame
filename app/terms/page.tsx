@@ -18,7 +18,7 @@ export default function TermsPage() {
 
         <h1 className="text-3xl font-bold mb-2">Terms of Service</h1>
         <p className="text-sm text-text-dim font-[family-name:var(--font-mono)] mb-8">
-          Last updated: April 6, 2026
+          Last updated: May 14, 2026
         </p>
 
         <div className="space-y-8 text-text-secondary text-[15px] leading-relaxed">
@@ -89,7 +89,19 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">6. Affiliate links</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">6. Discord bot (Pip)</h2>
+            <p>
+              We run an optional Discord bot called Pip. Server admins can add Pip to their
+              own Discord server to use slash commands like <span className="font-[family-name:var(--font-mono)]">/pick</span> and <span className="font-[family-name:var(--font-mono)]">/archetype</span>.
+              Pip processes commands statelessly and does not store any Discord user data,
+              messages, or server information. Pip is provided &ldquo;as is&rdquo; on the same
+              terms as the rest of the service. The acceptable use terms in Section 8 apply
+              to Pip interactions.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold text-text-primary mb-3">7. Affiliate links</h2>
             <p>
               Some game deal links may include affiliate parameters. If you purchase through these
               links, we may earn a small commission. We always show the actual price. We never
@@ -98,7 +110,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">7. Acceptable use</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">8. Acceptable use</h2>
             <p>Don&apos;t:</p>
             <ul className="list-disc list-inside space-y-1.5 text-text-muted mt-2">
               <li>Abuse the API endpoints (rate limiting is in place)</li>
@@ -112,7 +124,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">8. Availability and changes</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">9. Availability and changes</h2>
             <p>
               We aim to keep the app running and improving, but we can&apos;t guarantee 100% uptime.
               Features may change, be added, or be removed. We&apos;ll try to communicate significant
@@ -121,7 +133,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">9. Personalized recommendations</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">10. Personalized recommendations</h2>
             <p>
               Inventory Full provides personalized game recommendations based on your library data,
               selected mood, available time, and your history with the recommendation engine. The app
@@ -138,7 +150,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">10. Limitation of liability</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">11. Limitation of liability</h2>
             <p>
               Inventory Full is provided &ldquo;as is&rdquo; without warranties of any kind. We&apos;re
               not liable for any data loss (always use the Export Backup feature), inaccurate game
@@ -151,7 +163,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">11. Age requirement</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">12. Age requirement</h2>
             <p>
               Inventory Full is intended for users aged 13 and older. If you are under 13, please
               do not use this service or provide any personal information. We do not knowingly
@@ -161,7 +173,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">12. Data deletion</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">13. Data deletion</h2>
             <p>
               You have the right to request complete deletion of your account and all associated
               data at any time. Email{' '}
@@ -174,7 +186,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">13. Intellectual property</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">14. Intellectual property</h2>
             <p>
               The Inventory Full app, its design, code, and original content are our intellectual
               property. The themes, UI patterns, and brand identity are part of what makes this
@@ -183,7 +195,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-text-primary mb-3">14. Changes to these terms</h2>
+            <h2 className="text-lg font-bold text-text-primary mb-3">15. Changes to these terms</h2>
             <p>
               We may update these terms occasionally. The date at the top will reflect the latest
               revision. Continued use of the app after changes constitutes acceptance.

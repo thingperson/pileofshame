@@ -316,10 +316,10 @@ function Principles() {
             className="font-[family-name:var(--font-condensed)] uppercase leading-[0.88] tracking-tight mb-12"
             style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}
           >
-            Built different.
+            Not another tracker.
             <br />
             <span className="relative inline-block" style={{ color: C.pink }}>
-              On purpose.
+              A picker.
               <span className="absolute -bottom-1 left-0 w-[115%] h-1.5" style={{ backgroundColor: C.cyan, transform: 'skewX(-15deg)' }} aria-hidden />
             </span>
           </h2>

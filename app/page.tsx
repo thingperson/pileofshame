@@ -912,7 +912,7 @@ function AppContent() {
               {activeTab === 'up-next' && (
                 <>
                   <p className="text-sm text-text-muted">Nothing queued up.</p>
-                  <p className="text-xs text-text-faint mt-1">Move a game from your Backlog to get it on deck.</p>
+                  <p className="text-xs text-text-faint mt-1">Move a game from your Backlog to Up Next.</p>
                 </>
               )}
               {activeTab === 'now-playing' && (

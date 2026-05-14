@@ -152,6 +152,7 @@ export default function PrivacyPage() {
               <li><strong>Xbox Game Pass catalog</strong>: Game Pass catalog browsing (game names only, no user data sent)</li>
               <li><strong>Supabase</strong>: authentication and cloud sync (when signed in)</li>
               <li><strong>Sentry</strong>: error monitoring (anonymous error reports, no personal data sent)</li>
+              <li><strong>Vercel Analytics</strong>: cookieless page view analytics (page URL, referrer, browser type — no cookies, no personal data)</li>
             </ul>
           </section>
 
@@ -213,6 +214,12 @@ export default function PrivacyPage() {
               page views, feature usage, and general traffic patterns. We do not use this data to
               identify individuals or build advertising profiles. No pixel trackers, no fingerprinting,
               no cross-site tracking.
+            </p>
+            <p className="mt-2">
+              <strong>Vercel Analytics (no cookies):</strong> We use Vercel Analytics for
+              aggregate page view metrics. It is cookieless by design and does not collect
+              personal data, set cookies, or track users across sites. It runs without
+              requiring consent.
             </p>
             <p className="mt-2">
               <strong>Error monitoring (no cookies):</strong> Sentry receives anonymous error reports

@@ -52,7 +52,7 @@ export default function WhyDecidingIsHardPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div
+      <main
         style={{
           backgroundColor: 'var(--color-bg-primary)',
           color: 'var(--color-text-primary)',
@@ -60,7 +60,7 @@ export default function WhyDecidingIsHardPage() {
         }}
       >
         {/* Nav */}
-        <div
+        <nav
           style={{
             maxWidth: '42rem',
             margin: '0 auto',
@@ -78,7 +78,7 @@ export default function WhyDecidingIsHardPage() {
           >
             ← inventoryfull.gg
           </Link>
-        </div>
+        </nav>
 
         {/* Article */}
         <article
@@ -422,7 +422,7 @@ export default function WhyDecidingIsHardPage() {
             is? It's in there.
           </p>
         </article>
-      </div>
+      </main>
     </>
   );
 }
