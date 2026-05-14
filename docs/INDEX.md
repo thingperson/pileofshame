@@ -30,7 +30,7 @@
 | Doc | Subject | Status | Trigger to build |
 |---|---|---|---|
 | [merch-plan.md](merch-plan.md) | Archetype merch via Printful + Shopify | LOCKED | ~50 actives OR first organic external mention |
-| [discord-bot-spec.md](discord-bot-spec.md) | Discord bot (`/pick`, `/archetype`, webhook) | LOCKED | Brady has a 3-day window of focused time |
+| [discord-bot-spec.md](discord-bot-spec.md) | Discord bot (`/pick`, `/archetype`, webhook) | SHIPPED Phase 1 (2026-05-13), pool expanded to 344 (2026-05-14) | Phase 2: `/whatshouldweplay` group voting |
 | [b2b-studios-spec.md](b2b-studios-spec.md) | Anonymized analytics for indie studios | LOCKED | ≥5k MAU |
 | [marketing-recipients-spec.md](marketing-recipients-spec.md) | SQL view to dedupe email send list | LOCKED | When Resend/equivalent is on the near roadmap |
 | [monetization-plan.md](monetization-plan.md) | Tip jar, supporter tiers, mascot eval | LOCKED | Multiple per-stream triggers (see doc) |
@@ -50,7 +50,7 @@
 
 `docs/session-resume-YYYY-MM-DD.md` — current-state pointer, written at session close. Always read the latest at session start.
 
-Latest: [`session-resume-2026-05-13.md`](session-resume-2026-05-13.md)
+Latest: [`session-resume-2026-05-14.md`](session-resume-2026-05-14.md)
 
 ## Audits
 
