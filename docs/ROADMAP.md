@@ -125,6 +125,23 @@
 - PWA manifest + 192/512px icons + apple-icon fix ✅
 - Token efficiency restructure (plan file 94% reduction, path-scoped rules) ✅
 
+### SEO Content Pages — SHIPPED ✅
+- `/alternatives` — competitors comparison page (Backloggd, HowLongToBeat, GG.deals, LaunchBox) with CTA ✅
+- `/steam-backlog-picker` — Steam-specific SEO landing page, article format, JSON-LD ✅
+- `/xbox-backlog-picker` — Xbox/Game Pass SEO landing page ✅
+- `/playstation-backlog-picker` — PlayStation/PS Plus SEO landing page ✅
+- All four added to sitemap.ts ✅
+
+### ClankerView Review Fixes (2026-05-15) — SHIPPED ✅
+- "Quick to clear" sort renamed to "Shortest games" — no longer infers progress from hours played ✅
+- Sort logic simplified to pure HLTB length (was `hltbMain - hoursPlayed`, now just `hltbMain`) ✅
+- Sample library: removed 3 duplicates (A Short Hike, Vampire Survivors, Hades II) ✅
+- Sample library: 7 on-deck games → buried (was violating Up Next cap of 8) ✅
+- Sample library: Neon White description updated to explain brain-off-if-practiced angle ✅
+- Sample library: added 3 diversity picks (Pyre, Return of the Obra Dinn, Katamari Damacy REROLL) ✅
+- Neon White curated mood updated: `['intense', 'strategic']` → `['intense', 'brainless']` ✅
+- Three deferred specs written → `docs/specs/` + `docs/INDEX.md` (dynamic enrichment, share card overhaul, sort/progress rethink) ✅
+
 ---
 
 ## LAST SPRINT — April 14–18, 2026 (CLOSED)

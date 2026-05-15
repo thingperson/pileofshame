@@ -53,7 +53,7 @@
 
 `docs/session-resume-YYYY-MM-DD.md` — current-state pointer, written at session close. Always read the latest at session start.
 
-Latest: [`session-resume-2026-05-14.md`](session-resume-2026-05-14.md)
+Latest: [`session-resume-2026-05-15.md`](session-resume-2026-05-15.md)
 
 ## Audits
 
