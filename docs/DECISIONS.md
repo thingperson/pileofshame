@@ -15,6 +15,54 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-05-15 — Sort Option B dropped (user self-reports progress)
+
+**Decision.** Killed Sort Option B permanently. The feature would have added an optional "How far along are you?" (Just started / Somewhere in the middle / Almost done) field on Playing Now game cards to inform sort order.
+
+**Why.**
+- The user already tells us what they're playing via the status cycle — "Almost done" games are ones the user is actively playing and knows about. The field is informative to our sort algorithm, not to the user.
+- Creates a new maintenance obligation ("now I have to update progress on 8 games") that directly fights principle #6 (less time in app = success)
+- Marginal sort benefit for a field most users won't maintain
+- Option A (rename "Quick to clear" → "Shortest games," sort purely by HLTB) already shipped and is honest
+
+**Rejected.** The three-choice field (Just started / Middle / Almost done) with fallback to HLTB-only for unset games. Psychologically sound design (low cognitive load, preserves agency) but fails the "does this create a new thing to manage?" test.
+
+**Drift risk.** Future enrichment features (HLTB progress inference, achievement percentage) might tempt re-opening this. The principle holds: we don't infer progress from data signals, and we don't ask users to maintain fields that serve our sorting over their playing.
+
+---
+
+## 2026-05-15 — OG image caching via Vercel CDN revalidate, not Cloudflare R2
+
+**Decision.** Added `export const revalidate` to all 4 OG image routes instead of wiring Cloudflare R2 object storage. Root + archetype: 604800s (1 week). Clear + pile: 86400s (1 day).
+
+**Why.**
+- Investigated R2 — no Cloudflare MCP exists in the registry (the `52eafc82` connector is tldraw, not R2)
+- Wiring R2 via SDK adds a new service dependency, new credentials, new failure mode
+- Vercel's CDN natively caches responses with `revalidate` — same result, zero new dependencies
+- Prior state was `max-age=0, must-revalidate` on all OG routes (every unfurl triggered a fresh server-side render via satori)
+- Dynamic cards (clear/pile) get 1-day cache because user data can change; archetype/root are effectively static
+
+**Implementation.** `app/opengraph-image.tsx`, `app/clear/[id]/opengraph-image.tsx`, `app/pile/[id]/opengraph-image.tsx`, `app/archetype/[slug]/opengraph-image.tsx`. Commit `2233eda`.
+
+**Rejected.** Cloudflare R2 with cache-on-first-render pattern. Would have required `@aws-sdk/client-s3` or Cloudflare Workers SDK, R2 bucket setup, and a check-cache-then-generate pipeline in each OG route. Overkill when Vercel's built-in ISR achieves the same goal.
+
+---
+
+## 2026-05-15 — Share card UX overhaul scoped to approaches A + C
+
+**Decision.** From the 4 approaches in `docs/specs/share-card-overhaul.md`, locked the build scope to A (live preview thumbnail in celebration modal, one-tap share) and C (visible share button on stats page header).
+
+**Why.**
+- A catches users at peak emotional moment — they just completed a game, dopamine is up, share intent is highest. Replaces a 3-4 click buried flow with preview + one tap.
+- C makes the stats share card discoverable without excavation. Current path is 7+ clicks.
+- Together they cover the two highest-intent share surfaces (completion and stats) without overscoping.
+
+**Rejected.**
+- B (share button on completed game cards) — lower urgency, "discover later" path, not a high-intent moment. Can add later if share adoption warrants it.
+- D (preview-first flow everywhere) — a design philosophy that A and C already embody. Not a separate build item.
+
+---
+
 ## 2026-05-13 — DONE_FLAVORS: separate share-card copy pool for non-finishable games
 
 **Decision.** Added `DONE_FLAVORS` array and `pickDoneFlavor()` in `CompletionCelebration.tsx`, branching the share-card `flavorText` useMemo on `game.isNonFinishable`. Non-finishable games (MMOs, sandboxes, infinite games) get distinct flavor text ("Made my mark on {name}," "Put in the time," "Showed up for {name}. That counts.") instead of drawing from `CLEAR_FLAVORS` ("Knocked out," "Cleared," "Finished").

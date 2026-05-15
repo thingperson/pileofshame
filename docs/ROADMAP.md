@@ -130,7 +130,9 @@
 - `/steam-backlog-picker` — Steam-specific SEO landing page, article format, JSON-LD ✅
 - `/xbox-backlog-picker` — Xbox/Game Pass SEO landing page ✅
 - `/playstation-backlog-picker` — PlayStation/PS Plus SEO landing page ✅
-- All four added to sitemap.ts ✅
+- `/cant-decide-what-to-play` — Decision paralysis content page, FAQ schema ✅
+- `/how-to-clear-your-backlog` — Backlog management guide, FAQ schema ✅
+- All pages added to sitemap.ts ✅
 
 ### ClankerView Review Fixes (2026-05-15) — SHIPPED ✅
 - "Quick to clear" sort renamed to "Shortest games" — no longer infers progress from hours played ✅
@@ -397,7 +399,7 @@ Pixel sprite system replacing emoji as primary brand iconography.
 - Has anyone measured the "entertainment backlog" userbase size?
 
 ### Parking Lot (ideas, not committed)
-- Drag-to-reorder Up Next (dnd-kit installed)
+- Drag-to-reorder Up Next (dnd-kit removed 2026-05-15 — feature never built, deps dropped)
 - DealBadge rebuild (DLC/sequel deals with intent logic)
 - Multiplayer matchmaking ("we both own this, let's play")
 - Steam Deck compatibility indicators

@@ -24,7 +24,7 @@ Prior context: `docs/session-resume-2026-05-14.md`
 ## Health snapshot
 
 - **Build:** Clean (verified)
-- **Main tip:** All pushed
+- **Main tip:** `2233eda` — all pushed
 - **Known bugs:** Pre-existing HLTB token fetch 404s, NinetiesMode lint warnings, about page lint warnings
 - **Git:** Clean, all changes pushed
 
@@ -32,11 +32,13 @@ Prior context: `docs/session-resume-2026-05-14.md`
 
 1. ~~Platform pages~~ — **DONE**
 2. ~~ClankerView review triage~~ — **DONE** (fixes shipped, 3 specs banked)
-3. Share card UX overhaul — per `docs/specs/share-card-overhaul.md`, near-term priority
-4. Game card status-pill position rethink — flagged in share card spec, needs design
-5. Resend transactional email wiring — pending
-6. Product Hunt metadata (screenshots, video) — pending
-7. About page lint fixes (`<a>` → `<Link>`, `setShown` in effect) — LOW
+3. **Share card UX overhaul (A+C)** — scoped to celebration modal preview + stats header button. Spec at `docs/specs/share-card-overhaul.md`. **NEXT BUILD.**
+4. **Resend wiring** — email auth is broken for real users. Spec at `docs/email-infra-spec-2026-04-20.md`. ~2-3 hrs.
+5. **RAWG pre-seed** — spec + draft script at `docs/specs/rawg-pre-seed.md`. Run once, ~1 hr.
+6. **Dynamic enrichment MVP** — impl plan at `docs/specs/dynamic-enrichment-impl.md`. ~5-6 hrs.
+7. Game card status-pill position rethink — flagged in share card spec, needs design
+8. Product Hunt metadata (screenshots, video) — pending
+9. About page lint fixes — LOW
 
 ## Distribution queue
 
@@ -47,6 +49,8 @@ Prior context: `docs/session-resume-2026-05-14.md`
 | AlternativeTo | Window opens ~2026-05-20 |
 | Product Hunt | Needs video + 5 screenshots |
 | Show HN | After PH week |
+| Google Search Console | Sitemap submitted — verify indexing |
+| Bluesky drafts | 10 posts ready at `docs/social-drafts/bluesky-batch-2026-05-15.md` |
 
 ## Carry-forward
 
@@ -54,11 +58,45 @@ Prior context: `docs/session-resume-2026-05-14.md`
 - Sentry `pip` project (DSN not set)
 - Pip-as-archetype on share/clear cards
 - Game-specific trophy Pips (20 prompts written, not generated)
-- Pre-seeding metadata cache (top 500 Steam games)
 - Reddit feedback items: list view mobile, "More ways to play" UX, "Not for me" vs "Don't suggest" vs "Delete" confusion
-- Dynamic enrichment spec ready to build when Jump Back In work opens
-- Sort Option B (user self-reports progress) needs design work
+- Free-tier audit scheduled task (MCP tool needs interactive approval — couldn't create this session)
+- 5 more SEO pages specced at `docs/specs/seo-long-tail-pages.md`
+- Vercel MCP not available in registry; Cloudflare R2 MCP was misidentified (was tldraw)
+- `settings.local.json` pruned from 97→19 lines; will re-accumulate naturally
+
+## Decisions logged
+
+- Sort Option B dropped permanently (not deferred)
+- OG caching via Vercel CDN revalidate, not Cloudflare R2
+- Share card overhaul scoped to A+C
+
+See `docs/DECISIONS.md` for full entries.
 
 ---
 
-*Updated 2026-05-15 ~12:20 PDT*
+### Wave 2 — strategic audit + infrastructure
+
+6. **OG image caching shipped** — added `revalidate` to all 4 OG routes (root/archetype: 1 week, clear/pile: 1 day). Prior state was `max-age=0` on every route. Vercel CDN now caches after first render. Commit `2233eda`.
+
+7. **2 new SEO content pages** — `/cant-decide-what-to-play` and `/how-to-clear-your-backlog`. Article format, FAQ schema JSON-LD, internal link network, voice-consistent copy. Sitemap updated. Commit `2233eda`.
+
+8. **@dnd-kit removed** — 3 unused packages (feature never built). Commit `2233eda`.
+
+9. **Docs archived** — 44 historical files moved to `docs/archive/` via `git mv`. docs/ went from ~80 entries to ~31. Nothing deleted.
+
+10. **Specs written (not built):**
+    - `docs/specs/dynamic-enrichment-impl.md` — full implementation plan. API route + Haiku + Supabase cache. ~$0.0004/game, ~$2/mo at 2k DAU. MVP: 5-6 hrs.
+    - `docs/specs/rawg-pre-seed.md` — script to pre-seed top 500 Steam games. 533 API calls, ~9 min runtime, 2.7% of monthly RAWG budget.
+    - `docs/specs/seo-long-tail-pages.md` — 7 more page proposals ranked by impact.
+
+11. **Social copy drafted** — 10 Bluesky posts at `docs/social-drafts/bluesky-batch-2026-05-15.md`. Voice-swept against charter.
+
+12. **Full project workflow audit** — reviewed entire stack, services, MCPs, automation, marketing tools, GenAI leverage. Key findings: Resend is a production auth blocker, no Vercel MCP exists, `52eafc82` MCP is tldraw not R2, PDF Tools + Figma MCPs are removable, `settings.local.json` was bloated with one-off permissions.
+
+13. **SEO validation passed** — all 4 content pages have title, description, OG tags, JSON-LD, canonical URL. Sitemap is dynamic and well-formed (9 URLs on main, 11 after this push).
+
+14. **`settings.local.json` pruned** — 97 lines → 19. Kept only recurring patterns (git ops, web fetches, MCP tools, session hook).
+
+---
+
+*Updated 2026-05-15 ~13:10 PDT*
