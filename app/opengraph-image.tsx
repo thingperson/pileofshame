@@ -1,6 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
+export const revalidate = 604800;
 export const alt = 'Inventory Full - get playing.';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';

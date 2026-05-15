@@ -48,6 +48,7 @@
 | [specs/dynamic-enrichment.md](specs/dynamic-enrichment.md) | Claude API game data on first card open — tips, mood validation, share card copy | SPECCED | When building Jump Back In improvements or share card Phase 2 |
 | [specs/share-card-overhaul.md](specs/share-card-overhaul.md) | Share card UX — preview-first flow, fewer clicks, discoverability. Also covers game card status-change pill position | SPECCED, NEAR-TERM | Next UX polish session |
 | [specs/sort-and-progress-rethink.md](specs/sort-and-progress-rethink.md) | "Quick to clear" sort assumes user progress from hours — rename + rethink | SPECCED | Quick rename is 10 min; Option B needs design |
+| [specs/rawg-pre-seed.md](specs/rawg-pre-seed.md) | Pre-seed Supabase game_metadata with top 500 popular PC games from RAWG to reduce API pressure | SPECCED | Run before traffic spikes or monthly maintenance |
 
 ## Session resumes
 

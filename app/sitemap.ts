@@ -39,6 +39,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: 'https://inventoryfull.gg/cant-decide-what-to-play',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://inventoryfull.gg/how-to-clear-your-backlog',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
       url: 'https://inventoryfull.gg/about',
       lastModified: new Date(),
       changeFrequency: 'monthly',

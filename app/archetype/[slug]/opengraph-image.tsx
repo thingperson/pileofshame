@@ -5,6 +5,7 @@ import { findArchetypeBySlug } from '@/lib/archetypeRegistry';
 
 // Node runtime so we can read fonts off disk — same pattern as /clear/[id].
 export const runtime = 'nodejs';
+export const revalidate = 604800;
 export const alt = 'Player Archetype - Inventory Full';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';

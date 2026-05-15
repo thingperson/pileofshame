@@ -7,6 +7,7 @@ import { SPRITE_KEY_BY_TITLE } from '@/lib/archetypes';
 // Node runtime — needs fs.readFile to load persona sprite SVGs from
 // public/sprites/personas/. Same pattern as app/clear/[id]/opengraph-image.tsx.
 export const runtime = 'nodejs';
+export const revalidate = 86400;
 export const alt = 'Gaming Stats - Inventory Full';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
