@@ -49,12 +49,13 @@
 | [specs/share-card-overhaul.md](specs/share-card-overhaul.md) | Share card UX — preview-first flow, fewer clicks, discoverability. Also covers game card status-change pill position | SPECCED, NEAR-TERM | Next UX polish session |
 | [specs/sort-and-progress-rethink.md](specs/sort-and-progress-rethink.md) | "Quick to clear" sort assumes user progress from hours — rename + rethink | SPECCED | Quick rename is 10 min; Option B needs design |
 | [specs/rawg-pre-seed.md](specs/rawg-pre-seed.md) | Pre-seed Supabase game_metadata with top 500 popular PC games from RAWG to reduce API pressure | SPECCED | Run before traffic spikes or monthly maintenance |
+| [specs/ios-app-build-brief.md](specs/ios-app-build-brief.md) | iOS app — native SwiftUI rewrite, Phase 0 TestFlight, Phase 1 App Store free tier, $9.99 premium, native OAuth + widget | SPECCED | When ready to start iOS build |
 
 ## Session resumes
 
 `docs/session-resume-YYYY-MM-DD.md` — current-state pointer, written at session close. Always read the latest at session start.
 
-Latest: [`session-resume-2026-05-15.md`](session-resume-2026-05-15.md)
+Latest: [`session-resume-2026-05-20.md`](session-resume-2026-05-20.md)
 
 ## Audits
 

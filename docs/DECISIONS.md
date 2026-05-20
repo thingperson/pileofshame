@@ -15,6 +15,32 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-05-20 — iOS app: native SwiftUI, separate repo, $9.99 one-time
+
+**Decision.** Build a native SwiftUI iOS app in a separate GitHub repo ([inventoryfull-ios](https://github.com/thingperson/inventoryfull-ios)). Full spec at `docs/specs/ios-app-build-brief.md`.
+
+**Key locked decisions (all 2026-05-20):**
+
+1. **Native SwiftUI, not Capacitor.** The app has 5-6 core screens and >50% of iOS-differentiating features (widgets, Siri, share extension, OAuth, Keychain) require native Swift anyway. Capacitor would mean maintaining two languages + a bridge layer for a WebView that still doesn't feel native. Existing TypeScript codebase serves as the translation spec.
+
+2. **Separate GitHub repo.** Different language/toolchain (Swift vs TypeScript), different deploy cadence (App Store Review vs instant Vercel), Xcode project artifacts would pollute the web repo. Specs and decisions stay in the web repo as canonical home.
+
+3. **Full import, no game cap.** All platforms import full library on the free tier. Premium gates capabilities (intelligence layer, cloud sync, Year-in-Backlog), not library access. The 100-game cap was evaluated and rejected — "pay to access your own data" contradicts brand positioning and risks App Store backlash from the gaming community.
+
+4. **$9.99 one-time purchase, no subscription.** The app's inverted success metric (less time in app = success) structurally conflicts with subscription retention — users who succeed stop opening the app, which is the cancellation moment. RevenueCat data shows higher-priced apps convert better (2.8% vs 1.4%). GameTrack lifetime is $99.99; we're an order of magnitude cheaper. Supplemented by a tip jar ($2.99/$6.99/$14.99 consumable tiers, post-milestone only).
+
+5. **Apple Watch as Phase 3.** Today's Pick complication — logical extreme of the zero-time-in-app thesis. Pursue if iPhone widget adoption is strong.
+
+**Rejected alternatives:**
+- Capacitor wrapper — eliminated because static export is a project-killer with our API routes + server components, and >50% of the iOS value is native Swift anyway.
+- 100-game cap on free tier — eliminated because it contradicts "we're on your side" positioning. Gaming communities are hypersensitive to artificial limits on user-owned data.
+- Subscription pricing — eliminated because structural conflict with inverted success metric. Monthly renewal notification arrives exactly when users are happily playing games and not thinking about us.
+- $4.99-6.99 price point — eliminated after RevenueCat research showed higher-priced apps convert better, and the target audience (100+ game owners) routinely spends $15-60 per game.
+
+**Phasing:** Phase 0 = core app + widget on TestFlight (2-3 weeks build + 2 weeks data, kill criteria: <20% week-2 retention). Phase 1 = native features + App Store (4-5 weeks). Phase 2 = premium intelligence layer + $9.99 IAP. Phase 3 = Apple Watch + Android.
+
+---
+
 ## 2026-05-15 — Sort Option B dropped (user self-reports progress)
 
 **Decision.** Killed Sort Option B permanently. The feature would have added an optional "How far along are you?" (Just started / Somewhere in the middle / Almost done) field on Playing Now game cards to inform sort order.

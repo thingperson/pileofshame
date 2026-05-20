@@ -384,12 +384,15 @@ Pixel sprite system replacing emoji as primary brand iconography.
 - Deal alerts for games in your pile (price drops)
 - See: `.claude/plans/future-notifications-email.md`
 
-### Phase 6: Native Mobile App (FUTURE — not started)
-- Enhanced PWA first (offline library, install prompt, push notifications)
-- Capacitor or Expo wrapper for app store presence if PWA isn't enough
-- Full React Native rewrite only if wrapper feels too janky
-- Apple Developer ($99/yr) + Google Play Console ($25) needed
-- See: `docs/IDEAS.md` → "Native Mobile App Planning" section
+### Phase 6: Native iOS App (IN PROGRESS — specced, pre-build)
+- **Native SwiftUI rewrite** — not Capacitor, not PWA. Decided 2026-05-20. Full spec at `docs/specs/ios-app-build-brief.md`.
+- Separate repo: [inventoryfull-ios](https://github.com/thingperson/inventoryfull-ios)
+- Phase 0: Core app + Today's Pick widget on TestFlight (2-3 weeks build + 2 weeks data). Kill gate: <20% week-2 retention.
+- Phase 1: PSN/Xbox OAuth, Siri shortcut, share extension, full polish, App Store submission (4-5 weeks).
+- Phase 2: Premium intelligence layer, cloud sync, Year-in-Backlog. $9.99 one-time purchase + tip jar.
+- Phase 3: Apple Watch complication, Android (Kotlin/Jetpack Compose).
+- Apple Developer enrolled (pending 24-48hr address verification). Xcode + Fastlane installed.
+- **Blocked on:** Developer account clearing, then clone repo + init Xcode project.
 
 ### Research — Decision Paralysis & Choice Architecture
 - Formal study of choice overload interventions (Schwartz, Iyengar)
