@@ -145,14 +145,12 @@ export function sortBestForYou(gamesToSort: Game[], fullLibrary: Game[]): Game[]
 }
 
 /**
- * Smart status for Xbox imports — only auto-assigns 'played' when achievements
- * are 100% complete (unambiguous evidence). Up Next / Playing Now are user-only
- * statuses; the importer never guesses them.
+ * All imports default to Backlog. The user decides what's completed —
+ * achievement data can't tell us if they consider a game "done."
  */
 export function getSmartImportStatusFromAchievements(
-  earned: number,
-  total: number,
-): 'buried' | 'played' {
-  if (total > 0 && earned >= total) return 'played';
+  _earned: number,
+  _total: number,
+): 'buried' {
   return 'buried';
 }

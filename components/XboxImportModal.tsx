@@ -6,7 +6,7 @@ import { useToast } from './Toast';
 import { trackImport } from '@/lib/analytics';
 import { DEFAULT_CATEGORIES } from '@/lib/constants';
 import { getDupeNudge } from '@/lib/descriptors';
-import { getSmartImportStatusFromAchievements } from '@/lib/smartSort';
+
 
 interface XboxGameData {
   titleId: string;
@@ -116,13 +116,8 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
 
   const handleImport = () => {
     const toImport = games.filter((g) => selected.has(g.titleId));
-    let completedCount = 0;
 
     for (const game of toImport) {
-      const earned = game.achievements?.earned ?? 0;
-      const total = game.achievements?.total ?? 0;
-      const status = getSmartImportStatusFromAchievements(earned, total);
-
       const gamerscoreNote = game.achievements && game.achievements.totalGamerscore > 0
         ? `Xbox · ${game.achievements.gamerscore}/${game.achievements.totalGamerscore}G`
         : 'Xbox';
@@ -130,7 +125,7 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
       addGame({
         name: game.name,
         source: 'xbox',
-        status,
+        status: 'buried',
         category: DEFAULT_CATEGORIES[0],
         vibes: [],
         timeTier: 'wind-down',
@@ -143,10 +138,7 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
           gamerscore: game.achievements.gamerscore,
           totalGamerscore: game.achievements.totalGamerscore,
         } : undefined,
-        completedAt: status === 'played' && game.lastPlayed ? game.lastPlayed : undefined,
       });
-
-      if (status === 'played') completedCount++;
     }
 
     trackImport('xbox', toImport.length);
@@ -161,8 +153,7 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
       }
     }
 
-    const summaryTail = completedCount > 0 ? ` ${completedCount} already beaten.` : '';
-    showToast(`Imported ${toImport.length} Xbox games.${summaryTail}`);
+    showToast(`Imported ${toImport.length} Xbox games.`);
     handleClose();
   };
 

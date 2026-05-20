@@ -32,8 +32,7 @@ import { SAMPLE_GAMES } from '@/lib/sampleLibrary';
 import PostImportSummary from '@/components/PostImportSummary';
 import SampleImportNudge from '@/components/SampleImportNudge';
 import GamePassBrowse from '@/components/GamePassBrowse';
-import StalledGameNudge from '@/components/StalledGameNudge';
-import FinishCheckNudge from '@/components/FinishCheckNudge';
+
 import { trackThemeSession } from '@/lib/archetypes';
 import { trackSampleStarted, trackImportCompleted, trackSignupCompleted } from '@/lib/analytics';
 import { useAuth } from '@/lib/useAuth';
@@ -530,8 +529,8 @@ function AppContent() {
         </div>
         <div className="flex flex-col items-center gap-8 w-full max-w-md">
           <div className="text-center">
-            <h1 className="text-lg font-light tracking-[6px] text-[#444] lowercase">inventory full</h1>
-            <p className="text-xs text-[#333] mt-2 font-[family-name:var(--font-mono)]">{games.length} games. Pick one.</p>
+            <h1 className="text-lg font-light tracking-[6px] text-[#999] lowercase">inventory full</h1>
+            <p className="text-xs text-[#888] mt-2 font-[family-name:var(--font-mono)]">{games.length} games. Pick one.</p>
           </div>
           <button
             onClick={() => handleOpenReroll('anything')}
@@ -546,13 +545,13 @@ function AppContent() {
                 key={m}
                 onClick={() => openReroll(m)}
                 className="flex-1 px-3 py-3 text-xs font-[family-name:var(--font-mono)] rounded-lg transition-all hover:bg-[#111]"
-                style={{ background: '#050505', border: '1px solid #111', color: '#555' }}
+                style={{ background: '#050505', border: '1px solid #111', color: '#777' }}
               >
                 {m === 'quick-session' ? 'quick session' : 'resume'}
               </button>
             ))}
           </div>
-          <p className="text-xs text-[#222] font-[family-name:var(--font-mono)] mt-4">less deciding. more playing.</p>
+          <p className="text-xs text-[#777] font-[family-name:var(--font-mono)] mt-4">less deciding. more playing.</p>
         </div>
         <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} onJustFiveMinutes={() => { setRerollOpen(false); setRerollMode(undefined); justFiveRef.current?.startSession(); }} onSubShuffle={() => { setRerollOpen(false); setRerollMode(undefined); setGamePassOpen(true); }} onCommit={() => setActiveTab('now-playing')} />
         <CompletionCelebration game={celebrationGame} onClose={() => { closeCelebration(); setActiveTab('completed'); }} onConfirm={() => { if (celebrationGame) cycleStatus(celebrationGame.id); }} />
@@ -788,10 +787,6 @@ function AppContent() {
           </div>
         </div>
       )}
-
-      {/* ── Behavioral Nudges (1 each per session, dismissable) ── */}
-      {!isEmpty && !isSampleLibrary && activeTab === 'backlog' && <StalledGameNudge games={games} onTabSwitch={(id) => setActiveTab(id as TabId)} />}
-      {!isEmpty && !isSampleLibrary && activeTab === 'backlog' && <FinishCheckNudge games={games} onTabSwitch={(id) => setActiveTab(id as TabId)} />}
 
       {/* ── Sync Nudge (below tabs, above games) ── */}
       {!isEmpty && !isSampleLibrary && <SyncNudge />}

@@ -1445,3 +1445,37 @@ IGDB was investigated and ruled out as a RAWG escape — verified via web search
 **Drift risk.** The locked monetization plan now has both an original body (2026-05-04) and an Amendments section (2026-05-13). Future sessions must read the Amendments first when in doubt — the body is preserved for context but the Amendments section is the source of truth on any conflict. Marked explicitly in the doc.
 
 ---
+
+## 2026-05-20 — Xbox import: all games default to Backlog
+
+**Decision.** Xbox imports now always set status to `buried` (Backlog), regardless of achievement completion percentage. Previously, 100% achievements auto-set `played` (Completed).
+
+**Why.** The Completed tab is the user's showcase of games they beat *using Inventory Full* — it's the app's success metric. Auto-completing games based on external achievement data steals that moment. A user with 100% achievements may still consider the game active (replaying, DLC, etc.). The user decides when something is done, not us.
+
+**LOCKED.** This is the third time this pattern has been caught and rolled back (Xbox achievements, Steam HLTB inference). The principle: never auto-assign Completed, Up Next, or Moved On from heuristics. Imports default to Backlog. Period.
+
+---
+
+## 2026-05-20 — /preview-landing route is intentional
+
+**Decision.** `app/preview-landing/page.tsx` is a static duplicate of the landing page for Brady to preview while logged in (the real landing redirects to the app when authenticated).
+
+**Why.** Without this, there's no way to see the current landing page without logging out. Dev convenience, not user-facing.
+
+---
+
+## 2026-05-20 — Remove behavioral nudges (StalledGameNudge, FinishCheckNudge)
+
+**Decision.** Deleted both nudge components. They showed proactive prompts on the Backlog tab: one for games untouched in 14+ days, one for games at 85%+ estimated completion.
+
+**Why.** Both add cognitive load the user didn't ask for. FinishCheckNudge used `hltbMain - hoursPlayed` to estimate progress — the same inference pattern we've rolled back elsewhere. StalledGameNudge was gentler but still uninvited. The app's job is to help when asked, not to nag. If a user opens the app, the picker is right there.
+
+---
+
+## 2026-05-20 — Void mode contrast bumped to WCAG AA
+
+**Decision.** Raised void mode text colors from near-invisible (#222–#444) to readable-but-muted (#777–#999). Still the dimmest theme by far, but now meets 4.5:1 contrast on all text.
+
+**Why.** WCAG AA is non-negotiable per project rules. The void aesthetic trades some of its "barely there" vibe for accessibility. The muted palette still reads as minimal.
+
+---
