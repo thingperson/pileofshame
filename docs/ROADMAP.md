@@ -88,7 +88,7 @@
 - Skip feedback ("Why'd you skip?"): optional pill row after skips (not-in-mood, too-long, played-recently, hit-a-wall, not-interested) ✅
 - Energy matching: Low/Medium/High selector in reroll, replaces time-of-day weights, auto-defaults by clock ✅
 - Decision history recording: every accept/skip logged to localStorage for future behavioral learning ✅
-- Nudge card compact mode: StalledGameNudge + FinishCheckNudge collapsed by default, expandable ✅
+- ~~Nudge card compact mode: StalledGameNudge + FinishCheckNudge~~ — REMOVED 2026-05-20. Both nudge components deleted (uninvited cognitive load, FinishCheck used hltb-hours inference).
 - Typography pass: all text-[10px]/text-[11px] bumped to text-xs minimum across 25+ components ✅
 
 ### Themes
@@ -423,7 +423,7 @@ Captured from the round-1 + round-2 psychology audit (`docs/psychology-redteam-2
 **Round-3 cold-start interventions — SHIPPED 2026-04-28 (commit `4a90fcf`).** Five of eight findings from `docs/psychology-redteam-round3-2026-04-28.md` shipped pre-launch:
 - ✅ `ImportHub`: Steam-first with "Most start here" tag; manual platforms (Epic/GOG/Switch) hidden behind disclosure. Choice load 8 → 5 visible.
 - ✅ `GetStartedModal`: dropped "Free forever." marketing claim from a fulfillment surface.
-- ✅ `FinishCheckNudge`: dropped 130%+ population shame trigger, retired the third "Not yet" button (which was hiding a status mutation behind a deferral label — reactance/autonomy violation). Behavior change: no more auto-promote to Playing Now via "Not yet."
+- ✅ `FinishCheckNudge`: dropped 130%+ population shame trigger, retired the third "Not yet" button (which was hiding a status mutation behind a deferral label — reactance/autonomy violation). **Component fully removed 2026-05-20** (along with StalledGameNudge).
 - **Items #6–8 deferred to post-launch sprint:** updates-checkbox relocation, sample-library tertiary, SignInModal rename.
 
 **Share composer restructure (round 2 finding) + content lockdown — Phase 1 SHIPPED 2026-04-28 (commit `1d51760`).**
