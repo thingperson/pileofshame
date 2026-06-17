@@ -81,33 +81,33 @@ const MANUAL_PLATFORMS = [
 export default function ImportHub({ open, onClose, autoSteamId }: ImportHubProps) {
   const [activeImport, setActiveImport] = useState<string | null>(null);
 
-  // Returning from the Steam OpenID redirect fallback: skip the platform list.
-  useEffect(() => {
-    if (open && autoSteamId) setActiveImport('steam');
-  }, [open, autoSteamId]);
-
   if (!open) return null;
 
+  // Returning from the Steam OpenID redirect fallback: skip the platform list
+  // and jump straight into the Steam importer. Derived (not stored) so it can't
+  // trigger a cascading render; page.tsx clears the id on close.
+  const active = activeImport ?? (autoSteamId ? 'steam' : null);
+
   // If a specific import modal is active, show that instead
-  if (activeImport === 'steam') {
+  if (active === 'steam') {
     return <SteamImportModal open={true} initialSteamId={autoSteamId} onClose={() => { setActiveImport(null); onClose(); }} />;
   }
-  if (activeImport === 'xbox') {
+  if (active === 'xbox') {
     return <XboxImportModal open={true} onClose={() => { setActiveImport(null); onClose(); }} />;
   }
-  if (activeImport === 'steam-wishlist') {
+  if (active === 'steam-wishlist') {
     return <SteamWishlistModal open={true} onClose={() => { setActiveImport(null); onClose(); }} />;
   }
-  if (activeImport === 'playnite') {
+  if (active === 'playnite') {
     return <PlayniteImportModal open={true} onClose={() => { setActiveImport(null); onClose(); }} />;
   }
-  if (activeImport === 'epic') {
+  if (active === 'epic') {
     return <PlayniteImportModal open={true} context="epic" onClose={() => { setActiveImport(null); onClose(); }} />;
   }
-  if (activeImport === 'gog') {
+  if (active === 'gog') {
     return <PlayniteImportModal open={true} context="gog" onClose={() => { setActiveImport(null); onClose(); }} />;
   }
-  if (activeImport === 'playstation') {
+  if (active === 'playstation') {
     return <PSNImportModal open={true} onClose={() => { setActiveImport(null); onClose(); }} />;
   }
 
@@ -200,7 +200,7 @@ function ImportHubModal({ open, onClose, setActiveImport }: { open: boolean; onC
 
         <details className="group">
           <summary className="text-xs text-text-dim hover:text-text-muted cursor-pointer list-none flex items-center gap-1 py-2">
-            <span>Don't see your platform?</span>
+            <span>Don&apos;t see your platform?</span>
             <span className="transition-transform group-open:rotate-90">→</span>
           </summary>
           <div className="space-y-2 pt-2">
