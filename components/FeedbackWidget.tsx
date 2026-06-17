@@ -100,7 +100,7 @@ export default function FeedbackWidget() {
           <div className="w-full max-w-md bg-neutral-900 border border-neutral-700 rounded-2xl shadow-2xl p-5 sm:p-6">
             <div className="flex items-start justify-between mb-3">
               <div>
-                <h2 className="text-lg font-semibold text-neutral-100">Tell us what's up</h2>
+                <h2 className="text-lg font-semibold text-neutral-100">Tell us what&apos;s up</h2>
                 <p className="text-xs text-neutral-400 mt-1">
                   Bug, idea, or just hi. Email is optional.
                 </p>
@@ -145,7 +145,7 @@ export default function FeedbackWidget() {
                   className="mt-0.5 accent-violet-600"
                 />
                 <span>
-                  Hear from us about updates and new features. Unsubscribe anytime. We'll never share your email.
+                  Hear from us about updates and new features. Unsubscribe anytime. We&apos;ll never share your email.
                 </span>
               </label>
             )}

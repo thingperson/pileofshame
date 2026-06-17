@@ -222,7 +222,6 @@ export default async function Image({ params }: { params: Promise<{ id: string }
             zIndex: 1,
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={spriteDataUrl}
             alt=""

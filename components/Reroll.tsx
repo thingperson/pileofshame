@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { Game, MoodTag } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { useScrollLock } from '@/lib/useScrollLock';
-import { STATUS_CONFIG, REROLL_MESSAGES, TIME_TIER_CONFIG, MAX_PLAYING_NOW } from '@/lib/constants';
+import { REROLL_MESSAGES, TIME_TIER_CONFIG, MAX_PLAYING_NOW } from '@/lib/constants';
 import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
 import { hasSprite } from '@/lib/pixel/sprites';
 import PixelSprite from './PixelSprite';
@@ -19,20 +19,6 @@ import { recordDecision } from '@/lib/decisionHistory';
 import { emitSampleCompleted } from './SampleImportNudge';
 
 const ALL_MOODS: MoodTag[] = ['chill', 'intense', 'story-rich', 'brainless', 'atmospheric', 'competitive', 'spooky', 'creative', 'strategic', 'emotional'];
-
-const POST_ACCEPT_LINES = [
-  "Go. We'll be here when you get back.",
-  "{game} isn't going to play itself. Close the app.",
-  "You made a decision. That's the hard part. Now play.",
-  "The pile just got smaller. Go.",
-  "You picked it. Trust your gut.",
-  "One less game to wonder about. Go find out.",
-];
-
-function getPostAcceptLine(gameName: string): string {
-  const line = POST_ACCEPT_LINES[Math.floor(Math.random() * POST_ACCEPT_LINES.length)];
-  return line.replace('{game}', gameName);
-}
 
 function getSessionEstimate(game: Game): string | null {
   if (game.hltbMain && game.hltbMain > 0) {

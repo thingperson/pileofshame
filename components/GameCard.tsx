@@ -128,7 +128,7 @@ function JumpBackIn({ game }: { game: Game }) {
           {/* Genre tips (fallback when no verified pack) */}
           {!reentry && genreTips.length > 0 && (
             <div className="space-y-1">
-              <p className="text-[12px] text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider">// QUICK REMINDERS</p>
+              <p className="text-[12px] text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider">{'// QUICK REMINDERS'}</p>
               {genreTips.map((tip, i) => (
                 <p key={i} className="text-xs text-text-muted leading-relaxed">
                   {tip}

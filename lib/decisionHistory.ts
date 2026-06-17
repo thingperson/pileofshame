@@ -175,9 +175,6 @@ export function getDecisionStats(): {
   const history = getDecisionHistory();
   if (history.length < 10) return null;
 
-  const totalAccepts = history.filter(d => d.action === 'accept').length;
-  const avgRate = history.length > 0 ? totalAccepts / history.length : 0;
-
   // Genre accept rates
   const genreStats: Record<string, { accepts: number; total: number }> = {};
   for (const d of history) {

@@ -154,15 +154,6 @@ async function tap(page: Page, x: number, y: number) {
   });
 }
 
-/** Get the screen-space center of a locator and tap it. */
-async function tapLocator(page: Page, selector: string, nth = 0) {
-  const loc = page.locator(selector).nth(nth);
-  await loc.scrollIntoViewIfNeeded();
-  const box = await loc.boundingBox();
-  if (!box) throw new Error(`No bounding box for ${selector}`);
-  await tap(page, box.x + box.width / 2, box.y + box.height / 2);
-}
-
 async function tapRole(page: Page, role: Parameters<Page['getByRole']>[0], name: RegExp, nth = 0) {
   const loc = page.getByRole(role, { name }).nth(nth);
   await loc.scrollIntoViewIfNeeded();

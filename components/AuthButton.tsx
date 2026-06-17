@@ -1,18 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/lib/useAuth';
-
-/** Detect if running as installed PWA (Add to Home Screen) */
-function useIsPWA() {
-  const [isPWA, setIsPWA] = useState(false);
-  useEffect(() => {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-      || (navigator as unknown as { standalone?: boolean }).standalone === true;
-    setIsPWA(isStandalone);
-  }, []);
-  return isPWA;
-}
 
 export default function AuthButton() {
   const { user, loading, isSignedIn, signInWithDiscord, signInWithGoogle, signInWithEmail, signOut } = useAuth();
@@ -23,7 +12,6 @@ export default function AuthButton() {
   const [emailSent, setEmailSent] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [wantsUpdates, setWantsUpdates] = useState(false);
-  const isPWA = useIsPWA();
 
   if (loading) {
     return (

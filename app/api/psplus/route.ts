@@ -160,7 +160,7 @@ async function buildCatalog(): Promise<PSPlusGame[]> {
   // First page — also tells us the total count
   const firstPage = await fetchPage(0);
   const totalCount = firstPage.totalCount;
-  let allProducts = [...firstPage.products];
+  const allProducts = [...firstPage.products];
 
   // Fetch remaining pages in parallel
   if (totalCount > PAGE_SIZE) {
@@ -183,7 +183,6 @@ async function buildCatalog(): Promise<PSPlusGame[]> {
   for (const product of allProducts) {
     try {
       // Filter: only FULL_GAME
-      const classification = product.webctas as unknown;
       const storeDisplayClassification = product.storeDisplayClassification as string | undefined;
 
       if (

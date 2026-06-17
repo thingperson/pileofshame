@@ -128,7 +128,6 @@ export default async function Image({
           }}
         >
           {spriteDataUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={spriteDataUrl}
               alt=""
