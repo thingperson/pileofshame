@@ -472,7 +472,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
         <button
           onClick={handleNotNow}
           aria-label="Close"
-          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full text-text-dim hover:text-text-primary hover:bg-glass-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
+          className="absolute top-3 right-3 z-10 w-11 h-11 flex items-center justify-center rounded-full text-text-dim hover:text-text-primary hover:bg-glass-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
         >
           ✕
         </button>
@@ -553,7 +553,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                       style={{ backgroundColor: sessionLength === level ? 'rgba(124, 58, 237, 0.12)' : 'var(--color-bg-card)' }}
                     >
                       <div>{icon} {label}</div>
-                      <div className="text-[10px] text-text-dim font-[family-name:var(--font-mono)] mt-0.5">{sub}</div>
+                      <div className="text-[11px] text-text-dim font-[family-name:var(--font-mono)] mt-0.5">{sub}</div>
                     </button>
                   ))}
                 </div>
@@ -967,7 +967,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                 2026-04-27: the close (×) in the modal header already serves
                 that exit. The picker only needs two answers from the user
                 here: "this one" or "show me another." */}
-            <div className="flex flex-col items-center px-5 py-4 shrink-0 border-t" style={{ borderColor: 'var(--color-glass-border)', backgroundColor: 'var(--color-bg-elevated)' }}>
+            <div className="flex flex-col items-center px-5 py-4 shrink-0 border-t" style={{ borderColor: 'var(--color-glass-border)', backgroundColor: 'var(--color-bg-elevated)', paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
               <button
                 onClick={() => handleLetsGo(currentPick)}
                 className="w-full px-3 py-3.5 sm:py-2.5 text-base sm:text-sm font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"

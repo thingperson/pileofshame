@@ -88,4 +88,34 @@ Pre-existing working-tree changes left untouched — Brady's separate thread:
 
 ---
 
-*Closed 2026-06-17, ~10:15 PDT (Steam OpenID web). Second wave ~11:05 PDT (iOS steam-return redirect). Third wave ~11:10 PDT (HLTB path fix + June 9 recovery).*
+---
+
+## Fourth wave — light-theme WCAG AA pass + mobile a11y (afternoon)
+
+### What shipped
+
+- **Light theme contrast — full WCAG AA pass, stats page now 0 contrast failures.** Root cause: accent colors were hardcoded dark-theme hexes (washed out ~2:1 on pale light cards) and muted text tokens were too light.
+  - New accent CSS-variable system — `--stat-{green,amber,violet,sky,slate,red}` + `--src-{steam,playstation,epic,xbox,switch,gog,other}` — referenced as `var(--stat-x, <dark fallback>)`. **Dark theme unchanged** (fallback = original hex); `.theme-light` overrides to `-700` shades. See DECISIONS.md 2026-06-17.
+  - The critical fix: "What's your library worth?" button **1.2:1 → 5.84:1** (white text was force-applied to a pale gradient by the over-broad `button[style*="linear-gradient"]{color:white}` rule — narrowed with `:not(.light-gradient-btn)`).
+  - Darkened `.theme-light` `--color-text-dim`/`--color-text-faint`; extended the author's `.theme-light .text-text-*` override pattern to secondary/muted/dim/faint (it only covered primary).
+  - Files: `app/globals.css`, `app/stats/page.tsx`, `components/{StatsPanel,ValueCalculator,ArchetypeCard,StatCard}.tsx`, `lib/constants.ts`.
+- **Mobile a11y** (from a parallel mobile-audit agent): `safe-area-inset` on the Reroll bottom sheet + 3 import-modal footers + the void-state settings gear; 44px touch targets (Add-game, Reroll/Completion close, PSN Copy); `autoComplete`/`inputMode` on email + Steam/Xbox/PSN inputs; removed `autoFocus` from the PSN token field (instructions sit above it); bumped a 10px sub-label. Added a screen-reader `<h1>` to the hub (had no semantic heading).
+
+### Deferred (minor, documented)
+
+- Import-step `overflow-y-auto` audit (mobile finding 6) — needs careful per-modal testing.
+- `autoFocus` on input-first modals (Steam/Wishlist/GetStarted) — no instruction-occlusion there, lower priority.
+- Over-cover-art badges (match score / metacritic green) — pre-existing, theme-independent, render legibly.
+
+### Gotcha (rotting — heed next time)
+
+- **Preview MCP `getComputedStyle` returns stale color reads.** Verify CSS/contrast with `preview_screenshot` (real engine), not computed-style scans. To confirm a CSS rule loaded, `curl` the live stylesheet, not `document.styleSheets` iteration. This cost a long token detour this session. Saved to memory.
+
+### Health snapshot (current — supersedes waves above)
+
+- Build: `npm run build` passing (exit 0) with full batch. Typecheck clean.
+- 14 files changed this wave (all `components/`/`app/`/`lib/` + globals.css). Committed + pushed to main.
+
+---
+
+*Closed 2026-06-17, ~10:15 PDT (Steam OpenID web). Second wave ~11:05 PDT (iOS steam-return redirect). Third wave ~11:10 PDT (HLTB path fix + June 9 recovery). Fourth wave ~15:55 PDT (light-theme WCAG AA + mobile a11y).*

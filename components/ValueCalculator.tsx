@@ -66,12 +66,12 @@ export default function ValueCalculator({
       {!calculating && !calculated && (
         <button
           onClick={handleCalculate}
-          className="w-full py-3 rounded-lg text-sm font-semibold font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+          className="light-gradient-btn w-full py-3 rounded-lg text-sm font-semibold font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.99]"
           style={{
             backgroundColor: 'var(--color-bg-elevated)',
             background: 'linear-gradient(135deg, var(--color-bg-elevated), rgba(167, 139, 250, 0.08))',
             border: '1px dashed rgba(167, 139, 250, 0.35)',
-            color: '#a78bfa',
+            color: 'var(--stat-violet, #a78bfa)',
           }}
         >
           💎 What&apos;s your library worth?
@@ -92,7 +92,7 @@ export default function ValueCalculator({
           </div>
           <div
             className="text-3xl sm:text-4xl font-bold font-[family-name:var(--font-mono)] tracking-tight"
-            style={{ color: '#a78bfa' }}
+            style={{ color: 'var(--stat-violet, #a78bfa)' }}
           >
             ~${countedUnplayed.toLocaleString()}
           </div>
@@ -134,7 +134,7 @@ export default function ValueCalculator({
               </div>
               <div
                 className="text-xl font-bold font-[family-name:var(--font-mono)]"
-                style={{ color: '#22c55e' }}
+                style={{ color: 'var(--stat-green, #22c55e)' }}
               >
                 ${countedPlayed.toLocaleString()}
               </div>
@@ -149,7 +149,7 @@ export default function ValueCalculator({
               </div>
               <div
                 className="text-xl font-bold font-[family-name:var(--font-mono)]"
-                style={{ color: '#f59e0b' }}
+                style={{ color: 'var(--stat-amber, #f59e0b)' }}
               >
                 ~{countedBacklogHours.toLocaleString()} hours
               </div>
@@ -205,7 +205,7 @@ export default function ValueCalculator({
           style={{
             backgroundColor: 'rgba(167, 139, 250, 0.08)',
             border: '1px solid rgba(167, 139, 250, 0.2)',
-            color: '#a78bfa',
+            color: 'var(--stat-violet, #a78bfa)',
           }}
         >
           🔄 Refine estimate ({priceConfidence.known}/{priceConfidence.total} games priced)

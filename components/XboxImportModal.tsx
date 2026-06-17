@@ -206,6 +206,8 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
               onKeyDown={(e) => e.key === 'Enter' && resolveProfile()}
               placeholder="Gamertag"
               aria-label="Xbox Gamertag"
+              autoComplete="off"
+              autoCapitalize="none"
               autoFocus
               className="w-full text-sm bg-bg-primary border border-border-subtle rounded-lg px-3 py-2.5 text-text-primary placeholder-text-faint focus:outline-none focus:border-accent-purple"
             />

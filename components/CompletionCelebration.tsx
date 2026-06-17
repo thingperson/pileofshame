@@ -619,7 +619,7 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
         <div className="relative z-20 p-6 sm:p-8 text-center">
           <button
             onClick={handleClose}
-            className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-text-dim hover:text-text-muted hover:bg-glass-medium transition-all"
+            className="absolute top-3 right-3 w-11 h-11 flex items-center justify-center rounded-full text-text-dim hover:text-text-muted hover:bg-glass-medium transition-all"
             aria-label="Close"
           >
             ✕

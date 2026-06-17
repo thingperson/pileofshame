@@ -15,6 +15,18 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-06-17 — Light-theme accent colors via `var(--stat-*, <dark fallback>)`
+
+**Decision.** Light-theme WCAG AA pass. Accent colors (stat numbers, archetype/tone badges, platform tags, the value-calculator button) were hardcoded dark-theme Tailwind hexes (`#22c55e`, `#a78bfa`, `#38bdf8`, platform blues, etc.) applied as inline styles / props, so they washed out to ~2:1 on light theme's pale cards. Fixed by introducing accent CSS variables — `--stat-green/amber/violet/sky/slate/red` and `--src-steam/playstation/epic/xbox/switch/gog/other` — referenced as `var(--stat-green, #22c55e)`. The fallback is the original dark hex, so the default/dark theme is **byte-for-byte unchanged**; only `.theme-light` (and other light-ish themes, if extended later) overrides the vars to AA-passing `-700` shades. Token text (`--color-text-dim/faint`) was also darkened in `.theme-light`. Result: stats page went from many failures to **0 contrast failures**; the "What's your library worth?" button went 1.2:1 → 5.84:1 (it was white text forced onto a pale gradient by the over-broad `button[style*="linear-gradient"]{color:white}` rule, now narrowed with `:not(.light-gradient-btn)`).
+
+**Why this pattern (vs. per-theme component logic or utility overrides).**
+- Var-with-fallback means **zero risk to dark theme** and no `useTheme()` branching in components — the cascade does the work.
+- It's the cleanest extension of the file's existing `.theme-light` override approach.
+
+**Gotcha discovered (load-bearing — don't repeat the debug).** Tailwind v4 `@theme` here generates `text-text-*` color utilities, but `.theme-light .text-text-faint`-style override *rules* get stripped/ineffective via Lightning CSS, AND the utilities don't reliably pick up the runtime `--color-text-*` var override. The author had already worked around this for `text-text-primary`; this pass extended the same `.theme-light .text-text-{secondary,muted,dim,faint}` overrides. Separately: the **preview MCP's `getComputedStyle` returns stale color reads** — verify CSS/contrast changes with screenshots, not computed-style scans (cost a large token detour this session; logged to memory).
+
+**Rejected.** (1) Per-component `useTheme()` color switching — more code, more risk. (2) Blanket `.theme-light` utility overrides only — doesn't reach inline-styled accents. (3) Editing dark-theme hexes directly — would have regressed the default theme.
+
 ## 2026-06-17 — iOS Steam OpenID realm hosted on inventoryfull.gg
 
 **Decision.** Added a passthrough route at `/steam-return` ([app/steam-return/route.ts](../app/steam-return/route.ts)) that 302-redirects Steam's OpenID return into the iOS app's custom scheme (`inventoryfull://steam-callback?<openid params>`), so the iOS app can set its OpenID realm/`return_to` to `inventoryfull.gg` instead of the Supabase Edge Function (`xafdnhsuiygbsfuqtdav.supabase.co`). The Supabase function stays in place as a fallback.

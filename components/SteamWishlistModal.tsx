@@ -355,7 +355,7 @@ export default function SteamWishlistModal({ open, onClose }: SteamWishlistModal
               ))}
             </div>
 
-            <div className="px-5 py-3 border-t flex gap-2" style={{ borderColor: 'var(--color-border-subtle)' }}>
+            <div className="px-5 py-3 border-t flex gap-2" style={{ borderColor: 'var(--color-border-subtle)', paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
               <button
                 onClick={() => { setStep('input'); setGames([]); setProfile(null); }}
                 className="flex-1 px-3 py-2.5 text-sm text-text-dim rounded-xl border border-border-subtle hover:text-text-muted transition-colors"

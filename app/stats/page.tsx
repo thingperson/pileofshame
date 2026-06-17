@@ -75,7 +75,7 @@ function StatsContent() {
         {/* Hero */}
         {clearedCount > 0 && (
           <section className="mb-6 rounded-xl border p-6 text-center" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border-subtle)' }}>
-            <p className="text-6xl font-black tabular-nums" style={{ color: '#22c55e' }}>
+            <p className="text-6xl font-black tabular-nums" style={{ color: 'var(--stat-green, #22c55e)' }}>
               {clearedCount}
             </p>
             <p className="text-sm font-semibold text-text-dim mt-1">

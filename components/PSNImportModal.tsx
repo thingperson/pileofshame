@@ -212,7 +212,7 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
                         navigator.clipboard.writeText('https://ca.account.sony.com/api/v1/ssocookie');
                         showToast('URL copied!');
                       }}
-                      className="px-2 py-1.5 text-xs text-text-dim hover:text-accent-purple rounded border border-border-subtle transition-colors shrink-0"
+                      className="px-3 py-2.5 text-xs text-text-dim hover:text-accent-purple rounded border border-border-subtle transition-colors shrink-0"
                     >
                       Copy
                     </button>
@@ -266,7 +266,9 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
                 onKeyDown={(e) => e.key === 'Enter' && fetchGames()}
                 placeholder="Paste your NPSSO token here"
                 aria-label="PSN NPSSO token"
-                autoFocus
+                autoComplete="off"
+                autoCapitalize="none"
+                spellCheck={false}
                 className="flex-1 text-sm bg-bg-primary border border-border-subtle rounded-lg px-3 py-2.5 text-text-primary placeholder-text-faint focus:outline-none focus:border-accent-purple font-[family-name:var(--font-mono)]"
               />
               <button
@@ -382,7 +384,7 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
             </div>
 
             {/* Import button */}
-            <div className="px-5 py-3 border-t flex gap-2" style={{ borderColor: 'var(--color-border-subtle)' }}>
+            <div className="px-5 py-3 border-t flex gap-2" style={{ borderColor: 'var(--color-border-subtle)', paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
               <button
                 onClick={() => { setStep('paste'); setGames([]); }}
                 className="flex-1 px-3 py-2.5 text-sm text-text-dim rounded-xl border border-border-subtle hover:text-text-muted transition-colors"

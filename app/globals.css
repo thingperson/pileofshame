@@ -991,10 +991,30 @@ button:active:not(:disabled) {
   --color-text-primary: #1a1a1a !important;
   --color-text-secondary: #2d2d2d !important;
   --color-text-muted: #555555 !important;
-  --color-text-dim: #6b6b6b !important;
-  --color-text-faint: #888888 !important;
+  --color-text-dim: #5c5c5c !important;
+  --color-text-faint: #666666 !important;
   --color-accent-purple: #7c3aed !important;
   --color-accent-pink: #E91E63 !important;
+
+  /* Accent text re-tuned for light backgrounds. Components reference these as
+     var(--stat-*, <dark fallback>) so the default/dark theme keeps its bright
+     hex via the fallback; only light theme picks up these darker, AA-passing
+     shades. Bright dark-theme accents wash out to ~2:1 on pale cards. */
+  --stat-green: #15803d !important;  /* green-700 */
+  --stat-amber: #b45309 !important;  /* amber-700 */
+  --stat-violet: #6d28d9 !important; /* violet-700 */
+  --stat-sky: #0369a1 !important;    /* sky-700 */
+  --stat-slate: #475569 !important;  /* slate-600 */
+  --stat-red: #b91c1c !important;    /* red-700 */
+
+  /* Platform badge text re-tuned for light backgrounds (SOURCE_COLORS) */
+  --src-steam: #1d4ed8 !important;       /* blue-700 */
+  --src-playstation: #0369a1 !important; /* sky-700 */
+  --src-epic: #4b5563 !important;        /* gray-600 */
+  --src-xbox: #15803d !important;        /* green-700 */
+  --src-switch: #b91c1c !important;      /* red-700 */
+  --src-gog: #6d28d9 !important;         /* violet-700 */
+  --src-other: #555555 !important;
 
   --color-status-buried: #6b7280 !important;
   --color-status-buried-bg: #f0ebe6 !important;
@@ -1038,10 +1058,29 @@ button:active:not(:disabled) {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* All text in light mode needs dark colors */
+/* All text in light mode needs dark colors. The text-text-* Tailwind utilities
+   don't reliably pick up the .theme-light var overrides, so pin them here (same
+   pattern as text-primary below). Without this, secondary/muted/dim/faint text
+   renders at its dark-theme slate values (~#8494a6) on light cards — ~2.7:1. */
 .theme-light .text-text-primary,
 .theme-light [class*="text-text-primary"] {
   color: #1a1a1a !important;
+}
+.theme-light .text-text-secondary,
+.theme-light [class*="text-text-secondary"] {
+  color: #2d2d2d !important;
+}
+.theme-light .text-text-muted,
+.theme-light [class*="text-text-muted"] {
+  color: #555555 !important;
+}
+.theme-light .text-text-dim,
+.theme-light [class*="text-text-dim"] {
+  color: #5c5c5c !important;
+}
+.theme-light .text-text-faint,
+.theme-light [class*="text-text-faint"] {
+  color: #666666 !important;
 }
 
 /* Fix select/input/textarea backgrounds */
@@ -1071,9 +1110,18 @@ button:active:not(:disabled) {
   background-color: #EDE8E3 !important;
 }
 
-/* Fix gradient buttons in light mode — keep white text */
-.theme-light button[style*="linear-gradient"] {
+/* Fix gradient buttons in light mode — keep white text on dark/saturated
+   gradients. Opt a button out with .light-gradient-btn when its gradient is
+   pale (e.g. the bg-elevated value calculator), where white text vanishes. */
+.theme-light button[style*="linear-gradient"]:not(.light-gradient-btn) {
   color: white !important;
+}
+
+/* Solid accent-purple CTA buttons set dark inline text (#0a0a0f), which is
+   correct on the light purple of the default theme but fails AA on light
+   theme's darker #7c3aed. Flip to white (5.8:1) in light theme only. */
+.theme-light button[style*="--color-accent-purple"] {
+  color: #fff !important;
 }
 
 /* Fix modals and dropdowns */

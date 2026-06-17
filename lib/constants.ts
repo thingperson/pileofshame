@@ -81,14 +81,16 @@ export const SOURCE_SHORT: Record<GameSource, string> = {
 };
 
 /** Platform badge colors for visual distinction */
+// text uses var(--src-*, <dark fallback>) so the default/dark theme keeps the
+// bright hex; light theme (globals.css .theme-light) supplies AA-passing shades.
 export const SOURCE_COLORS: Record<GameSource, { bg: string; text: string }> = {
-  steam: { bg: 'rgba(66, 133, 244, 0.15)', text: '#6ba4f7' },
-  playstation: { bg: 'rgba(0, 112, 210, 0.15)', text: '#4da3e8' },
-  epic: { bg: 'rgba(255, 255, 255, 0.08)', text: '#999' },
-  xbox: { bg: 'rgba(16, 124, 16, 0.15)', text: '#4ec44e' },
-  switch: { bg: 'rgba(230, 0, 18, 0.12)', text: '#e85555' },
-  gog: { bg: 'rgba(165, 100, 235, 0.15)', text: '#b98ce8' },
-  other: { bg: 'rgba(255, 255, 255, 0.06)', text: '#777' },
+  steam: { bg: 'rgba(66, 133, 244, 0.15)', text: 'var(--src-steam, #6ba4f7)' },
+  playstation: { bg: 'rgba(0, 112, 210, 0.15)', text: 'var(--src-playstation, #4da3e8)' },
+  epic: { bg: 'rgba(255, 255, 255, 0.08)', text: 'var(--src-epic, #999)' },
+  xbox: { bg: 'rgba(16, 124, 16, 0.15)', text: 'var(--src-xbox, #4ec44e)' },
+  switch: { bg: 'rgba(230, 0, 18, 0.12)', text: 'var(--src-switch, #e85555)' },
+  gog: { bg: 'rgba(165, 100, 235, 0.15)', text: 'var(--src-gog, #b98ce8)' },
+  other: { bg: 'rgba(255, 255, 255, 0.06)', text: 'var(--src-other, #777)' },
 };
 
 export const SOURCE_LABELS: Record<GameSource, string> = {

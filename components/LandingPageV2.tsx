@@ -756,7 +756,7 @@ function FooterEmailForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
-      <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@somewhere.com" aria-label="Email address" disabled={status === 'submitting'} className="flex-1 min-w-0 rounded-lg border px-3 py-2 text-xs" style={{ backgroundColor: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.8)' }} />
+      <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@somewhere.com" aria-label="Email address" autoComplete="email" inputMode="email" disabled={status === 'submitting'} className="flex-1 min-w-0 rounded-lg border px-3 py-2 text-xs" style={{ backgroundColor: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.8)' }} />
       <button type="submit" disabled={status === 'submitting'} className="rounded-lg px-4 py-2 text-xs font-bold transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 cursor-pointer" style={{ backgroundColor: C.pink, color: C.white }}>
         {status === 'submitting' ? 'Sending…' : 'Sign me up'}
       </button>

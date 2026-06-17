@@ -410,25 +410,25 @@ export default function StatsPanel({ games }: StatsPanelProps) {
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
               <span className="text-sm">✅</span>
-              <span className="text-sm font-bold font-[family-name:var(--font-mono)]" style={{ color: '#22c55e' }}>{stats.gamesCleared}</span>
+              <span className="text-sm font-bold font-[family-name:var(--font-mono)]" style={{ color: 'var(--stat-green, #22c55e)' }}>{stats.gamesCleared}</span>
               <span className="text-xs text-text-dim hidden sm:inline">cleared</span>
             </div>
             {stats.inMotion > 0 && (
               <div className="flex items-center gap-1.5 shrink-0">
                 <span className="text-sm">🚀</span>
-                <span className="text-sm font-bold font-[family-name:var(--font-mono)]" style={{ color: '#f59e0b' }}>{stats.inMotion}</span>
+                <span className="text-sm font-bold font-[family-name:var(--font-mono)]" style={{ color: 'var(--stat-amber, #f59e0b)' }}>{stats.inMotion}</span>
                 <span className="text-xs text-text-dim hidden sm:inline">in motion</span>
               </div>
             )}
             <div className="flex items-center gap-1.5 shrink-0">
               <span className="text-sm">📚</span>
-              <span className="text-sm font-bold font-[family-name:var(--font-mono)]" style={{ color: '#64748b' }}>{stats.backlogSize}</span>
+              <span className="text-sm font-bold font-[family-name:var(--font-mono)]" style={{ color: 'var(--stat-slate, #64748b)' }}>{stats.backlogSize}</span>
               <span className="text-xs text-text-dim hidden sm:inline">to explore</span>
             </div>
             {stats.totalHours > 0 && (
               <div className="flex items-center gap-1.5 shrink-0 hidden sm:flex">
                 <span className="text-sm">⏱️</span>
-                <span className="text-sm font-bold font-[family-name:var(--font-mono)]" style={{ color: '#38bdf8' }}>{stats.totalHours.toLocaleString(undefined, { maximumFractionDigits: 0 })}h</span>
+                <span className="text-sm font-bold font-[family-name:var(--font-mono)]" style={{ color: 'var(--stat-sky, #38bdf8)' }}>{stats.totalHours.toLocaleString(undefined, { maximumFractionDigits: 0 })}h</span>
               </div>
             )}
             <div className="flex items-center gap-2 shrink-0 hidden sm:flex">
@@ -438,7 +438,7 @@ export default function StatsPanel({ games }: StatsPanelProps) {
                   style={{ width: `${explorationPct}%`, backgroundColor: '#a78bfa' }}
                 />
               </div>
-              <span className="text-xs font-bold font-[family-name:var(--font-mono)]" style={{ color: '#a78bfa' }}>{explorationPct}%</span>
+              <span className="text-xs font-bold font-[family-name:var(--font-mono)]" style={{ color: 'var(--stat-violet, #a78bfa)' }}>{explorationPct}%</span>
             </div>
           </div>
         </div>
@@ -455,14 +455,14 @@ export default function StatsPanel({ games }: StatsPanelProps) {
         >
           {/* Victory Row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
-            <StatCard label="Cleared" value={stats.gamesCleared.toString()} icon="✅" color="#22c55e" />
-            <StatCard label="In Motion" value={stats.inMotion.toString()} icon="🚀" color="#f59e0b" sublabel="on-deck + playing" />
-            <StatCard label="Streak" value={stats.streak.toString()} icon="⚡" color="#a78bfa" sublabel="without bailing" />
+            <StatCard label="Cleared" value={stats.gamesCleared.toString()} icon="✅" color="var(--stat-green, #22c55e)" />
+            <StatCard label="In Motion" value={stats.inMotion.toString()} icon="🚀" color="var(--stat-amber, #f59e0b)" sublabel="on-deck + playing" />
+            <StatCard label="Streak" value={stats.streak.toString()} icon="⚡" color="var(--stat-violet, #a78bfa)" sublabel="without bailing" />
             <StatCard
               label="Hours Logged"
               value={stats.totalHours > 0 ? stats.totalHours.toLocaleString(undefined, { maximumFractionDigits: 0 }) : '-'}
               icon="⏱️"
-              color="#38bdf8"
+              color="var(--stat-sky, #38bdf8)"
               sublabel={stats.totalHours === 0 ? 'via Steam import' : undefined}
             />
           </div>
@@ -474,37 +474,37 @@ export default function StatsPanel({ games }: StatsPanelProps) {
                 label="Trophies"
                 value={stats.totalAchievementsEarned.toLocaleString()}
                 icon="🏆"
-                color="#f59e0b"
+                color="var(--stat-amber, #f59e0b)"
                 sublabel={stats.totalAchievements > 0 ? `of ${stats.totalAchievements.toLocaleString()} total` : undefined}
               />
               {stats.platinumsEarned > 0 && (
-                <StatCard label="Platinums" value={stats.platinumsEarned.toString()} icon="💎" color="#e2e8f0" />
+                <StatCard label="Platinums" value={stats.platinumsEarned.toString()} icon="💎" color="var(--stat-slate, #e2e8f0)" />
               )}
               {stats.perfectGames > 0 && (
-                <StatCard label="100% Complete" value={stats.perfectGames.toString()} icon="⭐" color="#22c55e" />
+                <StatCard label="100% Complete" value={stats.perfectGames.toString()} icon="⭐" color="var(--stat-green, #22c55e)" />
               )}
               {stats.totalGamerscore > 0 && (
-                <StatCard label="Gamerscore" value={stats.totalGamerscore.toLocaleString()} icon="🟢" color="#22c55e" sublabel="Xbox" />
+                <StatCard label="Gamerscore" value={stats.totalGamerscore.toLocaleString()} icon="🟢" color="var(--stat-green, #22c55e)" sublabel="Xbox" />
               )}
             </div>
           )}
 
           {/* Library Row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
-            <StatCard label="To Explore" value={stats.backlogSize.toString()} icon="📚" color="#64748b" />
-            <StatCard label="Lines Drawn" value={stats.bailedCount.toString()} icon="✊" color="#94a3b8" />
+            <StatCard label="To Explore" value={stats.backlogSize.toString()} icon="📚" color="var(--stat-slate, #64748b)" />
+            <StatCard label="Lines Drawn" value={stats.bailedCount.toString()} icon="✊" color="var(--stat-slate, #94a3b8)" />
             {stats.oldest ? (
               <StatCard
                 label="Oldest"
                 value={`${stats.oldest.days}d`}
                 icon="⏳"
-                color="#d97706"
+                color="var(--stat-amber, #d97706)"
                 sublabel={stats.oldest.name.length > 18 ? stats.oldest.name.substring(0, 16) + '...' : stats.oldest.name}
               />
             ) : (
-              <StatCard label="Oldest" value="✓" icon="⏳" color="#22c55e" sublabel="no backlog!" />
+              <StatCard label="Oldest" value="✓" icon="⏳" color="var(--stat-green, #22c55e)" sublabel="no backlog!" />
             )}
-            <StatCard label="Total" value={games.length.toString()} icon="🎮" color="#94a3b8" sublabel="games tracked" />
+            <StatCard label="Total" value={games.length.toString()} icon="🎮" color="var(--stat-slate, #94a3b8)" sublabel="games tracked" />
           </div>
 
           {/* Player Archetype */}

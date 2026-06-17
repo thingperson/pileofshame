@@ -85,7 +85,7 @@ function InlineSearch({ onAddManual }: { onAddManual: () => void }) {
           </div>
           <button
             onMouseDown={(e) => { e.preventDefault(); onAddManual(); }}
-            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-text-dim hover:text-accent-purple hover:bg-glass-subtle transition-all"
+            className="shrink-0 w-11 h-11 flex items-center justify-center rounded-lg text-text-dim hover:text-accent-purple hover:bg-glass-subtle transition-all"
             title="Add a game manually"
             aria-label="Add a game manually"
           >
@@ -541,7 +541,7 @@ function AppContent() {
   if (isVoid) {
     return (
       <div className="relative z-10 w-full max-w-[960px] mx-auto px-4 flex flex-col items-center justify-center" style={{ minHeight: '100dvh' }}>
-        <div className="fixed top-4 right-4 z-50 flex gap-2">
+        <div className="fixed z-50 flex gap-2" style={{ top: 'max(1rem, env(safe-area-inset-top))', right: 'max(1rem, env(safe-area-inset-right))' }}>
           <SettingsMenu />
         </div>
         <div className="flex flex-col items-center gap-8 w-full max-w-md">
@@ -624,6 +624,9 @@ function AppContent() {
     <div className="relative z-10 w-full max-w-[960px] mx-auto px-4 py-6 pb-24">
       {/* ── Header ── */}
       <header className="mb-3 space-y-2">
+        {/* Screen-reader heading: the hub renders its wordmark visually but had
+            no semantic h1, so SR users couldn't navigate by heading (WCAG 2.4.6). */}
+        <h1 className="sr-only">Your game library</h1>
         <div className="flex items-center justify-end">
           <div className="flex items-center gap-1 sm:gap-1.5">
             <div className="hidden sm:contents">

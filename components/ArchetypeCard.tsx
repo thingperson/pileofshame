@@ -56,9 +56,9 @@ export default function ArchetypeCard({
                 backgroundColor: currentArchetype.tone === 'roast' ? 'rgba(239, 68, 68, 0.15)'
                   : currentArchetype.tone === 'respect' ? 'rgba(34, 197, 94, 0.15)'
                   : 'rgba(167, 139, 250, 0.15)',
-                color: currentArchetype.tone === 'roast' ? '#ef4444'
-                  : currentArchetype.tone === 'respect' ? '#22c55e'
-                  : '#a78bfa',
+                color: currentArchetype.tone === 'roast' ? 'var(--stat-red, #ef4444)'
+                  : currentArchetype.tone === 'respect' ? 'var(--stat-green, #22c55e)'
+                  : 'var(--stat-violet, #a78bfa)',
               }}
             >
               {(() => {
@@ -85,7 +85,7 @@ export default function ArchetypeCard({
             style={{
               backgroundColor: 'rgba(167, 139, 250, 0.08)',
               border: '1px solid rgba(167, 139, 250, 0.2)',
-              color: '#a78bfa',
+              color: 'var(--stat-violet, #a78bfa)',
             }}
           >
             🔮 Read me again ({archetypeIndex % archetypesLength + 1}/{archetypesLength})
