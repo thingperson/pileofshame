@@ -187,10 +187,10 @@ If an audited line has changed in code AND there is no corresponding DECISIONS e
 **Method:** `Bash` grep on `lib/store.ts` for `playing` cap logic; if no enforcement found, hard fail.
 
 ### `decision-tagline-canon`
-**Cites:** `.claude/rules/voice-charter.md` — primary tagline is `get playing.` (lowercase, with period). Landing subhead is "Your pile's not gonna play itself." Celebration tagline is "Less shame. More game." Retired: "Stop stalling. Get playing."
-**Surface:** landing (`/`), `/about`, share cards, footers.
-**Check:** primary tagline appears exactly as `get playing.`; landing subhead matches; "Stop stalling" not present anywhere user-facing.
-**Method:** `Bash` grep across `components/`, `app/` for each tagline variant; `vision` confirm on landing.
+**Cites:** `.claude/rules/voice-charter.md` — primary tagline is `get playing.` (lowercase, with period). Landing H1/subhead is "Your backlog isn't the problem. Deciding is." (locked 2026-05-11; supersedes the retired "Your pile's not gonna play itself."). Celebration tagline is "Less shame. More game." Retired: "Stop stalling. Get playing."
+**Surface:** landing (`/`, active component `components/LandingPageV2.tsx`), `/about`, share cards, footers.
+**Check:** primary tagline appears exactly as `get playing.`; landing H1/subhead matches "Your backlog isn't the problem. Deciding is."; neither "Stop stalling" nor "Your pile's not gonna play itself." appears in the active landing surface.
+**Method:** `Bash` grep across `components/`, `app/` for each tagline variant; `vision` confirm on landing. Note: `LandingPageClassic.tsx` (the original landing, which carried the retired subhead) was archived to `notes/_archive/` on 2026-06-08 — it is no longer imported and is excluded from the build.
 
 ### How to add a new `decision-*` assertion
 

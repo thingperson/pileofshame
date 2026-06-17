@@ -99,7 +99,7 @@ export default function PostImportSummary({ breakdown, onDismiss, onPlay }: Post
               </p>
             ) : (
               <p className="text-xs text-text-muted mt-1">
-                All added to your backlog. Hit &ldquo;What Should I Play?&rdquo; when you&apos;re ready.
+                All added to your backlog. Hit &ldquo;Pick My Game&rdquo; when you&apos;re ready.
               </p>
             )}
           </div>

@@ -44,7 +44,7 @@ const SECTIONS = [
       },
       {
         q: '▶️ Playing Now',
-        a: 'You\'re actively playing this one. These games get a special glow so they stand out. You can have multiple games here. We don\'t judge. When "What Should I Play?" picks a game and you hit "Let\'s go," it moves here automatically.',
+        a: 'You\'re actively playing this one. These games get a special glow so they stand out. You can have multiple games here. We don\'t judge. When "Pick My Game" picks a game and you hit "Let\'s go," it moves here automatically.',
       },
       {
         q: '✅ Completed',
@@ -62,11 +62,11 @@ const SECTIONS = [
   },
   {
     id: 'getplaying',
-    title: 'What Should I Play?',
+    title: 'Pick My Game',
     icon: '🎲',
     items: [
       {
-        q: 'What does "What Should I Play?" do?',
+        q: 'What does "Pick My Game" do?',
         a: 'It randomly picks a game from your backlog. Hit "Let\'s go" to commit and start playing, "Roll Again" to try another, or "Not now" to walk away. Simple.',
       },
       {
@@ -113,7 +113,7 @@ const SECTIONS = [
       },
       {
         q: 'What does the platform preference do?',
-        a: 'In settings, set "I play on" to PC, Mac, Console, or Any. This filters what "What Should I Play?" picks. It won\'t suggest a PlayStation game if you set Mac, for example. Doesn\'t hide games from your library, just from the randomizer.',
+        a: 'In settings, set "I play on" to PC, Mac, Console, or Any. This filters what "Pick My Game" picks. It won\'t suggest a PlayStation game if you set Mac, for example. Doesn\'t hide games from your library, just from the randomizer.',
       },
     ],
   },
