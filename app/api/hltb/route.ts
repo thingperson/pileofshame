@@ -3,12 +3,19 @@ import * as Sentry from '@sentry/nextjs';
 import { checkRateLimit, getClientIP } from '@/lib/rateLimit';
 import { fetchWithTimeout } from '@/lib/fetchWithTimeout';
 
-// Direct HLTB integration — April 2026
+// Direct HLTB integration — updated 2026-06-17
 // The howlongtobeat npm packages (both 1.8.0 and howlongtobeat-core 1.1.0)
-// are broken. HLTB moved to /api/find with token auth + honeypot fields.
+// are broken. HLTB uses a token-auth + honeypot search API.
 // This implementation talks to HLTB directly using their current API.
+//
+// IMPORTANT: HLTB rotates/obfuscates the search path to break scrapers.
+// History: /api/find (Apr 2026) → /api/bleed (Jun 2026). When the smoke test
+// (e2e: hltb.spec.ts) goes red, the path has rotated again — re-extract it by
+// loading howlongtobeat.com, searching, and reading the POST path in devtools
+// (it's the sibling of `<path>/init`). Update HLTB_SEARCH_PATH below.
 
 const HLTB_BASE = 'https://howlongtobeat.com';
+const HLTB_SEARCH_PATH = '/api/bleed';
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
 
 // Token cache (5 min TTL)
@@ -23,7 +30,7 @@ async function getToken(): Promise<{ token: string; hpKey: string; hpVal: string
   }
 
   try {
-    const res = await fetchWithTimeout(`${HLTB_BASE}/api/find/init?t=${Date.now()}`, {
+    const res = await fetchWithTimeout(`${HLTB_BASE}${HLTB_SEARCH_PATH}/init?t=${Date.now()}`, {
       headers: { 'User-Agent': UA, 'Referer': HLTB_BASE },
     });
 
@@ -81,7 +88,7 @@ async function searchHltb(title: string): Promise<HltbRawGame[] | null> {
   if (auth.hpKey) body[auth.hpKey] = auth.hpVal;
 
   try {
-    const res = await fetchWithTimeout(`${HLTB_BASE}/api/find`, {
+    const res = await fetchWithTimeout(`${HLTB_BASE}${HLTB_SEARCH_PATH}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -103,7 +110,7 @@ async function searchHltb(title: string): Promise<HltbRawGame[] | null> {
 
       if (freshAuth.hpKey) body[freshAuth.hpKey] = freshAuth.hpVal;
 
-      const retry = await fetchWithTimeout(`${HLTB_BASE}/api/find`, {
+      const retry = await fetchWithTimeout(`${HLTB_BASE}${HLTB_SEARCH_PATH}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
