@@ -18,7 +18,7 @@ export default function PrivacyPage() {
 
         <h1 className="text-3xl font-bold mb-2">Privacy Policy</h1>
         <p className="text-sm text-text-dim font-[family-name:var(--font-mono)] mb-8">
-          Last updated: May 13, 2026
+          Last updated: June 17, 2026
         </p>
 
         <div className="space-y-8 text-text-secondary text-[15px] leading-relaxed">
@@ -47,7 +47,7 @@ export default function PrivacyPage() {
                 <h3 className="text-sm font-semibold text-text-primary mb-1">Behavioral and preference data</h3>
                 <p>
                   To improve your recommendations over time, the app tracks how you interact with its
-                  suggestion engine. This includes which games you skip when asked &ldquo;What Should I Play?&rdquo;,
+                  suggestion engine. This includes which games you skip when you use &ldquo;Pick My Game&rdquo;,
                   how you respond to nudges, and your dismissal preferences. This data is currently stored
                   in your browser&apos;s localStorage and never leaves your device.
                 </p>
@@ -74,10 +74,13 @@ export default function PrivacyPage() {
               <div>
                 <h3 className="text-sm font-semibold text-text-primary mb-1">If you import from Steam</h3>
                 <p>
-                  We use the Steam Web API to fetch your public game list, playtime, and achievement data.
-                  Your Steam ID is sent to our server to make the API call, but we do not store your Steam
-                  credentials. The imported data is stored in your browser&apos;s localStorage (or in your
-                  synced account if you&apos;re signed in).
+                  You can connect with &ldquo;Sign in through Steam,&rdquo; which uses Steam&apos;s own OpenID
+                  sign-in. You authenticate on Steam&apos;s website, not ours &mdash; we never see your Steam
+                  password, and Steam only sends us your public Steam ID. (You can also enter your Steam ID or
+                  profile URL manually instead.) We then use the Steam Web API to fetch your public game list,
+                  playtime, and achievement data. Your Steam ID is sent to our server to make the API call, but
+                  we do not store your Steam credentials. The imported data is stored in your browser&apos;s
+                  localStorage (or in your synced account if you&apos;re signed in).
                 </p>
               </div>
               <div>
@@ -277,7 +280,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-bold text-text-primary mb-3">Personalized recommendations and profiling</h2>
             <p>
-              Our &ldquo;What Should I Play?&rdquo; feature uses algorithmic matching based on your
+              Our &ldquo;Pick My Game&rdquo; feature uses algorithmic matching based on your
               selected mood, available time, game metadata, and your history of past recommendations
               to suggest games from your own library. The engine learns from your skips and choices
               to make better suggestions over time. No AI models are used. No personal data is sent

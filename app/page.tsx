@@ -119,6 +119,7 @@ function AppContent() {
   const [rerollOpen, setRerollOpen] = useState(false);
   const [rerollMode, setRerollMode] = useState<RerollMode | undefined>();
   const [importHubOpen, setImportHubOpen] = useState(false);
+  const [steamReturnId, setSteamReturnId] = useState<string | undefined>(undefined);
   const [gamePassOpen, setGamePassOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>('backlog');
@@ -438,6 +439,22 @@ function AppContent() {
         params.delete('openPicker');
         mutated = true;
       }
+      // Steam OpenID popup-blocked fallback lands here: /?steam_openid=<id>.
+      // Reopen the import hub straight into the Steam importer with the
+      // already-verified SteamID, then strip the flag.
+      const steamOpenId = params.get('steam_openid');
+      if (steamOpenId && /^\d{17}$/.test(steamOpenId)) {
+        setSteamReturnId(steamOpenId);
+        setImportHubOpen(true);
+        params.delete('steam_openid');
+        mutated = true;
+      }
+      if (params.get('steam_openid_error')) {
+        // Sign-in didn't complete — reopen the hub so they can retry.
+        setImportHubOpen(true);
+        params.delete('steam_openid_error');
+        mutated = true;
+      }
       if (mutated) {
         const newSearch = params.toString();
         const newUrl = window.location.pathname + (newSearch ? `?${newSearch}` : '') + window.location.hash;
@@ -493,7 +510,7 @@ function AppContent() {
     }
   }, [activeTab, TAB_ORDER]);
 
-  // After sample data loads, pulse the "What Should I Play?" button to guide the user
+  // After sample data loads, pulse the "Pick My Game" button to guide the user
   useEffect(() => {
     if (pendingSampleReroll && games.length > 0) {
       const t = setTimeout(() => {
@@ -585,7 +602,7 @@ function AppContent() {
             setPendingSampleReroll(true);
           }}
         />
-        <ImportHub open={importHubOpen} onClose={() => setImportHubOpen(false)} />
+        <ImportHub open={importHubOpen} autoSteamId={steamReturnId} onClose={() => { setImportHubOpen(false); setSteamReturnId(undefined); }} />
         <AddGameModal open={addModalOpen} onClose={() => { setAddModalOpen(false); setAddModalInitialName(''); }} initialName={addModalInitialName} />
         <CloudSync />
       </>
@@ -745,7 +762,7 @@ function AppContent() {
             </p>
           ) : null}
           {/* Modes + Sub Shuffle live inside the Reroll modal ("More ways to
-              play" dropdown). Hero "What Should I Play?" is the single entry.
+              play" dropdown). Hero "Pick My Game" is the single entry.
               JustFiveMinutes stays mounted (hidden button) so its ref can be
               called from inside the modal. */}
           <JustFiveMinutes ref={justFiveRef} games={games} hideButton />
@@ -999,7 +1016,7 @@ function AppContent() {
 
       {/* ── Modals ── */}
       <AddGameModal open={addModalOpen} onClose={() => { setAddModalOpen(false); setAddModalInitialName(''); }} initialName={addModalInitialName} />
-      <ImportHub open={importHubOpen} onClose={() => setImportHubOpen(false)} />
+      <ImportHub open={importHubOpen} autoSteamId={steamReturnId} onClose={() => { setImportHubOpen(false); setSteamReturnId(undefined); }} />
       <Reroll open={rerollOpen} onClose={() => { setRerollOpen(false); setRerollMode(undefined); }} initialMode={rerollMode} onJustFiveMinutes={() => { setRerollOpen(false); setRerollMode(undefined); justFiveRef.current?.startSession(); }} onSubShuffle={() => { setRerollOpen(false); setRerollMode(undefined); setGamePassOpen(true); }} onCommit={() => setActiveTab('now-playing')} />
       <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
       <GamePassBrowse open={gamePassOpen} onClose={() => setGamePassOpen(false)} />

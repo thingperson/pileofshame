@@ -10,6 +10,9 @@ import PSNImportModal from './PSNImportModal';
 interface ImportHubProps {
   open: boolean;
   onClose: () => void;
+  // Set when returning from the Steam OpenID full-page redirect fallback —
+  // jump straight into the Steam importer with this verified SteamID64.
+  autoSteamId?: string;
 }
 
 const PLATFORMS = [
@@ -75,14 +78,19 @@ const MANUAL_PLATFORMS = [
   },
 ] as const;
 
-export default function ImportHub({ open, onClose }: ImportHubProps) {
+export default function ImportHub({ open, onClose, autoSteamId }: ImportHubProps) {
   const [activeImport, setActiveImport] = useState<string | null>(null);
+
+  // Returning from the Steam OpenID redirect fallback: skip the platform list.
+  useEffect(() => {
+    if (open && autoSteamId) setActiveImport('steam');
+  }, [open, autoSteamId]);
 
   if (!open) return null;
 
   // If a specific import modal is active, show that instead
   if (activeImport === 'steam') {
-    return <SteamImportModal open={true} onClose={() => { setActiveImport(null); onClose(); }} />;
+    return <SteamImportModal open={true} initialSteamId={autoSteamId} onClose={() => { setActiveImport(null); onClose(); }} />;
   }
   if (activeImport === 'xbox') {
     return <XboxImportModal open={true} onClose={() => { setActiveImport(null); onClose(); }} />;

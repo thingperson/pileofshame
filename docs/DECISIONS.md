@@ -15,6 +15,32 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-06-17 — Steam import: "Sign in through Steam" (OpenID 2.0) as the primary flow
+
+**Decision.** Replace paste-your-SteamID as the *default* Steam import with "Sign in through Steam" using Steam OpenID 2.0 — the standard one-tap Steam auth. The manual paste path (vanity / profile URL / SteamID, via `ResolveVanityURL`) stays as a collapsed fallback. Brings the web in line with the iOS app, which shipped this approach first.
+
+**How it works (so future-us doesn't re-derive it):**
+- Steam offers **only** OpenID 2.0 for third-party sign-in. No OAuth2, no scopes, no access token. You can't read a private library with it — it only proves identity.
+- New route `app/api/steam/openid/route.ts` does double duty on one URL:
+  1. No `openid.*` params → builds the `checkid_setup` redirect to `https://steamcommunity.com/openid/login` (`realm`/`return_to` = our origin, `identity`/`claimed_id` = `identifier_select`).
+  2. `openid.mode=id_res` → re-POSTs every param back with `mode=check_authentication`, requires `is_valid:true`, then extracts the 17-digit SteamID64 from `claimed_id`. **The claimed_id is never trusted until check_authentication passes** — this is the whole security model; skipping it lets anyone forge a SteamID.
+- The Steam **Web API key stays server-side** (`STEAM_API_KEY` in `app/api/steam/route.ts`). OpenID is keyless, so it doesn't touch the key. After verification, the existing `GetOwnedGames` fetch is unchanged.
+- **Return UX = popup + `postMessage`, with a robust full-page-redirect fallback.** The callback page messages the verified SteamID to the opener window and closes. If popups are blocked (detected: `window.open` returns null, or window opens then dies within 1.5s), we fall back to a top-level redirect to `/?steam_openid=<id>` — which `app/page.tsx` parses to reopen the import hub straight into the Steam importer (`ImportHub autoSteamId` → `SteamImportModal initialSteamId`). Top-level navigation is never blocked, so the fallback always works.
+- **Public game-details is still a hard limit.** OpenID identifies the user but grants no access to a private library. Empty/failed fetch routes to a dedicated guidance step with a deep link to Steam privacy settings (`https://steamcommunity.com/my/edit/settings`) and a retry. This constraint is unchanged and unsolvable — it's Steam's, not ours.
+
+**Why popup-first over full-redirect-first.** The popup keeps the SPA and modal state intact (no reload), which is the nicer UX. Full redirect is more robust but reloads the app. We get both: popup as primary, redirect as the auto-fallback only when blocked. (localStorage is authoritative, so even the redirect path loses nothing.)
+
+**Privacy.** No new data category and no new third party — we already stored `linkedSteamId` and called Steam APIs. OpenID only changes *how* we obtain the SteamID (verified sign-in vs. paste), and the user authenticates on Steam's site, so we never see their password. `app/privacy/page.tsx` updated anyway (Steam section + date) to describe the sign-in explicitly, to keep disclosures ahead of behavior.
+
+**Rejected alternatives:**
+- OAuth2 / access tokens — don't exist for Steam. OpenID 2.0 is the only option.
+- Full-page redirect as the *primary* flow — works, but reloads the app on every import. Demoted to fallback-only.
+- Dropping the manual paste path entirely — kept as a fallback for edge cases (popup + redirect both failing, privacy-tooling blocking the handshake, power users who already know their ID).
+
+**Reference:** iOS `InventoryFull/Steam/SteamOpenID.swift` (auth-URL builder + claimed_id→SteamID64 parse) and its `QUESTIONS.md` #5, which flagged that `check_authentication` belongs server-side. On web the realm is a real `https://` origin, so the custom-scheme realm worry from iOS doesn't apply.
+
+---
+
 ## 2026-05-20 — iOS app: native SwiftUI, separate repo, $9.99 one-time
 
 **Decision.** Build a native SwiftUI iOS app in a separate GitHub repo ([inventoryfull-ios](https://github.com/thingperson/inventoryfull-ios)). Full spec at `docs/specs/ios-app-build-brief.md`.
