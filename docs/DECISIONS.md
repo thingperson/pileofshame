@@ -15,6 +15,20 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-06-17 — iOS Steam OpenID realm hosted on inventoryfull.gg
+
+**Decision.** Added a passthrough route at `/steam-return` ([app/steam-return/route.ts](../app/steam-return/route.ts)) that 302-redirects Steam's OpenID return into the iOS app's custom scheme (`inventoryfull://steam-callback?<openid params>`), so the iOS app can set its OpenID realm/`return_to` to `inventoryfull.gg` instead of the Supabase Edge Function (`xafdnhsuiygbsfuqtdav.supabase.co`). The Supabase function stays in place as a fallback.
+
+**Why.**
+- Steam's sign-in consent screen displays the realm domain. A `supabase.co` URL read as untrustworthy to users; `inventoryfull.gg` is the trust win.
+- The route is pure and secret-less — no Steam Web API key, no user data touched. It only forwards the `openid.*` params.
+
+**Implementation.** Hand-built `Response` with `status: 302` + `Location` + `Cache-Control: no-store`, because `NextResponse.redirect()` rejects non-http(s) URLs (custom scheme). Commit `db6cccf`. Verified live on prod. iOS side flips `SteamConfig.returnURL`/`realm` in a one-line change (realm = bare origin `https://inventoryfull.gg`, no path).
+
+**Rejected.** Keeping the Supabase function as the sole realm (untrustworthy consent-screen domain); `NextResponse.redirect()` (rejects the custom scheme).
+
+---
+
 ## 2026-06-17 — Steam import: "Sign in through Steam" (OpenID 2.0) as the primary flow
 
 **Decision.** Replace paste-your-SteamID as the *default* Steam import with "Sign in through Steam" using Steam OpenID 2.0 — the standard one-tap Steam auth. The manual paste path (vanity / profile URL / SteamID, via `ResolveVanityURL`) stays as a collapsed fallback. Brings the web in line with the iOS app, which shipped this approach first.
