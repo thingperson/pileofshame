@@ -20,7 +20,7 @@
 - Just 5 Minutes mode — ultra-short session picker for quick-hit games ✅
 
 ### Import Pipeline
-- Steam library import (API-based) ✅
+- Steam library import (OpenID sign-in + API-based) ✅
 - Steam wishlist import ✅
 - Xbox import (gamertag-based) ✅
 - PlayStation import (PSN ID) ✅
