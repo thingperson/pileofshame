@@ -485,6 +485,41 @@ button:active:not(:disabled) {
   color: #000000 !important;
 }
 
+/* Restore dark text on grey card/elevated panels that AREN'T .group — the
+   /stats StatCards, teaser strip, hero, archetype card, and settings menu use
+   bg-card / bg-elevated (both #c0c0c0 in 90s) but no .group class, so they were
+   inheriting the light #cccccc meant for the navy desktop and washing out.
+   Text directly on the navy bg-primary is untouched and stays light. */
+.theme-90s [style*="bg-card"] .text-text-muted,
+.theme-90s [style*="bg-card"] .text-text-dim,
+.theme-90s [style*="bg-card"] .text-text-faint,
+.theme-90s [style*="bg-elevated"] .text-text-muted,
+.theme-90s [style*="bg-elevated"] .text-text-dim,
+.theme-90s [style*="bg-elevated"] .text-text-faint,
+.theme-90s .bg-bg-card .text-text-muted,
+.theme-90s .bg-bg-card .text-text-dim,
+.theme-90s .bg-bg-card .text-text-faint,
+.theme-90s .bg-bg-elevated .text-text-muted,
+.theme-90s .bg-bg-elevated .text-text-dim,
+.theme-90s .bg-bg-elevated .text-text-faint,
+.theme-90s .z-40 .text-text-muted,
+.theme-90s .z-40 .text-text-dim,
+.theme-90s .z-40 .text-text-faint {
+  color: #3a3a3a !important;
+}
+.theme-90s [style*="bg-card"] .text-text-primary,
+.theme-90s [style*="bg-card"] .text-text-secondary,
+.theme-90s [style*="bg-elevated"] .text-text-primary,
+.theme-90s [style*="bg-elevated"] .text-text-secondary,
+.theme-90s .bg-bg-card .text-text-primary,
+.theme-90s .bg-bg-card .text-text-secondary,
+.theme-90s .bg-bg-elevated .text-text-primary,
+.theme-90s .bg-bg-elevated .text-text-secondary,
+.theme-90s .z-40 .text-text-primary,
+.theme-90s .z-40 .text-text-secondary {
+  color: #000000 !important;
+}
+
 /* 90s marquee bar */
 .nineties-marquee {
   background: #000000;
