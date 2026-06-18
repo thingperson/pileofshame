@@ -309,6 +309,23 @@ button:active:not(:disabled) {
   --color-status-bailed: #a00000;
   --color-status-bailed-bg: #ffcccc;
 
+  /* Accent vars (post-commit 3967043). 90s cards are mid-grey (#c0c0c0), so the
+     bright dark-theme fallbacks wash out (~1.1-2.6:1). Dark, saturated values
+     matching the existing 90s status palette — all clear 4.5:1 on grey. */
+  --stat-green: #006400 !important;
+  --stat-amber: #8b4500 !important;
+  --stat-sky: #00477a !important;
+  --stat-violet: #551a8b !important;
+  --stat-slate: #404040 !important;
+  --stat-red: #a00000 !important;
+  --src-steam: #1a3a8a !important;
+  --src-playstation: #00477a !important;
+  --src-xbox: #006400 !important;
+  --src-switch: #a00000 !important;
+  --src-gog: #551a8b !important;
+  --src-epic: #404040 !important;
+  --src-other: #404040 !important;
+
   font-family: "Comic Sans MS", "Comic Sans", "Chalkboard SE", cursive !important;
   background-color: #000080 !important;
   background-image:
@@ -1996,6 +2013,23 @@ body.theme-cozy::before {
   --color-status-played-bg: #E4EDDC !important;
   --color-status-bailed: #7A6B58 !important;
   --color-status-bailed-bg: #F2E8D8 !important;
+
+  /* Accent vars (post-commit 3967043). Cozy's cards are pale cream, so the
+     bright dark-theme fallbacks wash out (~2:1). Clone light theme's -700
+     shades — all clear 4.5:1 on the cream surfaces. */
+  --stat-green: #15803d !important;
+  --stat-amber: #b45309 !important;
+  --stat-violet: #6d28d9 !important;
+  --stat-sky: #0369a1 !important;
+  --stat-slate: #475569 !important;
+  --stat-red: #b91c1c !important;
+  --src-steam: #1d4ed8 !important;
+  --src-playstation: #0369a1 !important;
+  --src-epic: #4b5563 !important;
+  --src-xbox: #15803d !important;
+  --src-switch: #b91c1c !important;
+  --src-gog: #6d28d9 !important;
+  --src-other: #555555 !important;
 }
 
 /* Cozy: hero CTA — fawn to terracotta */
