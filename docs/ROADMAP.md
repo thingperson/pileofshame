@@ -252,7 +252,7 @@ Pixel sprite system replacing emoji as primary brand iconography.
 - See: `docs/IDEAS.md` UX Feedback section for full detail
 
 ### Accessibility Hardening — SHIPPED ✅
-- Light-theme WCAG AA pass (Jun 17): accent colors → `var(--stat-*/--src-*, fallback)` system, stats page 0 contrast failures, library-worth button 1.2:1→5.84:1, muted-text token overrides; + mobile safe-area insets, 44px touch targets, hub sr-only h1 ✅
+- Light-theme WCAG AA pass (Jun 17–18): accent colors → `var(--stat-*/--src-*, fallback)` system, stats page 0 contrast failures, library-worth button 1.2:1→5.84:1, muted-text token overrides; + mobile safe-area insets, 44px touch targets, hub sr-only h1; + Cozy/90s theme contrast (90s card-surface text restore; hub-chrome remainder deferred) ✅
 - Cozy theme text-faint/dim contrast fixed ✅
 - Minimal theme opacity bumped ✅
 - Reroll modal close button with aria-label ✅
