@@ -26,7 +26,6 @@ import JustFiveMinutes, { JustFiveMinutesHandle } from '@/components/JustFiveMin
 import NinetiesMode from '@/components/NinetiesMode';
 import SyncNudge from '@/components/SyncNudge';
 import { useAutoEnrich } from '@/hooks/useAutoEnrich';
-import OnboardingWelcome from '@/components/OnboardingWelcome';
 import LandingPage from '@/components/LandingPageV2';
 import { SAMPLE_GAMES } from '@/lib/sampleLibrary';
 import PostImportSummary from '@/components/PostImportSummary';

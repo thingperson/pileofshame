@@ -75,7 +75,6 @@ export default function CloudSync() {
     };
 
     loadCloud();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSignedIn, user, hasLoaded, importState, showToast]);
 
   // Clear local user tracking on sign-out
