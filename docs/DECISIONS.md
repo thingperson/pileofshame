@@ -15,6 +15,23 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-06-30 — GA4 tag not firing: Next.js Script component vs DOM injection
+
+**Decision.** `CookieBanner.tsx` now injects the gtag.js script via `document.createElement('script')` in a `useEffect` rather than Next.js `<Script strategy="afterInteractive">`.
+
+**Why.**
+- Next.js `<Script strategy="afterInteractive">` is processed during the initial server render pass and injected at page load time. When the component is conditionally rendered *after* hydration (i.e., consent state changes from null → accepted mid-session), Next.js has already finished that pass and the script tag never makes it into the DOM.
+- Symptom: GA4 DebugView showed zero events even after cookie consent was accepted in an incognito window. Tag verifier also reported "data collection isn't active."
+- Direct DOM injection via `useEffect` works at any point in the component lifecycle and is not subject to the initial-render constraint.
+
+**Implementation.** `components/CookieBanner.tsx` — removed `import Script from 'next/script'` and the `{consent === 'accepted' && <Script ... />}` JSX block; replaced with a `useEffect([consent])` that appends a `<script>` tag to `document.head`. Guard: `document.querySelector(\`script[src*="${GA_ID}"]\`)` prevents double-injection on re-renders. Commit `1b40dfe`.
+
+**Rejected.** GA4 Consent Mode v2 (load gtag.js unconditionally, use `gtag('consent', 'default', { analytics_storage: 'denied' })` + `gtag('consent', 'update', ...)` on accept). Correct long-term approach and eliminates the "data collection isn't active" false-positive from GA4's own tag verifier. Deferred — requires layout.tsx changes and is a larger surface area than the immediate bug warranted.
+
+**Drift risk.** If another `<Script>` component needs to be consent-gated in the future, do NOT use the conditional-render pattern — use a `useEffect` with DOM injection instead.
+
+---
+
 ## 2026-06-29 — Play→Resume label: simplified version shipped, full platform matrix deferred
 
 **Decision.** The launch button now shows "Resume on [Platform]" when `hoursPlayed > 0`, "Launch in [Platform]" otherwise. The original modal-redesign-spec.md Item 2 called for a full platform×device matrix with new `Game` type fields (`psnTitleId`, `epicAppId`, `gogAppId`, etc.) and ~340 LOC of dispatch logic in `lib/launch.ts`.
