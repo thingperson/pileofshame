@@ -30,6 +30,17 @@ If DebugView still shows nothing: something else is blocking — check browser c
 
 ---
 
+## Next session: Sentry triage
+
+Check Sentry (org `inventory-full`, project `javascript-nextjs`) for any active issues. Goal: distinguish real errors from noise. Look at:
+- Issue count, frequency, and which users/sessions are affected
+- Whether errors are new (post-launch) or pre-existing
+- Any spikes that correlate with the share card or GA4 changes from this sprint
+
+No fix required — just triage and bring findings into the session so we know what's actually breaking for real users.
+
+---
+
 ## Open from prior session (unchanged)
 
 - **Flavor text consistency**: game clears lock flavor text (no reroll); stats share has a reroll button. Pick one approach.
