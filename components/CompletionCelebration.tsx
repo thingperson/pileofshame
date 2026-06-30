@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { Game } from '@/lib/types';
+import LineIcon from './LineIcon';
 import { useStore } from '@/lib/store';
 import { useScrollLock } from '@/lib/useScrollLock';
 import { useToast } from './Toast';
@@ -443,7 +444,7 @@ function GameClearShare({
                 color: '#5865f2',
               }}
             >
-              📋 Copy link
+              <LineIcon name="copy" size={13} className="shrink-0" />Copy link
             </button>
             <button
               onClick={() => {

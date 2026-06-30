@@ -8,6 +8,7 @@ import { REROLL_MESSAGES, TIME_TIER_CONFIG, MAX_PLAYING_NOW } from '@/lib/consta
 import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
 import { hasSprite } from '@/lib/pixel/sprites';
 import PixelSprite from './PixelSprite';
+import LineIcon from './LineIcon';
 import { getGameDescriptor } from '@/lib/descriptors';
 import { REROLL_MODES, RerollMode, SessionLength, getDefaultSessionLength, getEligibleGames, pickWeighted, pickSmartResume, getPickReasons } from '@/lib/reroll';
 import { SMART_PICK_LABELS, renderSmartPickHeadline, SmartPickType } from '@/lib/smartPickCopy';
@@ -660,7 +661,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                   className="inline-flex items-center gap-1.5 text-xs font-[family-name:var(--font-mono)] text-text-faint hover:text-text-muted transition-colors"
                   aria-expanded={showRollSettings}
                 >
-                  <span>⚙ {showRollSettings ? 'Hide' : 'Change'} roll settings</span>
+                  <LineIcon name="settings" size={12} /><span>{showRollSettings ? 'Hide' : 'Change'} roll settings</span>
                   <span className="text-text-dim">{showRollSettings ? '▴' : '▾'}</span>
                 </button>
               ) : (
@@ -1028,7 +1029,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                     className="inline-block w-full px-5 py-3 text-sm font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] mb-3"
                     style={{ backgroundColor: 'var(--color-accent-purple)', color: '#0a0a0f' }}
                   >
-                    🎮 Open in Steam
+                    <LineIcon name="controller" size={14} className="inline shrink-0 mr-1.5" />Open in Steam
                   </a>
                 )}
                 {encourage && (

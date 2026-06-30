@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { PlayerArchetype } from '@/lib/archetypes';
 import { trackShareStatsCard } from '@/lib/analytics';
+import LineIcon from './LineIcon';
 
 interface ShareToggle {
   key: string;
@@ -319,7 +320,7 @@ export default function StatsShareComposer({
               {shareUrl}
             </span>
             <span className="text-xs font-semibold shrink-0" style={{ color: '#22c55e' }}>
-              📋 Copy
+              <LineIcon name="copy" size={13} className="shrink-0" />Copy
             </span>
           </button>
 

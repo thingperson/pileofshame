@@ -1,6 +1,7 @@
 import { PlayerArchetype } from '@/lib/archetypes';
 import { plural } from '@/lib/statsHelpers';
 import StatsShareComposer from './StatsShareComposer';
+import LineIcon from './LineIcon';
 
 interface ValueCalculatorProps {
   calculating: boolean;
@@ -190,8 +191,8 @@ export default function ValueCalculator({
 
           {/* Enrichment status */}
           {enriching && (
-            <div className="mt-2 text-xs text-accent-purple font-[family-name:var(--font-mono)] animate-pulse">
-              🔄 Fetching more data... estimates updating live
+            <div className="mt-2 text-xs text-accent-purple font-[family-name:var(--font-mono)] animate-pulse flex items-center gap-1.5">
+              <LineIcon name="rotate" size={12} className="shrink-0" />Fetching more data... estimates updating live
             </div>
           )}
         </div>
@@ -208,7 +209,7 @@ export default function ValueCalculator({
             color: 'var(--stat-violet, #a78bfa)',
           }}
         >
-          🔄 Refine estimate ({priceConfidence.known}/{priceConfidence.total} games priced)
+          <LineIcon name="rotate" size={12} className="inline shrink-0 mr-1" />Refine estimate ({priceConfidence.known}/{priceConfidence.total} games priced)
         </button>
       )}
 

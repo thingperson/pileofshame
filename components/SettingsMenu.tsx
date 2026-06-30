@@ -8,6 +8,7 @@ import { enrichBatch } from '@/lib/enrichGame';
 import { trackThemeSession } from '@/lib/archetypes';
 import { useToast } from './Toast';
 import AuthButton from './AuthButton';
+import LineIcon from './LineIcon';
 
 // Capture the browser's install prompt event globally
 let deferredInstallPrompt: Event & { prompt?: () => Promise<void>; userChoice?: Promise<{ outcome: string }> } | null = null;
@@ -307,7 +308,7 @@ export default function SettingsMenu({ onOpenImport, onOpenSearch }: SettingsMen
                       onClick={() => setOpen(false)}
                       className="w-full block text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors flex items-center gap-2"
                     >
-                      <span>📊</span> Stats
+                      <LineIcon name="stats" size={14} /> Stats
                     </a>
                     <div className="px-3 py-1">
                       <AuthButton />
@@ -518,7 +519,7 @@ export default function SettingsMenu({ onOpenImport, onOpenSearch }: SettingsMen
                       aria-expanded={openSection === 'library'}
                       className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-text-secondary rounded-lg hover:bg-bg-card transition-colors"
                     >
-                      <span>📚 Library tools</span>
+                      <span className="flex items-center gap-1.5"><LineIcon name="book" size={14} />Library tools</span>
                       <span className="text-text-dim text-xs">{openSection === 'library' ? '▴' : '▾'}</span>
                     </button>
                     {openSection === 'library' && (
@@ -580,7 +581,7 @@ export default function SettingsMenu({ onOpenImport, onOpenSearch }: SettingsMen
                         onClick={handleImportClick}
                         className="w-full text-left px-3 py-2 text-sm text-text-secondary rounded-lg hover:bg-bg-card transition-colors"
                       >
-                        🔄 Restore Backup
+                        <LineIcon name="rotate" size={13} className="inline shrink-0 mr-1" />Restore Backup
                       </button>
                     </div>
                   )}
