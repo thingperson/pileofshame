@@ -7,6 +7,7 @@ import { Game, GameStatus, LibraryState, FilterState, PlatformPreference } from 
 import { DEFAULT_CATEGORIES, STATUS_CYCLE } from './constants';
 import { SEED_GAMES } from './seedData';
 import { recordCompletion } from './genreCooldown';
+import { recordStatusEvent } from './statusEvents';
 import { inferMoodTags } from './enrichment';
 
 interface StoreActions {
@@ -140,6 +141,15 @@ export const useStore = create<LibraryState & StoreActions>()(
           }
         }
 
+        // Catch-all: updateGame is also a status path (e.g. direct edits).
+        // Log it so the status-event log can't silently miss transitions.
+        if (updates.status !== undefined) {
+          const game = state.games.find((g) => g.id === id);
+          if (game && game.status !== updates.status) {
+            recordStatusEvent(game.id, game.status, updates.status, now);
+          }
+        }
+
         set({
           games: state.games.map((g) =>
             g.id === id ? { ...g, ...updates, updatedAt: now } : g
@@ -192,6 +202,8 @@ export const useStore = create<LibraryState & StoreActions>()(
           lastSaved: now,
         });
 
+        recordStatusEvent(game.id, game.status, nextStatus, now);
+
         // Record genre cooldown when a game is completed (not bailed)
         if (nextStatus === 'played' && game.genres && game.genres.length > 0) {
           recordCompletion(game.id, game.genres);
@@ -202,6 +214,7 @@ export const useStore = create<LibraryState & StoreActions>()(
 
       setBailed: (id) => {
         const now = new Date().toISOString();
+        const game = get().games.find((g) => g.id === id);
         set((state) => ({
           games: state.games.map((g) =>
             g.id === id && g.status !== 'played'
@@ -210,10 +223,14 @@ export const useStore = create<LibraryState & StoreActions>()(
           ),
           lastSaved: now,
         }));
+        if (game && game.status !== 'played') {
+          recordStatusEvent(game.id, game.status, 'bailed', now);
+        }
       },
 
       unBail: (id) => {
         const now = new Date().toISOString();
+        const game = get().games.find((g) => g.id === id);
         set((state) => ({
           games: state.games.map((g) =>
             g.id === id && g.status === 'bailed'
@@ -222,10 +239,14 @@ export const useStore = create<LibraryState & StoreActions>()(
           ),
           lastSaved: now,
         }));
+        if (game && game.status === 'bailed') {
+          recordStatusEvent(game.id, 'bailed', 'buried', now);
+        }
       },
 
       shelveGame: (id) => {
         const now = new Date().toISOString();
+        const game = get().games.find((g) => g.id === id);
         set((state) => ({
           games: state.games.map((g) =>
             g.id === id && (g.status === 'playing' || g.status === 'on-deck')
@@ -234,10 +255,14 @@ export const useStore = create<LibraryState & StoreActions>()(
           ),
           lastSaved: now,
         }));
+        if (game && (game.status === 'playing' || game.status === 'on-deck')) {
+          recordStatusEvent(game.id, game.status, 'buried', now);
+        }
       },
 
       playAgain: (id) => {
         const now = new Date().toISOString();
+        const game = get().games.find((g) => g.id === id);
         set((state) => ({
           games: state.games.map((g) =>
             g.id === id && g.status === 'played'
@@ -246,10 +271,14 @@ export const useStore = create<LibraryState & StoreActions>()(
           ),
           lastSaved: now,
         }));
+        if (game && game.status === 'played') {
+          recordStatusEvent(game.id, 'played', 'playing', now);
+        }
       },
 
       newGamePlus: (id) => {
         const now = new Date().toISOString();
+        const game = get().games.find((g) => g.id === id);
         set((state) => ({
           games: state.games.map((g) =>
             g.id === id && g.status === 'played'
@@ -263,6 +292,9 @@ export const useStore = create<LibraryState & StoreActions>()(
           ),
           lastSaved: now,
         }));
+        if (game && game.status === 'played') {
+          recordStatusEvent(game.id, 'played', 'on-deck', now);
+        }
       },
 
       // Filters

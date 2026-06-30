@@ -2,13 +2,18 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 
+// NOTE: every import lands in Backlog ('buried') — we NEVER auto-assign status
+// from playtime/achievements (see lib/smartSort.ts + the "user agency is sacred"
+// rule). These counts are display-only reads of CURRENT status. For a fresh
+// import, upNext/nowPlaying/completed are always 0 — they only show non-zero for
+// a returning/synced user whose own prior statuses came back with their library.
 interface ImportBreakdown {
   total: number;
-  backlog: number;    // 0 hours, pure backlog
-  started: number;    // 1+ hours, still backlog but flagged
-  upNext: number;     // 5+ hours, auto-moved to Up Next
-  nowPlaying: number; // auto-moved to Playing Now
-  completed: number;  // hours >= HLTB threshold, auto-completed
+  backlog: number;    // in Backlog, no playtime logged
+  started: number;    // in Backlog, but has playtime — already touched
+  upNext: number;     // already in Up Next (user's own prior status)
+  nowPlaying: number; // already in Playing Now (user's own prior status)
+  completed: number;  // already Completed (user's own prior status)
 }
 
 interface PostImportSummaryProps {
@@ -51,7 +56,7 @@ export default function PostImportSummary({ breakdown, onDismiss, onPlay }: Post
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [handleDismiss]);
 
-  const hasSmartSorting = breakdown.started > 0 || breakdown.upNext > 0 || breakdown.nowPlaying > 0 || breakdown.completed > 0;
+  const hasActivity = breakdown.started > 0 || breakdown.upNext > 0 || breakdown.nowPlaying > 0 || breakdown.completed > 0;
   const realBacklog = breakdown.backlog;
 
   return (
@@ -90,11 +95,11 @@ export default function PostImportSummary({ breakdown, onDismiss, onPlay }: Post
             <p className="text-xl font-bold text-text-primary">
               {breakdown.total} games imported
             </p>
-            {hasSmartSorting ? (
+            {hasActivity ? (
               <p className="text-xs text-text-muted mt-1 leading-relaxed max-w-sm mx-auto">
-                We looked at your playtime and sorted them for you.
+                Everything&apos;s in your backlog. We didn&apos;t decide anything for you.
                 {breakdown.total !== realBacklog && (
-                  <> Your actual backlog is <span className="text-accent-purple font-semibold">{realBacklog}</span> games, not {breakdown.total}.</>
+                  <> You&apos;ve already put time into some, so your untouched backlog is <span className="text-accent-purple font-semibold">{realBacklog}</span>, not {breakdown.total}.</>
                 )}
               </p>
             ) : (
@@ -104,7 +109,7 @@ export default function PostImportSummary({ breakdown, onDismiss, onPlay }: Post
             )}
           </div>
 
-          {hasSmartSorting && (
+          {hasActivity && (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <SummaryStat label="Backlog" count={realBacklog} icon="📚" color="#64748b" />
               {breakdown.started > 0 && (
@@ -120,12 +125,6 @@ export default function PostImportSummary({ breakdown, onDismiss, onPlay }: Post
                 <SummaryStat label="Completed" count={breakdown.completed} icon="✅" color="#22c55e" sub="already behind you" />
               )}
             </div>
-          )}
-
-          {breakdown.completed > 0 && (
-            <p className="text-xs text-text-faint text-center font-[family-name:var(--font-mono)]">
-              We guessed {breakdown.completed} game{breakdown.completed !== 1 ? 's are' : ' is'} already beaten based on your playtime. Wrong? Move them back anytime.
-            </p>
           )}
 
           <div className="space-y-2">
