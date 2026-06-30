@@ -17,6 +17,7 @@ import { getDecisionStats, clearDecisionHistory } from '@/lib/decisionHistory';
 import StatCard from './StatCard';
 import ArchetypeCard from './ArchetypeCard';
 import ValueCalculator from './ValueCalculator';
+import StatsShareComposer from './StatsShareComposer';
 
 interface StatsPanelProps {
   games: Game[];
@@ -534,6 +535,21 @@ export default function StatsPanel({ games }: StatsPanelProps) {
             handleCalculate={handleCalculate}
             handleRecalculate={handleRecalculate}
           />
+
+          {/* Stats share card — only available once an archetype is computed */}
+          {currentArchetype && (
+            <StatsShareComposer
+              stats={stats}
+              totalGames={totalGames}
+              explorationPct={explorationPct}
+              currentArchetype={currentArchetype}
+              unplayedValue={unplayedValue}
+              playedValue={playedValue}
+              backlogHours={backlogHours}
+              calculated={calculated}
+              showToast={showToast}
+            />
+          )}
 
           {/* Decision Engine Stats */}
           <DecisionEngineSection showToast={showToast} />

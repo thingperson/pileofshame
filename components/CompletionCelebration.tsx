@@ -261,6 +261,21 @@ function pickDoneFlavor(ctx: FlavorContext): string {
   return eligible[Math.floor(Math.random() * eligible.length)];
 }
 
+function findSimilar(target: Game, all: Game[], limit: number): Game[] {
+  const targetGenres = new Set(target.genres ?? []);
+  if (targetGenres.size === 0) return [];
+  return all
+    .filter((g) => (g.status === 'buried' || g.status === 'on-deck') && g.id !== target.id)
+    .map((g) => ({
+      game: g,
+      overlap: (g.genres ?? []).filter((genre) => targetGenres.has(genre)).length,
+    }))
+    .filter(({ overlap }) => overlap > 0)
+    .sort((a, b) => b.overlap - a.overlap)
+    .slice(0, limit)
+    .map(({ game }) => game);
+}
+
 function ShareThisClear(props: {
   game: Game;
   gamesCleared: number;
@@ -298,8 +313,9 @@ function GameClearShare({
   hoursOnGame: number;
   showToast: (msg: string) => void;
 }) {
-  const [creating, setCreating] = useState(false);
+  const [creating, setCreating] = useState(true);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [failed, setFailed] = useState(false);
 
   const timeInPileDays = useMemo(() => {
     if (!game.addedAt) return null;
@@ -342,8 +358,9 @@ function GameClearShare({
     return diff > 0 ? diff : null;
   }, [game.hltbMain, hoursOnGame]);
 
-  const handleCreateCard = async () => {
+  const handleCreateCard = useCallback(async () => {
     setCreating(true);
+    setFailed(false);
     try {
       const res = await fetch('/api/share', {
         method: 'POST',
@@ -370,15 +387,21 @@ function GameClearShare({
       if (data.url) {
         setShareUrl(data.url);
         trackShareClear('card_created', game.name);
-        // Funnel: share card successfully generated
         trackShareCardCreated(game.name);
+      } else {
+        setFailed(true);
       }
     } catch {
-      showToast('Could not create share card. Try copying instead.');
+      setFailed(true);
     } finally {
       setCreating(false);
     }
-  };
+  }, [game.name, game.coverUrl, game.hltbMain, hoursOnGame, timeInPileDays, gamesCleared, backlogSize, gamePrice, hltbFasterHours, flavorText, showToast]);
+
+  useEffect(() => {
+    handleCreateCard();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleCopyLink = () => {
     if (shareUrl) {
@@ -396,10 +419,6 @@ function GameClearShare({
         border: '1px solid rgba(167, 139, 250, 0.2)',
       }}
     >
-      <p className="text-xs text-text-faint font-[family-name:var(--font-mono)]">
-        Creates a link that unfurls with a card when pasted.
-      </p>
-
       {/* Flavor preview — auto-picked, no reroll. The card is what it is. */}
       <div
         className="rounded-lg p-2.5 text-sm text-text-muted italic leading-relaxed"
@@ -408,20 +427,21 @@ function GameClearShare({
         {flavorText}
       </div>
 
-      {/* Action buttons */}
+      {/* Auto-created share URL — no manual create step */}
       {!shareUrl ? (
-        <button
-          onClick={handleCreateCard}
-          disabled={creating}
-          className="w-full px-4 py-2.5 rounded-lg text-sm font-bold font-[family-name:var(--font-mono)] transition-all hover:scale-[1.01] active:scale-[0.98] disabled:opacity-50"
-          style={{
-            backgroundColor: 'rgba(167, 139, 250, 0.15)',
-            border: '1px solid rgba(167, 139, 250, 0.3)',
-            color: '#a78bfa',
-          }}
-        >
-          {creating ? 'Creating...' : '🔗 Create share link'}
-        </button>
+        <div className="flex items-center justify-center gap-2 py-1">
+          {creating && (
+            <span className="text-xs text-text-faint font-[family-name:var(--font-mono)]">Making your card...</span>
+          )}
+          {failed && (
+            <button
+              onClick={handleCreateCard}
+              className="text-xs text-accent-purple underline font-[family-name:var(--font-mono)] hover:opacity-80"
+            >
+              Retry
+            </button>
+          )}
+        </div>
       ) : (
         <div className="space-y-2">
           {/* Generated URL */}
@@ -756,9 +776,51 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
                 )}
               </div>
 
-              {/* Share this clear — opt-in. Composer only mounts after the
-                  user asks for it, so the celebration doesn't double as a
-                  share-prompt by default. */}
+              {/* From your shelf — similar unplayed games by genre */}
+              {game.genres && game.genres.length > 0 && (() => {
+                const similar = findSimilar(game, games, 3);
+                if (similar.length === 0) return null;
+                return (
+                  <div className="mb-5 text-left">
+                    <p className="text-xs text-text-faint font-[family-name:var(--font-mono)] mb-2.5">
+                      From your shelf
+                    </p>
+                    <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+                      {similar.map((g) => (
+                        <button
+                          key={g.id}
+                          onClick={() => {
+                            updateGame(g.id, { status: 'on-deck' });
+                            showToast(`${g.name} → Up Next 🎯 Nice. You just committed.`);
+                          }}
+                          className="flex flex-col items-center gap-1 shrink-0 p-2 rounded-lg transition-all hover:bg-glass-subtle active:scale-[0.97]"
+                          title={`Add ${g.name} to Up Next`}
+                        >
+                          {g.coverUrl ? (
+                            <img
+                              src={g.coverUrl}
+                              alt={g.name}
+                              className="w-14 h-14 rounded object-cover"
+                            />
+                          ) : (
+                            <div
+                              className="w-14 h-14 rounded flex items-center justify-center text-lg"
+                              style={{ backgroundColor: 'var(--color-glass-subtle)' }}
+                            >
+                              🎮
+                            </div>
+                          )}
+                          <span className="text-[10px] text-text-muted font-[family-name:var(--font-mono)] max-w-[60px] truncate">
+                            {g.name}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Share this clear — opens pre-created card instantly */}
               <ShareThisClear
                 game={game}
                 gamesCleared={gamesCleared}

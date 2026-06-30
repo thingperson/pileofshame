@@ -6,6 +6,8 @@ export type DeviceType = 'desktop' | 'ios' | 'android';
 export interface LaunchTarget {
   url: string;
   label: string;
+  /** Same as label but for games already started (e.g. "Resume on Steam") */
+  resumeLabel: string;
   /** Tooltip explaining behavior (e.g. "Opens in Steam (or Steam Link on mobile)") */
   title: string;
 }
@@ -38,6 +40,7 @@ export function getLaunchTarget(game: Game, device?: DeviceType): LaunchTarget |
     return {
       url: `steam://rungameid/${game.steamAppId}`,
       label: `Launch in ${label}`,
+      resumeLabel: `Resume on ${label}`,
       title: `Opens in ${label} (or Steam Link on mobile)`,
     };
   }
@@ -48,12 +51,14 @@ export function getLaunchTarget(game: Game, device?: DeviceType): LaunchTarget |
       return {
         url: `https://www.xbox.com/games/store/a/${game.xboxTitleId}`,
         label: 'Open in Xbox Store',
+        resumeLabel: 'Open in Xbox Store',
         title: 'Opens the Xbox Store page',
       };
     }
     return {
       url: `xbox://launch/${game.xboxTitleId}`,
       label: 'Launch in Xbox',
+      resumeLabel: 'Resume in Xbox',
       title: 'Opens in Xbox app (or Game Pass)',
     };
   }
@@ -63,6 +68,7 @@ export function getLaunchTarget(game: Game, device?: DeviceType): LaunchTarget |
     return {
       url: `https://store.playstation.com/concept/${game.psnProductId}`,
       label: 'Open in PS Store',
+      resumeLabel: 'Open in PS Store',
       title: 'Opens the PlayStation Store page',
     };
   }

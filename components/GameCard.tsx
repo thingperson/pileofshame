@@ -373,6 +373,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showMoreActions, setShowMoreActions] = useState(false);
   const [notesSaved, setNotesSaved] = useState(false);
+  const [sharingClear, setSharingClear] = useState(false);
   const [storylineOpen, setStorylineOpen] = useState(false);
   const [bailing, setBailing] = useState(false);
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
@@ -594,6 +595,50 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
     showToast(`${game.name} → returned to The Pile 📚`);
     onStatusChange?.('buried');
   }, [game.id, game.name, shelveGame, showToast, onStatusChange]);
+
+  const handleShareClear = useCallback(async () => {
+    setSharingClear(true);
+    try {
+      const { games: allGames } = useStore.getState();
+      const gamesCleared = allGames.filter((g) => g.status === 'played').length;
+      const backlogSize = allGames.filter((g) => g.status === 'buried' || g.status === 'on-deck').length;
+      const timeInPileDays = game.addedAt
+        ? Math.floor((Date.now() - new Date(game.addedAt).getTime()) / (1000 * 60 * 60 * 24))
+        : null;
+      const res = await fetch('/api/share', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          gameName: game.name,
+          coverUrl: game.coverUrl || null,
+          rating: game.rating || 0,
+          hoursPlayed: game.hoursPlayed || null,
+          hltbMain: game.hltbMain || null,
+          timeInPileDays,
+          totalCleared: gamesCleared,
+          backlogRemaining: backlogSize,
+          dollarValue: null,
+          showHours: false,
+          showHltbCompare: false,
+          showPileTime: false,
+          showStats: false,
+          showDollarValue: false,
+          flavorText: `${game.name}: cleared.`,
+        }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        navigator.clipboard.writeText(data.url);
+        showToast('Share link copied! Paste it anywhere.');
+      } else {
+        showToast('Could not create share link.');
+      }
+    } catch {
+      showToast('Could not create share link.');
+    } finally {
+      setSharingClear(false);
+    }
+  }, [game, showToast]);
 
   return (
     <div
@@ -1153,7 +1198,10 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                   }
                   title={launch.title}
                 >
-                  {forceExpanded ? launch.label : `🚀 ${launch.label}`}
+                  {(() => {
+                    const lbl = game.hoursPlayed > 0 ? launch.resumeLabel : launch.label;
+                    return forceExpanded ? lbl : `🚀 ${lbl}`;
+                  })()}
                 </a>
               </div>
             );
@@ -1201,6 +1249,26 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                   }}
                 >
                   {forceExpanded ? 'DLC / New Game+?' : '🎯 DLC / New Game+?'}
+                </button>
+                <button
+                  onClick={handleShareClear}
+                  disabled={sharingClear}
+                  className={
+                    forceExpanded
+                      ? 'col-span-2 flex items-center justify-center text-xs font-semibold rounded-lg transition-all hover:brightness-110 active:scale-[0.97] cursor-pointer disabled:opacity-50'
+                      : 'px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer disabled:opacity-50'
+                  }
+                  style={{
+                    backgroundColor: 'rgba(167, 139, 250, 0.08)',
+                    color: '#a78bfa',
+                    border: '1px solid rgba(167, 139, 250, 0.2)',
+                    ...(forceExpanded ? { height: 44 } : {}),
+                  }}
+                  title="Copy a shareable link for this clear"
+                >
+                  {forceExpanded
+                    ? (sharingClear ? 'Creating link...' : '↗ Share this clear')
+                    : (sharingClear ? '...' : '🔗 Share')}
                 </button>
               </>
             )}
