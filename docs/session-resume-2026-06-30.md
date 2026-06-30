@@ -70,3 +70,33 @@ The iOS companion project did a full deep read of this repo and left actionable 
 (`getCompletionRecommendations` unwired), a misleading "auto-status" label in PostImportSummary, a
 time-sensitive MISSING status-event log that Year-in-Pile needs, worktree cruft, and good ideas at risk
 of being lost.** Read `docs/ios-deepread-feedback-2026-06-30.md` before substantive work.
+
+---
+
+## Second wave — iOS handoff integration (15:22 → 17:xx PDT)
+
+Integrated the full iOS deep-read + a second inbound note (`web-ios-interop`) that hadn't been seen.
+
+### Shipped to main (2 commits, pushed, Vercel building)
+- `274c187` — **Append-only status-event log (Year-in-Pile Phase 1, perishable).** New `lib/statusEvents.ts` (localStorage key `if-status-events`, event `{id,gameId,from,to,at}`, FIFO 5000, SSR-safe, fail-silent). Wired into **all 7** store status sites — spec named 5, missed `newGamePlus` + the `updateGame` catch-all. + Honest `PostImportSummary` labels (killed "we guessed N beaten / auto-moved / sorted by playtime" — was display-only but read like agency theft). + Deleted dead `lib/recommendations.ts`.
+- `b87ad4f` — **Cross-project handoffs bridge** (SessionStart inbox hook + session-close iOS-outbound channel + doc↔reality reconcile + inbox hygiene) + capture docs.
+
+### Biggest discovery — interop initiative blocks iOS prod
+`docs/specs/web-ios-interop.md` (NEW, in INDEX). Brady green-lit D1–D6 on iOS side 2026-06-30. **Mostly web+Supabase work.** D1 = this repo blind-overwrites the whole `library_data` blob on save (`cloudSync.ts:13-25`, `CloudSync.tsx:60`); pointed at shared prod, a stale web save silently deletes the other client's games. Fix = server-authoritative `merge_library` Supabase RPC (port from iOS `LibraryMerge.swift` + golden tests). D1+D3 (identity linking) BLOCK the iOS prod flip. **This is the next session's main candidate.**
+
+### In-progress / uncommitted
+- None. Working tree clean except pre-existing untracked cruft (5 `docs/audits/*`, 1 logo PNG) — not this session's, left alone.
+
+### Verify on next session start
+- **Status-event log writing:** change any game's status, confirm `localStorage['if-status-events']` grows. (Build+typecheck verified; runtime write unobserved.)
+- Vercel deploy for `b87ad4f` landed clean.
+
+### Rotting gotchas
+- `lib/statusEvents.ts` is **local-only**. Multi-device synced users accumulate a per-device log until the Supabase mirror ships (`docs/specs/status-events-supabase-mirror.md`, gated on a Privacy Policy update). Year-in-Pile undercounts for them until then.
+- `dinoRider` sprite in `personas.json` is unreferenced (harmless, left — possibly a planned archetype). `retroKids` IS wired (`archetypes.ts:735`) — iOS handoff was wrong.
+
+### Open question
+- Interop sequencing: is iOS's prod flip imminent? If days away, D1 is an active data-corruption fire and jumps the queue. If "after web lands" (what the note implies), scope it deliberately in a fresh session.
+
+### Health
+- Build: clean ✅ · main tip: `b87ad4f` · all pushed · prod 200.
