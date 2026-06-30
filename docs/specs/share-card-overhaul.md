@@ -1,9 +1,19 @@
 # Spec: Share Card UX Overhaul
 
-**Status:** Specced, near-term priority  
-**Priority:** High — share cards exist and look good, but users can't find them  
+**Status:** SHIPPED 2026-06-29  
+**Shipped:** All four proposals (D+A+B+C) landed in commit `1aca880`.  
 **Created:** 2026-05-14  
 **Origin:** ClankerView UX review (reviewer didn't know share cards existed), Brady's own friction observation ("click 3 things on a modal to copy a URL you can't preview")
+
+### What shipped
+- **D** — Preview-first: `GameClearShare` auto-creates card on mount, no manual "Create share link" step
+- **A** — Live in celebration: share section opens with card already being created
+- **B** — Share button on completed game cards: compact `🔗 Share`, modal `↗ Share this clear` — tap to create + copy
+- **C** — `StatsShareComposer` wired into StatsPanel (was built but never rendered)
+
+### Open questions (park for later)
+- Mobile vs desktop preview sizing for the stats card
+- Flavor text: lock it (game clears, current) or make rerollable (stats, current)? Pick one for consistency.
 
 ---
 

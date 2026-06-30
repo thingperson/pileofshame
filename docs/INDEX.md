@@ -36,7 +36,7 @@
 | [monetization-plan.md](monetization-plan.md) | Tip jar, supporter tiers, mascot eval | LOCKED | Multiple per-stream triggers (see doc) |
 | [bot-character-spec.md](bot-character-spec.md) | Pip — bot character bible, GPT prompt library, placement plan | LOCKED | When generating new Pip art or wiring Pip into app/Discord/merch |
 | [testing-agents-spec.md](testing-agents-spec.md) | "Won't suck" + "Didn't strip a feature" testing agents — design, cadence, recon plan | PARTIAL — phases 1+3 shipped 2026-05-05 | Phase 4 (scheduling Agent B weekly) when ready |
-| [modal-redesign-spec.md](modal-redesign-spec.md) | Game-detail modal: destructive collapse, adaptive CTA, more like this | PLANNING — recon done 2026-05-05 | Pick any of 3 items per dedicated session |
+| [modal-redesign-spec.md](modal-redesign-spec.md) | Game-detail modal: destructive collapse, adaptive CTA, more like this | Items 1+3 SHIPPED 2026-06-29; Item 2 label-only shipped, full platform matrix pending | Full platform launch matrix when ready |
 | [smaller-surgeries.md](smaller-surgeries.md) | Queue of self-contained ~30–60 min surgeries (roll modal, stats, undo toast, retroKids, etc.) | PLANNING | Pick any when window opens |
 | [on-the-horizon.md](on-the-horizon.md) | Bigger workflow builds — visual regression loop, parallel sprint agents, self-healing site integrity | PLANNING | Per-build trigger; modal/surgery queues clear first |
 
@@ -46,7 +46,7 @@
 |---|---|---|---|
 | [app-theme-spec.md](app-theme-spec.md) | Cream light theme migration spec — token map, component audit, phased rollout | SHIPPED (phase 1–2) | Phase 3 polish when window opens |
 | [specs/dynamic-enrichment.md](specs/dynamic-enrichment.md) | Claude API game data on first card open — tips, mood validation, share card copy | SPECCED | When building Jump Back In improvements or share card Phase 2 |
-| [specs/share-card-overhaul.md](specs/share-card-overhaul.md) | Share card UX — preview-first flow, fewer clicks, discoverability. Also covers game card status-change pill position | SPECCED, NEAR-TERM | Next UX polish session |
+| [specs/share-card-overhaul.md](specs/share-card-overhaul.md) | Share card UX — preview-first flow, fewer clicks, discoverability. Also covers game card status-change pill position | SHIPPED 2026-06-29 (D+A+B+C); open questions: mobile preview sizing, flavor text consistency | If those open questions become friction |
 | [specs/sort-and-progress-rethink.md](specs/sort-and-progress-rethink.md) | "Quick to clear" sort assumes user progress from hours — rename + rethink | SPECCED | Quick rename is 10 min; Option B needs design |
 | [specs/rawg-pre-seed.md](specs/rawg-pre-seed.md) | Pre-seed Supabase game_metadata with top 500 popular PC games from RAWG to reduce API pressure | SPECCED | Run before traffic spikes or monthly maintenance |
 | [specs/ios-app-build-brief.md](specs/ios-app-build-brief.md) | iOS app — native SwiftUI rewrite, Phase 0 TestFlight, Phase 1 App Store free tier, $9.99 premium, native OAuth + widget | SPECCED | When ready to start iOS build |

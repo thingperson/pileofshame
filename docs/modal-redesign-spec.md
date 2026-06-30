@@ -1,12 +1,18 @@
 # Game Detail Modal — Redesign Spec
 
-**Status:** PLANNING — recon completed 2026-05-05 PDT.
-**Trigger to build:** Brady has a focused 60–90 min session per item below. Items are independent; ship in any order.
+**Status:** Items 1+3 SHIPPED 2026-06-29. Item 2 partially shipped (label change only; full platform matrix still pending).
+**Original trigger:** Brady has a focused 60–90 min session per item below. Items are independent; ship in any order.
 **Why this exists:** Three modal items remain after the 2026-05-05 modal quick-wins push (`39f8797`: Why we picked, humble HLTB, Discord affordance). Each needs its own session. This doc preserves the recon so the next pass starts hot.
 
 ---
 
-## Item 1 — Destructive-action collapse
+## Item 1 — Destructive-action collapse ✅ SHIPPED (was already live)
+
+**Status 2026-06-29:** Audited and confirmed live. Delete has inline confirm in both card and modal views (`showDeleteConfirm` state + "Gone forever?" confirm). No code change needed — the pattern Brady specified was already implemented from the May 5 session.
+
+---
+
+## Item 1 (original spec) — Destructive-action collapse
 
 ### Current state (verified)
 Three destructive actions, three different patterns. Inconsistent.
@@ -47,7 +53,15 @@ Confirmation flow is consistent — inline reveal on click ("Drawing the line?",
 
 ---
 
-## Item 2 — Adaptive primary CTA
+## Item 2 — Adaptive primary CTA ⚡ PARTIALLY SHIPPED 2026-06-29
+
+**What shipped:** Launch button label is now "Resume on [Platform]" when `hoursPlayed > 0`, "Launch in [Platform]" otherwise. `resumeLabel` added to `LaunchTarget` interface in `lib/launch.ts`.
+
+**What's still pending:** The original spec below is the full platform launch matrix (PSN, Epic, GOG, Switch deeplinks + device detection). That's a separate session — ~340 LOC of work across types, constants, and `lib/launch.ts`.
+
+---
+
+## Item 2 (original spec) — Adaptive primary CTA (full platform matrix)
 
 ### Current state (verified)
 Steam-only by accident. The launch button at `components/GameCard.tsx:1089–1119` only renders if `game.steamAppId` exists. Six other platforms (`playstation`, `epic`, `xbox`, `switch`, `gog`, `other` per `lib/types.ts`) show no launch CTA. Desktop/mobile differentiation is a tooltip hint ("or Steam Link on mobile" line 1114) with no actual mobile-specific routing.
@@ -106,7 +120,13 @@ Don't ship the whole matrix in one PR. Order:
 
 ---
 
-## Item 3 — "More like this from your library" (Completed only)
+## Item 3 — "More like this from your library" (Completed only) ✅ SHIPPED 2026-06-29
+
+**What shipped:** "From your shelf" section in `CompletionCelebration` celebrate stage. Shows 2-3 similar unplayed games by genre Jaccard overlap. Tap to add to Up Next + toast. Hides when no genre data or no matches. `findSimilar()` helper defined inline in `CompletionCelebration.tsx`.
+
+---
+
+## Item 3 (original spec) — "More like this from your library" (Completed only)
 
 ### Current state (verified)
 No similarity logic exists. `lib/reroll.ts` has a sophisticated weighted-pick algorithm but no `findSimilar()` helper. Game type carries strong signals (genres, moodTags, timeTier, hltbMain, metacritic, source, rating) — enough for a v1 heuristic without ML.
