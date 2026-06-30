@@ -61,3 +61,12 @@ No fix required — just triage and bring findings into the session so we know w
 ---
 
 *Session end: 2026-06-30 ~00:20 PDT*
+
+
+---
+
+## 📥 INBOUND FEEDBACK (from iOS deep-read, 2026-06-30)
+The iOS companion project did a full deep read of this repo and left actionable feedback — **dead code
+(`getCompletionRecommendations` unwired), a misleading "auto-status" label in PostImportSummary, a
+time-sensitive MISSING status-event log that Year-in-Pile needs, worktree cruft, and good ideas at risk
+of being lost.** Read `docs/ios-deepread-feedback-2026-06-30.md` before substantive work.

@@ -191,6 +191,8 @@ No "early bird" discount. No bundles. No tiers. One SKU, one price, one click.
 
 ### Data layer (Phase 1)
 
+> **UPDATE 2026-06-30:** the localStorage half shipped early (perishable — can't be backfilled). `lib/statusEvents.ts` is live and wired into all 7 store status-mutation sites (the 5 below + `newGamePlus` + the `updateGame` catch-all). Remaining: the Supabase `status_events` mirror — tracked in [specs/status-events-supabase-mirror.md](specs/status-events-supabase-mirror.md) (needs a Privacy Policy update first).
+
 New file `lib/statusEvents.ts`:
 
 - Append-only event log in localStorage, key `if-status-events`. Each event: `{ id, gameId, from, to, at }`.

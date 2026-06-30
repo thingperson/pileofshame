@@ -50,6 +50,8 @@
 | [specs/sort-and-progress-rethink.md](specs/sort-and-progress-rethink.md) | "Quick to clear" sort assumes user progress from hours — rename + rethink | SPECCED | Quick rename is 10 min; Option B needs design |
 | [specs/rawg-pre-seed.md](specs/rawg-pre-seed.md) | Pre-seed Supabase game_metadata with top 500 popular PC games from RAWG to reduce API pressure | SPECCED | Run before traffic spikes or monthly maintenance |
 | [specs/ios-app-build-brief.md](specs/ios-app-build-brief.md) | iOS app — native SwiftUI rewrite, Phase 0 TestFlight, Phase 1 App Store free tier, $9.99 premium, native OAuth + widget | SPECCED | When ready to start iOS build |
+| [specs/web-ios-interop.md](specs/web-ios-interop.md) | Web↔iOS shared-backend interop — server-authoritative `merge_library` RPC (D1, BLOCKS iOS prod), identity linking (D3), Apple auth, tombstones, connection-persistence bugs, naming alignment. Mostly web+Supabase work | SPECCED — green-lit, not started | Before iOS points at prod; D1+D3 are blocking |
+| [specs/status-events-supabase-mirror.md](specs/status-events-supabase-mirror.md) | Supabase `status_events` mirror for the append-only status log (local log shipped 2026-06-30) — Year-in-Pile Phase 1 fast-follow | SPECCED — needs Privacy Policy update | When wiring Year-in-Pile sync or right away to stop multi-device event loss |
 
 ## Session resumes
 

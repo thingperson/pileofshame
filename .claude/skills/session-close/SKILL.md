@@ -5,10 +5,11 @@ description: End-of-session ritual. Pre-flight sweep, tidy docs, log decisions, 
 
 # Session Close
 
-End-of-session ritual for Inventory Full. Owns two artifacts:
+End-of-session ritual for Inventory Full. Owns these artifacts:
 
 1. **`docs/session-resume-YYYY-MM-DD.md`** — code-level state for the next Claude Code session in this repo.
-2. **Brady OS handoff** at `/Users/bradywhitteker/Library/Mobile Documents/iCloud~md~obsidian/Documents/Handoffs/inbox/YYYY-MM-DD-inventory-full-[slug].md` — operator-level signal for the cross-project hub.
+2. **Brady OS handoff** at `…/Handoffs/inbox/YYYY-MM-DD-inventory-full-[slug].md` — operator-level signal for the cross-project hub (`to: [brady-os]`).
+3. **iOS-facing handoff** (conditional) at `…/Handoffs/inbox/YYYY-MM-DD-getplaying-to-inventory-full-[slug].md` — actionable findings for the iOS companion app, only when the session affects it (Step 8b).
 
 These are **different** artifacts with different readers. Do not duplicate content between them.
 
@@ -23,6 +24,18 @@ These are **different** artifacts with different readers. Do not duplicate conte
 - **Uncommitted in-progress work without intent** — unless Brady confirms the pause is deliberate, the handoff will claim "shipped" for files still in the working tree.
 
 If any of these apply, say so and stop.
+
+---
+
+## Step 0 — Doc↔reality reconcile (quick pass)
+
+Before the sweep, verify docs still match reality on anything this session touched. The trust of the spec/roadmap layer depends on this not drifting:
+
+- Roadmap/INDEX items marked "planned" or "deferred" that actually shipped → propose flipping status.
+- Comments or specs describing something as built that's actually dead/unwired, or vice-versa (the 2026-06-30 `getCompletionRecommendations` dead-code-presented-as-shipped case is the canonical example).
+- Dead code introduced or left this session that a reader would mistake for live.
+
+Fix small drift inline; surface bigger gaps for Brady. Keep it to surfaces the session actually touched — this is a reconcile, not a full audit.
 
 ---
 
@@ -238,6 +251,31 @@ No Brady-OS-relevant signal (pure refactor day, nothing shipped, no decisions, n
 
 ---
 
+## Step 8b — iOS-facing handoff (only when the session affects the iOS app)
+
+The iOS companion (`inventoryfull-ios`) shares this project's backend + product contract and consumes the same Handoffs bus. When this session produced findings the iOS app needs to know — a shared-contract change (`library_data` shape, auth providers, Supabase schema), a bug that affects iOS users, a product/voice decision iOS should mirror, or progress on the [web-ios-interop](../../docs/specs/web-ios-interop.md) initiative (e.g. the `merge_library` RPC going live) — write a **separate** inbox note addressed to iOS.
+
+**Location:** same inbox, `YYYY-MM-DD-getplaying-to-inventory-full-[slug].md`
+
+```
+---
+from: getplaying
+to: [inventory-full]
+date: YYYY-MM-DD
+title: [short — what the iOS session needs to act on]
+---
+```
+
+Body = **actionable findings only**: what changed, what iOS must do in response, file/contract pointers iOS can read directly in this repo. No operator narrative (that's the brady-os handoff). iOS's SessionStart hook surfaces this next time it opens.
+
+**This is distinct from the brady-os handoff** (Step 8) — different reader, different content. A session can produce both, one, or neither. Skip if nothing affects iOS.
+
+### Inbox hygiene (inbound items addressed to getplaying)
+
+If this session acted on an inbound item addressed `to: getplaying`, move it out of `inbox/` to `processed/` (year-month subfolder) so the SessionStart hook stops re-surfacing it. This is getplaying's own inbox hygiene — only move items addressed to getplaying, never brady-os's items or anything else on the bus.
+
+---
+
 ## Step 9 — Next-session kickoff block
 
 Print this as the last thing before the final report. ~5 lines. What Brady scans when he opens cold:
@@ -273,7 +311,7 @@ Then stop.
 
 ## Boundaries
 
-- Don't touch Brady's Workspace or the Handoffs bus beyond writing the single handoff file in `inbox/`. Moving to `processed/`, updating `pulse.md`, editing wiki pages — those are Brady OS's job.
+- Don't touch Brady's Workspace, `pulse.md`, or Brady OS's wiki pages — those are Brady OS's job. You MAY: write your own handoff notes to `inbox/` (brady-os and/or inventory-full), and move inbound items addressed `to: getplaying` to `processed/` once acted on (Step 8b inbox hygiene). Never move or edit items addressed to anyone else.
 - Don't change the SessionStart hook or `settings.json` unless Brady asks.
 - Don't bundle into `/deploy` or `/pre-push-review`. This skill can offer to run them; it does not replace or swallow them.
 - Don't invent decisions to populate the `decisions:` field.
