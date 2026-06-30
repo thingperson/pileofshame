@@ -15,6 +15,51 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-06-29 — Play→Resume label: simplified version shipped, full platform matrix deferred
+
+**Decision.** The launch button now shows "Resume on [Platform]" when `hoursPlayed > 0`, "Launch in [Platform]" otherwise. The original modal-redesign-spec.md Item 2 called for a full platform×device matrix with new `Game` type fields (`psnTitleId`, `epicAppId`, `gogAppId`, etc.) and ~340 LOC of dispatch logic in `lib/launch.ts`.
+
+**Why.**
+- The label change delivers the continuity signal at near-zero cost and no enrichment pipeline dependency.
+- The full matrix requires enrichment pipeline changes to populate new platform ID fields. PSN and Epic/GOG IDs are not in the current import flow — shipping the matrix now would be dead code for 90% of the library.
+- Deferred until enrichment work makes the platform IDs reliably available.
+
+**Implementation.** `resumeLabel` added to `LaunchTarget` interface in `lib/launch.ts`. `GameCard.tsx` picks `resumeLabel` vs `label` based on `game.hoursPlayed > 0`.
+
+**Drift risk.** The full platform matrix spec in `docs/modal-redesign-spec.md` Item 2 (original) describes the intended end state. Don't re-design from scratch when the time comes — read that spec first.
+
+---
+
+## 2026-06-29 — "More like this" placement: celebration modal only
+
+**Decision.** The "From your shelf" similar-games section lives in `CompletionCelebration`'s celebrate stage, not in `GameCard` as the original spec suggested. It fires on Completed status only, not Moved On.
+
+**Why.**
+- Amabile & Kramer (Progress Principle): the post-completion moment is when commitment to the next game is most likely. The celebration modal is that exact moment.
+- Moved On excluded — surfacing alternatives immediately after bail risks reading as guilt-tripping, undermining the "Moving on is deciding too" canon.
+- GameCard placement would require extracting `findSimilar` to a lib file and plumbing it through more surfaces. Celebration-only is simpler and psychologically better-targeted.
+
+**Implementation.** `findSimilar()` helper defined inline in `CompletionCelebration.tsx`. Jaccard genre overlap, eligibility filter `status in (buried, on-deck)`, limit 3. Tap → `updateGame(id, { status: 'on-deck' })` + toast.
+
+**Rejected.** Persistent "Find similar" link on all game card detail views — adds discovery surface but re-introduces choice at the wrong moment (Iyengar).
+
+---
+
+## 2026-06-29 — Share card auto-creates on mount (preview-first)
+
+**Decision.** `GameClearShare` now calls `/api/share` via `useEffect` on mount, creating the share record in the background. The URL is ready before the user looks at the share section. The "Create share link" button is eliminated.
+
+**Why.**
+- Proposal D (preview-first) was the UX goal. Auto-creation on mount is the minimal implementation that achieves it without a separate preview endpoint or client-side render.
+- The original flow (configure → create → see) required 3 clicks to get a shareable URL. Now it's 1 click (expand share section → URL already there).
+- Trade-off accepted: every time a user opens the share section, a DB write fires even if they never copy the link. Acceptable given low completion volume and Supabase free-tier headroom.
+
+**Implementation.** `handleCreateCard` converted to `useCallback`, called in `useEffect([], [])` in `components/CompletionCelebration.tsx`. Failed state shows a Retry link inline. No toast on failure — silent retry is less disruptive in the post-celebration context.
+
+**Rejected.** Showing a static visual preview before creation — would need a `/api/og-preview` endpoint or client-side OG card renderer. Deferred; auto-create achieves the same outcome without the complexity.
+
+---
+
 ## 2026-06-17 — Light-theme accent colors via `var(--stat-*, <dark fallback>)`
 
 **Decision.** Light-theme WCAG AA pass. Accent colors (stat numbers, archetype/tone badges, platform tags, the value-calculator button) were hardcoded dark-theme Tailwind hexes (`#22c55e`, `#a78bfa`, `#38bdf8`, platform blues, etc.) applied as inline styles / props, so they washed out to ~2:1 on light theme's pale cards. Fixed by introducing accent CSS variables — `--stat-green/amber/violet/sky/slate/red` and `--src-steam/playstation/epic/xbox/switch/gog/other` — referenced as `var(--stat-green, #22c55e)`. The fallback is the original dark hex, so the default/dark theme is **byte-for-byte unchanged**; only `.theme-light` (and other light-ish themes, if extended later) overrides the vars to AA-passing `-700` shades. Token text (`--color-text-dim/faint`) was also darkened in `.theme-light`. Result: stats page went from many failures to **0 contrast failures**; the "What's your library worth?" button went 1.2:1 → 5.84:1 (it was white text forced onto a pale gradient by the over-broad `button[style*="linear-gradient"]{color:white}` rule, now narrowed with `:not(.light-gradient-btn)`).
