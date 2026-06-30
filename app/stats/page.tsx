@@ -17,7 +17,12 @@ function StatsContent() {
     () => games.filter((g) => g.status === 'played').length,
     [games],
   );
-  const valueReclaimed = clearedCount * 15;
+  const valueReclaimed = useMemo(() => {
+    const FALLBACK_PRICE = 15;
+    return games
+      .filter((g) => g.status === 'played' || g.status === 'bailed')
+      .reduce((sum, g) => sum + ((g as { purchasePrice?: number }).purchasePrice ?? FALLBACK_PRICE), 0);
+  }, [games]);
 
   // Archetype share URL for hero CTA
   const shareUrl = useMemo(() => {

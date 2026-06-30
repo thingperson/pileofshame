@@ -1,6 +1,4 @@
-import { PlayerArchetype } from '@/lib/archetypes';
 import { plural } from '@/lib/statsHelpers';
-import StatsShareComposer from './StatsShareComposer';
 import LineIcon from './LineIcon';
 
 interface ValueCalculatorProps {
@@ -18,26 +16,6 @@ interface ValueCalculatorProps {
   hltbPct: number;
   handleCalculate: () => void;
   handleRecalculate: () => void;
-  stats: {
-    backlogSize: number;
-    gamesCleared: number;
-    bailedCount: number;
-    nowPlaying: number;
-    totalHours: number;
-    streak: number;
-    oldest: { name: string; days: number } | null;
-    inMotion: number;
-    totalAchievementsEarned: number;
-    totalAchievements: number;
-    platinumsEarned: number;
-    perfectGames: number;
-    totalGamerscore: number;
-    hasAchievementData: boolean;
-  };
-  totalGames: number;
-  explorationPct: number;
-  currentArchetype: PlayerArchetype;
-  showToast: (msg: string) => void;
 }
 
 export default function ValueCalculator({
@@ -55,11 +33,6 @@ export default function ValueCalculator({
   hltbPct,
   handleCalculate,
   handleRecalculate,
-  stats,
-  totalGames,
-  explorationPct,
-  currentArchetype,
-  showToast,
 }: ValueCalculatorProps) {
   return (
     <>
@@ -211,28 +184,6 @@ export default function ValueCalculator({
         >
           <LineIcon name="rotate" size={12} className="inline shrink-0 mr-1" />Refine estimate ({priceConfidence.known}/{priceConfidence.total} games priced)
         </button>
-      )}
-
-      {/* Share as OG card */}
-      {calculated && (
-        <div className="mt-4 pt-3 border-t" style={{ borderColor: 'var(--color-glass-border)' }}>
-          <div className="text-xs text-text-faint font-[family-name:var(--font-mono)] uppercase tracking-wider mb-2 text-center">
-            Share your stats
-          </div>
-          <div>
-            <StatsShareComposer
-              stats={stats}
-              totalGames={totalGames}
-              explorationPct={explorationPct}
-              currentArchetype={currentArchetype}
-              unplayedValue={countedUnplayed}
-              playedValue={countedPlayed}
-              backlogHours={backlogHours}
-              calculated={calculated}
-              showToast={showToast}
-            />
-          </div>
-        </div>
       )}
 
     </>

@@ -533,11 +533,6 @@ export default function StatsPanel({ games }: StatsPanelProps) {
             hltbPct={hltbPct}
             handleCalculate={handleCalculate}
             handleRecalculate={handleRecalculate}
-            stats={stats}
-            totalGames={totalGames}
-            explorationPct={explorationPct}
-            currentArchetype={currentArchetype}
-            showToast={showToast}
           />
 
           {/* Decision Engine Stats */}
