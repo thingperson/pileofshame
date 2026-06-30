@@ -396,7 +396,7 @@ function GameClearShare({
     } finally {
       setCreating(false);
     }
-  }, [game.name, game.coverUrl, game.hltbMain, hoursOnGame, timeInPileDays, gamesCleared, backlogSize, gamePrice, hltbFasterHours, flavorText, showToast]);
+  }, [game.name, game.coverUrl, game.hltbMain, hoursOnGame, timeInPileDays, gamesCleared, backlogSize, gamePrice, hltbFasterHours, flavorText]);
 
   useEffect(() => {
     handleCreateCard();
