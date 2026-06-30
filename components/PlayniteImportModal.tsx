@@ -243,7 +243,7 @@ export default function PlayniteImportModal({ open, onClose, context }: Playnite
         role="dialog"
         aria-modal="true"
         aria-label="Import from Playnite"
-        className="relative w-full max-w-lg max-h-[85vh] rounded-2xl border p-5 space-y-4 animate-[scaleIn_300ms_ease-out] flex flex-col"
+        className="relative w-full max-w-lg max-h-[85vh] rounded-2xl border p-5 space-y-4 animate-[scaleIn_300ms_ease-out] flex flex-col overflow-hidden"
         style={{
           backgroundColor: 'var(--color-bg-elevated)',
           borderColor: 'var(--color-border-active)',
@@ -252,7 +252,7 @@ export default function PlayniteImportModal({ open, onClose, context }: Playnite
         <h2 className="text-lg font-bold text-text-primary">{contextCopy?.title ?? 'Import from Playnite'}</h2>
 
         {step === 'upload' && (
-          <div className="space-y-4">
+          <div className="space-y-4 overflow-y-auto">
             <div className="space-y-3 text-sm text-text-secondary">
               {contextCopy ? (
                 <p>{contextCopy.preface}</p>

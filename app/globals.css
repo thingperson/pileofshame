@@ -520,6 +520,30 @@ button:active:not(:disabled) {
   color: #000000 !important;
 }
 
+/* 90s hub chrome legibility fix.
+   Root cause: .theme-90s button { background-color: #c0c0c0 !important } gives
+   all buttons a grey background. But .theme-90s .text-text-dim/muted/faint
+   (specificity 0,2,0) overrides the button's own color: #000000 (specificity
+   0,1,1) when those classes appear ON the button element — making inactive tab
+   labels and nav button text #cccccc on #c0c0c0 (near-invisible).
+   Similarly, .theme-90s header span (0,1,2) overrides button children in header.
+   These rules restore dark text by outranking the offending selectors. */
+
+/* Inactive tabs: button element itself carries the text-text-* class */
+.theme-90s button.text-text-dim,
+.theme-90s button.text-text-muted,
+.theme-90s button.text-text-faint {
+  color: #333333 !important;
+}
+
+/* Header nav buttons: labels/icons inside header buttons inherit the
+   header span rule (#cccccc) which overrides the button's dark color */
+.theme-90s header button,
+.theme-90s header button span,
+.theme-90s header button svg {
+  color: #000000 !important;
+}
+
 /* 90s marquee bar */
 .nineties-marquee {
   background: #000000;

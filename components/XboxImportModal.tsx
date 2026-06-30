@@ -184,7 +184,7 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
         role="dialog"
         aria-modal="true"
         aria-label="Import from Xbox"
-        className="relative w-full max-w-lg max-h-[85vh] rounded-2xl border p-5 space-y-4 animate-[scaleIn_300ms_ease-out] flex flex-col"
+        className="relative w-full max-w-lg max-h-[85vh] rounded-2xl border p-5 space-y-4 animate-[scaleIn_300ms_ease-out] flex flex-col overflow-hidden"
         style={{
           backgroundColor: 'var(--color-bg-elevated)',
           borderColor: 'var(--color-border-active)',
@@ -195,7 +195,7 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
         </h2>
 
         {step === 'input' && (
-          <div className="space-y-3">
+          <div className="space-y-3 overflow-y-auto">
             <p className="text-sm text-text-secondary">
               Enter your Xbox Gamertag to import your game history.
             </p>
@@ -235,7 +235,7 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
         )}
 
         {step === 'confirm' && profile && (
-          <div className="space-y-4">
+          <div className="space-y-4 overflow-y-auto">
             <div className="flex items-center gap-3 p-3 rounded-xl" style={{ backgroundColor: 'var(--color-bg-card)' }}>
               {profile.avatarUrl && (
                 <img src={profile.avatarUrl} alt="" className="w-12 h-12 rounded-full bg-bg-primary" />

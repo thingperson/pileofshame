@@ -568,30 +568,49 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                 <span className="text-text-dim text-xs">{showVibes ? '▴' : '▾'}</span>
               </button>
               {showVibes && (
-                <div className="px-3 pb-3 flex flex-wrap gap-1.5">
-                  {ALL_MOODS.map((mood) => {
-                    const config = MOOD_TAG_CONFIG[mood];
-                    const active = moodFilters.includes(mood);
-                    return (
-                      <button
-                        key={mood}
-                        onClick={() => toggleMood(mood)}
-                        className={`px-3 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 ${active ? 'scale-[1.02]' : 'hover:bg-glass-medium'}`}
+                <div>
+                  {/* Mood illustration — shown when a vibe is selected */}
+                  {moodFilters.length > 0 && (
+                    <div className="relative w-full overflow-hidden rounded-t-none" style={{ height: '96px' }}>
+                      <img
+                        src={`/moods/${moodFilters[0]}.png`}
+                        alt={MOOD_TAG_CONFIG[moodFilters[0]].label}
+                        className="w-full h-full object-cover object-center"
+                        style={{ opacity: 0.85 }}
+                      />
+                      <div
+                        className="absolute inset-0"
                         style={{
-                          backgroundColor: active ? `${config.color}25` : 'var(--color-glass-subtle)',
-                          color: active ? config.color : 'var(--color-text-muted)',
-                          border: active ? `1px solid ${config.color}50` : '1px solid var(--color-glass-border)',
+                          background: `linear-gradient(to bottom, transparent 30%, var(--color-bg-elevated) 100%)`,
                         }}
-                      >
-                        {hasSprite(config.spriteKey) ? (
-                          <PixelSprite name={config.spriteKey} size={20} ariaLabel={config.label} />
-                        ) : (
-                          <span aria-hidden="true">{config.icon}</span>
-                        )}
-                        <span>{config.label}</span>
-                      </button>
-                    );
-                  })}
+                      />
+                    </div>
+                  )}
+                  <div className="px-3 pb-3 flex flex-wrap gap-1.5" style={{ paddingTop: moodFilters.length > 0 ? '8px' : undefined }}>
+                    {ALL_MOODS.map((mood) => {
+                      const config = MOOD_TAG_CONFIG[mood];
+                      const active = moodFilters.includes(mood);
+                      return (
+                        <button
+                          key={mood}
+                          onClick={() => toggleMood(mood)}
+                          className={`px-3 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 ${active ? 'scale-[1.02]' : 'hover:bg-glass-medium'}`}
+                          style={{
+                            backgroundColor: active ? `${config.color}25` : 'var(--color-glass-subtle)',
+                            color: active ? config.color : 'var(--color-text-muted)',
+                            border: active ? `1px solid ${config.color}50` : '1px solid var(--color-glass-border)',
+                          }}
+                        >
+                          {hasSprite(config.spriteKey) ? (
+                            <PixelSprite name={config.spriteKey} size={20} ariaLabel={config.label} />
+                          ) : (
+                            <span aria-hidden="true">{config.icon}</span>
+                          )}
+                          <span>{config.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
             </div>
