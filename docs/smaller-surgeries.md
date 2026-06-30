@@ -6,7 +6,20 @@
 
 ---
 
+## Shipped
+
+| # | Item | Date |
+|---|------|------|
+| 1 | Roll Modal Hierarchy — filter collapse, one-line summary, ↻ change, Roll Again as text link, skip feedback gating | 2026-06-29 |
+| 2 | Moved On Undo Toast — captures previousStatus, 5s toast with ↩ Undo, implemented in `GameCard.tsx` handleBail | 2026-06-29 |
+| 3 | retroKids Archetype Trigger — releaseYear parsed in `enrichGame.ts`, trigger logic in `archetypes.ts`, sprite + pixel data present | 2026-06-29 |
+| 4 | Stats Hero Metric — valueReclaimed sums purchasePrice for played+bailed ($15 fallback), share buttons reduced 3→1 | 2026-06-29 |
+
+---
+
 ## 1. Roll modal hierarchy
+
+**Status: SHIPPED 2026-06-29**
 
 **Surface:** `components/Reroll.tsx` (the Pick My Game flow).
 **Why:** post-pick screen is loud. Every control competes equally with the primary "Let's go" CTA. Defaults aren't honored visually.
@@ -25,6 +38,8 @@
 ---
 
 ## 2. Stats hero metric pattern
+
+**Status: SHIPPED 2026-06-29**
 
 **Surface:** `app/stats/page.tsx` and any stats components rendered there.
 **Why:** current stats hero is a list of metrics with no narrative anchor. Brady identified the right metric is "value reclaimed" — sunk cost on games the user has now actually played.
@@ -48,6 +63,8 @@
 
 ## 3. Moved On undo toast
 
+**Status: SHIPPED 2026-06-29**
+
 **Surface:** wherever `moveToMovedOn` action fires in `lib/store.ts` + UI in `components/GameCard.tsx`.
 **Why:** Moving On is a high-friction commitment moment. Industry-standard 5s undo lowers the perceived cost of the action without diluting "Moving on is deciding too" — the toast affirms the decision while leaving an out.
 
@@ -65,6 +82,8 @@
 ---
 
 ## 4. retroKids archetype trigger (release-year enrichment)
+
+**Status: SHIPPED 2026-06-29**
 
 **Surface:** `lib/enrichment.ts`, `lib/types.ts`, `lib/archetypes.ts`.
 **Why:** retroKids archetype was wired in `8ead582` (2026-05-04) but ships untriggered because we don't pull `released` field from RAWG. Sprite is in `public/sprites/h2/` already.
