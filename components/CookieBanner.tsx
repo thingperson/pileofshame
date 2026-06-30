@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Script from 'next/script';
 
 const CONSENT_KEY = 'if-cookie-consent';
 const GA_ID = 'G-98B24MRQZS';
@@ -60,6 +59,18 @@ export default function CookieBanner() {
     return () => window.removeEventListener('if-consent-change', onChange);
   }, []);
 
+  // Inject gtag.js via DOM directly — Next.js <Script> doesn't reliably load
+  // when conditionally added after hydration (strategy="afterInteractive" is
+  // designed for the initial render tree, not dynamic insertion).
+  useEffect(() => {
+    if (consent !== 'accepted') return;
+    if (document.querySelector(`script[src*="${GA_ID}"]`)) return;
+    const script = document.createElement('script');
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+    script.async = true;
+    document.head.appendChild(script);
+  }, [consent]);
+
   const accept = () => {
     writeConsent('accepted');
     setConsent('accepted');
@@ -75,17 +86,6 @@ export default function CookieBanner() {
 
   return (
     <>
-      {/* gtag.js loads only after explicit consent — sets cookies + sends data.
-          The dataLayer/gtag stub + gtag('config') call live in app/layout.tsx
-          <head> so they run before hydration; pre-consent that just creates an
-          in-memory queue (no cookies, no requests). */}
-      {consent === 'accepted' && (
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-          strategy="afterInteractive"
-        />
-      )}
-
       {consent === null && (
         <div
           role="dialog"
