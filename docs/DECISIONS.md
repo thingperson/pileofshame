@@ -15,6 +15,35 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-06-30 — Status-event log shipped ahead of schedule; Supabase mirror deferred
+
+**Decision.** Shipped the localStorage append-only status-event log (`lib/statusEvents.ts`) now, ahead of the Year-in-Pile Phase 1 (Sept) schedule, and deferred the Supabase `status_events` mirror.
+
+**Why.**
+- Status events are perishable — they cannot be backfilled. Every day unlogged is a permanent hole in Year-1 "Wrapped" data. Local capture has no dependency on the rest of the feature, so there's no reason to wait.
+- The Supabase mirror moves a new data category client→server, which requires a Privacy Policy update first (`legal-compliance.md`). That gate shouldn't block the perishable local capture.
+
+**Implementation.** `lib/statusEvents.ts` (key `if-status-events`, event `{id,gameId,from,to,at}`, FIFO 5000, SSR-safe, fail-silent); wired into 7 store sites in `lib/store.ts` — the spec named 5 but missed `newGamePlus` and the `updateGame` catch-all (a real status path). Mirror tracked in `docs/specs/status-events-supabase-mirror.md`.
+
+**Rejected.** Waiting for the full Phase 1 build to ship the log as one unit — would have cost months of unrecoverable event data for the Dec 2026 launch.
+
+**Drift risk.** Local-only means multi-device synced users accumulate a per-device log until the mirror ships → Year-in-Pile undercounts for them. Documented in the spec + session-resume.
+
+---
+
+## 2026-06-30 — Deleted the completion-recommender instead of wiring it
+
+**Decision.** Deleted `lib/recommendations.ts` (`getCompletionRecommendations` + `getWishlistRecommendations`, both zero-importer dead code) rather than wiring it into the completion celebration, per the iOS deep-read's "wire or delete" prompt.
+
+**Why.**
+- `getWishlistRecommendations` surfaced unowned wishlisted games as "deal opportunities" — a `legal-compliance.md` no-sell-rule violation (behavioral targeting toward new purchases).
+- `getCompletionRecommendations` returned a 3-game shortlist — violates the locked one-pick / no-shortlist psychology rule (Iyengar/Schwartz), on the protected completion surface.
+- Recoverable from git if ever properly specced with consent/disclosure.
+
+**Rejected.** Wiring it (what the deep-read floated as an option) — would require breaking two locked rule-sets. Dead code that can't ship without a rule violation is safer removed than left to mislead a future reader into thinking it's shippable.
+
+---
+
 ## 2026-06-30 — GA4 tag not firing: Next.js Script component vs DOM injection
 
 **Decision.** `CookieBanner.tsx` now injects the gtag.js script via `document.createElement('script')` in a `useEffect` rather than Next.js `<Script strategy="afterInteractive">`.

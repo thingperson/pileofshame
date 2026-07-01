@@ -374,6 +374,12 @@ Pixel sprite system replacing emoji as primary brand iconography.
 - Natural lock-in through accumulated self-knowledge (not gamification)
 - From user feedback: "I like data breakdowns on my own behaviour over time"
 
+### Year in Pile — gaming "Wrapped" (build-ready spec, Phase 1 data layer SHIPPED)
+- Reflective Dec-only year-in-review. Free square share card + $5 one-time scrollable walkthrough. Full spec: `docs/year-in-pile-spec.md`. **Target: Dec 1, 2026.**
+- **Phase 1 data layer SHIPPED 2026-06-30** — `lib/statusEvents.ts` append-only status-event log is live (perishable data; capture clock now running). Remaining Phase 1: `lib/yearInPile.ts` compute, free OG card route, `/year/[year]` view.
+- **Dependency:** the Supabase `status_events` mirror (`docs/specs/status-events-supabase-mirror.md`) and multi-device correctness fold into the web↔iOS `merge_library` work (`docs/specs/web-ios-interop.md` D1). Needs a Privacy Policy update before the mirror ships.
+- iOS equivalent is "Year-in-Backlog" (Phase 6 / iOS Phase 2) — reconcile pricing (web $5/yr vs iOS one-time bundle) before either monetizes.
+
 ### Phase 4: Social & Sharing (LOW priority for now)
 - Public profile route (/u/username) — `/archetype/[slug]` is the lighter-weight precursor (no DB writes, identity-only, anyone can land on it). Full per-user profile would add cloud-stored library snapshots, friend comparisons, etc.
 - OG link previews for shared profiles
