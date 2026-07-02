@@ -42,6 +42,8 @@ export default function SettingsMenu({ onOpenImport, onOpenSearch }: SettingsMen
   const importState = useStore((s) => s.importState);
   const games = useStore((s) => s.games);
   const updateGame = useStore((s) => s.updateGame);
+  const beginBulkSync = useStore((s) => s.beginBulkSync);
+  const endBulkSync = useStore((s) => s.endBulkSync);
   const settings = useStore((s) => s.settings);
   const linkedSteamId = useStore((s) => s.linkedSteamId);
   const { showToast } = useToast();
@@ -49,7 +51,9 @@ export default function SettingsMenu({ onOpenImport, onOpenSearch }: SettingsMen
   const gamesWithoutArt = useMemo(() => games.filter((g) => !g.coverUrl), [games]);
   const steamGames = useMemo(() => games.filter((g) => g.steamAppId), [games]);
   const psnGames = useMemo(() => games.filter((g) => g.source === 'playstation'), [games]);
-  const gamesNeedingEnrichment = useMemo(() => games.filter((g) => !g.enrichedAt || !g.description || !g.moodTags || g.moodTags.length === 0), [games]);
+  // Matches enrichBatch's convergence gate: a game is "needing enrichment" only
+  // until it's been attempted once (enrichedAt stamped), not forever-if-fields-missing.
+  const gamesNeedingEnrichment = useMemo(() => games.filter((g) => !g.enrichedAt), [games]);
 
   // Check if PWA install is available
   useEffect(() => {
@@ -75,6 +79,9 @@ export default function SettingsMenu({ onOpenImport, onOpenSearch }: SettingsMen
   const handleEnrichAll = async () => {
     setEnrichingAll(true);
     setEnrichProgress('Starting...');
+    // Pause cloud sync for the whole batch — each enriched game bumps lastSaved,
+    // and we want one final upsert, not a full-library push per game.
+    beginBulkSync();
     try {
       const count = await enrichBatch(
         games,
@@ -91,6 +98,10 @@ export default function SettingsMenu({ onOpenImport, onOpenSearch }: SettingsMen
       }
     } catch {
       showToast('Enrichment hit an error. Try again for remaining games.');
+    } finally {
+      // Release the pause; when the ref-count hits zero CloudSync's effect
+      // re-runs and pushes one final sync.
+      endBulkSync();
     }
     setEnrichingAll(false);
     setEnrichProgress('');

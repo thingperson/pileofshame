@@ -27,15 +27,14 @@ export function useAutoEnrich() {
     });
   }, []);
 
-  // Find games that need enrichment
+  // Find games that need enrichment. Gate on enrichedAt alone — NOT on missing
+  // description/moodTags/hltbMain. Those fields legitimately stay empty for games
+  // RAWG/HLTB can't match; keying off them meant every page load (processedRef
+  // resets on reload) re-selected and re-hammered those games forever. One attempt
+  // per game, marked by enrichedAt (which persists), then it's left alone.
   const getUnenriched = useCallback((allGames: Game[]): Game[] => {
     return allGames.filter((g) =>
-      !processedRef.current.has(g.id) && (
-        !g.enrichedAt ||
-        !g.description ||
-        !g.moodTags || g.moodTags.length === 0 ||
-        !g.hltbMain
-      )
+      !processedRef.current.has(g.id) && !g.enrichedAt
     );
   }, []);
 
@@ -44,36 +43,49 @@ export function useAutoEnrich() {
     enrichingRef.current = true;
     abortRef.current = false;
 
+    // Pause cloud sync for the whole run — each updateGame below bumps lastSaved,
+    // and we don't want a full-library upsert per game. One sync fires on release.
+    useStore.getState().beginBulkSync();
+
     const total = batch.length;
     setEnrichmentProgress(0, total, true);
 
-    for (let i = 0; i < total; i++) {
-      if (abortRef.current) break;
+    try {
+      for (let i = 0; i < total; i++) {
+        if (abortRef.current) break;
 
-      const game = batch[i];
-      processedRef.current.add(game.id);
+        const game = batch[i];
+        processedRef.current.add(game.id);
 
-      try {
-        const result = await enrichGame(game);
-        if (result) {
-          updateGame(game.id, result as Partial<Game>);
+        try {
+          const result = await enrichGame(game);
+          if (result) {
+            updateGame(game.id, result as Partial<Game>);
+          } else {
+            // Nothing found, but mark as attempted so this game isn't re-selected
+            // on the next page load. processedRef resets on reload; enrichedAt persists.
+            updateGame(game.id, { enrichedAt: new Date().toISOString() });
+          }
+        } catch {
+          // Skip failures silently — leave enrichedAt unset so a later run can retry.
         }
-      } catch {
-        // Skip failures silently
-      }
 
-      setEnrichmentProgress(i + 1, total, true);
+        setEnrichmentProgress(i + 1, total, true);
 
-      // Rate limit: 300ms between games, 1s pause every 5 games
-      if ((i + 1) % 5 === 0) {
-        await new Promise((r) => setTimeout(r, 1000));
-      } else if (i < total - 1) {
-        await new Promise((r) => setTimeout(r, 300));
+        // Rate limit: 300ms between games, 1s pause every 5 games
+        if ((i + 1) % 5 === 0) {
+          await new Promise((r) => setTimeout(r, 1000));
+        } else if (i < total - 1) {
+          await new Promise((r) => setTimeout(r, 300));
+        }
       }
+    } finally {
+      enrichingRef.current = false;
+      setEnrichmentProgress(0, 0, false);
+      // Release the pause; when the ref-count hits zero CloudSync's effect
+      // re-runs to push the final enriched library in a single upsert.
+      useStore.getState().endBulkSync();
     }
-
-    enrichingRef.current = false;
-    setEnrichmentProgress(0, 0, false);
   }, [updateGame, setEnrichmentProgress]);
 
   // Watch for new unenriched games

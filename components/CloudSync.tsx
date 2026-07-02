@@ -15,6 +15,7 @@ export default function CloudSync() {
   const customVibes = useStore((s) => s.customVibes);
   const settings = useStore((s) => s.settings);
   const lastSaved = useStore((s) => s.lastSaved);
+  const bulkSyncPaused = useStore((s) => s.bulkSyncPaused);
   const importState = useStore((s) => s.importState);
   const { showToast } = useToast();
   const [hasLoaded, setHasLoaded] = useState(false);
@@ -89,6 +90,10 @@ export default function CloudSync() {
   // Auto-save to cloud on changes (debounced)
   const saveDebounced = useCallback(() => {
     if (!isSignedIn || !user) return;
+    // A bulk enrichment is running — each enriched game bumps lastSaved. Skip the
+    // per-change save; when bulkSyncPaused flips back to false this callback's
+    // identity changes, the effect re-runs, and one sync captures the final state.
+    if (bulkSyncPaused) return;
     if (lastSaved === lastSyncedRef.current) return; // no changes
 
     if (saveTimer.current) clearTimeout(saveTimer.current);
@@ -107,7 +112,7 @@ export default function CloudSync() {
         lastSyncedRef.current = state.lastSaved;
       }
     }, 3000); // 3 second debounce
-  }, [isSignedIn, user, lastSaved]);
+  }, [isSignedIn, user, lastSaved, bulkSyncPaused]);
 
   useEffect(() => {
     saveDebounced();

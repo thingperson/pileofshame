@@ -36,6 +36,16 @@ interface StoreActions {
   // Auto-enrichment progress (transient, not persisted)
   enrichmentProgress: { done: number; total: number } | null;
 
+  // Sync pause during bulk enrichment (transient, not persisted). While paused,
+  // CloudSync skips its debounced auto-save, so a bulk enrich doesn't fire a
+  // full-library upsert per game. Ref-counted so overlapping runs (auto-hook +
+  // manual button) only release sync once BOTH finish — one sync then captures
+  // the final state.
+  bulkSyncPaused: boolean;
+  bulkSyncDepth: number;
+  beginBulkSync: () => void;
+  endBulkSync: () => void;
+
   // Filters
   setFilter: <K extends keyof FilterState>(key: K, value: FilterState[K]) => void;
   resetFilters: () => void;
@@ -89,6 +99,16 @@ export const useStore = create<LibraryState & StoreActions>()(
       // Celebration state (global so it survives GameCard unmount)
       celebrationGame: null,
       enrichmentProgress: null,
+      bulkSyncPaused: false,
+      bulkSyncDepth: 0,
+      beginBulkSync: () => {
+        const depth = get().bulkSyncDepth + 1;
+        set({ bulkSyncDepth: depth, bulkSyncPaused: true });
+      },
+      endBulkSync: () => {
+        const depth = Math.max(0, get().bulkSyncDepth - 1);
+        set({ bulkSyncDepth: depth, bulkSyncPaused: depth > 0 });
+      },
       showCelebration: (game: Game) => {
         set({ celebrationGame: { ...game } }); // snapshot the game before status change
       },

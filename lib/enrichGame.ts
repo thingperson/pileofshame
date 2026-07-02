@@ -2,14 +2,16 @@ import { Game, MoodTag, TimeTier } from './types';
 import { inferMoodTags, inferTimeTier } from './enrichment';
 
 /**
- * Fetch with a single retry on failure (rate limit or network error).
- * Waits 2s before retry to let rate limits cool down.
+ * Fetch with a single retry — but ONLY on 429 (explicit rate-limit), where a
+ * short cooldown genuinely helps. We deliberately do NOT retry 5xx: those mean
+ * an upstream (RAWG / HLTB / Supabase) is down or timing out, and an immediate
+ * second request just doubles the failed load during an outage — the exact
+ * amplification that saturated our free-tier Supabase. Let 5xx fail fast.
  */
 async function fetchWithRetry(url: string, retries = 1): Promise<Response> {
   const res = await fetch(url);
   if (res.ok || retries <= 0) return res;
-  // Rate limited (429) or server error (5xx) — wait and retry once
-  if (res.status === 429 || res.status >= 500) {
+  if (res.status === 429) {
     await new Promise((r) => setTimeout(r, 2000));
     return fetch(url);
   }
@@ -221,10 +223,12 @@ export async function enrichBatch(
   onProgress?: (done: number, total: number) => void,
   batchSize = 5,
 ): Promise<number> {
-  // Filter to games that need enrichment
-  const needsEnrichment = games.filter((g) =>
-    !g.enrichedAt || !g.description || !g.moodTags || g.moodTags.length === 0 || !g.hltbMain
-  );
+  // Only enrich games we've never attempted. Gating on enrichedAt — rather than
+  // on whether specific fields came back — is deliberate: RAWG/HLTB genuinely
+  // have no data for plenty of games, so keying off !description / !hltbMain meant
+  // those games re-ran on every "Enrich all" click and never converged, hammering
+  // RAWG + Supabase indefinitely. One attempt per game, then it's done.
+  const needsEnrichment = games.filter((g) => !g.enrichedAt);
 
   let enriched = 0;
   const total = needsEnrichment.length;
@@ -237,9 +241,13 @@ export async function enrichBatch(
       if (result) {
         updateGame(game.id, result as Partial<Game>);
         enriched++;
+      } else {
+        // Lookups ran but found nothing new. Still stamp enrichedAt so this game
+        // drops out of needsEnrichment and we don't re-hammer it on the next run.
+        updateGame(game.id, { enrichedAt: new Date().toISOString() });
       }
     } catch {
-      // Skip failures
+      // Hard (thrown) failure — leave enrichedAt unset so a later run can retry.
     }
 
     onProgress?.(i + 1, total);
