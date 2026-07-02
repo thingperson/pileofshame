@@ -15,6 +15,22 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-07-02 — Enrichment converges on `enrichedAt`; field-based filters retired
+
+**Decision.** Enrichment (both the `useAutoEnrich` background hook and the manual "Enrich all" button) now selects games on `!enrichedAt` alone, and stamps `enrichedAt` even when RAWG/HLTB return nothing. A game is attempted once, then left alone. Thrown errors still leave `enrichedAt` unset so genuine failures retry.
+
+**Why.**
+- The old filters gated on `!description || !moodTags || !hltbMain` — fields that legitimately never fill for games RAWG/HLTB can't match. So unmatched games were re-selected forever.
+- `useAutoEnrich` fires on every page load (its `processedRef` guard resets each reload), so this re-ran the full doomed set on every visit, one Supabase round-trip per game — the dominant driver of the free-tier saturation that prompted this session. (Compounded by a Supabase platform incident on Jul 1, but the code was the accelerant.)
+
+**Implementation.** `lib/enrichGame.ts` (`enrichBatch` filter + stamp-on-null), `hooks/useAutoEnrich.ts` (same pattern), `components/SettingsMenu.tsx` (button `gamesNeedingEnrichment` filter). Also in `1027b91`: ref-counted `bulkSyncPaused` to collapse per-game `libraries` upserts into one sync, and `fetchWithRetry` retries only on 429 (not 5xx). Commit `1027b91`.
+
+**Rejected.** Keeping field-based filters + a separate "force re-enrich" escape hatch — more surface, and the outage-during-enrich edge (games attempted while an upstream is down get marked done and won't auto-retry) was judged acceptable versus perpetual re-hammering.
+
+**Drift risk.** Do NOT reintroduce `!description` / `!moodTags` / `!hltbMain` into any enrichment filter — they never converge because those fields legitimately stay empty for unmatched games. Gate on `enrichedAt`. This was the bug. Related: the server-side `game_metadata` cache in `app/api/rawg/route.ts` writes to a table that doesn't exist (never migrated) — separate follow-up, see session-resume 2026-07-02.
+
+---
+
 ## 2026-06-30 — Status-event log shipped ahead of schedule; Supabase mirror deferred
 
 **Decision.** Shipped the localStorage append-only status-event log (`lib/statusEvents.ts`) now, ahead of the Year-in-Pile Phase 1 (Sept) schedule, and deferred the Supabase `status_events` mirror.
