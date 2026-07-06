@@ -27,8 +27,9 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Build
-        run: npm run build
+      - name: Verify (lint + typecheck + build)
+        # Executable definition-of-done — same gate agents run locally.
+        run: ./verify.sh
         env:
           # Build needs these present or the bundle errors on import. Empty
           # strings are fine — the server routes guard against missing creds
