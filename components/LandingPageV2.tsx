@@ -712,6 +712,7 @@ function Footer() {
           <div className="flex flex-col gap-2 text-xs">
             <a href="/privacy" className="hover:text-white transition-colors">Privacy</a>
             <a href="/terms" className="hover:text-white transition-colors">Terms</a>
+            <a href="/support" className="hover:text-white transition-colors">Support</a>
             <button type="button" onClick={() => { import('./CookieBanner').then((m) => m.reopenCookieBanner()); }} className="text-left hover:text-white transition-colors cursor-pointer">Cookies</button>
             <a href="/about" className="hover:text-white transition-colors">About</a>
             <span className="mt-2 text-[10px] opacity-50">Made by Brady in Vancouver, BC</span>

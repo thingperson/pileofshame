@@ -18,7 +18,7 @@ export default function PrivacyPage() {
 
         <h1 className="text-3xl font-bold mb-2">Privacy Policy</h1>
         <p className="text-sm text-text-dim font-[family-name:var(--font-mono)] mb-8">
-          Last updated: June 17, 2026
+          Last updated: July 13, 2026
         </p>
 
         <div className="space-y-8 text-text-secondary text-[15px] leading-relaxed">
@@ -137,6 +137,33 @@ export default function PrivacyPage() {
                 </p>
               </div>
             </div>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold text-text-primary mb-3">The iOS app</h2>
+            <p>
+              Inventory Full for iOS is a separate native app that talks to the same Supabase backend
+              as this website. It collects less than the web app, not more:
+            </p>
+            <ul className="list-disc list-inside space-y-1.5 text-text-muted mt-2">
+              <li><strong>Account:</strong> your email address, used to sign in via email/password,
+                Google, or Discord (your choice). We never see your Google or Discord password.</li>
+              <li><strong>Your game library:</strong> the games you import or add, their status,
+                playtime, and any notes you attach. Synced via Supabase if you&apos;re signed in.</li>
+              <li><strong>Session:</strong> your sign-in session is stored in iOS Keychain, the
+                system&apos;s encrypted credential store. It is never written to iCloud backup in
+                plain form.</li>
+              <li><strong>On-device only, never synced:</strong> the picker&apos;s behavioral signals
+                (which games you skip, why, and how that shapes future picks) live in the app&apos;s
+                local storage on your device. They do not leave your phone.</li>
+            </ul>
+            <p className="mt-2">
+              No ads, no third-party analytics or crash reporting SDKs, and no tracking of any kind
+              ship in the iOS app. We do not use your data to build advertising profiles, and we do
+              not share it with anyone outside the Supabase infrastructure that runs the sync you
+              opted into. Everything under &ldquo;We do not sell your data&rdquo; and &ldquo;Your
+              rights&rdquo; below applies equally to the iOS app.
+            </p>
           </section>
 
           <section>
