@@ -15,6 +15,43 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-07-15 — GA4 replaced by Vercel Web Analytics; cookie consent banner removed
+
+**Decision.** Removed Google Analytics 4 (the `gtag`/`dataLayer` init script and the consent-gated `gtag.js` loader) and the cookie consent banner entirely. Vercel Web Analytics — already mounted via `<Analytics/>` — becomes the only analytics: cookieless, first-party, no consent required. `lib/analytics.ts` was rewritten as a thin Vercel-backed stub: all ~30 `track*` exports preserved so no call site changed, but only three funnel events are wired (`import_completed → pick_committed → game_launched`); everything else is a no-op.
+
+**Why.**
+- GA4 was unreliable: adblockers and consent-declines meant real users didn't register, while our own un-blocked test sessions did — so the dashboard looked alive but wasn't measuring actual traffic.
+- Vercel WA is first-party (`/_vercel/insights`), which adblockers can't easily block without breaking the site, so it sees the users GA hid. Cookieless with no personal data → needs no consent banner, removing a click between arrival and playing (product axiom) and shrinking the privacy surface.
+- Kept the event set tiny on purpose: page views + uniques come free; only the activation→play funnel is instrumented, to stay under the Vercel plan's monthly event cap and avoid re-accreting GA's over-instrumentation.
+
+**Implementation.** `lib/analytics.ts` (Vercel `track()` stub), `app/layout.tsx` (GA init + `CookieBanner` removed), `components/CookieBanner.tsx` (deleted), `components/LandingPageV2.tsx` (footer "Cookies" link removed), `app/privacy/page.tsx` (GA4/consent copy → cookieless-only, dated 2026-07-15). Commit `07a5463`.
+
+**Rejected.**
+- **Plausible / Fathom** — more full-featured, but a new vendor, cost, and another data processor to disclose. Vercel was already mounted and already our processor.
+- **Keeping GA4 alongside Vercel** — GA is what causes the invisibility and the consent-banner requirement; keeping it defeats both wins.
+- **Wiring all ~20 legacy events to Vercel** — would burn the free event cap and re-create the noise. No-op stub keeps call sites intact for easy future opt-in.
+
+**Drift risk.** The privacy policy is now the source of truth: cookieless, no consent, no game/account identifiers in events. Any new Vercel event must stay anonymous (no game names, no user IDs) or the policy needs updating first (`legal-compliance.md`).
+
+---
+
+## 2026-07-15 — `game_metadata` cache: built for real, not ripped out
+
+**Decision.** Resolved the open follow-up from the 2026-07-02 entry below: created the `game_metadata` table in prod (RLS enabled, public-read policy, writes service-role-only) instead of deleting the dead cache path. It's the same `002_game_metadata_cache.sql` written in April but never applied — now applied, with RLS added.
+
+**Why.**
+- The server-side L2 cache in `app/api/rawg/route.ts` read/wrote a table that didn't exist → two doomed 404s per enrichment, caching nothing. With real users, enrichment shouldn't silently fail or keep re-hitting RAWG.
+- Building it real makes the cache shared across all users: one user's RAWG lookup for a game serves everyone else who owns it, protecting the 20k/mo RAWG quota as traffic grows.
+- Bonus: the already-deployed code references the table, so the cache started working the moment the table existed — no code deploy needed for that half.
+
+**Implementation.** `supabase/migrations/002_game_metadata_cache.sql` (schema matches the route's read/write exactly; RLS + public-read added). Applied to prod project `lrzjszthlmcivgyprqnb`. Commit `5babae2`.
+
+**Rejected.** Option (b) — rip out the dead `saveToSupabase`/read-cache path. That was the "minimize surface" call for a toy; rejected because this is a real product where RAWG-quota protection and reliable enrichment matter.
+
+**Drift risk.** Writes depend on `SUPABASE_SERVICE_ROLE_KEY`; anon clients can read but never write (by design). Don't add client-side writes to this table.
+
+---
+
 ## 2026-07-02 — Enrichment converges on `enrichedAt`; field-based filters retired
 
 **Decision.** Enrichment (both the `useAutoEnrich` background hook and the manual "Enrich all" button) now selects games on `!enrichedAt` alone, and stamps `enrichedAt` even when RAWG/HLTB return nothing. A game is attempted once, then left alone. Thrown errors still leave `enrichedAt` unset so genuine failures retry.
