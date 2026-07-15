@@ -60,3 +60,6 @@ next-env.d.ts
 
 demo-output/
 .playwright-mcp/
+
+# local settings backups
+*.bak-*

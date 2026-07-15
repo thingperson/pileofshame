@@ -4,6 +4,19 @@
 
 ---
 
+## 🔎 Act on this — weekly regress-watch (2026-07-07)
+
+The Monday regress-watch pass ran clean statically (5 PASS · 0 hard fails) but left **3 live-only items it couldn't confirm without a dev server**. All are this week's own 06-29 visual work — likely fine, just unverified by the regression net. Full report: [`docs/audits/audit-2026-07-07.md`](audits/audit-2026-07-07.md).
+
+**When a dev server is up, a 60-second live pass closes all three:**
+1. **90s theme chrome** — new contrast fix ([globals.css](../app/globals.css), `.theme-90s button.text-text-dim`→`#333`, header btn→`#000`). Switch to 90s theme, confirm inactive tabs + header buttons are legible.
+2. **Import modal overflow** — Xbox + Playnite modals got `overflow-y-auto` for mobile-height clipping. Open each at a short viewport, confirm no clipping.
+3. **Mood banner** — 96px selected-state banner in the Reroll vibes drawer (asset wiring verified: all 10 mood PNGs present + keys match, no 404). Pick a vibe, eyeball the banner + gradient fade.
+
+No hard fails, nothing broke, no push needed — this is a "look when convenient," not a gate.
+
+---
+
 ## What shipped this session (1 commit to main)
 
 | Commit | What |
