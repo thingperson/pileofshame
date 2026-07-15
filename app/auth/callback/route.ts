@@ -14,6 +14,6 @@ export async function GET(request: NextRequest) {
   }
 
   // Redirect back to the app with a flag so the client can fire a one-time
-  // GA4 signup_completed event. The flag is stripped from the URL on mount.
+  // signup_completed hook. The flag is stripped from the URL on mount.
   return NextResponse.redirect(new URL('/?auth=ok', request.url));
 }

@@ -400,8 +400,7 @@ function AppContent() {
         };
         setImportBreakdown(breakdown);
         // We don't know the exact source here (Steam/Xbox/PSN/manual) so we
-        // fire a generic "any" source — the breakdown already tells GA4
-        // everything about the resulting library shape.
+        // fire a generic "any" source for the import_completed funnel event.
         trackImportCompleted('any', games.length);
         // Auto-launch the Reroll modal so the user lands on a first-pick
         // moment, not on a stats summary they have to dismiss. The breakdown
@@ -421,8 +420,8 @@ function AppContent() {
     setMounted(true);
     setHasUsedReroll(!!localStorage.getItem('pos-reroll-used'));
 
-    // Auth callback lands on /?auth=ok — fire GA4 signup_completed once,
-    // then strip the flag so a reload doesn't re-fire it.
+    // Auth callback lands on /?auth=ok — fire the signup_completed hook once
+    // (currently a no-op), then strip the flag so a reload doesn't re-fire it.
     // Stats page CTA lands on /?openPicker=1 — open the picker, then
     // strip the flag so reload doesn't re-open it.
     try {

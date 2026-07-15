@@ -18,7 +18,7 @@ export default function PrivacyPage() {
 
         <h1 className="text-3xl font-bold mb-2">Privacy Policy</h1>
         <p className="text-sm text-text-dim font-[family-name:var(--font-mono)] mb-8">
-          Last updated: July 13, 2026
+          Last updated: July 15, 2026
         </p>
 
         <div className="space-y-8 text-text-secondary text-[15px] leading-relaxed">
@@ -26,8 +26,9 @@ export default function PrivacyPage() {
             <h2 className="text-lg font-bold text-text-primary mb-3">The short version</h2>
             <p>
               We collect the minimum data needed to make the app work. We don&apos;t sell your data
-              and we don&apos;t track you across the web. We use Google Analytics to understand general
-              usage patterns, but we don&apos;t use that data to identify you or build ad profiles.
+              and we don&apos;t track you across the web. Our analytics are cookieless and anonymous:
+              enough to see how many people visit and which pages get used, never enough to identify
+              you or build ad profiles. That also means no cookie consent banner to click through.
               Your game library data stays in your browser unless you explicitly opt into cloud sync.
             </p>
           </section>
@@ -182,7 +183,7 @@ export default function PrivacyPage() {
               <li><strong>Xbox Game Pass catalog</strong>: Game Pass catalog browsing (game names only, no user data sent)</li>
               <li><strong>Supabase</strong>: authentication and cloud sync (when signed in)</li>
               <li><strong>Sentry</strong>: error monitoring (anonymous error reports, no personal data sent)</li>
-              <li><strong>Vercel Analytics</strong>: cookieless page view analytics (page URL, referrer, browser type — no cookies, no personal data)</li>
+              <li><strong>Vercel Analytics</strong>: cookieless, anonymous analytics — page views plus a few product events (e.g. that an import finished or a game was picked). No cookies, no personal data, no game or account identifiers</li>
             </ul>
           </section>
 
@@ -229,10 +230,9 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-bold text-text-primary mb-3">Cookies and tracking</h2>
             <p>
-              On your first visit, we ask whether to enable analytics cookies. Google Analytics
-              only loads if you accept. If you decline, no analytics scripts are loaded and no
-              tracking cookies are set. You can change your choice anytime via the &ldquo;Cookies&rdquo;
-              link in the footer.
+              We don&apos;t use tracking or advertising cookies, so there&apos;s no cookie consent
+              banner to click through. The only cookies we set are strictly necessary sign-in
+              cookies, and only if you create an account. Our analytics are cookieless (details below).
             </p>
             <p className="mt-2">
               <strong>Strictly necessary cookies (no consent required):</strong> sign-in session
@@ -240,16 +240,12 @@ export default function PrivacyPage() {
               keep you logged in and cannot be disabled while you remain signed in.
             </p>
             <p className="mt-2">
-              <strong>Analytics cookies (consent-based):</strong> Google Analytics 4 to understand
-              page views, feature usage, and general traffic patterns. We do not use this data to
-              identify individuals or build advertising profiles. No pixel trackers, no fingerprinting,
-              no cross-site tracking.
-            </p>
-            <p className="mt-2">
-              <strong>Vercel Analytics (no cookies):</strong> We use Vercel Analytics for
-              aggregate page view metrics. It is cookieless by design and does not collect
-              personal data, set cookies, or track users across sites. It runs without
-              requiring consent.
+              <strong>Vercel Analytics (no cookies):</strong> our only analytics. It records
+              aggregate page views plus a few anonymous product events (for example, that an import
+              finished or a game was picked) so we can see whether the app is actually helping people
+              play. It is cookieless by design, sends no personal data and no game or account
+              identifiers, and does not track you across sites. No pixel trackers, no fingerprinting.
+              Because it collects no personal data, it runs without requiring consent.
             </p>
             <p className="mt-2">
               <strong>Error monitoring (no cookies):</strong> Sentry receives anonymous error reports

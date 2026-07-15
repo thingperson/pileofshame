@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Outfit, JetBrains_Mono, Nunito, Bebas_Neue } from "next/font/google";
-import CookieBanner from "@/components/CookieBanner";
 import FeedbackWidget from "@/components/FeedbackWidget";
 import ThemeClass from "@/components/ThemeClass";
 import { Analytics } from "@vercel/analytics/next";
@@ -138,22 +137,6 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `try{if(localStorage.getItem('if-text-size')==='comfortable')document.documentElement.classList.add('comfortable')}catch(e){}`,
-          }}
-        />
-        {/* GA4 init (privacy-safe — only creates dataLayer + queue function;
-            no cookies, no network requests until gtag.js loads, which is
-            still consent-gated by CookieBanner). MUST run before any useEffect
-            that calls trackLandingView etc., or the early events queue without
-            a configured property and get dropped silently when gtag.js
-            eventually processes the dataLayer.
-
-            ?ga_debug=1 enables debug_mode for the whole session — events
-            route to GA4 DebugView for testing instrumentation. Sticks via
-            sessionStorage so same-tab navigation keeps it on. Real visitors
-            without the param are unaffected. */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());var __ifd=false;try{if(location.search.indexOf('ga_debug=1')!==-1){sessionStorage.setItem('if-ga-debug','1');}__ifd=sessionStorage.getItem('if-ga-debug')==='1';}catch(e){}gtag('config','G-98B24MRQZS',__ifd?{debug_mode:true}:undefined);`,
           }}
         />
         <script
@@ -295,7 +278,6 @@ export default function RootLayout({
         <ThemeClass />
         {children}
         <FeedbackWidget />
-        <CookieBanner />
         <Analytics />
       </body>
     </html>
