@@ -23,6 +23,13 @@ CREATE TABLE IF NOT EXISTS game_metadata (
 -- Index for name search (used by enrichment lookups)
 CREATE INDEX IF NOT EXISTS idx_game_metadata_name ON game_metadata USING gin (to_tsvector('english', name));
 
--- No RLS — this is public game data, not user data
--- Any authenticated or anon user can read; only service role can write
--- (writes happen from API routes using the service role key)
+-- RLS: this is public game data, not user data.
+-- Enable RLS (Supabase best practice / clears the security advisor) and allow
+-- public read. Writes have NO policy, so only the service role (which bypasses
+-- RLS) can write — that's the /api/rawg route using SUPABASE_SERVICE_ROLE_KEY.
+-- Anon/authenticated clients can read but never write.
+ALTER TABLE game_metadata ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "game_metadata public read"
+  ON game_metadata FOR SELECT
+  USING (true);
