@@ -798,7 +798,15 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                 const headline = renderSmartPickHeadline(smartPickType, currentPick.name, {
                   hoursPlayed: currentPick.hoursPlayed,
                   hltbMain: currentPick.hltbMain,
-                  ratingPct: currentPick.metacritic ?? undefined,
+                  // {pct} means playthrough progress for almost-there, not a
+                  // critic score. Pass real progress (hours / HLTB, capped 99)
+                  // only there; leave it undefined for every other type so
+                  // forgotten-gem's "% positive on Steam" line self-filters
+                  // instead of rendering a Metacritic score as a Steam stat.
+                  ratingPct:
+                    smartPickType === 'almost-there' && currentPick.hltbMain
+                      ? Math.min(99, Math.round((currentPick.hoursPlayed / currentPick.hltbMain) * 100))
+                      : undefined,
                 });
                 return (
                   <div className="mt-3">

@@ -12,7 +12,11 @@
  * Template tokens (filled by `renderSmartPickHeadline`):
  *   {h}         → user hours played, e.g. "12"
  *   {remaining} → hltbMain - hoursPlayed, e.g. "2"
- *   {pct}       → rating percent — Steam positive % or progress %, e.g. "94"
+ *   {pct}       → playthrough progress % for almost-there (hours / HLTB).
+ *                 Reserved for a Steam positive-review % on forgotten-gem, but
+ *                 that data isn't wired yet, so the caller passes it undefined
+ *                 there and the "% positive on Steam" line self-filters. Never
+ *                 feed a Metacritic/critic score here.
  *
  * Copy approved by Brady 2026-04-17. Voice-filtered against
  * .claude/rules/voice-and-tone.md. See
