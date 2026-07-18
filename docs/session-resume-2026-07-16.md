@@ -4,9 +4,22 @@
 
 ---
 
-## 🎯 NEXT SESSION STARTS HERE — build in-app account deletion (web)
+## 🎯 NEXT SESSION STARTS HERE — two tasks, in this order
 
-**This is the very next task.** Full spec + rationale in [`DECISIONS.md`](DECISIONS.md) 2026-07-16.
+The SessionStart hook will also surface both source handoffs in the bus inbox (`inventory-full → getplaying`). Read them. Priority 1 takes precedence over Priority 2.
+
+### ⚠️ PRIORITY 1 (do FIRST) — remove the live HLTB scraper (legal exposure, in prod now)
+
+Source: bus inbox `2026-07-15-inventory-full-to-getplaying-hltb-scraper-legal-exposure.md`.
+
+The web app runs a **live HowLongToBeat scraper with active anti-bot evasion** (rotating token, honeypot field, spoofed User-Agent, obfuscated endpoint) at **`app/api/hltb/route.ts`**, called from `lib/enrichGame.ts` and `lib/statsHelpers.ts`, surfaced on `app/alternatives/page.tsx`. Running in production against real users. On a monetized product that's a genuine ToS-breach / CFAA-adjacent exposure (possibly shared partner liability if Slant-branded). **iOS already removed theirs entirely** (deleted client, stopped enrichment fetch, archived the edge function) — nothing broke; HLTB times were a nice-to-have, not load-bearing.
+
+**Do:** remove the web scraper and degrade gracefully — drop completion-time estimates or fall back to cached values. Keep `hltbMain` fields (sync-populated, consumers nil-safe). Mirror iOS's approach. Full detail: `inventoryfull-ios/notes/commercial-risk-audit-2026-07-15.md`.
+**Also (small):** confirm the web credits RAWG ("Game data by RAWG" per RAWG ToS) — iOS just added this; web likely already does.
+
+### PRIORITY 2 — build in-app account deletion (web)
+
+Full spec + rationale in [`DECISIONS.md`](DECISIONS.md) 2026-07-16. Source: bus inbox `2026-07-14 ...appstore-privacy-support-pages`.
 
 The iOS session built a reusable `delete-account` Supabase Edge Function. Web should stop saying "contact us" and offer real in-app deletion. Export-my-data is already done on web (`lib/backup.ts` + Settings "Export Backup") — no work there; iOS is the side missing export.
 
@@ -63,7 +76,8 @@ Filed to `processed/2026-07/` on the bus (`ec8fa5e`, local only — bus not push
 
 ## Still open (carried)
 
-- **In-app account deletion (web)** — the next task, see top. Prod-deploy `delete-account` + web UI + copy.
+- **⚠️ Remove live HLTB scraper (web)** — Priority 1 next session, see top. Legal exposure live in prod.
+- **In-app account deletion (web)** — Priority 2, see top. Prod-deploy `delete-account` + web UI + copy.
 - **Fable audit queue:** CI green / lint cleanup (task `task_9124c6ea`), regress-watch weekly registration, GitHub Actions already exists, AGENTS.md evergreen refresh (stale: dated 05-05, no iOS-sibling mention).
 - **Sentry triage** from 2026-06-30.
 - **3 live-only regress-watch items** (90s theme contrast, import-modal overflow, mood banner) — 60s dev-server pass clears all.
