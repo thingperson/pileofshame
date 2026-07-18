@@ -15,6 +15,28 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-07-16 — In-app account deletion comes to web (reuse iOS's Edge Function, sequenced after prod deploy)
+
+**Decision.** Build real in-app account deletion in the web app and replace the "delete by contacting us / within 30 days" privacy language with immediate in-app deletion. Reuse the existing `delete-account` Supabase Edge Function as-is — built and dev-tested by the iOS session (their D-041). This is the **next getplaying session's first task.** Export-my-data needs no web work: the web already has it (`lib/backup.ts` + Settings "Export Backup"); iOS is the side missing export, not web.
+
+**Why.**
+- The iOS `delete-account` function has a clean, provider-agnostic contract the web can call identically: `POST /functions/v1/delete-account`, Bearer JWT, no body, identity derived only from the JWT, returns `{ok:true}` or typed errors, permissive CORS. It deletes `libraries` + `profiles` + the auth user synchronously.
+- "Contact us / 30 days" is strictly worse than what we can now offer. Once deletion is in-app and immediate, the copy should say so.
+- Supersedes the same-session "hold the privacy copy" reasoning: the hold was correct only while the feature didn't exist. It now exists (dev) with a reusable contract, so the resolution is to build, not to keep waiting.
+
+**Prerequisite (hard gate).** `delete-account` is deployed to **DEV only** (`xafdnhsuiygbsfuqtdav`). Prod (`lrzjszthlmcivgyprqnb`) has **zero** edge functions. It must be deployed to prod before any web (or iOS launch) call works — a shared-infra escalation step, not yet done on either side. The web UI is untestable end-to-end until then, which is why this is a dedicated next session, not a tail-of-close add.
+
+**Implementation (next session).**
+- Deploy `delete-account` to prod (verify `SUPABASE_SERVICE_ROLE_KEY` is set; smoke: anon-key → 401, then a real-JWT happy-path). Source of truth: iOS repo `supabase/functions/delete-account/index.ts`.
+- Web UI: signed-in-only danger-zone row in `components/SettingsMenu.tsx` → type-to-confirm "DELETE" modal (works for OAuth users) → `supabase.functions.invoke('delete-account')` → sign out → wipe local → typed error handling. Mirror iOS `DeleteAccountView` + the server-delete-**first** ordering in their `SyncCoordinator`.
+- Copy: `app/privacy/page.tsx` (~L276, L297) + `app/support/page.tsx` → immediate in-app deletion; reserve any "30 days" for genuine backup retention only. No em dashes. Legal gate: ship copy WITH the feature.
+
+**Rejected.**
+- Rewriting the privacy copy now without the feature — announces an unshipped capability (legal gate).
+- Building the web UI this session without the prod deploy — untestable end-to-end, and races the actively-running iOS session on shared infra.
+
+**Drift risk.** Per-game delete / tombstones (iOS D-010) is a separate, deferred contract change — NOT this. This is whole-account deletion (server wipes the `libraries` row outright). Don't conflate the two.
+
 ## 2026-07-15 — GA4 replaced by Vercel Web Analytics; cookie consent banner removed
 
 **Decision.** Removed Google Analytics 4 (the `gtag`/`dataLayer` init script and the consent-gated `gtag.js` loader) and the cookie consent banner entirely. Vercel Web Analytics — already mounted via `<Analytics/>` — becomes the only analytics: cookieless, first-party, no consent required. `lib/analytics.ts` was rewritten as a thin Vercel-backed stub: all ~30 `track*` exports preserved so no call site changed, but only three funnel events are wired (`import_completed → pick_committed → game_launched`); everything else is a no-op.
