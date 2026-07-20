@@ -15,6 +15,25 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-07-19 — HLTB scraper retired; game length now sourced from RAWG `playtime` (honest `playtimeHours` field)
+
+**Decision.** Removed the live HowLongToBeat scraper (`app/api/hltb/route.ts`, deleted) and its e2e test. Game-length data now comes from RAWG's `playtime` field (average hours to beat), written to a new, honestly-named `Game.playtimeHours`. All hours-consumers read effective length via a single helper `gameLengthHours(game) = game.playtimeHours ?? game.hltbMain`. This mirrors what the iOS session did on 2026-07-15 (RAWG-only enrichment). This was carried Priority 1 from 07-16/07-17.
+
+**Why.**
+- The scraper hit an obfuscated endpoint (`/api/bleed`) with a rotating token, a fabricated honeypot field, and a spoofed browser User-Agent — **deliberate bot-detection circumvention, not passive scraping.** In a paid/commercial product (possibly under the Slant brand → shared partner liability) that's real ToS-breach / CFAA-adjacent exposure. iOS's commercial-risk audit (`inventoryfull-ios/notes/commercial-risk-audit-2026-07-15.md`) flagged it as the single biggest exposure. Web being live made it more urgent than iOS.
+- RAWG is the legitimate destination: official, API-keyed, documented, permitted with attribution. It was already our primary enrichment source; it exposes `playtime` on both the detail and search endpoints — we just weren't mapping it.
+- The scraper only ever ran once per game at enrichment; the session-length pick axis and all UI read persisted per-game fields. So swapping the *source* keeps the whole axis alive without a data migration.
+
+**Honest field, not a rename.** New games write `playtimeHours`; the legacy `hltbMain`/`hltbComplete` fields are kept **read-only** (never written again) for (a) games enriched before this change and (b) iOS cloud-sync back-compat. Consumers prefer `playtimeHours` and fall back to `hltbMain`. Rejected: reusing `hltbMain` to hold RAWG data (a field literally named `hltbMain` holding non-HLTB data is a lie waiting to confuse someone). Rejected: renaming/migrating `hltbMain` outright (it's persisted in localStorage AND synced to Supabase AND read by iOS — renaming breaks the sync contract).
+
+**Scope of change.** RAWG route maps `playtime` through L3 fetch + search + both L2 (Supabase `game_metadata`) directions; `enrichGame` derives tier from `playtime`; helper added in `lib/enrichment.ts`; consumers updated in `reroll.ts`, `smartSort.ts`, `GameCard.tsx`, `GridCard.tsx`, `Reroll.tsx`, `CompletionCelebration.tsx`, `app/page.tsx`; StatsPanel Value Calculator now seeds backlog-hours from the store (no network) instead of `fetchHltbBatch` (deleted). Sample/seed fixtures left on the legacy field (fallback covers them). Privacy policy: HowLongToBeat removed from third-party list, RAWG line updated, date bumped.
+
+**Follow-ups (not done in this change).**
+- **Prod DB migration required before deploy:** `ALTER TABLE public.game_metadata ADD COLUMN IF NOT EXISTS playtime real;` — `saveToSupabase` now writes `playtime`, and the whole upsert fails on an unknown column. Hard pre-deploy gate.
+- Delete the dormant dev `hltb` edge function: `supabase functions delete hltb --project-ref xafdnhsuiygbsfuqtdav` (Supabase MCP has no delete verb).
+- iOS contract heads-up: iOS length data stayed fresh only because web synced `hltbMain`. Web now writes `playtimeHours`; iOS should read it too or new games won't get length on iOS.
+- Visible "Powered by RAWG" attribution link (RAWG API terms; iOS added one). Pre-existing gap since RAWG was already the primary source — flagged, not introduced here.
+
 ## 2026-07-16 — In-app account deletion comes to web (reuse iOS's Edge Function, sequenced after prod deploy)
 
 **Decision.** Build real in-app account deletion in the web app and replace the "delete by contacting us / within 30 days" privacy language with immediate in-app deletion. Reuse the existing `delete-account` Supabase Edge Function as-is — built and dev-tested by the iOS session (their D-041). This is the **next getplaying session's first task.** Export-my-data needs no web work: the web already has it (`lib/backup.ts` + Settings "Export Backup"); iOS is the side missing export, not web.

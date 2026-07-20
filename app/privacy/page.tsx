@@ -18,7 +18,7 @@ export default function PrivacyPage() {
 
         <h1 className="text-3xl font-bold mb-2">Privacy Policy</h1>
         <p className="text-sm text-text-dim font-[family-name:var(--font-mono)] mb-8">
-          Last updated: July 15, 2026
+          Last updated: July 19, 2026
         </p>
 
         <div className="space-y-8 text-text-secondary text-[15px] leading-relaxed">
@@ -174,9 +174,8 @@ export default function PrivacyPage() {
               we make API calls to the following services using game names (not your personal data):
             </p>
             <ul className="list-disc list-inside space-y-1.5 text-text-muted">
-              <li><strong>RAWG API</strong>: game metadata, descriptions, genres, screenshots</li>
+              <li><strong>RAWG API</strong>: game metadata, descriptions, genres, screenshots, and average completion times</li>
               <li><strong>IsThereAnyDeal API</strong>: current game prices and deals across stores</li>
-              <li><strong>HowLongToBeat</strong>: estimated completion times</li>
               <li><strong>Steam Web API</strong>: game library, playtime, achievements (when importing)</li>
               <li><strong>OpenXBL API</strong>: Xbox game library and achievements (when importing)</li>
               <li><strong>PlayStation Store API</strong>: PS Plus catalog browsing (game names only, no user data sent)</li>

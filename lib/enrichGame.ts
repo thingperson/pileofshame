@@ -25,6 +25,7 @@ interface EnrichmentResult {
   genres?: string[];
   description?: string;
   moodTags?: MoodTag[];
+  playtimeHours?: number;
   hltbMain?: number;
   hltbComplete?: number;
   timeTier?: TimeTier;
@@ -78,7 +79,8 @@ function matchConfidence(searchName: string, resultName: string): number {
 }
 
 /**
- * Enrich a single game with data from RAWG and HLTB.
+ * Enrich a single game with data from RAWG (metadata + `playtime` game length).
+ * The HLTB scraper was retired 2026-07-19; length now comes from RAWG.
  * Returns partial Game update fields.
  */
 export async function enrichGame(game: Game): Promise<EnrichmentResult | null> {
@@ -140,6 +142,12 @@ export async function enrichGame(game: Game): Promise<EnrichmentResult | null> {
           const year = parseInt(rawgData.released.slice(0, 4), 10);
           if (!isNaN(year) && year > 1970 && year < 2100) result.releaseYear = year;
         }
+        // Game length now comes from RAWG's `playtime` (avg hours), not the retired
+        // HLTB scraper. Populate the honest `playtimeHours` field and derive the tier.
+        if (!game.playtimeHours && rawgData.playtime && rawgData.playtime > 0) {
+          result.playtimeHours = rawgData.playtime;
+          result.timeTier = inferTimeTier(rawgData.playtime);
+        }
 
         // If we got a slug from search but don't have a description yet,
         // do a follow-up slug fetch for the full description
@@ -169,25 +177,8 @@ export async function enrichGame(game: Game): Promise<EnrichmentResult | null> {
     if (moods.length > 0) result.moodTags = moods;
   }
 
-  // Step 3: HLTB — fetch completion time if we don't have it
-  if (!game.hltbMain) {
-    try {
-      const cleanName = normalizeGameName(game.name);
-      const res = await fetchWithRetry(`/api/hltb?title=${encodeURIComponent(cleanName)}`);
-      if (res.ok) {
-        const data = await res.json();
-        if (data.found && data.main > 0) {
-          result.hltbMain = data.main;
-          result.hltbComplete = data.completionist || undefined;
-
-          // Auto-assign time tier from HLTB data
-          result.timeTier = inferTimeTier(data.main);
-        }
-      }
-    } catch {
-      // HLTB failed, continue
-    }
-  }
+  // Step 3: (retired) HLTB completion-time lookup removed 2026-07-19. Game length now
+  // comes from RAWG `playtime` in Step 1. See docs/DECISIONS.md 2026-07-19.
 
   // Step 4: Auto-detect non-finishable games
   if (game.isNonFinishable === undefined) {
@@ -198,7 +189,7 @@ export async function enrichGame(game: Game): Promise<EnrichmentResult | null> {
     const hasNonFinishableGenre = allGenres.some(g => nonFinishableGenres.some(nf => g.includes(nf)));
     const hasSandboxOnly = allGenres.some(g => likelyNonFinishable.some(nf => g.includes(nf)))
       && !allGenres.some(g => g.includes('adventure') || g.includes('rpg'));
-    const noStoryTime = !result.hltbMain && !game.hltbMain;
+    const noStoryTime = !result.playtimeHours && !game.playtimeHours && !result.hltbMain && !game.hltbMain;
     const isMultiplayerOnly = noStoryTime && allGenres.some(g =>
       g.includes('shooter') || g.includes('sports') || g.includes('racing') || g.includes('fighting')
     );

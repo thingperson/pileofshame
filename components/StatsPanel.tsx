@@ -10,10 +10,11 @@ import { trackStatsExpand, trackArchetypeRerolled } from '@/lib/analytics';
 import {
   loadCache, saveCache, getCacheKey,
   getCurrentStreak, getOldestBacklogGame,
-  fetchPricesBatch, fetchHltbBatch,
-  PRICE_CACHE_KEY, HLTB_CACHE_KEY,
+  fetchPricesBatch,
+  PRICE_CACHE_KEY,
 } from '@/lib/statsHelpers';
 import { getDecisionStats, clearDecisionHistory } from '@/lib/decisionHistory';
+import { gameLengthHours } from '@/lib/enrichment';
 import StatCard from './StatCard';
 import ArchetypeCard from './ArchetypeCard';
 import ValueCalculator from './ValueCalculator';
@@ -172,9 +173,15 @@ export default function StatsPanel({ games }: StatsPanelProps) {
     // Non-finishable games that are playing count as "explored"
     const nonFinishablePlaying = games.filter((g) => g.isNonFinishable && g.status === 'playing').length;
 
+    // Share of the whole library actually finished. The user asked to be measured
+    // here — it's an honest number, and the copy reframes the remainder as runway,
+    // not shame (denominator is everything owned; Moved On counts as not-finished).
+    const totalGames = games.length;
+    const finishedPct = totalGames > 0 ? Math.round((gamesCleared / totalGames) * 100) : 0;
+
     return {
       backlogSize, gamesCleared, bailedCount, nowPlaying, totalHours, streak, oldest,
-      inMotion, nonFinishablePlaying,
+      inMotion, nonFinishablePlaying, totalGames, finishedPct,
       totalAchievementsEarned, totalAchievements, platinumsEarned, perfectGames,
       totalGamerscore, hasAchievementData: gamesWithAchievements.length > 0,
     };
@@ -259,9 +266,6 @@ export default function StatsPanel({ games }: StatsPanelProps) {
     const allGames = games.filter((g) => g.name.length > 2);
 
     const uncachedForPrice = allGames.filter((g) => !priceCache.has(getCacheKey(g.name)));
-    const uncachedForHltb = allGames
-      .filter((g) => g.status === 'buried' || g.status === 'on-deck')
-      .filter((g) => !hltbCache.has(getCacheKey(g.name)));
 
     for (let i = 0; i < uncachedForPrice.length; i += 15) {
       if (enrichAbortRef.current) break;
@@ -269,16 +273,6 @@ export default function StatsPanel({ games }: StatsPanelProps) {
       const results = await fetchPricesBatch(batch);
       results.forEach((v, k) => priceCache.set(k, v));
       saveCache(PRICE_CACHE_KEY, priceCache);
-      computeValues(priceCache, hltbCache);
-      await new Promise((r) => setTimeout(r, 500));
-    }
-
-    for (let i = 0; i < uncachedForHltb.length; i += 10) {
-      if (enrichAbortRef.current) break;
-      const batch = uncachedForHltb.slice(i, i + 10).map((g) => g.name);
-      const results = await fetchHltbBatch(batch);
-      results.forEach((v, k) => hltbCache.set(k, v));
-      saveCache(HLTB_CACHE_KEY, hltbCache);
       computeValues(priceCache, hltbCache);
       await new Promise((r) => setTimeout(r, 500));
     }
@@ -295,34 +289,26 @@ export default function StatsPanel({ games }: StatsPanelProps) {
     setCalculating(true);
 
     const priceCache = loadCache<number>(PRICE_CACHE_KEY);
-    const hltbCache = loadCache<number>(HLTB_CACHE_KEY);
 
     const allGames = games.filter((g) => g.name.length > 2);
+
+    // Game length now comes straight from each game's enriched RAWG playtime
+    // (legacy hltbMain fallback) — no network call, no scraper. Seed the hours
+    // map synchronously from the store.
+    const hltbCache = new Map<string, number>();
+    for (const g of allGames) {
+      const len = gameLengthHours(g);
+      if (len && len > 0) hltbCache.set(getCacheKey(g.name), len);
+    }
 
     const uncachedForPrice = allGames
       .filter((g) => !priceCache.has(getCacheKey(g.name)))
       .sort(() => Math.random() - 0.5)
       .slice(0, 15);
 
-    const backlogUncachedForHltb = allGames
-      .filter((g) => g.status === 'buried' || g.status === 'on-deck')
-      .filter((g) => !hltbCache.has(getCacheKey(g.name)))
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 10);
-
-    const [priceResults, hltbResults] = await Promise.allSettled([
-      fetchPricesBatch(uncachedForPrice.map((g) => g.name)),
-      fetchHltbBatch(backlogUncachedForHltb.map((g) => g.name)),
-    ]);
-
-    if (priceResults.status === 'fulfilled') {
-      priceResults.value.forEach((v, k) => priceCache.set(k, v));
-      saveCache(PRICE_CACHE_KEY, priceCache);
-    }
-    if (hltbResults.status === 'fulfilled') {
-      hltbResults.value.forEach((v, k) => hltbCache.set(k, v));
-      saveCache(HLTB_CACHE_KEY, hltbCache);
-    }
+    const priceResults = await fetchPricesBatch(uncachedForPrice.map((g) => g.name));
+    priceResults.forEach((v, k) => priceCache.set(k, v));
+    saveCache(PRICE_CACHE_KEY, priceCache);
 
     computeValues(priceCache, hltbCache);
 
@@ -454,6 +440,27 @@ export default function StatsPanel({ games }: StatsPanelProps) {
             animation: 'scaleIn 300ms ease-out',
           }}
         >
+          {/* Finished share of the whole library. Honest number, validating copy —
+              the user came here to be measured. Remainder reframed as runway, not shame. */}
+          {stats.totalGames > 0 && (
+            <div
+              className="mb-3 rounded-lg border p-3"
+              style={{ backgroundColor: 'var(--color-glass-medium)', borderColor: 'var(--color-border-subtle)' }}
+            >
+              {stats.finishedPct >= 100 ? (
+                <p className="text-sm text-text-secondary leading-relaxed">
+                  <span className="font-bold text-text-primary">100% finished.</span>{' '}
+                  The pile is empty. Go find your next one.
+                </p>
+              ) : (
+                <p className="text-sm text-text-secondary leading-relaxed">
+                  <span className="font-bold text-text-primary">{stats.finishedPct}% finished.</span>{' '}
+                  The other {100 - stats.finishedPct}% is runway, not guilt. Go add one to Up Next.
+                </p>
+              )}
+            </div>
+          )}
+
           {/* Victory Row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
             <StatCard label="Cleared" value={stats.gamesCleared.toString()} icon="✅" color="var(--stat-green, #22c55e)" />

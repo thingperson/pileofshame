@@ -9,6 +9,7 @@ import { useScrollLock } from '@/lib/useScrollLock';
 import { useToast } from './Toast';
 import { trackGameCleared, trackShareClear, trackFirstCompletion, trackShareCardCreated } from '@/lib/analytics';
 import { loadCache, PRICE_CACHE_KEY, getCacheKey } from '@/lib/statsHelpers';
+import { gameLengthHours } from '@/lib/enrichment';
 import PixelSprite from './PixelSprite';
 
 interface CompletionCelebrationProps {
@@ -350,13 +351,14 @@ function GameClearShare({
     return game.isNonFinishable ? pickDoneFlavor(ctx) : pickFlavor(ctx);
   }, [game.name, game.isNonFinishable, timeInPileDays, hoursOnGame, gamesCleared, backlogSize, gamePrice]);
 
-  // HLTB "faster than average" — only a brag when the player actually beat it
-  // below the average. Slower/thorough isn't share-worthy.
+  // "Faster than average" — only a brag when the player actually beat it below
+  // the crowd-average length (RAWG playtime). Slower/thorough isn't share-worthy.
   const hltbFasterHours = useMemo(() => {
-    if (!game.hltbMain || !hoursOnGame || game.hltbMain <= 0) return null;
-    const diff = Math.round(game.hltbMain - hoursOnGame);
+    const len = gameLengthHours(game);
+    if (!len || !hoursOnGame || len <= 0) return null;
+    const diff = Math.round(len - hoursOnGame);
     return diff > 0 ? diff : null;
-  }, [game.hltbMain, hoursOnGame]);
+  }, [game, hoursOnGame]);
 
   const handleCreateCard = useCallback(async () => {
     setCreating(true);
@@ -370,7 +372,7 @@ function GameClearShare({
           coverUrl: game.coverUrl || null,
           rating: 0,
           hoursPlayed: hoursOnGame || null,
-          hltbMain: game.hltbMain || null,
+          hltbMain: gameLengthHours(game) || null,
           timeInPileDays,
           totalCleared: gamesCleared + 1,
           backlogRemaining: backlogSize,
@@ -396,7 +398,7 @@ function GameClearShare({
     } finally {
       setCreating(false);
     }
-  }, [game.name, game.coverUrl, game.hltbMain, hoursOnGame, timeInPileDays, gamesCleared, backlogSize, gamePrice, hltbFasterHours, flavorText]);
+  }, [game.name, game.coverUrl, game.playtimeHours, game.hltbMain, hoursOnGame, timeInPileDays, gamesCleared, backlogSize, gamePrice, hltbFasterHours, flavorText]);
 
   useEffect(() => {
     handleCreateCard();
@@ -532,7 +534,7 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
     trackGameCleared({
       game_name: game?.name,
       hours_played: hoursOnGame,
-      hltb_main: game?.hltbMain,
+      hltb_main: game ? gameLengthHours(game) : undefined,
       time_tier: game?.timeTier,
       rating: rating || undefined,
     });

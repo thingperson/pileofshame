@@ -5,6 +5,7 @@ import { isNotInterestedIgnored, isHitAWallSuppressed, getAllSkipReasons } from 
 import { getBehavioralWeight } from './decisionHistory';
 import type { SmartPickType } from './smartPickCopy';
 import { getSupersededGameIds } from './franchiseDedup';
+import { gameLengthHours } from './enrichment';
 
 // `continue` is the internal key for user-facing "Resume". Kept as `continue`
 // so existing persisted state and analytics events don't break. Deep Cut and
@@ -80,13 +81,14 @@ export function getEligibleGames(
       case 'anything':
         return true;
       case 'quick-session': {
-        // Tier is the primary gate, but cross-check against hltbMain so a 52-hour sim
+        // Tier is the primary gate, but cross-check against game length so a 52-hour sim
         // tagged 'wind-down' doesn't leak into "short session today." Drop-in games
         // (isNonFinishable) are exempt — Vampire Survivors and Stardew are legitimately
         // short-session friendly regardless of total length.
         if (game.timeTier !== 'quick-hit' && game.timeTier !== 'wind-down') return false;
         if (game.isNonFinishable) return true;
-        if (game.hltbMain && game.hltbMain > 12) return false;
+        const len = gameLengthHours(game);
+        if (len && len > 12) return false;
         return true;
       }
       case 'continue': {
@@ -294,8 +296,9 @@ export function getPickReasons(game: Game): PickReason[] {
     reasons.push({ label: 'Been in your pile a while', icon: '📅' });
   }
 
-  if (game.hltbMain && game.hltbMain <= 8) {
-    reasons.push({ label: game.isNonFinishable ? `~${game.hltbMain}h sessions` : `Beatable in ~${game.hltbMain}h`, icon: '⏱️' });
+  const lengthH = gameLengthHours(game);
+  if (lengthH && lengthH <= 8) {
+    reasons.push({ label: game.isNonFinishable ? `~${lengthH}h sessions` : `Beatable in ~${lengthH}h`, icon: '⏱️' });
   }
 
   // Time-of-day contextual reason.
@@ -363,11 +366,12 @@ export function pickWeighted(
 // lands on the Game type, extend the Forgotten Gem check here.
 
 export function classifySmartPick(game: Game): SmartPickType | null {
-  const { status, hoursPlayed, hltbMain, metacritic } = game;
+  const { status, hoursPlayed, metacritic } = game;
+  const lengthH = gameLengthHours(game);
 
   if (
-    hltbMain && hltbMain > 0 &&
-    hoursPlayed / hltbMain >= 0.75 &&
+    lengthH && lengthH > 0 &&
+    hoursPlayed / lengthH >= 0.75 &&
     (status === 'playing' || status === 'on-deck')
   ) {
     return 'almost-there';

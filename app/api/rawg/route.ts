@@ -51,6 +51,7 @@ async function getFromSupabase(slug: string) {
         rating: data.rating,
         description: data.description,
         tags: data.tags || [],
+        playtime: data.playtime ?? null,
       },
     };
   } catch {
@@ -72,6 +73,7 @@ async function saveToSupabase(slug: string, game: Record<string, unknown>, hltb?
       rating: game.rating,
       description: game.description,
       tags: game.tags || [],
+      playtime: game.playtime ?? null,
       hltb_main: hltb?.main ?? null,
       hltb_extra: hltb?.extra ?? null,
       hltb_completionist: hltb?.completionist ?? null,
@@ -152,6 +154,7 @@ export async function GET(request: NextRequest) {
         rating: game.rating,
         description: synopsis,
         tags: game.tags?.slice(0, 10).map((t: { name: string }) => t.name) || [],
+        playtime: game.playtime ?? null,
       };
 
       const result = { game: gameData };
@@ -193,6 +196,7 @@ export async function GET(request: NextRequest) {
           released: game.released,
           rating: game.rating,
           description: (game.description_raw || '').replace(/<[^>]*>/g, '').slice(0, 200) || undefined,
+          playtime: game.playtime ?? null,
         })),
       };
       setCache(cacheKey, result);

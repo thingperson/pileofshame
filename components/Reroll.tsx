@@ -5,7 +5,7 @@ import { Game, MoodTag } from '@/lib/types';
 import { useStore } from '@/lib/store';
 import { useScrollLock } from '@/lib/useScrollLock';
 import { REROLL_MESSAGES, TIME_TIER_CONFIG, MAX_PLAYING_NOW } from '@/lib/constants';
-import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
+import { MOOD_TAG_CONFIG, gameLengthHours } from '@/lib/enrichment';
 import { hasSprite } from '@/lib/pixel/sprites';
 import PixelSprite from './PixelSprite';
 import LineIcon from './LineIcon';
@@ -22,12 +22,13 @@ import { emitSampleCompleted } from './SampleImportNudge';
 const ALL_MOODS: MoodTag[] = ['chill', 'intense', 'story-rich', 'brainless', 'atmospheric', 'competitive', 'spooky', 'creative', 'strategic', 'emotional'];
 
 function getSessionEstimate(game: Game): string | null {
-  if (game.hltbMain && game.hltbMain > 0) {
+  const lengthH = gameLengthHours(game);
+  if (lengthH && lengthH > 0) {
     if (game.hoursPlayed > 0) {
-      const remaining = Math.max(Math.ceil(game.hltbMain - game.hoursPlayed), 1);
+      const remaining = Math.max(Math.ceil(lengthH - game.hoursPlayed), 1);
       return `~${remaining}h left`;
     }
-    return game.isNonFinishable ? `~${game.hltbMain}h per session` : `~${game.hltbMain}h to beat`;
+    return game.isNonFinishable ? `~${lengthH}h per session` : `~${lengthH}h to beat`;
   }
   return null;
 }
@@ -231,7 +232,7 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
       game_name: game.name,
       time_tier: game.timeTier,
       smart_pick_type: smartPickType ?? undefined,
-      hltb_main: game.hltbMain,
+      hltb_main: gameLengthHours(game),
       rolls_until_commit: rollCount,
     });
     // Funnel: first-ever commit (once per browser)
@@ -786,8 +787,8 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                     other people's opinions of the game instead of their own. We
                     say "try this — we have reason to believe you'll like it,"
                     not "here's how it scored." */}
-                {currentPick.hltbMain && (
-                  <span>🕐 ~{currentPick.hltbMain}h {currentPick.isNonFinishable ? 'per session' : 'to beat'}</span>
+                {gameLengthHours(currentPick) && (
+                  <span>🕐 ~{gameLengthHours(currentPick)}h {currentPick.isNonFinishable ? 'per session' : 'to beat'}</span>
                 )}
                 <span>{TIME_TIER_CONFIG[currentPick.timeTier].icon} {TIME_TIER_CONFIG[currentPick.timeTier].label}</span>
                 {currentPick.hoursPlayed > 0 && <span>{currentPick.hoursPlayed}h logged</span>}
@@ -795,17 +796,18 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
               {/* Smart Pick pill + headline */}
               {smartPickType && (() => {
                 const { label, icon } = SMART_PICK_LABELS[smartPickType];
+                const pickLength = gameLengthHours(currentPick);
                 const headline = renderSmartPickHeadline(smartPickType, currentPick.name, {
                   hoursPlayed: currentPick.hoursPlayed,
-                  hltbMain: currentPick.hltbMain,
+                  hltbMain: pickLength,
                   // {pct} means playthrough progress for almost-there, not a
-                  // critic score. Pass real progress (hours / HLTB, capped 99)
+                  // critic score. Pass real progress (hours / length, capped 99)
                   // only there; leave it undefined for every other type so
                   // forgotten-gem's "% positive on Steam" line self-filters
                   // instead of rendering a Metacritic score as a Steam stat.
                   ratingPct:
-                    smartPickType === 'almost-there' && currentPick.hltbMain
-                      ? Math.min(99, Math.round((currentPick.hoursPlayed / currentPick.hltbMain) * 100))
+                    smartPickType === 'almost-there' && pickLength
+                      ? Math.min(99, Math.round((currentPick.hoursPlayed / pickLength) * 100))
                       : undefined,
                 });
                 return (
@@ -860,14 +862,15 @@ export default function Reroll({ open, onClose, initialMode, onJustFiveMinutes, 
                 // already in the stat row above. Avoids the user reading
                 // "~3.1h to beat" twice on the same screen.
                 const allReasons = getPickReasons(currentPick);
-                const reasons = currentPick.hltbMain
+                const pickLen = gameLengthHours(currentPick);
+                const reasons = pickLen
                   ? allReasons.filter((r) => !r.label.startsWith('Beatable in'))
                   : allReasons;
                 let trigger: { icon: string; label: string } | null = null;
                 if (smartPickType) {
                   const h = Math.round(currentPick.hoursPlayed);
-                  if (smartPickType === 'almost-there' && currentPick.hltbMain) {
-                    const pct = Math.min(99, Math.round((currentPick.hoursPlayed / currentPick.hltbMain) * 100));
+                  if (smartPickType === 'almost-there' && pickLen) {
+                    const pct = Math.min(99, Math.round((currentPick.hoursPlayed / pickLen) * 100));
                     trigger = { icon: '🏁', label: `${pct}% to credits` };
                   } else if (smartPickType === 'keep-flowing') {
                     trigger = { icon: '🌊', label: `Still warm, ${h}h in` };

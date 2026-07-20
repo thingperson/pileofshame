@@ -3,7 +3,6 @@ import { Game } from '@/lib/types';
 // --- Cache constants ---
 
 export const PRICE_CACHE_KEY = 'pos-price-cache';
-export const HLTB_CACHE_KEY = 'pos-hltb-cache';
 export const CACHE_TTL = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 interface CacheEntry<T> {
@@ -182,27 +181,6 @@ export async function fetchPricesBatch(titles: string[]): Promise<Map<string, nu
       if (data.prices) {
         for (const p of data.prices) {
           results.set(getCacheKey(p.title), p.retailPrice);
-        }
-      }
-    }
-  } catch { /* fail silently */ }
-
-  return results;
-}
-
-export async function fetchHltbBatch(titles: string[]): Promise<Map<string, number>> {
-  const results = new Map<string, number>();
-  if (titles.length === 0) return results;
-
-  try {
-    const res = await fetch(`/api/hltb?action=batch&titles=${encodeURIComponent(titles.join(','))}`);
-    if (res.ok) {
-      const data = await res.json();
-      if (data.results) {
-        for (const r of data.results) {
-          if (r.found && r.main > 0) {
-            results.set(getCacheKey(r.title), r.main);
-          }
         }
       }
     }

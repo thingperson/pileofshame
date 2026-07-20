@@ -41,11 +41,14 @@ export interface Game {
   // Achievements / Trophies (populated on import from PSN, Xbox)
   achievements?: GameAchievements;
 
-  // Auto-enrichment fields (populated from RAWG, HLTB, Steam)
+  // Auto-enrichment fields (populated from RAWG, Steam)
   description?: string;        // Game synopsis from RAWG
   moodTags?: MoodTag[];        // Auto-inferred from genres
-  hltbMain?: number;           // Hours to beat (main story) from HLTB
-  hltbComplete?: number;       // Hours to 100% from HLTB
+  playtimeHours?: number;      // Average hours to beat, from RAWG `playtime`. Preferred hours source.
+  hltbMain?: number;           // LEGACY (do not write): hours-to-beat from the retired HLTB scraper.
+                               // Kept read-only for already-enriched games + iOS cloud-sync back-compat.
+                               // Read as `playtimeHours ?? hltbMain`.
+  hltbComplete?: number;       // LEGACY (do not write): hours-to-100% from the retired HLTB scraper.
   enrichedAt?: string;         // ISO date of last enrichment
   isNonFinishable?: boolean;   // Auto-detected: MMOs, multiplayer-only, roguelikes, sandboxes
   releaseYear?: number;        // Year of original release (from RAWG `released` field)

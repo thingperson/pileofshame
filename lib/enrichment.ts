@@ -1,5 +1,16 @@
-import { MoodTag, TimeTier } from './types';
+import { Game, MoodTag, TimeTier } from './types';
 import { CURATED_MOODS } from './curatedMoods';
+
+/**
+ * Effective "hours to beat" for a game. Prefers RAWG `playtimeHours` (current
+ * source); falls back to the legacy `hltbMain` for games enriched before the
+ * HLTB scraper was retired (2026-07-19). Returns undefined when neither exists.
+ */
+export function gameLengthHours(
+  game: Pick<Game, 'playtimeHours' | 'hltbMain'>,
+): number | undefined {
+  return game.playtimeHours ?? game.hltbMain;
+}
 
 /**
  * Auto-enrichment engine.
@@ -151,12 +162,12 @@ export function inferMoodTags(gameName: string, genres?: string[]): MoodTag[] {
 }
 
 /**
- * Infer session tier from HLTB main story hours.
+ * Infer session tier from average hours to beat (RAWG playtime).
  */
-export function inferTimeTier(hltbMainHours: number): TimeTier {
-  if (hltbMainHours <= 3) return 'quick-hit';
-  if (hltbMainHours <= 12) return 'wind-down';
-  if (hltbMainHours <= 35) return 'deep-cut';
+export function inferTimeTier(hours: number): TimeTier {
+  if (hours <= 3) return 'quick-hit';
+  if (hours <= 12) return 'wind-down';
+  if (hours <= 35) return 'deep-cut';
   return 'marathon';
 }
 

@@ -8,7 +8,7 @@ import { getLaunchTarget } from '@/lib/launch';
 import { findSimilarGames } from '@/lib/similarity';
 import { useToast } from './Toast';
 import { getGameDescriptor } from '@/lib/descriptors';
-import { MOOD_TAG_CONFIG, getPlaytimeRoast } from '@/lib/enrichment';
+import { MOOD_TAG_CONFIG, getPlaytimeRoast, gameLengthHours } from '@/lib/enrichment';
 import { trackStatusChange } from '@/lib/analytics';
 import { getSkipCount, resetSkipCount, isSoftIgnored } from '@/lib/skipTracking';
 import { getReentryTips } from '@/lib/reentryPacks';
@@ -21,9 +21,10 @@ import { hasSprite } from '@/lib/pixel/sprites';
 function JumpBackIn({ game }: { game: Game }) {
   const [open, setOpen] = useState(false);
 
-  // Progress estimate
-  const progressPct = game.hoursPlayed && game.hltbMain
-    ? Math.min(Math.round((game.hoursPlayed / game.hltbMain) * 100), 100)
+  // Progress estimate (game length from RAWG playtime, legacy hltbMain fallback)
+  const lengthH = gameLengthHours(game);
+  const progressPct = game.hoursPlayed && lengthH
+    ? Math.min(Math.round((game.hoursPlayed / lengthH) * 100), 100)
     : null;
 
   // Check for verified re-entry pack first, then fall back to genre tips
@@ -56,7 +57,7 @@ function JumpBackIn({ game }: { game: Game }) {
             <div className="space-y-1">
               <div className="flex items-center justify-between text-xs font-[family-name:var(--font-mono)]">
                 <span className="text-text-dim">
-                  ~{progressPct}% through ({game.hoursPlayed}h / {game.hltbMain}h)
+                  ~{progressPct}% through ({game.hoursPlayed}h / {lengthH}h)
                 </span>
                 {progressPct >= 75 && (
                   <span className="text-green-400">Almost there</span>
@@ -137,20 +138,20 @@ function JumpBackIn({ game }: { game: Game }) {
             </div>
           )}
 
-          {/* Progress-based nudge — HLTB is crowd data, not a personal prediction. */}
-          {progressPct !== null && progressPct >= 75 && game.hltbMain && (
+          {/* Progress-based nudge — crowd average, not a personal prediction. */}
+          {progressPct !== null && progressPct >= 75 && lengthH && (
             <p className="text-xs text-green-400/80 font-medium font-[family-name:var(--font-mono)]">
-              Most finish within ~{Math.max(1, Math.round(game.hltbMain - game.hoursPlayed))}h from here. Could be your last session.
+              Most finish within ~{Math.max(1, Math.round(lengthH - game.hoursPlayed))}h from here. Could be your last session.
             </p>
           )}
-          {progressPct !== null && progressPct >= 40 && progressPct < 75 && game.hltbMain && (
+          {progressPct !== null && progressPct >= 40 && progressPct < 75 && lengthH && (
             <p className="text-xs text-amber-300/60 font-[family-name:var(--font-mono)]">
-              ~{Math.round(game.hltbMain - game.hoursPlayed)}h more for most players. Past the typical halfway mark.
+              ~{Math.round(lengthH - game.hoursPlayed)}h more for most players. Past the typical halfway mark.
             </p>
           )}
 
           {/* No enrichment data? */}
-          {!game.description && !game.hltbMain && (!game.genres || game.genres.length === 0) && (
+          {!game.description && !lengthH && (!game.genres || game.genres.length === 0) && (
             <p className="text-xs text-text-faint italic">
               No game data available yet. It might still be enriching.
             </p>
@@ -613,7 +614,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
           coverUrl: game.coverUrl || null,
           rating: game.rating || 0,
           hoursPlayed: game.hoursPlayed || null,
-          hltbMain: game.hltbMain || null,
+          hltbMain: gameLengthHours(game) || null,
           timeInPileDays,
           totalCleared: gamesCleared,
           backlogRemaining: backlogSize,
@@ -879,9 +880,11 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                 {game.hoursPlayed > 0 && (
                   <span className="text-text-primary font-semibold">{game.hoursPlayed}h played</span>
                 )}
-                {game.status === 'playing' && game.hoursPlayed > 0 && game.hltbMain && game.hltbMain > 0 && (() => {
-                  const remaining = Math.max(game.hltbMain - game.hoursPlayed, 0);
-                  const pct = Math.min(Math.round((game.hoursPlayed / game.hltbMain) * 100), 100);
+                {game.status === 'playing' && game.hoursPlayed > 0 && (() => {
+                  const lengthH = gameLengthHours(game);
+                  if (!lengthH || lengthH <= 0) return null;
+                  const remaining = Math.max(lengthH - game.hoursPlayed, 0);
+                  const pct = Math.min(Math.round((game.hoursPlayed / lengthH) * 100), 100);
                   if (remaining > 0 && remaining <= 8) {
                     return (
                       <span
@@ -1038,12 +1041,12 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
                 );
               })()}
 
-              {/* HLTB + Mood Tags row */}
-              {(game.hltbMain || (game.moodTags && game.moodTags.length > 0)) && (
+              {/* Game length + Mood Tags row */}
+              {(gameLengthHours(game) || (game.moodTags && game.moodTags.length > 0)) && (
                 <div className="flex flex-wrap items-center gap-1.5">
-                  {game.hltbMain && (
-                    <span className="text-xs font-[family-name:var(--font-mono)] text-text-dim px-1.5 py-0.5 rounded bg-bg-primary border border-border-subtle" title="Average completion time via HowLongToBeat">
-                      🕐 ~{game.hltbMain}h {game.isNonFinishable ? 'per session' : 'to beat'}
+                  {gameLengthHours(game) && (
+                    <span className="text-xs font-[family-name:var(--font-mono)] text-text-dim px-1.5 py-0.5 rounded bg-bg-primary border border-border-subtle" title="Average completion time (RAWG)">
+                      🕐 ~{gameLengthHours(game)}h {game.isNonFinishable ? 'per session' : 'to beat'}
                     </span>
                   )}
                   {game.moodTags?.map((mood) => {
@@ -1066,7 +1069,7 @@ export default function GameCard({ game, upNextIndex, forceExpanded, progressAct
               )}
 
               {/* Jump Back In — Now Playing cheat sheet */}
-              {(game.status === 'playing' || game.status === 'on-deck') && (game.description || game.hltbMain || game.genres?.length) && (
+              {(game.status === 'playing' || game.status === 'on-deck') && (game.description || gameLengthHours(game) || game.genres?.length) && (
                 <JumpBackIn game={game} />
               )}
 

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Game } from '@/lib/types';
 import { TIME_TIER_CONFIG, SOURCE_LABELS, SOURCE_SHORT, SOURCE_COLORS } from '@/lib/constants';
-import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
+import { MOOD_TAG_CONFIG, gameLengthHours } from '@/lib/enrichment';
 import GameDetailModal from './GameDetailModal';
 import { isSoftIgnored } from '@/lib/skipTracking';
 
@@ -38,10 +38,11 @@ export default function GridCard({ game }: GridCardProps) {
 
   const tierConfig = TIME_TIER_CONFIG[game.timeTier];
 
-  // HLTB progress inference
-  const hasProgress = game.hoursPlayed > 0 && game.hltbMain && game.hltbMain > 0;
-  const progressPct = hasProgress ? Math.min(Math.round((game.hoursPlayed / game.hltbMain!) * 100), 100) : null;
-  const remainingHours = hasProgress ? Math.max(game.hltbMain! - game.hoursPlayed, 0) : null;
+  // Progress inference from game length (RAWG playtime, legacy hltbMain fallback)
+  const lengthH = gameLengthHours(game);
+  const hasProgress = game.hoursPlayed > 0 && !!lengthH && lengthH > 0;
+  const progressPct = hasProgress ? Math.min(Math.round((game.hoursPlayed / lengthH!) * 100), 100) : null;
+  const remainingHours = hasProgress ? Math.max(lengthH! - game.hoursPlayed, 0) : null;
 
   // Achievement progress
   const hasAchievements = game.achievements && game.achievements.total > 0;
@@ -182,7 +183,7 @@ export default function GridCard({ game }: GridCardProps) {
                   backgroundColor: progressPct! >= 85 ? 'rgba(34, 197, 94, 0.15)' : 'rgba(251, 191, 36, 0.15)',
                   color: progressPct! >= 85 ? '#4ade80' : '#fcd34d',
                 }}
-                title={`HLTB-typical pacing: ${game.hoursPlayed}h played of ~${game.hltbMain}h average. Your run will vary.`}
+                title={`Typical pacing: ${game.hoursPlayed}h played of ~${lengthH}h average. Your run will vary.`}
               >
                 {progressPct! >= 85 ? '🏁 Near typical finish' : `⏳ ~${Math.round(remainingHours)}h to typical`}
               </span>

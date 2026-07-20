@@ -252,12 +252,14 @@ function AppContent() {
           case 'most-playtime': sorted.sort((a, b) => (b.hoursPlayed || 0) - (a.hoursPlayed || 0) || a.name.localeCompare(b.name)); break;
           case 'least-playtime': sorted.sort((a, b) => (a.hoursPlayed || 0) - (b.hoursPlayed || 0) || a.name.localeCompare(b.name)); break;
           case 'closest-to-done': sorted.sort((a, b) => {
-            // Sort by HLTB main story length — shortest games first.
-            // We don't infer completion proximity from hours played; the user
-            // decides where they are, not us.
-            if (a.hltbMain && b.hltbMain) return a.hltbMain - b.hltbMain;
-            if (a.hltbMain) return -1;
-            if (b.hltbMain) return 1;
+            // Sort by game length (RAWG playtime, legacy hltbMain fallback) —
+            // shortest games first. We don't infer completion proximity from hours
+            // played; the user decides where they are, not us.
+            const al = a.playtimeHours ?? a.hltbMain;
+            const bl = b.playtimeHours ?? b.hltbMain;
+            if (al && bl) return al - bl;
+            if (al) return -1;
+            if (bl) return 1;
             return a.name.localeCompare(b.name);
           }); break;
           default: sorted = sortBestForYou(inTab, games);

@@ -1,4 +1,5 @@
 import { Game } from './types';
+import { gameLengthHours } from './enrichment';
 
 /**
  * "Best for You" sort algorithm.
@@ -77,10 +78,11 @@ export function scoreGame(game: Game, genreDist: GenreDistribution): number {
 
   // ── Completion proximity (0-20) ──
   // The closer you are to finishing, the higher you should be.
-  // This is the HLTB inference — if they're 15h into a 20h game, surface it.
-  if (game.hoursPlayed > 0 && game.hltbMain && game.hltbMain > 0) {
-    const progress = game.hoursPlayed / game.hltbMain;
-    const remainingHours = game.hltbMain - game.hoursPlayed;
+  // Uses game length (RAWG playtime) — if they're 15h into a 20h game, surface it.
+  const lengthH = gameLengthHours(game);
+  if (game.hoursPlayed > 0 && lengthH && lengthH > 0) {
+    const progress = game.hoursPlayed / lengthH;
+    const remainingHours = lengthH - game.hoursPlayed;
 
     if (progress >= 0.85) {
       // Almost done — huge boost. "You're right there."
@@ -122,7 +124,7 @@ export function scoreGame(game: Game, genreDist: GenreDistribution): number {
   if (game.description) score += 2;
   if (game.coverUrl) score += 1;
   if (game.moodTags && game.moodTags.length > 0) score += 1;
-  if (game.hltbMain) score += 1;
+  if (lengthH) score += 1;
 
   return score;
 }
