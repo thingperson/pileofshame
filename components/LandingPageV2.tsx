@@ -9,7 +9,7 @@ import { trackLandingView } from '@/lib/analytics';
 import { useStore } from '@/lib/store';
 import { DISCORD_INVITE_URL, PIP_BOT_INVITE_URL } from '@/lib/social';
 import { SAMPLE_GAMES } from '@/lib/sampleLibrary';
-import { getEligibleGames, pickWeighted, getDefaultSessionLength, type SessionLength } from '@/lib/reroll';
+import { getEligibleGames, pickWeighted, type SessionLength } from '@/lib/reroll';
 import { gameLengthHours } from '@/lib/enrichment';
 import type { Game, MoodTag } from '@/lib/types';
 
@@ -180,31 +180,32 @@ function demoReasons(game: Game, hours: number | null | undefined): { label: str
 function HeroPicker({ onImport }: { onImport: () => void }) {
   const [mood, setMood] = useState<MoodTag | null>(null);
   const [session, setSession] = useState<SessionLength>('medium');
-  const [pick, setPick] = useState<Game | null>(null);
-  const [recent, setRecent] = useState<Game[]>([]);
+  // pick and its recent-history always change together, so they're one piece of
+  // state. Keeps the mount effect to a single setState call.
+  const [result, setResult] = useState<{ pick: Game | null; recent: Game[] }>({ pick: null, recent: [] });
+  const pick = result.pick;
 
-  const roll = useCallback((nextMood: MoodTag | null, nextSession: SessionLength, avoid: Game | null) => {
-    const eligible = getEligibleGames(SAMPLE_GAMES, 'anything', 'any', nextMood ? [nextMood] : []);
-    // Don't hand back the same game twice in a row when there's a real choice.
-    const pool = avoid && eligible.length > 1 ? eligible.filter((g) => g.id !== avoid.id) : eligible;
-    const next = pickWeighted(pool, new Set(), recent, nextSession);
-    if (!next) return;
-    setPick(next);
-    setRecent((prev) => [next, ...prev].slice(0, 3));
-  }, [recent]);
-
-  // First pick runs after hydration — pickWeighted uses Math.random() and the
-  // clock, so rolling during render would desync server and client markup.
-  useEffect(() => {
-    const initial = getDefaultSessionLength();
-    setSession(initial);
-    const eligible = getEligibleGames(SAMPLE_GAMES, 'anything', 'any', []);
-    const first = pickWeighted(eligible, new Set(), [], initial);
-    if (first) { setPick(first); setRecent([first]); }
+  const roll = useCallback((nextMood: MoodTag | null, nextSession: SessionLength) => {
+    setResult((prev) => {
+      const eligible = getEligibleGames(SAMPLE_GAMES, 'anything', 'any', nextMood ? [nextMood] : []);
+      // Don't hand back the same game twice in a row when there's a real choice.
+      const pool = prev.pick && eligible.length > 1 ? eligible.filter((g) => g.id !== prev.pick!.id) : eligible;
+      const next = pickWeighted(pool, new Set(), prev.recent, nextSession);
+      if (!next) return prev;
+      return { pick: next, recent: [next, ...prev.recent].slice(0, 3) };
+    });
   }, []);
 
-  const chooseMood = (tag: MoodTag | null) => { setMood(tag); roll(tag, session, pick); };
-  const chooseSession = (value: SessionLength) => { setSession(value); roll(mood, value, pick); };
+  // First pick runs after hydration — pickWeighted uses Math.random(), so
+  // rolling during render would desync server and client markup. Deferring the
+  // randomness to the client is the whole point here, and it runs once on mount.
+  // The demo starts on 'medium' rather than the app's time-of-day default; the
+  // visitor can't tell the clock was consulted either way.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { roll(null, 'medium'); }, [roll]);
+
+  const chooseMood = (tag: MoodTag | null) => { setMood(tag); roll(tag, session); };
+  const chooseSession = (value: SessionLength) => { setSession(value); roll(mood, value); };
 
   const hours = pick ? gameLengthHours(pick) : null;
   // `getPickReasons` is the in-app presenter and speaks in second person about
@@ -300,7 +301,7 @@ function HeroPicker({ onImport }: { onImport: () => void }) {
                   </ul>
                 )}
                 <button
-                  onClick={() => roll(mood, session, pick)}
+                  onClick={() => roll(mood, session)}
                   className="w-full px-4 py-2.5 text-sm font-bold rounded-lg cursor-pointer cta-primary"
                   style={{ backgroundColor: C.pink, color: C.white }}
                 >
