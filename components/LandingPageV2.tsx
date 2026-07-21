@@ -551,7 +551,14 @@ function ProblemSolution() {
     { step: '1', title: 'You tell us what you want.', body: 'Mood and time. Two questions. We keep it simple.' },
     { step: '2', title: 'We analyze your library.', body: 'Genres, playtime, tags, and recency. Without the noise.' },
     { step: '3', title: 'We pick your game.', body: 'One game. Matched to your mood, your time, and your library. Not a list. An answer.' },
-    { step: '4', title: 'You play.', body: "Less friction. More fun. That's the whole point.", subFeatures: true },
+    { step: '4', title: 'You play.', body: "Less friction. More fun. That's the whole point." },
+  ];
+
+  // Pulled out of step 4. Nesting these inside one step made that grid cell run
+  // ~3x the height of its neighbours, which is what made this section look broken.
+  const extras = [
+    { sprite: '/landing/sprites/hourglass.png', title: 'The 5-minute pick.', body: "Give it 5 minutes. If it's not hitting, blame us and reroll." },
+    { sprite: '/landing/sprites/skip-back.png', title: 'Moving on is deciding too.', body: "Clearing a game you're done pretending you'll finish? That's progress." },
   ];
 
   return (
@@ -610,7 +617,7 @@ function ProblemSolution() {
         </div>
 
         {/* SOLUTION panel — rotated the other direction */}
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-5xl mx-auto relative">
           <div style={{ transform: 'rotate(1.5deg)', transformOrigin: 'top right' }}>
             <Reveal>
               <h2 className="font-[family-name:var(--font-condensed)] uppercase leading-[0.85] tracking-tight" style={{ fontSize: 'clamp(2.5rem, 7vw, 5rem)' }}>
@@ -623,35 +630,45 @@ function ProblemSolution() {
             </Reveal>
           </div>
 
-          <div className="pip-anchor mt-6 mb-2 hidden sm:block">
-            <Image src="/landing/pip/pip-magician.webp" alt="" width={120} height={150} className="w-20" />
+          {/* Pip sits beside the heading instead of floating above the grid,
+              where it left a column of dead space down the left. */}
+          <div className="pip-anchor absolute right-0 top-0 hidden lg:block pointer-events-none">
+            <Image src="/landing/pip/pip-magician.webp" alt="" width={120} height={150} className="w-24" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 max-w-3xl">
+
+          {/* Four even steps. No cell carries extra payload, so the rows line up. */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-6 mt-8">
             {solutions.map((s, i) => (
               <Reveal key={i} delay={i * 80} variant="right">
-                <div className="flex gap-3">
+                <div className="flex gap-3 h-full">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-sm font-bold" style={{ backgroundColor: C.cyanDark, color: C.white }}>{s.step}</div>
                   <div>
                     <p className="font-bold text-base" style={{ color: C.textDark }}>{s.title}</p>
                     <p className="text-base" style={{ color: C.textMuted }}>{s.body}</p>
-                    {'subFeatures' in s && (
-                      <div className="mt-3 space-y-2">
-                        <p className="text-xs font-bold uppercase tracking-wider" style={{ color: C.textFaint }}>Two more things we built for the way you actually play:</p>
-                        <div className="rounded-lg p-3" style={{ backgroundColor: 'rgba(0,0,0,0.04)' }}>
-                          <p className="text-sm font-bold mb-0.5" style={{ color: C.textDark }}><img src="/landing/sprites/hourglass.png" alt="" width={20} height={20} className="inline-block mr-1.5 -mt-0.5 pixelated" />The 5-minute pick.</p>
-                          <p className="text-sm" style={{ color: C.textMuted }}>Give it 5 minutes. If it&apos;s not hitting, blame us and reroll.</p>
-                        </div>
-                        <div className="rounded-lg p-3" style={{ backgroundColor: 'rgba(0,0,0,0.04)' }}>
-                          <p className="text-sm font-bold mb-0.5" style={{ color: C.textDark }}><img src="/landing/sprites/skip-back.png" alt="" width={20} height={20} className="inline-block mr-1.5 -mt-0.5 pixelated" />Moving on is deciding too.</p>
-                          <p className="text-sm" style={{ color: C.textMuted }}>Clearing a game you&apos;re done pretending you&apos;ll finish? That&apos;s progress.</p>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </div>
               </Reveal>
             ))}
           </div>
+
+          {/* The two extras, promoted to their own full-width row */}
+          <Reveal delay={320}>
+            <p className="text-xs font-bold uppercase tracking-wider mt-10 mb-3" style={{ color: C.textMuted }}>
+              Two more things we built for the way you actually play
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {extras.map((f) => (
+                <div key={f.title} className="rounded-xl p-4" style={{ backgroundColor: 'rgba(0,0,0,0.04)' }}>
+                  <p className="font-bold text-base mb-1 flex items-center gap-2" style={{ color: C.textDark }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={f.sprite} alt="" width={20} height={20} className="pixelated shrink-0" />
+                    {f.title}
+                  </p>
+                  <p className="text-base" style={{ color: C.textMuted }}>{f.body}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </div>
 
@@ -691,7 +708,7 @@ function ClarityBanner() {
             className="relative z-10 font-[family-name:var(--font-condensed)] uppercase tracking-tight text-center px-4"
             style={{ fontSize: 'clamp(2rem, 6vw, 4.5rem)', color: C.white, transform: 'skewY(3deg)' }}
           >
-            Pick a mood. See what fits.
+            One mood. One game. Go play.
           </h2>
         </div>
       </div>
