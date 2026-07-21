@@ -40,7 +40,7 @@ If a feature adds catalogue management, organization tools, or "engagement" that
 ## Folders (most-edited)
 
 - `app/` — App Router routes. `page.tsx` is landing/shell; `api/` is route handlers; `pile/[id]/` + `clear/[id]/` are share cards with OG images.
-- `components/` — React, client by default. `LandingPage.tsx` and `GameCard.tsx` are the big ones. Keep landing aligned with `app/about/page.tsx`.
+- `components/` — React, client by default. `LandingPageV2.tsx` (the live landing page) and `GameCard.tsx` are the big ones. Keep landing aligned with `app/about/page.tsx`.
 - `lib/` — Pure logic + integrations. Prefer adding here over inflating components. Key files: `store.ts`, `types.ts`, `reroll.ts`, `enrichment.ts`, `archetypes.ts`.
 - `.claude/rules/` — Loaded every session. Voice, legal, psychology, deploy gates, token efficiency.
 - `docs/` — Roadmap, session notes, decisions, planning specs. **Read [`docs/INDEX.md`](docs/INDEX.md) before starting new planning work** — it lists locked specs (merch, discord-bot, b2b, monetization, marketing-recipients) so we don't re-think them from scratch. `docs/session-resume-*.md` = current state. `docs/LAUNCH_BIBLE.md` = single source of truth for launch planning (Apr 21–May 11 sprint).
