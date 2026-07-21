@@ -25,13 +25,14 @@ Run this skill before deploying a new version to production. It performs these c
   - Hedging in CTAs ("maybe", "might", "feel free")
   - Summary closers ("In conclusion", "Ultimately")
   - Triple adjective lists, uniform paragraph lengths
-- **Locked terminology** (per voice-charter.md, status: shipped 2026-04-09 + 2026-05-04):
-  - Status cycle: `Backlog → Up Next → Playing Now → Completed` (or `Moved On` as sibling exit)
-  - Picker CTA: **"Pick My Game"** — not "What Should I Play?", not "Decide for me", not "Just pick one"
-  - Primary tagline: `get playing.` (lowercase, with period)
-  - Landing subhead: "Your pile's not gonna play itself." ("pile" = whole collection; "backlog" = unplayed-status column only on-page; "backlog" stays in SEO meta/JSON-LD)
-  - Celebration tagline: "Less shame. More game."
-  - Moved On canon line: "Moving on is deciding too."
+- **Locked terminology — read it from the charter, don't trust a copy.**
+  `.claude/rules/voice-charter.md` → "Locked terminology" is the single source of truth for the status cycle, taglines, and landing copy. Open it and check against what's there.
+
+  This section used to restate that table and drifted out of date (it still named a landing subhead that the 2026-05-11 Phase 1 tightening had already replaced). Don't reintroduce a copy here. If the charter is ambiguous, fix the charter.
+
+  Two things the charter doesn't spell out, so they live here:
+  - **"Pick My Game" is the in-app picker CTA.** The landing page's live hero demo is a deliberate exception: it auto-picks on mount and its only button is "Roll again", because the mechanism is what the visitor needs to see, not a two-step flow. Confirmed 2026-07-21. Don't "fix" the landing to say "Pick My Game".
+  - **`getPickReasons` copy is in-app only.** It speaks in second person about the player's own history ("Been in your pile a while"). Anything rendering picks from the sample library to a non-user — landing demo, marketing, OG cards — needs library-agnostic reason copy instead. See `demoReasons` in `components/LandingPageV2.tsx`.
 - **Retired terms — flag if reintroduced:** "Play Next", "On Deck", "Buried", "Queue", "Active", "Cleared", "Beaten", "Bailed", "Dropped", "Abandoned", "Pile of Shame", "Stop stalling. Get playing.", "What Should I Play?"
 
 ## 3. Accessibility Quick Check
