@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Wordmark from '@/components/Wordmark';
@@ -8,6 +8,10 @@ import AuthButton from '@/components/AuthButton';
 import { trackLandingView } from '@/lib/analytics';
 import { useStore } from '@/lib/store';
 import { DISCORD_INVITE_URL, PIP_BOT_INVITE_URL } from '@/lib/social';
+import { SAMPLE_GAMES } from '@/lib/sampleLibrary';
+import { getEligibleGames, pickWeighted, getDefaultSessionLength, type SessionLength } from '@/lib/reroll';
+import { gameLengthHours } from '@/lib/enrichment';
+import type { Game, MoodTag } from '@/lib/types';
 
 interface LandingPageV2Props {
   onImport: () => void;
@@ -97,12 +101,11 @@ export default function LandingPageV2({ onImport, onLoadSample }: LandingPageV2P
         }
       `}</style>
       <Nav onImport={onImport} />
-      <Hero onImport={onImport} onLoadSample={onLoadSample} />
+      <Hero onImport={onImport} />
       <PlatformBar />
       <SocialProof />
       <ProblemSolution />
       <ClarityBanner />
-      <VibeSection />
       <BottomCTA onImport={onImport} onLoadSample={onLoadSample} />
       <Footer />
     </div>
@@ -125,7 +128,6 @@ function Nav({ onImport }: { onImport: () => void }) {
       </div>
       <nav className="hidden md:flex items-center gap-6 text-sm font-medium" style={{ color: C.textDark }}>
         <a href="#how-it-works" className="hover:opacity-70 transition-opacity">How It Works</a>
-        <a href="#features" className="hover:opacity-70 transition-opacity">Features</a>
         <a href="/about" className="hover:opacity-70 transition-opacity">About</a>
         <AuthButton />
         <button onClick={onImport} className="px-5 py-2.5 text-sm font-bold rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer" style={{ backgroundColor: C.dark, color: C.white }}>
@@ -141,10 +143,194 @@ function Nav({ onImport }: { onImport: () => void }) {
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   HERO PICKER — the real engine, running live
+
+   This runs the actual `lib/reroll.ts` against `lib/sampleLibrary.ts`. Not a
+   canned mood→game map, not a screenshot. Two inputs (mood + session length),
+   matching the locked pick flow. No network calls, so no RAWG quota exposure
+   from anonymous landing traffic.
+
+   Mood tags below are real `MoodTag` values with healthy sample coverage.
+   Sprites were matched to labels by looking at the files, not the filenames:
+   moon=chill, bolt=intense, book=story-rich, smiley=brainless, ?star=surprise.
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+const DEMO_MOODS: { tag: MoodTag | null; label: string; sprite: string }[] = [
+  { tag: null, label: 'Surprise me', sprite: '/landing/sprites/mood-surprise.png' },
+  { tag: 'chill', label: 'Chill', sprite: '/landing/sprites/mood-chill.png' },
+  { tag: 'intense', label: 'Challenge me', sprite: '/landing/sprites/mood-challenge.png' },
+  { tag: 'story-rich', label: 'Good story', sprite: '/landing/sprites/mood-story.png' },
+  { tag: 'brainless', label: 'Zero thinking', sprite: '/landing/sprites/mood-laugh.png' },
+];
+
+const DEMO_SESSIONS: { value: SessionLength; label: string; icon: string }[] = [
+  { value: 'small', label: 'Small', icon: '🚣' },
+  { value: 'medium', label: 'Medium', icon: '⛵' },
+  { value: 'large', label: 'Large', icon: '🚢' },
+];
+
+function demoReasons(game: Game, hours: number | null | undefined): { label: string; icon: string }[] {
+  const out: { label: string; icon: string }[] = [];
+  if (game.metacritic && game.metacritic >= 90) out.push({ label: `Rated ${game.metacritic} on Metacritic`, icon: '⭐' });
+  else if (game.metacritic && game.metacritic >= 75) out.push({ label: `Well-reviewed (${game.metacritic} Metacritic)`, icon: '👍' });
+  if (game.moodTags?.length) out.push({ label: `Mood: ${game.moodTags.slice(0, 2).join(', ')}`, icon: '🎭' });
+  return out.slice(0, 2);
+}
+
+function HeroPicker({ onImport }: { onImport: () => void }) {
+  const [mood, setMood] = useState<MoodTag | null>(null);
+  const [session, setSession] = useState<SessionLength>('medium');
+  const [pick, setPick] = useState<Game | null>(null);
+  const [recent, setRecent] = useState<Game[]>([]);
+
+  const roll = useCallback((nextMood: MoodTag | null, nextSession: SessionLength, avoid: Game | null) => {
+    const eligible = getEligibleGames(SAMPLE_GAMES, 'anything', 'any', nextMood ? [nextMood] : []);
+    // Don't hand back the same game twice in a row when there's a real choice.
+    const pool = avoid && eligible.length > 1 ? eligible.filter((g) => g.id !== avoid.id) : eligible;
+    const next = pickWeighted(pool, new Set(), recent, nextSession);
+    if (!next) return;
+    setPick(next);
+    setRecent((prev) => [next, ...prev].slice(0, 3));
+  }, [recent]);
+
+  // First pick runs after hydration — pickWeighted uses Math.random() and the
+  // clock, so rolling during render would desync server and client markup.
+  useEffect(() => {
+    const initial = getDefaultSessionLength();
+    setSession(initial);
+    const eligible = getEligibleGames(SAMPLE_GAMES, 'anything', 'any', []);
+    const first = pickWeighted(eligible, new Set(), [], initial);
+    if (first) { setPick(first); setRecent([first]); }
+  }, []);
+
+  const chooseMood = (tag: MoodTag | null) => { setMood(tag); roll(tag, session, pick); };
+  const chooseSession = (value: SessionLength) => { setSession(value); roll(mood, value, pick); };
+
+  const hours = pick ? gameLengthHours(pick) : null;
+  // `getPickReasons` is the in-app presenter and speaks in second person about
+  // the player's own history ("Been in your pile a while", "You've started this
+  // one"). True in the app, false for a visitor looking at OUR sample library.
+  // The pick itself is still the real engine — only the reason copy is reframed
+  // to the facts that hold regardless of whose library it came from.
+  const reasons = pick ? demoReasons(pick, hours) : [];
+
+  return (
+    <div className="w-full max-w-md mx-auto lg:mx-0 lg:ml-auto">
+      <div className="rounded-2xl p-4 sm:p-5 shadow-2xl" style={{ backgroundColor: C.cardDark }}>
+        <p className="text-[11px] font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider mb-3" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          Live demo · our sample library
+        </p>
+
+        {/* Input 1 — mood */}
+        <p className="text-xs font-medium mb-2" style={{ color: 'rgba(255,255,255,0.6)' }}>What are you in the mood for?</p>
+        <div className="flex flex-wrap gap-1.5 mb-4">
+          {DEMO_MOODS.map((m) => {
+            const active = mood === m.tag;
+            return (
+              <button
+                key={m.label}
+                onClick={() => chooseMood(m.tag)}
+                aria-pressed={active}
+                className="vibe-pill flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-medium border cursor-pointer"
+                style={{
+                  borderColor: active ? C.pink : 'rgba(255,255,255,0.16)',
+                  color: active ? C.white : 'rgba(255,255,255,0.75)',
+                  backgroundColor: active ? 'rgba(233, 30, 99, 0.22)' : 'rgba(255,255,255,0.04)',
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={m.sprite} alt="" width={16} height={16} className="pixelated" />
+                <span>{m.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Input 2 — session length */}
+        <p className="text-xs font-medium mb-2" style={{ color: 'rgba(255,255,255,0.6)' }}>How long have you got?</p>
+        <div className="flex gap-1.5 mb-4">
+          {DEMO_SESSIONS.map((s) => {
+            const active = session === s.value;
+            return (
+              <button
+                key={s.value}
+                onClick={() => chooseSession(s.value)}
+                aria-pressed={active}
+                className="vibe-pill flex-1 flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg text-xs font-medium border cursor-pointer"
+                style={{
+                  borderColor: active ? C.cyan : 'rgba(255,255,255,0.16)',
+                  color: active ? C.white : 'rgba(255,255,255,0.75)',
+                  backgroundColor: active ? 'rgba(0, 188, 212, 0.18)' : 'rgba(255,255,255,0.04)',
+                }}
+              >
+                <span aria-hidden>{s.icon}</span><span>{s.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Result */}
+        <div className="min-h-[172px]" aria-live="polite">
+          {pick ? (
+            <div key={pick.id} className="rounded-xl overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.05)', animation: 'pickIn 350ms cubic-bezier(0.16, 1, 0.3, 1) both' }}>
+              <style>{`@keyframes pickIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+                @media (prefers-reduced-motion: reduce) { @keyframes pickIn { from { opacity: 1; } to { opacity: 1; } } }`}</style>
+              {pick.coverUrl && (
+                <div className="relative w-full" style={{ aspectRatio: '616 / 288' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={pick.coverUrl} alt="" className="w-full h-full object-cover" loading="lazy" />
+                  <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${C.cardDark} 0%, transparent 70%)` }} />
+                </div>
+              )}
+              <div className="p-3.5 -mt-6 relative z-10">
+                <h3 className="font-[family-name:var(--font-condensed)] uppercase text-xl sm:text-2xl tracking-tight leading-tight" style={{ color: C.white }}>
+                  {pick.name}
+                </h3>
+                <p className="text-[11px] font-[family-name:var(--font-mono)] mt-1 mb-2" style={{ color: 'rgba(255,255,255,0.62)' }}>
+                  {hours ? (pick.isNonFinishable ? `~${hours}h sessions` : `~${hours}h to beat`) : 'Ready when you are'}
+                  {pick.genres?.length ? ` · ${pick.genres.slice(0, 2).join(', ')}` : ''}
+                </p>
+                {reasons.length > 0 && (
+                  <ul className="space-y-0.5 mb-3">
+                    {reasons.map((r) => (
+                      <li key={r.label} className="text-xs flex items-start gap-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                        <span aria-hidden>{r.icon}</span><span>{r.label}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <button
+                  onClick={() => roll(mood, session, pick)}
+                  className="w-full px-4 py-2.5 text-sm font-bold rounded-lg cursor-pointer cta-primary"
+                  style={{ backgroundColor: C.pink, color: C.white }}
+                >
+                  Roll again
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-xl border border-dashed h-[172px] flex items-center justify-center px-4" style={{ borderColor: 'rgba(255,255,255,0.15)' }}>
+              <p className="text-sm text-center" style={{ color: 'rgba(255,255,255,0.5)' }}>Pick a mood. We&apos;ll do the rest.</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <p className="text-sm mt-3 text-center lg:text-left" style={{ color: C.textMuted }}>
+        That&apos;s a pick from our sample pile.{' '}
+        <button onClick={onImport} className="font-bold underline cursor-pointer" style={{ color: C.pink, textUnderlineOffset: '3px' }}>
+          Run it on yours →
+        </button>
+      </p>
+    </div>
+  );
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    HERO — angled background panel
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: () => void }) {
+function Hero({ onImport }: { onImport: () => void }) {
   return (
     <section className="relative px-5 sm:px-8 pt-8 sm:pt-12 pb-20 sm:pb-28 overflow-visible">
       {/* Hero entrance keyframes */}
@@ -215,7 +401,7 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
 
       {/* Mountain hero — left side, behind text. Masked so it fades out toward the text area */}
       <div
-        className="absolute bottom-0 left-0 w-[25%] max-w-[320px] pointer-events-none z-[1] hidden xl:block opacity-50"
+        className="absolute bottom-0 left-0 w-[25%] max-w-[320px] pointer-events-none z-[1] hidden xl:block opacity-25"
         style={{ maskImage: 'linear-gradient(to right, black 40%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 40%, transparent 100%)' }}
       >
         <Image src="/landing/mountain-hero.webp" alt="" width={800} height={1000} className="w-full h-auto object-contain object-bottom" />
@@ -230,10 +416,14 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
       </div>
 
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center pt-6 sm:pt-10 relative z-10">
-        {/* Left: headline + copy */}
-        <div className="relative">
-          <h1 className="font-[family-name:var(--font-condensed)] uppercase leading-[0.9] tracking-tight mb-6" style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', transform: 'rotate(-2deg)', transformOrigin: 'left top' }}>
+      {/* Mobile order is deliberate: headline, then the working picker, then the
+          import CTA. The demo has to land in the first viewport on a phone —
+          visitors arriving from search already believe the problem, they came
+          to see the answer. */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-x-12 lg:gap-y-6 pt-6 sm:pt-10 relative z-10">
+        {/* Headline */}
+        <div className="relative lg:col-start-1 lg:row-start-1 lg:self-end">
+          <h1 className="font-[family-name:var(--font-condensed)] uppercase leading-[0.9] tracking-tight mb-5" style={{ fontSize: 'clamp(2.75rem, 8vw, 6rem)', transform: 'rotate(-2deg)', transformOrigin: 'left top' }}>
             <span className="block hero-headline-1" style={{ animation: 'revealUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both' }}>
               Your backlog isn&apos;t the problem.
             </span>
@@ -244,33 +434,21 @@ function Hero({ onImport, onLoadSample }: { onImport: () => void; onLoadSample: 
           </h1>
 
           <div className="hero-subhead" style={{ animation: 'heroFadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both' }}>
-            <p className="text-base sm:text-lg leading-relaxed mb-2" style={{ color: C.textMuted }}>Tell us your mood. We&apos;ll find the game.</p>
-          </div>
-
-          <div className="hero-subhead" style={{ animation: 'heroFadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both' }}>
-            <div className="flex flex-col sm:flex-row items-start gap-3 mb-4">
-              <button onClick={onImport} className="cta-primary px-7 py-3.5 text-base font-bold rounded-lg cursor-pointer" style={{ backgroundColor: C.pink, color: C.white, boxShadow: `0 4px 20px ${C.pinkGlow}` }}>
-                Import My Library →
-              </button>
-              <button onClick={onLoadSample} className="px-6 py-3.5 text-base font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97] cursor-pointer border" style={{ borderColor: C.textDark, color: C.textDark, backgroundColor: 'transparent' }}>
-                Try a Sample First
-              </button>
-            </div>
-            <p className="text-sm mt-3 font-[family-name:var(--font-mono)]" style={{ color: C.textFaint }}>Free. No account needed. Data stays yours.</p>
+            <p className="text-base sm:text-lg leading-relaxed" style={{ color: C.textMuted }}>Tell us your mood. We&apos;ll find the game.</p>
           </div>
         </div>
 
-        {/* Right: picker card — tilted, entrance with rotation settle */}
-        <div className="hero-card" style={{ animation: 'cardSettle 800ms cubic-bezier(0.16, 1, 0.3, 1) 400ms both' }}>
-          <div className="relative">
-            <div className="absolute -top-12 -right-2 sm:right-0 w-52 sm:w-64 z-20 pointer-events-none">
-              <Image src="/landing/annotation-tell-us.webp" alt="Tell us a few things. We'll do the hard part." width={500} height={150} className="w-full h-auto" />
-            </div>
-            <Image src="/landing/hero-picker-card.webp" alt="Inventory Full picker: choose your mood and time, get one game recommendation — A Short Hike" width={600} height={750} className="w-full max-w-md mx-auto h-auto rounded-2xl shadow-2xl" priority />
-            <div className="absolute -bottom-8 -right-2 sm:right-0 w-48 sm:w-56 z-20 pointer-events-none">
-              <Image src="/landing/annotation-new-picks.webp" alt="New picks in seconds. No endless scrolling." width={500} height={100} className="w-full h-auto" />
-            </div>
-          </div>
+        {/* The live picker — real engine, sample library */}
+        <div className="hero-card lg:col-start-2 lg:row-start-1 lg:row-span-2" style={{ animation: 'heroFadeUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 400ms both' }}>
+          <HeroPicker onImport={onImport} />
+        </div>
+
+        {/* Secondary door — the picker above is the primary action */}
+        <div className="hero-subhead lg:col-start-1 lg:row-start-2 lg:self-start" style={{ animation: 'heroFadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 600ms both' }}>
+          <button onClick={onImport} className="px-6 py-3.5 text-base font-bold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97] cursor-pointer border-2" style={{ borderColor: C.textDark, color: C.textDark, backgroundColor: C.cream }}>
+            Import My Library →
+          </button>
+          <p className="text-sm mt-3 font-[family-name:var(--font-mono)] font-medium" style={{ color: C.textMuted }}>Free. No account, ever. Your library stays on your device.</p>
         </div>
       </div>
 
@@ -521,120 +699,6 @@ function ClarityBanner() {
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   VIBE SECTION — angled card & tower
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-const VIBE_PICKS: { sprite: string; label: string; game: string; art: string; time: string; tags: string; reason: string }[] = [
-  { sprite: '/landing/sprites/mood-chill.png', label: 'I want to chill', game: 'Stardew Valley', art: '/landing/games/stardew-valley.jpg', time: '∞ (one more day)', tags: 'Cozy, Farming, Relaxing', reason: "No stakes. No pressure. Just you, your farm, and a town full of people who don't judge your bedtime." },
-  { sprite: '/landing/sprites/mood-challenge.png', label: 'I want a challenge', game: 'Sekiro: Shadows Die Twice', art: '/landing/games/sekiro.jpg', time: '30-50 hours', tags: 'Action, Souls-like, Precision', reason: "You said challenge. This is that. Every death teaches you something. Every victory is earned." },
-  { sprite: '/landing/sprites/mood-story.png', label: 'I want a good story', game: 'Disco Elysium', art: '/landing/games/disco-elysium.jpg', time: '25-40 hours', tags: 'RPG, Detective, Narrative', reason: "The best-written RPG in years. You play a washed-up cop solving a murder. Your skills are your personality traits. It gets weird." },
-  { sprite: '/landing/sprites/mood-quick.png', label: 'I want something quick', game: 'Vampire Survivors', art: '/landing/games/vampire-survivors.jpg', time: '15-20 min runs', tags: 'Roguelike, Action, Addictive', reason: "One run. Fifteen minutes. You mow down thousands of monsters and somehow it never gets old. Perfect for when you have a sliver of time." },
-  { sprite: '/landing/sprites/mood-laugh.png', label: 'I want to laugh', game: 'Portal 2', art: '/landing/games/portal-2.jpg', time: '8-10 hours', tags: 'Puzzle, Comedy, Co-op', reason: "GLaDOS is still the funniest villain in gaming. The puzzles are brilliant. The writing is better." },
-  { sprite: '/landing/sprites/mood-surprise.png', label: 'Surprise me', game: 'Inscryption', art: '/landing/games/inscryption.jpg', time: '10-12 hours', tags: 'Card Game, Horror, Mystery', reason: "Starts as a card game in a cabin. Becomes something else entirely. The less you know going in, the better." },
-];
-
-function VibeSection() {
-  const [activeVibe, setActiveVibe] = useState<number | null>(0);
-  const pick = activeVibe !== null ? VIBE_PICKS[activeVibe] : null;
-
-  return (
-    <section id="features" className="relative px-5 sm:px-8 py-8 sm:py-12 overflow-hidden" style={{ backgroundColor: C.cream }}>
-      {/* Small triangle cluster — left */}
-      <svg className="absolute top-10 left-2 sm:left-8 w-16 sm:w-20 pointer-events-none opacity-35 hidden sm:block" viewBox="0 0 80 70" fill="none" aria-hidden>
-        <polygon points="0,70 40,0 80,70" fill={C.cyan} opacity="0.7" />
-        <polygon points="20,70 50,15 80,70" fill={C.pink} opacity="0.5" />
-      </svg>
-
-      <div className="max-w-4xl mx-auto text-center relative z-10">
-        <Reveal>
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <p className="text-base sm:text-lg" style={{ color: C.textMuted }}>Tap one and see what we&apos;d pick from a sample library.</p>
-            <div className="pip-anchor shrink-0 hidden sm:block">
-              <Image src="/landing/pip/pip-thinking.png" alt="" width={120} height={150} className="w-16 sm:w-24" />
-            </div>
-          </div>
-        </Reveal>
-
-        <Reveal delay={100}>
-          <div className="flex flex-wrap justify-center gap-3 mb-6">
-            {VIBE_PICKS.map((v, i) => (
-              <button
-                key={v.label}
-                onClick={() => setActiveVibe(i)}
-                className="vibe-pill flex items-center gap-2 px-5 py-3 rounded-full text-base font-medium border cursor-pointer"
-                style={{
-                  borderColor: activeVibe === i ? C.pink : 'rgba(0,0,0,0.12)',
-                  color: activeVibe === i ? C.pink : C.textDark,
-                  backgroundColor: activeVibe === i ? 'rgba(233, 30, 99, 0.06)' : C.white,
-                  boxShadow: activeVibe === i ? `0 2px 12px ${C.pinkGlow}` : 'none',
-                }}
-              >
-                <img src={v.sprite} alt="" width={20} height={20} className="pixelated" /><span>{v.label}</span>
-              </button>
-            ))}
-          </div>
-        </Reveal>
-
-        {/* Pick result card */}
-        <div className="min-h-[280px] sm:min-h-[240px]">
-          {pick ? (
-            <div
-              key={activeVibe}
-              className="max-w-2xl mx-auto rounded-2xl overflow-hidden shadow-xl"
-              style={{
-                backgroundColor: C.cardDark,
-                transform: 'rotate(-1deg)',
-                animation: 'vibeCardIn 400ms cubic-bezier(0.16, 1, 0.3, 1) both',
-              }}
-            >
-              <style>{`@keyframes vibeCardIn { from { opacity: 0; transform: rotate(-1deg) translateY(20px) scale(0.97); } to { opacity: 1; transform: rotate(-1deg) translateY(0) scale(1); } }`}</style>
-              {/* Art banner — landscape, full-width, no crop */}
-              <div className="relative w-full" style={{ aspectRatio: '616 / 353' }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={pick.art} alt={pick.game} className="w-full h-full object-cover" loading="lazy" />
-                <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${C.cardDark} 0%, transparent 50%)` }} />
-              </div>
-              {/* Pick details */}
-              <div className="p-5 sm:p-6 -mt-8 relative z-10 text-left">
-                <p className="text-xs font-bold font-[family-name:var(--font-mono)] uppercase tracking-wider mb-1" style={{ color: C.pink }}>
-                  Your pick
-                </p>
-                <h3 className="font-[family-name:var(--font-condensed)] uppercase text-2xl sm:text-3xl tracking-tight mb-2" style={{ color: C.white }}>
-                  {pick.game}
-                </h3>
-                <p className="text-xs font-[family-name:var(--font-mono)] mb-3" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                  {pick.time} · {pick.tags}
-                </p>
-                <p className="text-sm leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                  {pick.reason}
-                </p>
-                <div className="flex gap-2">
-                  <span className="px-4 py-2 text-sm font-bold rounded-lg" style={{ backgroundColor: C.pink, color: C.white }}>
-                    Let&apos;s go
-                  </span>
-                  <span className="px-4 py-2 text-sm font-medium rounded-lg border" style={{ borderColor: 'rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.6)' }}>
-                    Roll again
-                  </span>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <Reveal delay={200}>
-              <div className="max-w-md mx-auto py-12 px-6 rounded-2xl border-2 border-dashed" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
-                <p className="text-lg font-medium" style={{ color: C.textMuted }}>
-                  Pick a vibe above and we&apos;ll show you what a pick looks like.
-                </p>
-              </div>
-            </Reveal>
-          )}
-        </div>
-
-      </div>
-    </section>
-  );
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    BOTTOM CTA — skewed background panel
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
@@ -664,15 +728,17 @@ function BottomCTA({ onImport, onLoadSample }: { onImport: () => void; onLoadSam
 
       <div className="relative z-10 max-w-2xl mx-auto px-5 sm:px-8">
         <Reveal>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
+          {/* One primary door. The sample link is a text link on purpose —
+              two equal buttons force a decision on a page about not deciding. */}
+          <div className="flex flex-col items-center gap-3 mb-4">
             <button onClick={onImport} className="cta-primary px-7 py-3.5 text-base font-bold rounded-lg cursor-pointer" style={{ backgroundColor: C.pink, color: C.white, boxShadow: `0 4px 20px ${C.pinkGlow}` }}>
               Import My Library →
             </button>
-            <button onClick={onLoadSample} className="px-6 py-3.5 text-base font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.97] cursor-pointer border" style={{ borderColor: C.textDark, color: C.textDark, backgroundColor: 'transparent' }}>
-              Try a Sample First
+            <button onClick={onLoadSample} className="text-sm underline cursor-pointer" style={{ color: C.textMuted, textUnderlineOffset: '3px' }}>
+              Or poke around the sample library first
             </button>
           </div>
-          <p className="text-sm font-[family-name:var(--font-mono)]" style={{ color: C.textFaint }}>Free. No account needed. Your data stays on your device.</p>
+          <p className="text-sm font-[family-name:var(--font-mono)]" style={{ color: C.textFaint }}>Free. No account, ever. Your library stays on your device.</p>
         </Reveal>
       </div>
     </section>
