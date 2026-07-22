@@ -337,7 +337,7 @@ function renderPixelCard(d: CardData) {
           background: '#1a3a1a',
           fontFamily: 'monospace',
           color: '#33ff33',
-          imageRendering: 'pixelated' as any,
+          imageRendering: 'pixelated' as const,
         }}
       >
         {/* Pixel border frame */}
@@ -420,11 +420,11 @@ function renderUltraCard(d: CardData) {
         <div style={{ position: 'absolute', top: '0', left: '0', width: '6px', height: '100%', background: '#BFFF00', display: 'flex' }} />
 
         {/* Header */}
-        <div style={{ fontSize: '48px', fontWeight: 900, color: '#BFFF00', letterSpacing: '6px', textTransform: 'uppercase' as any, display: 'flex' }}>
+        <div style={{ fontSize: '48px', fontWeight: 900, color: '#BFFF00', letterSpacing: '6px', textTransform: 'uppercase' as const, display: 'flex' }}>
           INVENTORY FULL
         </div>
         {d.rank && (
-          <div style={{ fontSize: '18px', color: '#ffffff', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase' as any, marginTop: '4px', display: 'flex' }}>
+          <div style={{ fontSize: '18px', color: '#ffffff', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase' as const, marginTop: '4px', display: 'flex' }}>
             {d.rank}
           </div>
         )}
@@ -433,16 +433,16 @@ function renderUltraCard(d: CardData) {
         <div style={{ display: 'flex', gap: '48px', marginTop: '40px' }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ fontSize: '56px', fontWeight: 900, color: '#ffffff', display: 'flex' }}>{d.backlog}</div>
-            <div style={{ fontSize: '14px', color: '#555555', letterSpacing: '2px', textTransform: 'uppercase' as any, display: 'flex' }}>BACKLOG</div>
+            <div style={{ fontSize: '14px', color: '#555555', letterSpacing: '2px', textTransform: 'uppercase' as const, display: 'flex' }}>BACKLOG</div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ fontSize: '56px', fontWeight: 900, color: '#BFFF00', display: 'flex' }}>{d.cleared}</div>
-            <div style={{ fontSize: '14px', color: '#555555', letterSpacing: '2px', textTransform: 'uppercase' as any, display: 'flex' }}>CLEARED</div>
+            <div style={{ fontSize: '14px', color: '#555555', letterSpacing: '2px', textTransform: 'uppercase' as const, display: 'flex' }}>CLEARED</div>
           </div>
           {d.hours > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: '56px', fontWeight: 900, color: '#ffffff', display: 'flex' }}>{d.hours.toLocaleString()}</div>
-              <div style={{ fontSize: '14px', color: '#555555', letterSpacing: '2px', textTransform: 'uppercase' as any, display: 'flex' }}>HOURS</div>
+              <div style={{ fontSize: '14px', color: '#555555', letterSpacing: '2px', textTransform: 'uppercase' as const, display: 'flex' }}>HOURS</div>
             </div>
           )}
         </div>

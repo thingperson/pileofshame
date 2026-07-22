@@ -55,17 +55,17 @@ function Nav() {
       className="sticky top-0 z-50 flex items-center justify-between px-5 sm:px-8 py-3 backdrop-blur-md"
       style={{ backgroundColor: 'rgba(245, 240, 235, 0.9)', borderBottom: '1px solid rgba(0,0,0,0.06)' }}
     >
-      <a href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80" aria-label="Inventory Full — home">
+      <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80" aria-label="Inventory Full — home">
         <Wordmark variant="full" aria-label="Inventory Full — get playing." className="h-8 sm:h-10 w-auto" style={{ ['--wordmark-in' as string]: C.textDark }} />
         <span className="hidden sm:block text-xs font-[family-name:var(--font-mono)] tracking-wide lowercase" style={{ color: C.textMuted }}>get playing.</span>
-      </a>
-      <a
+      </Link>
+      <Link
         href="/"
         className="px-5 py-2.5 text-sm font-bold rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97]"
         style={{ backgroundColor: C.dark, color: C.white }}
       >
         Open App
-      </a>
+      </Link>
     </header>
   );
 }
@@ -399,13 +399,13 @@ function BottomCTA() {
         </Reveal>
 
         <Reveal delay={80}>
-          <a
+          <Link
             href="/"
             className="inline-block px-7 py-3.5 mt-8 text-base font-bold rounded-lg transition-all hover:scale-[1.03] active:scale-[0.97]"
             style={{ backgroundColor: C.pink, color: C.white, boxShadow: `0 4px 20px ${C.pinkGlow}` }}
           >
             Open Inventory Full
-          </a>
+          </Link>
           <p className="text-sm mt-4 font-[family-name:var(--font-mono)]" style={{ color: C.textFaint }}>Free. No account needed. Your data stays on your device.</p>
         </Reveal>
       </div>
@@ -449,9 +449,9 @@ function Footer() {
 
           {/* Links */}
           <div className="flex flex-col gap-2 text-xs">
-            <a href="/" className="hover:text-white transition-colors">Home</a>
-            <a href="/privacy" className="hover:text-white transition-colors">Privacy</a>
-            <a href="/terms" className="hover:text-white transition-colors">Terms</a>
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
             <span className="mt-2 text-[10px] opacity-50">Made by Brady in Vancouver, BC</span>
           </div>
         </div>

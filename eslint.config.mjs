@@ -14,6 +14,9 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Scratch / feedback files — not app code
     "notes/**",
+    // Pre-Next prototypes kept for reference. Not imported by the app, not
+    // built, not shipped — linting them only ever produced CI noise.
+    "early-examples/**",
   ]),
 ]);
 
