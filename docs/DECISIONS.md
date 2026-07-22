@@ -15,6 +15,37 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-07-21 — Landing hero runs the real picker against the sample library
+
+**Decision.** The landing hero executes the actual `lib/reroll.ts` engine (`getEligibleGames` → `pickWeighted`) against `lib/sampleLibrary.ts`, live and in-page. It replaces a static webp plus `VibeSection`, a hardcoded mood→game map. Two inputs, mood + session length, matching the locked pick flow.
+
+**Why.**
+- The page previously proved the interface but never ran the product. The hero was a screenshot and the "interactive" section below it was six canned answers.
+- No network calls, so anonymous landing traffic cannot touch the RAWG quota.
+- `reroll.ts` imports no store and no fetch, so it already worked on arbitrary arrays — `components/GamePassBrowse.tsx:210` had been calling it on synthesized game objects for months. The capability existed; the landing page just wasn't using it.
+
+**Implementation.** `components/LandingPageV2.tsx` — `HeroPicker`. Commits `4df8d9d`, `bdcc36d`.
+
+**Rejected.** A "type 5 games you own" autocomplete hero, proposed by an external audit. Two reasons. First, the `?search=` branch of `app/api/rawg/route.ts` has no Supabase L2 cache (unlike the `?slug=` path), so every debounced keystroke is a live hit against a 20k/month quota — exposing that to anonymous landing traffic would starve enrichment for real users. Second, games a visitor can name from memory are top-of-mind by definition, so a pick drawn from them cannot demonstrate the thing the product is actually for: surfacing something buried under 200 titles they forgot they owned. Gated behind `docs/specs/rawg-pre-seed.md` if revisited.
+
+**Also removed.** `VibeSection` (114 lines). Once the hero runs the real engine, a canned copy of the same interaction three sections down is a second decision on a page whose thesis is that deciding is the problem. Its nav anchor (`#features`) went with it.
+
+**Drift risk.** `getPickReasons` speaks in second person about the player's own history ("Been in your pile a while", "You've started this one"). True in-app, false for a visitor looking at our sample library. The landing uses a local `demoReasons` helper instead, emitting only facts that hold for any library. Anything else that renders sample-library picks to a non-user — marketing screenshots, OG cards — needs the same treatment.
+
+---
+
+## 2026-07-21 — Landing demo is a deliberate exception to the "Pick My Game" CTA
+
+**Decision.** The hero demo auto-picks on mount and its only control is "Roll again". "Pick My Game" remains the in-app picker CTA and does not appear on the landing page.
+
+**Why.**
+- What the visitor needs to see is the mechanism, not a two-step flow.
+- Auto-populating means every visitor sees a real pick without having to click anything.
+
+**Implementation.** `components/LandingPageV2.tsx` — `HeroPicker`. Recorded in `.claude/skills/pre-push-review/SKILL.md` so the terminology check doesn't "fix" it back to the in-app CTA. Commit `73b985d`.
+
+---
+
 ## 2026-07-19 — HLTB scraper retired; game length now sourced from RAWG `playtime` (honest `playtimeHours` field)
 
 **Decision.** Removed the live HowLongToBeat scraper (`app/api/hltb/route.ts`, deleted) and its e2e test. Game-length data now comes from RAWG's `playtime` field (average hours to beat), written to a new, honestly-named `Game.playtimeHours`. All hours-consumers read effective length via a single helper `gameLengthHours(game) = game.playtimeHours ?? game.hltbMain`. This mirrors what the iOS session did on 2026-07-15 (RAWG-only enrichment). This was carried Priority 1 from 07-16/07-17.
