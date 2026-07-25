@@ -6,9 +6,10 @@ import { test, expect } from '@playwright/test';
 test('landing -> sample -> roll modal opens', async ({ page }) => {
   await page.goto('/');
 
-  // Landing page loads
-  // Two "Try a sample first" buttons exist on the landing (hero + bottom CTA). Either works.
-  const sampleBtn = page.getByRole('button', { name: /try a sample/i }).first();
+  // Landing page loads. The sample-library affordance is a text-link button in
+  // the bottom CTA ("Or poke around the sample library first") since the
+  // 2026-07-21 landing conversion — the hero's link runs Import, not the sample.
+  const sampleBtn = page.getByRole('button', { name: /sample library/i }).first();
   await expect(sampleBtn).toBeVisible();
 
   // Load sample library

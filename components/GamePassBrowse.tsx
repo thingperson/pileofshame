@@ -235,7 +235,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
       setRolling(false);
       setRevealed(true);
     }, 500);
-  }, [catalogAsGames, mode, moodFilters, currentPick, skippedIds, recentPicks, showToast, isInLibrary]);
+  }, [catalogAsGames, mode, moodFilters, currentPick, skippedIds, recentPicks, showToast, isInLibrary, svc.label]);
 
   const handleAddToLibrary = useCallback((game: Game) => {
     if (isInLibrary(game.name)) {
@@ -284,7 +284,7 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
 
     showToast(`${game.name} added and set to Playing. Go.`);
     onClose();
-  }, [addGame, showToast, isInLibrary, onClose]);
+  }, [addGame, showToast, isInLibrary, onClose, svc.label, svc.source]);
 
   // Escape to close
   useEffect(() => {

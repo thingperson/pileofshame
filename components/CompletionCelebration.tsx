@@ -510,6 +510,32 @@ function GameClearShare({
   );
 }
 
+// Celebrate-stage flavor line. The random pick lives in this helper (not inline
+// in render) so the render body stays pure — react-hooks/purity flags a bare
+// Math.random() during render, and it also let the line re-roll on every
+// re-render mid-celebration. The caller memoizes this per game so the line is
+// picked once and stays put.
+function pickCelebrateLine(isNonFinishable: boolean): string {
+  const msgs = isNonFinishable
+    ? [
+        'You gave it real time. That\'s what matters.',
+        'Not every game has a finish line. You still showed up.',
+        'You committed, you followed through. That\'s the whole game.',
+        'Another one done. The pile is officially lighter.',
+        'The backlog just got a little less intimidating.',
+      ]
+    : [
+        'One more slot opened up. Space cleared. Great work.',
+        'That\'s one less game looking at you from the pile.',
+        'You committed, you followed through. That\'s the whole game.',
+        'Another one done. The pile is officially lighter.',
+        'Credits rolled. You earned this moment.',
+        'Feels good, right? That\'s what finishing things feels like.',
+        'The backlog just got a little less intimidating.',
+      ];
+  return msgs[Math.floor(Math.random() * msgs.length)];
+}
+
 export default function CompletionCelebration({ game, onClose, onConfirm }: CompletionCelebrationProps) {
   useScrollLock(!!game);
   const [stage, setStage] = useState<'confirm' | 'celebrate'>('confirm');
@@ -528,6 +554,16 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
   const gamesCleared = games.filter((g) => g.status === 'played').length;
   const backlogSize = games.filter((g) => g.status === 'buried' || g.status === 'on-deck').length;
   const hoursOnGame = game?.hoursPlayed || 0;
+
+  // Picked once per game (memoized) so it doesn't re-roll on every re-render
+  // while the celebration is on screen. Read granular props into locals so the
+  // memo deps stay specific (matches the flavorText memo below).
+  const gameName = game?.name;
+  const gameIsNonFinishable = !!game?.isNonFinishable;
+  const celebrateLine = useMemo(
+    () => (gameName ? pickCelebrateLine(gameIsNonFinishable) : ''),
+    [gameName, gameIsNonFinishable]
+  );
 
   const handleConfirm = useCallback(() => {
     onConfirm();
@@ -695,26 +731,7 @@ export default function CompletionCelebration({ game, onClose, onConfirm }: Comp
                   : <>You cleared <span className="text-green-400 font-semibold">{game.name}</span> from your backlog.</>}
               </p>
               <p className="text-sm text-text-dim italic mb-5">
-                {(() => {
-                  const msgs = game.isNonFinishable
-                    ? [
-                        'You gave it real time. That\'s what matters.',
-                        'Not every game has a finish line. You still showed up.',
-                        'You committed, you followed through. That\'s the whole game.',
-                        'Another one done. The pile is officially lighter.',
-                        'The backlog just got a little less intimidating.',
-                      ]
-                    : [
-                        'One more slot opened up. Space cleared. Great work.',
-                        'That\'s one less game looking at you from the pile.',
-                        'You committed, you followed through. That\'s the whole game.',
-                        'Another one done. The pile is officially lighter.',
-                        'Credits rolled. You earned this moment.',
-                        'Feels good, right? That\'s what finishing things feels like.',
-                        'The backlog just got a little less intimidating.',
-                      ];
-                  return msgs[Math.floor(Math.random() * msgs.length)];
-                })()}
+                {celebrateLine}
               </p>
 
               {/* Stats impact */}
