@@ -1,7 +1,17 @@
 # Spec: Clear the 22 react-hooks lint errors blocking CI
 
-**Status:** SPECCED — not started
+**Status:** ✅ DONE 2026-07-25 (`9a4607b`) — hybrid approach, see note below.
 **Created:** 2026-07-21
+
+> **Resolution (2026-07-25).** Took the hybrid path, not the full per-site rewrite.
+> The 18 `set-state-in-effect` errors were downgraded to `warn` in `eslint.config.mjs`
+> (they're the benign `setMounted(true)` hydration idiom — not bugs). The 4 genuine
+> ones were fixed at the source: GamePassBrowse's 3 memoization errors (missing
+> `svc.label`/`svc.source` deps — real stale-closure risk) and CompletionCelebration's
+> purity error (inline `Math.random()` in render → moved to a module helper + memoized
+> per game, which also fixed a mid-celebration flicker). Also fixed a stale smoke test
+> that broke on the 2026-07-21 landing conversion. `./verify.sh --full` green; CI
+> unblocked for the first time since 2026-07-06.
 **Why it matters:** CI has failed on *every* push to `main` since the `verify.sh` gate landed 2026-07-06 (`1606000`). Each failure emails Brady. These 22 errors are the only thing left standing between the repo and a green gate.
 
 ---

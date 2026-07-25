@@ -42,6 +42,7 @@ Product name is locked **Inventory Full**; web artifacts carry legacy names (map
 - `gh repo rename thingperson/pileofshame → inventoryfull-web` (GitHub auto-redirects). *(No `gh` CLI here — Brady does this in the GitHub UI.)*
 - Rename Supabase **prod** project display name `Pile Of Shame → Inventory Full` (display only; ref/URL/keys immutable, no code impact). Brady in dashboard.
 - Folder `~/Desktop/getplaying → inventoryfull-web` is **DEFERRED** (high path-breakage — do it with no live session in the folder + sweep absolute-path refs; note this settings.json + the SessionStart hooks hard-code `/Users/bradywhitteker/Desktop/getplaying`).
+  - **Update 2026-07-25:** the *move* half is being actioned separately for an unrelated reason — getting `.next` build-dir churn off the iCloud-synced Desktop (see `DECISIONS.md` 2026-07-25). That move keeps the `getplaying` name (`~/Desktop/getplaying → ~/dev/getplaying`) and does the exact ref-sweep this line warns about. The **rename** to `inventoryfull-web` is still deferred — do it as a follow-up once the GitHub + Supabase renames land, on top of the new `~/dev/getplaying` path.
 - Check Vercel project name → `inventory-full`.
 
 ## Dev/prod hygiene (noted)
