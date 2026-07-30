@@ -10,7 +10,7 @@
     {
       "name": "design-studies",
       "runtimeExecutable": "bash",
-      "runtimeArgs": ["-c", "cd '/Users/bradywhitteker/Desktop/getplaying/notes/Inventory Full-claude code resume package from design' && exec python3 -m http.server 4321 --bind 127.0.0.1"],
+      "runtimeArgs": ["-c", "cd '/Users/bradywhitteker/dev/getplaying/notes/Inventory Full-claude code resume package from design' && exec python3 -m http.server 4321 --bind 127.0.0.1"],
       "port": 4321
     }
   ]

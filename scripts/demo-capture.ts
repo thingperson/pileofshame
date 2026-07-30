@@ -33,7 +33,7 @@ const VIEWPORT = { width: 1280, height: 800 };
  * file isn't found (e.g. fresh clone without the notes dir).
  */
 const PIP_FILE = process.env.PIP_FILE || 'pip-26.png';
-const PIP_LOCAL_BASE = '/Users/bradywhitteker/Desktop/getplaying/notes/pip/Transparent Pips';
+const PIP_LOCAL_BASE = '/Users/bradywhitteker/dev/getplaying/notes/pip/Transparent Pips';
 function loadPipDataUri(): string | null {
   const p = resolve(PIP_LOCAL_BASE, PIP_FILE);
   if (!existsSync(p)) return null;

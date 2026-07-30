@@ -8,7 +8,7 @@ description: Run before deploying a new version. Bundles build verification, cop
 Run this skill before deploying a new version to production. It performs these checks in sequence:
 
 ## 1. Build Verification
-- Run `npm run build` in /Users/bradywhitteker/Desktop/getplaying
+- Run `npm run build` in /Users/bradywhitteker/dev/getplaying
 - Report any TypeScript errors, missing imports, or build failures
 - If build fails, stop and report. Do not proceed.
 

@@ -9,7 +9,7 @@ description: Build, verify, push, and confirm production deploy to Vercel. Orche
 
 ## Project info
 
-- **Local codebase:** `/Users/bradywhitteker/Desktop/getplaying`
+- **Local codebase:** `/Users/bradywhitteker/dev/getplaying`
 - **Live URL:** https://inventoryfull.gg (Vercel auto-deploys from `main`)
 - **Git remote:** `origin` → `github.com:thingperson/pileofshame.git`
 - **Push command:** `GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519" git -c credential.helper= push origin main`
