@@ -164,9 +164,9 @@ If an audited line has changed in code AND there is no corresponding DECISIONS e
 
 ### `decision-picker-cta-pick-my-game`
 **Cites:** `docs/DECISIONS.md` 2026-05-05 — picker CTA renamed from "What Should I Play?" to "Pick My Game" with full Iyengar/Brehm/SDT/Loewenstein rationale.
-**Surface:** hero CTA on `/`, post-import CTA, Reroll modal header, JSON-LD feature list.
-**Check:** primary CTA text is exactly `Pick My Game` (with the dice glyph); old label `What Should I Play?` does not appear in any user-facing context. The `R` keyboard shortcut opens the picker with no modal open.
-**Method:** `Bash` grep for `What Should I Play` outside `.claude/rules/voice-and-tone.md`'s "do not use" column; `vision` on hero; live keypress test for `R`.
+**Surface:** hero CTA on `/`, post-import CTA, Reroll modal header, JSON-LD feature list. The `R` shortcut lives in `hooks/useKeyboardShortcuts.ts` (`onRoll`), wired in `app/page.tsx:476` → `handleOpenReroll('anything')`.
+**Check:** primary CTA text is exactly `Pick My Game` (with the dice glyph); old label `What Should I Play?` does not appear in any user-facing context. The `R` keyboard shortcut opens the picker when no modal is open and focus isn't in an input.
+**Method:** `Bash` grep for `What Should I Play` outside `.claude/rules/voice-and-tone.md`'s "do not use" column; `vision` on hero. For `R`: grep `hooks/useKeyboardShortcuts.ts` for the `'r'`/`'R'` → `onRoll` binding — **not** `app/`+`components/`; the handler is in `hooks/`, which is what tripped the 2026-07-29 audit into a false "unverifiable" verdict. Optional live keypress to confirm.
 
 ### `decision-moving-on-canon`
 **Cites:** `.claude/rules/voice-charter.md` — "Moving on is deciding too" is the canonical anchor for the Moved On status. Sentiment locked; variations OK.
@@ -190,6 +190,7 @@ If an audited line has changed in code AND there is no corresponding DECISIONS e
 **Cites:** `.claude/rules/voice-charter.md` — primary tagline is `get playing.` (lowercase, with period). Landing H1/subhead is "Your backlog isn't the problem. Deciding is." (locked 2026-05-11; supersedes the retired "Your pile's not gonna play itself."). Celebration tagline is "Less shame. More game." Retired: "Stop stalling. Get playing."
 **Surface:** landing (`/`, active component `components/LandingPageV2.tsx`), `/about`, share cards, footers.
 **Check:** primary tagline appears exactly as `get playing.`; landing H1/subhead matches "Your backlog isn't the problem. Deciding is."; neither "Stop stalling" nor "Your pile's not gonna play itself." appears in the active landing surface.
+**Whitelist (2026-07-30, Brady):** the pile share-card subhead in `app/pile/[id]/page.tsx` — "Your backlog's not gonna play itself." — is a **deliberate, accepted** share-card variant. Share cards are a distinct surface from the landing; casual voice is fine there. It is NOT a violation — do not soft-flag it. The retired-stem check ("not gonna play itself") applies to the **landing** surface only. (Soft-flagged three weeks running 07-19/07-20/07-29 before this ruling.)
 **Method:** `Bash` grep across `components/`, `app/` for each tagline variant; `vision` confirm on landing. Note: `LandingPageClassic.tsx` (the original landing, which carried the retired subhead) was archived to `notes/_archive/` on 2026-06-08 — it is no longer imported and is excluded from the build.
 
 ### How to add a new `decision-*` assertion
