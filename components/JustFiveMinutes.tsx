@@ -259,7 +259,7 @@ const JustFiveMinutes = forwardRef<JustFiveMinutesHandle, JustFiveMinutesProps>(
                   className="px-3 py-2.5 text-sm font-bold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
                   style={{ backgroundColor: 'rgba(167, 139, 250, 0.15)', color: '#a78bfa' }}
                 >
-                  📋 Play Next
+                  🎯 Up Next
                 </button>
                 <button
                   onClick={() => handleTriage('pile')}
