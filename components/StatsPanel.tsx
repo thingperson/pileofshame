@@ -200,7 +200,14 @@ export default function StatsPanel({ games }: StatsPanelProps) {
     const FALLBACK_HOURS = 12;
 
     const backlogGames = games.filter((g) => g.status === 'buried' || g.status === 'on-deck');
-    const playedGames = games.filter((g) => g.status === 'played' || g.status === 'playing');
+    // "Reclaimed" = value freed by playing/finishing games WITH Inventory Full.
+    // A 'played' game with no completedAt was imported as already-completed (pre-app,
+    // e.g. Xbox/PSN 100% or a Playnite "Completed" tag) — it belongs in the Completed
+    // tab but not in this dollar figure (DECISIONS 2026-08-03). completedAt is set only
+    // on in-app completion (store.ts). 'playing' games count — they're active with us.
+    const playedGames = games.filter(
+      (g) => g.status === 'playing' || (g.status === 'played' && !!g.completedAt)
+    );
 
     // --- Prices ---
     let knownPriceSum = 0;

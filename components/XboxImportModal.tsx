@@ -122,10 +122,19 @@ export default function XboxImportModal({ open, onClose }: XboxImportModalProps)
         ? `Xbox · ${game.achievements.gamerscore}/${game.achievements.totalGamerscore}G`
         : 'Xbox';
 
+      // Honest completion import (DECISIONS 2026-08-03, supersedes 2026-05-20).
+      // Only the UNAMBIGUOUS 100%-achievements signal maps to Completed — same bar
+      // as PSN's platinum/100%. Anything partial is ambiguous and defaults to Backlog.
+      // No completedAt is set: imported completions are pre-app, so they show in the
+      // Completed tab but are excluded from the "reclaimed with us" dollar figure.
+      const fullyAchieved = !!game.achievements
+        && game.achievements.total > 0
+        && game.achievements.earned === game.achievements.total;
+
       addGame({
         name: game.name,
         source: 'xbox',
-        status: 'buried',
+        status: fullyAchieved ? 'played' : 'buried',
         category: DEFAULT_CATEGORIES[0],
         vibes: [],
         timeTier: 'wind-down',

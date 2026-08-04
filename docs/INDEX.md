@@ -54,6 +54,14 @@
 | [specs/web-ios-interop.md](specs/web-ios-interop.md) | Web↔iOS shared-backend interop — server-authoritative `merge_library` RPC (D1, BLOCKS iOS prod), identity linking (D3), Apple auth, tombstones, connection-persistence bugs, naming alignment. Mostly web+Supabase work | SPECCED — green-lit, not started | Before iOS points at prod; D1+D3 are blocking |
 | [specs/status-events-supabase-mirror.md](specs/status-events-supabase-mirror.md) | Supabase `status_events` mirror for the append-only status log (local log shipped 2026-06-30) — Year-in-Pile Phase 1 fast-follow | SPECCED — needs Privacy Policy update | When wiring Year-in-Pile sync or right away to stop multi-device event loss |
 
+## Handoffs (cross-client contracts)
+
+`docs/handoffs/*.md` — shared-behavior contracts the iOS repo inherits.
+
+| Doc | What | Status |
+|---|---|---|
+| [handoffs/ios-import-status-logic.md](handoffs/ios-import-status-logic.md) | Import status logic — honest completion (PSN/Xbox 100% + Playnite declared → Completed; imports never set `completedAt`; reclaim filters on it). Canon: DECISIONS 2026-08-03 | Web shipped/staged 2026-08-03; iOS to inherit |
+
 ## Session resumes
 
 `docs/session-resume-YYYY-MM-DD.md` — current-state pointer, written at session close. Always read the latest at session start.

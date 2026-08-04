@@ -7,7 +7,7 @@ import { inferMoodTags } from '@/lib/enrichment';
 import { MOOD_TAG_CONFIG } from '@/lib/enrichment';
 import { pickWeighted, getEligibleGames, REROLL_MODES, RerollMode } from '@/lib/reroll';
 import { getGameDescriptor } from '@/lib/descriptors';
-import { TIME_TIER_CONFIG } from '@/lib/constants';
+import { TIME_TIER_CONFIG, MAX_PLAYING_NOW } from '@/lib/constants';
 import { useToast } from './Toast';
 
 type SubService = 'gamepass' | 'psplus';
@@ -264,6 +264,14 @@ export default function GamePassBrowse({ open, onClose }: GamePassBrowseProps) {
   const handleAddAndPlay = useCallback((game: Game) => {
     if (isInLibrary(game.name)) {
       showToast(`${game.name} is already in your library.`);
+      return;
+    }
+
+    // Same Playing Now cap every other promotion path enforces (DECISIONS 2026-04-06).
+    // Sub Shuffle's add-and-play predates that lock and was never on its sweep list.
+    const nowPlayingCount = useStore.getState().games.filter((g) => g.status === 'playing').length;
+    if (nowPlayingCount >= MAX_PLAYING_NOW) {
+      showToast(`Playing Now is capped at ${MAX_PLAYING_NOW}. Finish or shelve something first.`);
       return;
     }
 

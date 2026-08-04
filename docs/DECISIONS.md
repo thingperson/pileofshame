@@ -15,6 +15,31 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-08-03 — Imports may set *honest* completion; the anti-heuristic rule is about nudging, not status (supersedes 2026-05-20 "Imports default to Backlog")
+
+**Decision.** Refines the 2026-05-20 lock. Imports may set `Completed` when the completion is **honest** — either an *unambiguous* data signal (PSN 100% progress, Xbox 100% achievements) or a *user-declared* status (Playnite's own Completed/Playing/Abandoned tags). Everything ambiguous still defaults to Backlog. What stays forbidden is what the lock was really protecting: **inferring status from a soft signal, and any suggesting/nudging** based on import data.
+
+Concretely:
+- **PSN** — `progress === 100` → Completed, else Backlog. (Already shipped; now documented and comment-anchored.)
+- **Xbox** — brought in line with PSN: 100% achievements (`earned === total`, `total > 0`) → Completed, else Backlog. Was hardcoded to Backlog and threw the achievement signal away; that platform-dependent inconsistency is exactly the drift the old lock feared, so consistency wins.
+- **Playnite** — user-declared `completionStatus` maps through as-is (Completed / Playing Now / Moved On). Declared ≠ inferred; importing what the user explicitly tagged respects their data. This is the one path allowed to set Playing Now / Moved On on import, and only because the user typed it.
+- **Imports never set `completedAt`.** That field is set *only* on in-app completion (`lib/store.ts`). Imported completions therefore appear in the Completed tab but are **excluded from the "$ reclaimed" figure** — reclaim means value freed *with* Inventory Full, not a lifetime backlog you finished before you showed up (`components/StatsPanel.tsx` filters `played && completedAt`).
+
+**Why.** Three of the old lock's fears don't survive scrutiny for the *honest* case: (1) the animated completion celebration fires on a UI transition, never on import — import can't steal it; (2) at an unambiguous 100%/platinum signal, "still active / DLC / replay" is a rare edge, and the cost of being wrong is one re-shelve the user controls; (3) we're parking, not suggesting — no agency is taken. Pretending we don't know a game is done, when the platform plainly says so, is *less* honest, not more. The real guardrail — never nudge a user back toward a game they've finished, always let them decide — is preserved intact.
+
+**Rejected.**
+- **Keep the blanket "everything → Backlog."** Rejected — it forces the user to re-mark dozens of obviously-finished games, and it made completion-on-import depend on which platform you used (PSN silently did it, Xbox didn't).
+- **Auto-complete on *any* completion signal (e.g. "beat the main story", partial %).** Rejected — that's the ambiguous inference the lock correctly bans. Only the unambiguous ceiling (100%/platinum) or an explicit user declaration qualifies.
+- **Count imported completions toward "$ reclaimed."** Rejected per Brady — the reclaim narrative is specifically "what you've freed since using the tool." Pre-app completions dilute that. They still count as Completed; they just don't inflate the dollar figure.
+
+**How to apply this.** New import source? Default to Backlog. Only escalate to Completed on an unambiguous platform signal or a user-declared status, and **never write `completedAt` from an importer**. Never derive Up Next / Playing Now / Moved On from inference — only from an explicit user declaration (Playnite-style). Any surface that means "done *with us*" (the reclaim figure, and reconsider the headline Cleared count / archetypes if this recurs) must filter on `completedAt`, not raw `status === 'played'`.
+
+**Open (not blocking):** the headline "Cleared" count, `finishedPct`, and archetype calc still read raw `status === 'played'`, so they include imported completions. Left as-is for now — those arguably describe the user's whole library, not just app-attributed wins. Flagged so it's a deliberate line, not an oversight.
+
+**Drift risk.** The rule is now nuanced (declared/unambiguous OK, inferred not), so a future importer could over-reach and auto-complete on a soft signal. `decision-imports-honest-completion` in `regress-watch/assertions.md` guards it: importers must not write `completedAt`, and status escalation must be gated on a 100%/declared check. iOS shares this contract — see `docs/handoffs/ios-import-status-logic.md`.
+
+---
+
 ## 2026-07-25 — Move the web repo off the iCloud-synced Desktop
 
 **Decision.** Relocate `~/Desktop/getplaying` → `~/dev/getplaying` (off iCloud), keeping the `getplaying` name. Un-defers the folder-move half of `docs/specs/web-ios-interop.md:44`; the `inventoryfull-web` rename stays deferred (it tangles with the GitHub + Supabase renames).

@@ -105,6 +105,10 @@ export default function PSNImportModal({ open, onClose }: PSNImportModalProps) {
         vibes: [],
         timeTier: game.progress > 50 ? 'deep-cut' : 'wind-down',
         notes: game.platform,
+        // Honest completion import (DECISIONS 2026-08-03, supersedes 2026-05-20).
+        // 100% progress is the unambiguous "done" signal — same bar as Xbox's full
+        // achievements. Partial progress is ambiguous → Backlog. No completedAt set:
+        // pre-app completions show in Completed but don't count toward "reclaimed with us".
         status: game.progress === 100 ? 'played' : 'buried',
         achievements: game.trophiesTotal > 0 ? {
           earned: game.trophiesEarned,

@@ -158,7 +158,8 @@ If an audited line has changed in code AND there is no corresponding DECISIONS e
 
 ### `decision-status-cycle-locked`
 **Cites:** `docs/DECISIONS.md` 2026-04-09 — status cycle locked as `Backlog → Up Next → Playing Now → Completed` with `Moved On` as sibling exit.
-**Surface:** `lib/types.ts`, `lib/store.ts`, `components/GameCard.tsx`, `components/GridCard.tsx`.
+**Surface:** `lib/types.ts`, `lib/store.ts`, `lib/constants.ts`, `components/GameCard.tsx`, `components/GridCard.tsx`, `components/JustFiveMinutes.tsx`.
+*(JustFiveMinutes added 2026-08-02: the triage flow writes status and is where the "Play Next" drift actually surfaced — caught 07-20, still shipping 07-29, fixed 07-30. It was never in this list, so the assertion found the bug only because the grep was run repo-wide. `lib/constants.ts` added for the same reason — it holds the canon label map.)*
 **Check:** internal status keys remain `buried | on-deck | playing | played | bailed`; user-facing labels remain `Backlog | Up Next | Playing Now | Completed | Moved On`. No reintroduction of retired labels: `Play Next`, `On Deck`, `Buried`, `Queue`, `Active`, `Cleared`, `Beaten`, `Bailed`, `Dropped`, `Abandoned`.
 **Method:** `Bash` grep on `lib/` and `components/` for retired labels in user-facing strings; `eval` on live preview to confirm tab labels match.
 
@@ -182,9 +183,9 @@ If an audited line has changed in code AND there is no corresponding DECISIONS e
 
 ### `decision-playing-now-cap-3`
 **Cites:** `docs/DECISIONS.md` 2026-04-06 — Playing Now cap of 3 simultaneous games (locked).
-**Surface:** `lib/store.ts` (action that promotes a game to `playing`).
-**Check:** the action either prevents 4th promotion or auto-demotes oldest. Cap = 3 is enforced somewhere in the store, not just hinted in copy.
-**Method:** `Bash` grep on `lib/store.ts` for `playing` cap logic; if no enforcement found, hard fail.
+**Surface:** `lib/constants.ts` (`MAX_PLAYING_NOW`) + every call site that promotes to `playing`: `components/Reroll.tsx`, `components/JustFiveMinutes.tsx`, `components/GameCard.tsx`, `components/GamePassBrowse.tsx`, `app/page.tsx`.
+**Check:** the cap constant exists and every promotion path blocks the 4th. Cap = 3 is enforced in code, not just hinted in copy.
+**Method:** grep **repo-wide** for every write of `status: 'playing'` in `app/`+`components/` (the surface list above is a *hint, not the search boundary*) and confirm each is preceded by a `nowPlayingCount >= MAX_PLAYING_NOW` guard. The surface list has been the thing that nearly hid a real drift three runs straight — `GamePassBrowse.tsx` (add-and-play) had NO guard from 2026-04-04 until the 2026-08-03 audit caught it, because it predated the 2026-04-06 lock's sweep. Sample-data/seed files (`lib/sampleLibrary.ts`, `lib/seedData.ts`) are fixtures, not promotion paths — exclude. If the constant is missing or any promotion path skips the check, hard fail.
 
 ### `decision-tagline-canon`
 **Cites:** `.claude/rules/voice-charter.md` — primary tagline is `get playing.` (lowercase, with period). Landing H1/subhead is "Your backlog isn't the problem. Deciding is." (locked 2026-05-11; supersedes the retired "Your pile's not gonna play itself."). Celebration tagline is "Less shame. More game." Retired: "Stop stalling. Get playing."
@@ -192,6 +193,16 @@ If an audited line has changed in code AND there is no corresponding DECISIONS e
 **Check:** primary tagline appears exactly as `get playing.`; landing H1/subhead matches "Your backlog isn't the problem. Deciding is."; neither "Stop stalling" nor "Your pile's not gonna play itself." appears in the active landing surface.
 **Whitelist (2026-07-30, Brady):** the pile share-card subhead in `app/pile/[id]/page.tsx` — "Your backlog's not gonna play itself." — is a **deliberate, accepted** share-card variant. Share cards are a distinct surface from the landing; casual voice is fine there. It is NOT a violation — do not soft-flag it. The retired-stem check ("not gonna play itself") applies to the **landing** surface only. (Soft-flagged three weeks running 07-19/07-20/07-29 before this ruling.)
 **Method:** `Bash` grep across `components/`, `app/` for each tagline variant; `vision` confirm on landing. Note: `LandingPageClassic.tsx` (the original landing, which carried the retired subhead) was archived to `notes/_archive/` on 2026-06-08 — it is no longer imported and is excluded from the build.
+
+### `decision-imports-honest-completion`
+**Cites:** `docs/DECISIONS.md` 2026-08-03 — imports may set *honest* completion (unambiguous signal or user-declared), never inferred; importers never write `completedAt`. Supersedes 2026-05-20 "Imports default to Backlog."
+**Surface:** every import mapper — `components/PSNImportModal.tsx`, `components/XboxImportModal.tsx`, `components/PlayniteImportModal.tsx`, `components/GamePassBrowse.tsx`, `components/SteamImportModal.tsx`, `components/AddGameModal.tsx` — plus the reclaim consumer `components/StatsPanel.tsx`.
+**Check (three invariants):**
+1. **No importer writes `completedAt`.** That field is in-app-only (`lib/store.ts`). An importer setting it would silently fold pre-app completions into the "$ reclaimed with us" figure.
+2. **Status escalation to `played` is gated on an *unambiguous* signal**, not a soft/partial one: PSN `progress === 100`, Xbox `earned === total && total > 0`. Playnite may map `played`/`playing`/`bailed` — but only via its user-*declared* `completionStatus`, never inferred from playtime/achievements. No importer sets `playing`/`on-deck`/`bailed` from a data heuristic.
+3. **The reclaim figure filters on `completedAt`.** `StatsPanel.tsx` "reclaimed" value counts `status === 'playing' || (status === 'played' && completedAt)` — never raw `status === 'played'`.
+**Method:** `Bash`. (1) grep `completedAt` across `components/*ImportModal.tsx` + `GamePassBrowse.tsx` → must be **zero** hits. (2) grep each importer's `status:` expression; any `'played'` must sit behind a 100%/declared condition, any `'playing'`/`'on-deck'`/`'bailed'` must trace to a user-declared field. Xbox/PSN hardcoding `'played'` unconditionally, or gating on partial progress, is a hard fail (that was the 4×-rolled-back regression). (3) grep `StatsPanel.tsx` reclaim filter for the `completedAt` guard.
+**Note:** the `timeTier` heuristic in importers (e.g. PSN `progress > 50 ? 'deep-cut'`) is a *separate* field, not status — not covered here. The headline "Cleared" count / archetype calc reading raw `played` is a known, accepted open item (DECISIONS 2026-08-03) — do not flag it under this assertion.
 
 ### How to add a new `decision-*` assertion
 
