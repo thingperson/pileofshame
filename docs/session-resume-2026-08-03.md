@@ -2,6 +2,8 @@
 
 ⚡ **START HERE.** Prior: [`session-resume-2026-08-02.md`](session-resume-2026-08-02.md). This session ran the weekly decisions-audit, then — with Brady live — turned its two findings into a shipped decision + code. The 08-02 doc's "highest-value audit gap" (imports-default-to-Backlog) is now **resolved and generalized**, not just added as an assertion.
 
+> 🟡 **FIRST: run [`env-path-migration-check.md`](env-path-migration-check.md).** Brady re-pointed the Claude Desktop "pileofshame" project from `~/Desktop/getplaying` → `~/dev/getplaying` and restarted. That doc verifies the fix took (cwd + memory key + permission writes now land in dev), reconciles the two forked memory dirs, and deletes the husk. Do it before other work; mark it DONE when green.
+
 ---
 
 ## 🎯 NEXT SESSION STARTS HERE
