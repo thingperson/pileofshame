@@ -15,6 +15,54 @@ This doc is a starting point, created 2026-04-09 from what was fresh in the curr
 
 ---
 
+## 2026-08-06 — Web stays free; paid features route through iOS instead
+
+**Decision.** Inventory Full's web app carries no paid tiers, subscriptions, or checkout flows. Any premium/paid feature is built into the iOS companion app instead, priced as a one-time purchase there.
+
+**Why.**
+- Current userbase (~10) makes web monetization infrastructure premature — no volume to justify the build or the ongoing Stripe/checkout surface area.
+- The iOS app already has a locked one-time-purchase pricing model (see `~/.claude/projects/.../memory/project_ios_app.md`); routing all paid features through one platform avoids maintaining two separate payment surfaces for a solo builder.
+
+**Implementation.** `docs/monetization-plan.md` Amendments — 2026-08-06. `docs/year-in-pile-spec.md` deferred banner (its paid unlock, if it ships, now routes through iOS, not a web Stripe checkout).
+
+**Rejected.** Keeping Year-in-Pile's originally spec'd `$5 one-time unlock` as a web Stripe Checkout charge.
+
+**Drift risk.** Monetization Stream #5 (Cosmetic Premium Subscription, web-based, in `docs/monetization-plan.md`) was not explicitly addressed by this ruling and now conflicts with it — a recurring web subscription doesn't fit "pay-once, iOS-only." Flagged in the doc; not resolved. Don't build Stream #5 without asking first.
+
+---
+
+## 2026-08-06 — Year-in-Pile deferred, not killed
+
+**Decision.** The Year-in-Pile annual recap feature is deferred with no committed build window. The prior Dec 1, 2026 fixed-launch-deadline is dropped.
+
+**Why.**
+- Current userbase (~10) is too small for a launch/share-moment feature to have real payoff. Brady: "an idea but we don't have to build it especially when we only have like 10 users."
+
+**Implementation.** Status banner added to top of `docs/year-in-pile-spec.md`. `docs/ROADMAP.md` Year-in-Pile entry updated to remove the deadline. `docs/monetization-plan.md` amended.
+
+**Rejected.** Continuing to build toward the Dec 1 deadline regardless of current traction.
+
+**Drift risk.** The spec body (pricing, Stripe Checkout, scrollable walkthrough mechanics) is untouched and will need a rewrite before this becomes buildable again — both for the deferred-until-traction call above and the web-stays-free ruling above it.
+
+---
+
+## 2026-08-06 — RAWG attribution (footer-only) + search-branch caching fix
+
+**Decision.** Added the RAWG-required attribution as a single footer link ("Game data via RAWG," `app/page.tsx`) rather than per-card badges. Fixed the one uncached RAWG path — search results (`app/api/rawg/route.ts`) now check a new Supabase L2 cache (`rawg_search_cache`) before hitting RAWG live, and write through to both that table and the existing `game_metadata` table. Added a silent, non-blocking monthly usage counter (`rawg_usage_log`) — no UI, no user-facing messaging, no gating.
+
+**Why.**
+- RAWG's terms require visible attribution; footer placement (present on the main app page where RAWG-sourced game data actually renders) satisfies it without per-card clutter Brady didn't want.
+- The search branch was the actual uncached path: every import hit RAWG live even for a title another user had already imported. This is the fix, not just a cache-tuning tweak — it changes RAWG cost from scaling with *users* to scaling with *distinct titles*.
+- Brady explicitly does not want users to feel volume anxiety around enriching their library — the counter exists purely for his own visibility, with no cutoff behavior. "That's a fork in the road to decide on" if it's ever needed, not a default posture.
+
+**Implementation.** `app/page.tsx` (footer), `app/api/rawg/route.ts` (L2 search cache + write-through + counter), `supabase/migrations/009_rawg_search_cache.sql` (applied directly to prod project `lrzjszthlmcivgyprqnb` via Supabase MCP this session, with Brady's explicit go-ahead).
+
+**Rejected.** A hard request-volume cutoff that would block or warn users — rejected specifically because it would introduce the fear-of-enriching dynamic Brady wants to avoid.
+
+**Drift risk.** The "footer-only attribution suffices" read comes from research done while RAWG's own terms pages were down (connection-level failure, not just a 522) — not verified against the live page. Recheck once RAWG is reachable again.
+
+---
+
 ## 2026-08-03 — Imports may set *honest* completion; the anti-heuristic rule is about nudging, not status (supersedes 2026-05-20 "Imports default to Backlog")
 
 **Decision.** Refines the 2026-05-20 lock. Imports may set `Completed` when the completion is **honest** — either an *unambiguous* data signal (PSN 100% progress, Xbox 100% achievements) or a *user-declared* status (Playnite's own Completed/Playing/Abandoned tags). Everything ambiguous still defaults to Backlog. What stays forbidden is what the lock was really protecting: **inferring status from a soft signal, and any suggesting/nudging** based on import data.

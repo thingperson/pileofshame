@@ -2,6 +2,8 @@
 
 *Written 2026-05-13. Implementation target: Dec 1, 2026 launch. One-time $5 unlock per user per year. Free card is the acquisition funnel; paid card is the keepsake. Reuses share-card infra; new tables in Supabase + Stripe one-time Checkout.*
 
+> **DEFERRED — 2026-08-06.** Not killed, on hold. Brady: "an idea but we don't have to build it especially when we only have like 10 users." Revisit once there's a userbase where a launch/share moment matters. The Dec 1 2026 deadline below no longer holds, and if this ships, the paid unlock should route through the iOS one-time purchase per the same-day web-stays-free ruling, not a web Stripe checkout — §6 and §5's "new tables in Supabase + Stripe one-time Checkout" line are stale under that ruling and need a rewrite before this becomes buildable again. See `docs/monetization-plan.md` Amendments — 2026-08-06.
+
 ---
 
 ## 1. The pitch

@@ -124,6 +124,7 @@
 - GA4 analytics — full event set incl. `landing_view`, with `mood`/`session_length`/`archetype`/`smart_pick_type` params ✅
 - PWA manifest + 192/512px icons + apple-icon fix ✅
 - Token efficiency restructure (plan file 94% reduction, path-scoped rules) ✅
+- Daily prod-health loop (B1) — Sentry digest across both projects, plain-language, surface-only. Spec: `docs/specs/health-loop.md` ✅ 2026-08-06
 
 ### SEO Content Pages — SHIPPED ✅
 - `/alternatives` — competitors comparison page (Backloggd, HowLongToBeat, GG.deals, LaunchBox) with CTA ✅
@@ -195,8 +196,8 @@ Pixel sprite system replacing emoji as primary brand iconography.
 - Name normalization shipped ✅
 - Result scoring shipped ✅
 - RAWG in-memory cache (1hr TTL, 500 entries) + Cache-Control headers ✅
-- Supabase `game_metadata` L2 cache (persistent, shared across users, write-through from RAWG) ✅
-- API rate limiting on /api/rawg (60/min), /api/hltb (30/min), /api/deals (40/min) per IP ✅
+- Supabase `game_metadata` L2 cache (persistent, shared across users, write-through from RAWG) ✅ — extended 2026-08-06 to cover the search branch too (`rawg_search_cache` table), not just slug lookups
+- API rate limiting on /api/rawg (60/min), /api/deals (40/min) per IP ✅ — `/api/hltb` line removed, that route was deleted 2026-07-19 (HLTB retirement)
 - Enrichment retry logic (1 retry with 2s delay on 429/5xx) ✅
 - Broken image fallback (onError → gamepad emoji) ✅
 - 200+ game library working without issues ✅
@@ -374,8 +375,8 @@ Pixel sprite system replacing emoji as primary brand iconography.
 - Natural lock-in through accumulated self-knowledge (not gamification)
 - From user feedback: "I like data breakdowns on my own behaviour over time"
 
-### Year in Pile — gaming "Wrapped" (build-ready spec, Phase 1 data layer SHIPPED)
-- Reflective Dec-only year-in-review. Free square share card + $5 one-time scrollable walkthrough. Full spec: `docs/year-in-pile-spec.md`. **Target: Dec 1, 2026.**
+### Year in Pile — gaming "Wrapped" (build-ready spec, Phase 1 data layer SHIPPED) — **DEFERRED 2026-08-06**
+- Reflective Dec-only year-in-review. Free square share card + paid deep version. Full spec: `docs/year-in-pile-spec.md`. **No committed build window** — deferred given current ~10-user scale; the prior "Target: Dec 1, 2026" deadline is dropped. If it ships, the paid unlock routes through the iOS one-time purchase, not a web charge (see `docs/monetization-plan.md` Amendments — 2026-08-06).
 - **Phase 1 data layer SHIPPED 2026-06-30** — `lib/statusEvents.ts` append-only status-event log is live (perishable data; capture clock now running). Remaining Phase 1: `lib/yearInPile.ts` compute, free OG card route, `/year/[year]` view.
 - **Dependency:** the Supabase `status_events` mirror (`docs/specs/status-events-supabase-mirror.md`) and multi-device correctness fold into the web↔iOS `merge_library` work (`docs/specs/web-ios-interop.md` D1). Needs a Privacy Policy update before the mirror ships.
 - iOS equivalent is "Year-in-Backlog" (Phase 6 / iOS Phase 2) — reconcile pricing (web $5/yr vs iOS one-time bundle) before either monetizes.

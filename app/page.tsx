@@ -1055,6 +1055,7 @@ function AppContent() {
           <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] py-1">Discord</a>
           <a href="/privacy" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] py-1">Privacy</a>
           <a href="/terms" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] py-1">Terms</a>
+          <a href="https://rawg.io" target="_blank" rel="noopener noreferrer" className="text-xs text-text-faint hover:text-text-dim transition-colors font-[family-name:var(--font-mono)] py-1">Game data via RAWG</a>
         </div>
       </footer>
     </div>

@@ -185,6 +185,17 @@ Spec at [docs/b2b-studios-spec.md](b2b-studios-spec.md). Aggregate-only, opt-in,
 
 ---
 
+## Amendments — 2026-08-06 (scale check + platform-routing ruling)
+
+Two rulings from Brady, both read first before anything below in this doc — they supersede the pricing/trigger details on streams #5 and #6.
+
+1. **Web stays free. Any paid feature routes through the iOS app instead**, priced as a one-time purchase there ("for the convenience, if nothing else" — his words). Do not add web-side charges, checkout flows, or Stripe/card-payment UI to inventoryfull.gg. This directly contradicts Stream #6's `$5 one-time unlock on web` design in `docs/year-in-pile-spec.md` §6 — that pricing section is now the wrong platform, not just a wrong number. Stream #5 (Cosmetic Premium Subscription, web-based) is flagged for reconsideration under this same principle — a recurring web subscription doesn't fit "pay-once iOS" either, but Brady hasn't explicitly ruled on #5 specifically. Don't build it without asking first.
+2. **Year-in-Pile is deferred, not killed.** Current userbase is ~10. Brady's framing: "an idea but we don't have to build it especially when we only have like 10 users." The Dec 1 2026 fixed-deadline framing in this doc and in `docs/year-in-pile-spec.md` no longer holds — there is no committed build window right now. Revisit once there's a userbase where a launch/share moment is actually meaningful. See `~/.claude/projects/.../memory/project_scale_and_scope_aug2026.md` for the durable version of this rule.
+
+RAWG-cost gating on Affiliate (row below, "RAWG-cost-coverable revenue (~2.5k MAU)") should also be re-examined — a same-day roadmap review found RAWG's actual free-tier terms permit commercial use up to a request quota, not a revenue-based ban, which was this doc's original premise. Not fully re-verified against RAWG's live terms pages (RAWG's domain has been down); flagging so a future pass doesn't propagate the old premise uncorrected.
+
+---
+
 ## Amendments — 2026-05-13 (launch-day retrospective)
 
 During the r/SideProject launch session, the original 2026-05-04 plan was audited for internal consistency. Several contradictions and unexamined assumptions surfaced and were corrected in-place. Captured here for future-session traceability.
